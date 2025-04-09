@@ -1,447 +1,338 @@
 import markdownProcessor from './markdownProcessor';
 
 /**
- * Gestor de la previsualización en iframe que optimiza la manipulación directa
- * del contenido sin recargar el iframe completo cada vez.
+ * Gestor de la previsualización en iframe V2.5.
+ * Muestra HTML procesado, aplica CSS cargado dinámicamente,
+ * y añade mejoras visuales/interactivas con JS (barras, hover).
  */
 class PreviewManager {
     private iframe: HTMLIFrameElement | null = null;
-    private isInitialized: boolean = false;
+    public isReady: boolean = false;
     private currentCSSText: string = '';
     private loadedFonts: Set<string> = new Set();
-    private scrollSyncTimeout: number | null = null;
+    private scrollSyncTimeout: NodeJS.Timeout | null = null;
     private lastScrollSource: 'editor' | 'preview' | null = null;
     private lastKnownMarkdown: string = '';
+    private interactionListenersAttached: boolean = false; // Para evitar duplicar listeners
 
-    /**
-     * Inicializa el PreviewManager con una referencia al iframe
-     */
     initialize(iframe: HTMLIFrameElement): void {
-        if (this.iframe) {
-            this.destroy();
-        }
-        console.log(`PreviewManager: Initializing (Adapter Mode)...`);
-        this.iframe = iframe;
-        this.isInitialized = false;
-        this.currentCSSText = '';
-        this.loadedFonts.clear();
-        this.lastKnownMarkdown = '';
+        if (this.iframe) { this.destroy(); }
+        console.log(`PreviewManager: Initializing (V2.5 Enhanced Adapter Mode)...`);
+        this.iframe = iframe; 
+        this.isReady = false; 
+        this.currentCSSText = ''; 
+        this.loadedFonts.clear(); 
+        this.lastKnownMarkdown = ''; 
+        this.interactionListenersAttached = false;
 
-        // Escuchar mensajes del iframe
-        window.addEventListener('message', this.handleIframeMessage);
-
-        // Configurar el iframe con el documento base
-        iframe.srcdoc = `
+        // Usar el HTML base que incluye los estilos por defecto
+        const baseHtml = `
             <!DOCTYPE html>
             <html>
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: http: https:;">
+                    <base target="_blank">
                     <style id="base-styles">
                         body { 
                             margin: 0; 
                             padding: 10px; 
                             font-family: Arial, sans-serif;
                             color: #333;
+                            background-color: #fff;
                         }
                         #content {
                             min-height: 100%;
                         }
                     </style>
-                    <style id="custom-css"></style>
+                    <style id="custom-theme-style"></style>
                 </head>
                 <body>
                     <div id="content"></div>
-                    <script>
-                        // Notificar cuando la página esté lista
-                        document.addEventListener('DOMContentLoaded', function() {
-                            console.log('Preview iframe contenido cargado');
-                            
-                            // Función para recibir CSS del padre
-                            window.applyCss = function(css) {
-                                try {
-                                    const styleEl = document.getElementById('custom-css');
-                                    if (styleEl) {
-                                        styleEl.textContent = css;
-                                        console.log('CSS aplicado desde iframe');
-                                        return true;
-                                    }
-                                } catch (e) {
-                                    console.error('Error aplicando CSS:', e);
-                                }
-                                return false;
-                            };
-                            
-                            // Notificar al padre que estamos listos
-                            if (window.parent) {
-                                try {
-                                    window.parent.postMessage({type: 'IFRAME_READY'}, '*');
-                                    console.log('Notificación enviada al padre');
-                                } catch (e) {
-                                    console.error('Error notificando al padre');
-                                }
-                            }
-                        });
-                    </script>
                 </body>
             </html>
         `;
+
+        iframe.srcdoc = baseHtml;
         
-        // Esperar a que el iframe cargue inicialmente
         iframe.onload = () => {
-            try {
-                if (!this.iframe?.contentWindow?.document) {
-                    console.error('PreviewManager: Iframe document not accessible.');
-                    this.isInitialized = false;
-                    return;
-                }
-                console.log('PreviewManager: Iframe loaded. Ready.');
-                this.isInitialized = true;
-                this.applyStyles();
-                this.updateContent(this.lastKnownMarkdown);
-                this.setupScrollListener();
-            } catch (error) {
-                console.error('PreviewManager: Error during iframe initialization', error);
-                this.isInitialized = false;
+            if (!this.iframe?.contentWindow?.document) { 
+                console.error('PM: Iframe doc not accessible.'); 
+                this.isReady = false; 
+                return; 
             }
+            console.log('PM: Iframe loaded. Ready.'); 
+            this.isReady = true;
+            this.applyStyles(); // Aplica CSS inicial
+            this.updateContent(this.lastKnownMarkdown); // Aplica contenido inicial y mejoras
+            this.setupScrollListener();
+            this.setupInteractionListeners(); // Configurar listeners generales una vez
         };
     }
 
-    /**
-     * Actualiza el contenido HTML del iframe con el markdown procesado
-     */
+    destroy(): void {
+        console.log("PM: Destroying...");
+        if (this.iframe && this.iframe.contentWindow) {
+             this.iframe.contentWindow.removeEventListener('scroll', this.handleIframeScroll);
+             // Limpiar listeners de interacción
+             this.removeInteractionListeners(this.iframe.contentWindow.document);
+        }
+        this.iframe = null; this.isReady = false; this.currentCSSText = ''; this.loadedFonts.clear();
+        if (this.scrollSyncTimeout) clearTimeout(this.scrollSyncTimeout); this.lastScrollSource = null; this.interactionListenersAttached = false;
+        console.log("PM: Destroyed.");
+    }
+
     updateContent(markdown: string): void {
         this.lastKnownMarkdown = markdown;
-        if (!this.isReady) {
-            console.log('PreviewManager: Not ready yet, content update delayed');
+        
+        if (!this.isReady || !this.iframe?.contentWindow?.document) {
+            console.warn('PM: Cannot update content - iframe not ready');
             return;
         }
+
+        const doc = this.iframe.contentWindow.document;
+        const contentDiv = doc.getElementById('content');
         
+        if (!contentDiv) {
+            console.error('PM: Content div not found');
+            return;
+        }
+
+        const scrollable = doc.scrollingElement || doc.body;
+        const currentScroll = scrollable.scrollTop;
+
         try {
-            // Primero, mostrar un indicador de carga
-            const doc = this.getDocument();
-            if (!doc) {
-                console.error('PreviewManager: Document not available');
-                return;
-            }
-            
-            // Intentar procesar el markdown
-            let html;
-            try {
-                html = markdownProcessor.process(markdown);
-            } catch (processingError: unknown) {
-                console.error('PreviewManager: Error processing markdown', processingError);
-                const errorMessage = processingError instanceof Error ? processingError.message : 'Unknown error';
-                this.showError('Error processing markdown: ' + errorMessage);
-                return;
-            }
+            // Procesar el markdown
+            const processedHTML = markdownProcessor.process(markdown);
             
             // Actualizar el contenido
-            try {
-                const contentDiv = doc.getElementById('content');
-                if (contentDiv) {
-                    contentDiv.innerHTML = html || '';
-                    console.log('PreviewManager: Content updated successfully');
-                } else {
-                    // Fallback si no existe el div #content
-                    doc.body.innerHTML = `<div id="content">${html || ''}</div>`;
-                    console.log('PreviewManager: Created new content container');
-                }
-            } catch (contentError) {
-                console.error('PreviewManager: Error updating content DOM', contentError);
-                this.showError('Error updating preview content');
-            }
-        } catch (error) {
-            console.error('PreviewManager: Unhandled error in updateContent', error);
-            // No podemos mostrar el error porque si llegamos aquí probablemente
-            // ni siquiera podemos acceder al documento
-        }
-    }
-
-    /**
-     * Aplica CSS personalizado sin recargar el iframe
-     */
-    applyCustomCSS(css: string): void {
-        // Guardar el CSS actual
-        this.currentCSSText = css;
-        
-        if (!this.iframe || !this.iframe.contentWindow) {
-            console.error('PreviewManager: No se puede acceder al iframe');
-            return;
-        }
-        
-        try {
-            // Intentar usar la función applyCss definida en el iframe
-            const iframeWindow = this.iframe.contentWindow as any;
-            if (iframeWindow.applyCss && typeof iframeWindow.applyCss === 'function') {
-                const success = iframeWindow.applyCss(css);
-                if (success) {
-                    console.log('PreviewManager: CSS aplicado a través de la función del iframe');
-                    return;
-                }
-            }
+            contentDiv.innerHTML = processedHTML;
             
-            // Fallback si la función no está disponible
-            if (this.iframe.contentWindow.document) {
-                const doc = this.iframe.contentWindow.document;
-                let styleEl = doc.getElementById('custom-css') as HTMLStyleElement;
-                if (!styleEl) {
-                    styleEl = doc.createElement('style');
-                    styleEl.id = 'custom-css';
-                    doc.head.appendChild(styleEl);
-                }
-                styleEl.textContent = css;
-                console.log('PreviewManager: CSS aplicado mediante fallback');
-            } else {
-                console.error('PreviewManager: No se puede acceder al documento del iframe');
-            }
-        } catch (error) {
-            console.error('PreviewManager: Error al aplicar CSS:', error);
-        }
-    }
-
-    /**
-     * Sincroniza el scroll del preview basado en un porcentaje
-     */
-    syncScroll(scrollPercentage: number): void {
-        if (!this.isReady) return;
-        
-        try {
-            const doc = this.getDocument();
-            if (doc) {
-                const maxScroll = doc.documentElement.scrollHeight - doc.documentElement.clientHeight;
-                const targetScroll = (maxScroll * scrollPercentage) / 100;
-                doc.documentElement.scrollTop = targetScroll;
-            }
-        } catch (error) {
-            console.error('PreviewManager: Error syncing scroll', error);
-        }
-    }
-
-    /**
-     * Muestra un mensaje de error en el iframe
-     */
-    private showError(message: string): void {
-        if (!this.isReady) {
-            console.error('PreviewManager: Cannot show error, not ready:', message);
-            return;
-        }
-        
-        try {
-            const doc = this.getDocument();
-            if (!doc) {
-                console.error('PreviewManager: Cannot show error, document not available:', message);
-                return;
-            }
+            // Aplicar mejoras JS
+            this.renderProgressBars(doc);
             
-            // Crear un contenedor de error con estilo
-            const errorHtml = `
-                <div id="content">
-                    <div style="
-                        color: #721c24;
-                        background-color: #f8d7da;
-                        border: 1px solid #f5c6cb;
-                        padding: 20px;
-                        margin: 20px 0;
-                        border-radius: 5px;
-                        font-family: Arial, sans-serif;
-                    ">
-                        <h3 style="margin-top: 0; color: #721c24;">Error</h3>
-                        <p>${message}</p>
-                    </div>
-                </div>
-            `;
-            
-            doc.body.innerHTML = errorHtml;
-            console.error('PreviewManager: Displayed error in preview:', message);
+            // Restaurar el scroll
+            requestAnimationFrame(() => {
+                scrollable.scrollTop = currentScroll;
+            });
+
+            console.log('PM: Content updated successfully');
         } catch (error) {
-            console.error('PreviewManager: Failed to show error in preview:', message, error);
-            // No podemos hacer más si no podemos mostrar el error
+            console.error('PM: Error updating content:', error);
+            contentDiv.innerHTML = '<div class="error-message">Error rendering content.</div>';
         }
     }
 
-    /**
-     * Obtiene el documento del iframe de forma segura
-     */
-    private getDocument(): Document | null {
-        return this.iframe?.contentWindow?.document || null;
-    }
-
-    /**
-     * Limpia los recursos cuando el componente se desmonta
-     */
-    destroy(): void {
-        console.log("PreviewManager: Destroying...");
-        try {
-            // Eliminar listener de mensajes
-            window.removeEventListener('message', this.handleIframeMessage);
-            
-            if (this.iframe && this.iframe.contentWindow) {
-                try {
-                    this.iframe.contentWindow.removeEventListener('scroll', this.handleIframeScroll);
-                } catch (error) {
-                    console.log("PreviewManager: Error removing event listener, iframe may be cross-origin", error);
-                }
-            }
-            this.iframe = null;
-            this.isInitialized = false;
-            this.currentCSSText = '';
-            this.loadedFonts.clear();
-            if (this.scrollSyncTimeout) {
-                clearTimeout(this.scrollSyncTimeout);
-            }
-            this.lastScrollSource = null;
-            console.log("PreviewManager: Destroyed.");
-        } catch (error) {
-            console.error("PreviewManager: Error during destroy", error);
+    applyCustomCSS(cssContent: string): void {
+        console.log("PM: Applying new custom CSS (V2.5 Mode).");
+        if (typeof cssContent !== 'string') { console.error("Invalid CSS content"); return; }
+        this.currentCSSText = cssContent;
+        this.loadedFonts.clear();
+        if (this.isReady) {
+            this.applyStyles(); // Aplica el nuevo CSS y fuentes
+            this.updateContent(this.lastKnownMarkdown); // Re-renderiza HTML y aplica mejoras JS
         }
-    }
-
-    /**
-     * Verifica si el preview manager está listo para ser usado
-     */
-    get isReady(): boolean {
-        return this.isInitialized && this.iframe !== null && this.iframe.contentWindow !== null;
     }
 
     private applyStyles(): void {
         if (!this.isReady || !this.iframe?.contentWindow?.document) {
-            console.log('PreviewManager: Not ready to apply styles');
+            console.warn('PM: Cannot apply styles - iframe not ready');
             return;
         }
-        
-        try {
-            const doc = this.iframe.contentWindow.document;
-            const head = doc.head;
 
-            // Inyectar/Actualizar CSS
+        const doc = this.iframe.contentWindow.document;
+        const head = doc.head;
+
+        try {
+            // Asegurarse de que el elemento style existe
             let styleElement = doc.getElementById('custom-theme-style') as HTMLStyleElement | null;
             if (!styleElement) {
                 styleElement = doc.createElement('style');
                 styleElement.id = 'custom-theme-style';
                 head.appendChild(styleElement);
-            }
-            
-            if (styleElement.textContent !== this.currentCSSText) {
-                styleElement.textContent = this.currentCSSText;
-                console.log('PreviewManager: Theme styles updated');
+                console.log('PM: Created custom-theme-style element');
             }
 
-            // Extraer y aplicar data-theme
+            // Aplicar el CSS
+            if (styleElement.textContent !== this.currentCSSText) {
+                styleElement.textContent = this.currentCSSText;
+                console.log('PM: Applied new CSS content');
+            }
+
+            // Extraer y aplicar el nombre del tema
             let themeName = "default-theme";
-            if (this.currentCSSText) {
-                const themeMatch = this.currentCSSText.match(/\/\*\s*Theme:\s*([^*]*?)\s*\*\//);
-                if (themeMatch && themeMatch[1]) {
-                    themeName = themeMatch[1].trim().toLowerCase().replace(/\s+/g, '-');
-                }
+            const themeMatch = this.currentCSSText?.match(/\/\*\s*Theme:\s*([^*]*?)\s*\*\//);
+            if (themeMatch?.[1]) {
+                themeName = themeMatch[1].trim().toLowerCase().replace(/\s+/g, '-');
             }
             doc.documentElement.setAttribute('data-theme', themeName);
-            
-            // Extraer e inyectar fuentes
+
+            // Cargar fuentes
             this.injectFontsFromCSS(doc, this.currentCSSText);
-            console.log(`PreviewManager: Styles applied (Theme: ${themeName}).`);
+
+            // Forzar un repintado para asegurar que los estilos se apliquen
+            doc.body.style.opacity = '0.99';
+            setTimeout(() => {
+                doc.body.style.opacity = '1';
+            }, 10);
+
+            console.log(`PM: Styles applied successfully (Theme: ${themeName})`);
         } catch (error) {
-            console.error('PreviewManager: Error applying styles', error);
+            console.error('PM: Error applying styles:', error);
         }
     }
 
     private injectFontsFromCSS(doc: Document, cssText: string): void {
-        if (!doc || !doc.head || !cssText) {
-            return;
+        if (!doc?.head || !cssText) return;
+        const head = doc.head; const importRegex = /@import\s+url\(['"]?(.+?)['"]?\);?/g; let match;
+        while ((match = importRegex.exec(cssText)) !== null) {
+            const fontUrl = match[1];
+            if (fontUrl.includes('fonts.googleapis.com') && !this.loadedFonts.has(fontUrl)) {
+                const link = doc.createElement('link'); link.href = fontUrl; link.rel = 'stylesheet';
+                head.appendChild(link); this.loadedFonts.add(fontUrl); console.log(`PM: Injected Font: ${fontUrl}`);
+            }
         }
+    }
+
+    // --- Funciones de Mejora JS ---
+
+    private renderProgressBars(doc: Document): void {
+        doc.querySelectorAll('[data-value][data-max]').forEach(element => {
+            // Limpiar barras antiguas si existen
+            element.querySelectorAll('.dynamic-progress-bar').forEach(oldBar => oldBar.remove());
+
+            // Ignorar celdas de tabla por ahora
+            if (element.tagName === 'TD') return;
+
+            // Cast element to HTMLElement to access dataset
+            const htmlElement = element as HTMLElement;
+            const value = parseFloat(htmlElement.dataset.value || "0");
+            const max = parseFloat(htmlElement.dataset.max || "100");
+            if (isNaN(value) || isNaN(max) || max <= 0) return;
+            const percent = Math.max(0, Math.min(100, (value / max) * 100));
+            let barClass = 'ok'; if (percent < 60) barClass = 'warn'; if (percent < 30) barClass = 'error';
+
+            const barContainer = doc.createElement('div');
+            barContainer.className = 'dynamic-progress-bar status-bar';
+            const barFill = doc.createElement('span');
+            barFill.className = `bar-fill ${barClass}`;
+            barFill.style.width = `${percent}%`;
+            barContainer.appendChild(barFill);
+            element.appendChild(barContainer);
+        });
+    }
+
+    // Configura listeners DELEGADOS en el body del iframe
+    private setupInteractionListeners(): void {
+        if (!this.iframe?.contentWindow?.document || this.interactionListenersAttached) return;
+        const doc = this.iframe.contentWindow.document;
+
+        console.log("PM: Setting up interaction listeners.");
+
+        // Usar delegación de eventos en el body para hover
+        doc.body.addEventListener('mouseover', this.handleMouseOver);
+        doc.body.addEventListener('mouseout', this.handleMouseOut);
+
+        // Podríamos añadir listener de click de forma similar
+        // doc.body.addEventListener('click', this.handleClick);
+
+        this.interactionListenersAttached = true;
+    }
+
+     // Quita listeners delegados
+     private removeInteractionListeners(doc: Document | null): void {
+         if (!doc?.body) return;
+         console.log("PM: Removing interaction listeners.");
+         doc.body.removeEventListener('mouseover', this.handleMouseOver);
+         doc.body.removeEventListener('mouseout', this.handleMouseOut);
+         // doc.body.removeEventListener('click', this.handleClick);
+     }
+
+    // Handler para mouseover (delegado)
+    private handleMouseOver = (event: MouseEvent): void => {
+        // Buscar el ancestro interactivo más cercano (panel o fila)
+        const targetElement = (event.target as Element)?.closest('.mixed-panel, tbody tr');
+        if (targetElement) {
+            // Añadir clase solo a este elemento
+            targetElement.classList.add('hover-active');
+            // Quitarla de otros elementos que pudieran tenerla por error
+            const otherActives = targetElement.parentElement?.querySelectorAll('.hover-active');
+            otherActives?.forEach(el => {
+                if (el !== targetElement) el.classList.remove('hover-active');
+            });
+        }
+    };
+
+    // Handler para mouseout (delegado)
+    private handleMouseOut = (event: MouseEvent): void => {
+        const targetElement = (event.target as Element)?.closest('.mixed-panel, tbody tr');
+         // El relatedTarget nos dice hacia dónde se movió el ratón
+         const relatedTarget = event.relatedTarget as Element | null;
+
+        // Solo quitar la clase si el ratón realmente salió del elemento (y no entró en un hijo)
+         if (targetElement && !targetElement.contains(relatedTarget)) {
+             targetElement.classList.remove('hover-active');
+         }
+    };
+
+    // Placeholder para futura interactividad de click
+    // private handleClick = (event: MouseEvent): void => {
+    //     const diceRollSpan = (event.target as Element)?.closest('span.dice-roll');
+    //     if (diceRollSpan) {
+    //         const roll = diceRollSpan.dataset.roll;
+    //         console.log(`TODO: Roll dice for ${roll}`);
+    //         // Aquí iría la lógica para tirar el dado y mostrar resultado
+    //     }
+    // };
+
+
+    // --- Funciones de Scroll Sync (Sin cambios) ---
+    syncScroll(scrollPercentage: number): void {
+        if (!this.isReady || !this.iframe?.contentWindow?.document) return;
+        const doc = this.iframe.contentWindow.document;
+        const scrollable = doc.scrollingElement || doc.body;
+        const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
+        if (maxScroll <= 0) return;
         
-        try {
-            const head = doc.head;
-            
-            // Detectar importaciones de Google Fonts
-            const importRegex = /@import\s+url\(['"]?(.+?)['"]?\);?/g;
-            let match;
-            while ((match = importRegex.exec(cssText)) !== null) {
-                const fontUrl = match[1];
-                if (fontUrl.includes('fonts.googleapis.com') && !this.loadedFonts.has(fontUrl)) {
-                    const link = doc.createElement('link');
-                    link.href = fontUrl;
-                    link.rel = 'stylesheet';
-                    head.appendChild(link);
-                    this.loadedFonts.add(fontUrl);
-                    console.log(`PreviewManager: Injected Google Font: ${fontUrl}`);
-                }
-            }
-            
-            // Detectar reglas @font-face
-            const fontFaceRegex = /@font-face\s*{[^}]*}/g;
-            const fontFaces = cssText.match(fontFaceRegex);
-            
-            if (fontFaces && fontFaces.length > 0) {
-                // Si hay reglas @font-face, crear un estilo específico para ellas
-                let fontFaceStyle = doc.getElementById('font-face-styles');
-                if (!fontFaceStyle) {
-                    fontFaceStyle = doc.createElement('style');
-                    fontFaceStyle.id = 'font-face-styles';
-                    head.appendChild(fontFaceStyle);
-                }
-                
-                // Aplicar todas las reglas @font-face encontradas
-                fontFaceStyle.textContent = fontFaces.join('\n');
-                console.log(`PreviewManager: Injected ${fontFaces.length} @font-face rules`);
-            }
-        } catch (error) {
-            console.error('PreviewManager: Error injecting fonts', error);
-        }
+        this.lastScrollSource = 'editor';
+        const targetY = (scrollPercentage / 100) * maxScroll;
+        scrollable.scrollTop = targetY;
+        
+        if (this.scrollSyncTimeout) clearTimeout(this.scrollSyncTimeout);
+        this.scrollSyncTimeout = setTimeout(() => {
+            this.lastScrollSource = null;
+        }, 150);
     }
 
     private handleIframeScroll = (): void => {
-        if (!this.isReady || !this.iframe?.contentWindow || this.lastScrollSource === 'editor') {
-            return;
-        }
+        if (this.lastScrollSource === 'editor' || !this.iframe?.contentWindow?.document) return;
+        
         this.lastScrollSource = 'preview';
-        if (this.scrollSyncTimeout) {
-            clearTimeout(this.scrollSyncTimeout);
-        }
-        this.scrollSyncTimeout = window.setTimeout(() => {
+        const scrollable = this.iframe.contentWindow.document.scrollingElement || this.iframe.contentWindow.document.body;
+        const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
+        if (maxScroll <= 0) return;
+        
+        const scrollPercentage = (scrollable.scrollTop / maxScroll) * 100;
+        
+        if (this.scrollSyncTimeout) clearTimeout(this.scrollSyncTimeout);
+        this.scrollSyncTimeout = setTimeout(() => {
             this.lastScrollSource = null;
-        }, 100);
+        }, 150);
+        
+        // Aquí, podríamos emitir un evento si fuera necesario para que App.tsx actualizara CodeMirror
+        // window.dispatchEvent(new CustomEvent('previewScroll', { detail: { percentage: scrollPercentage } }));
+        
+        // O guardar el porcentaje por si App.tsx pregunta por él
+        // this.lastScrollPercentage = scrollPercentage;
     };
 
     private setupScrollListener(): void {
-        if (!this.iframe?.contentWindow) return;
-        
-        try {
-            this.iframe.contentWindow.addEventListener('scroll', this.handleIframeScroll);
-            console.log("PreviewManager: Scroll listener setup successful");
-        } catch (error) {
-            console.warn("PreviewManager: Could not set up scroll listener. This is likely due to cross-origin restrictions.", error);
-        }
+        if (!this.iframe?.contentWindow?.document) return;
+        const doc = this.iframe.contentWindow.document;
+        doc.addEventListener('scroll', this.handleIframeScroll);
     }
-
-    /**
-     * Maneja los mensajes enviados desde el iframe
-     */
-    private handleIframeMessage = (event: MessageEvent): void => {
-        // Solo procesamos mensajes de nuestro iframe
-        if (!this.iframe || !this.iframe.contentWindow || event.source !== this.iframe.contentWindow) {
-            return;
-        }
-        
-        try {
-            const message = event.data;
-            if (message && message.type === 'IFRAME_READY') {
-                console.log('PreviewManager: Iframe ha notificado que está listo');
-                
-                // Si tenemos CSS pendiente, aplicarlo ahora
-                if (this.currentCSSText) {
-                    setTimeout(() => {
-                        this.applyCustomCSS(this.currentCSSText);
-                    }, 100);
-                }
-            }
-        } catch (error) {
-            console.error('PreviewManager: Error procesando mensaje del iframe', error);
-        }
-    };
 }
 
-// Exportar una instancia única para usar en toda la aplicación
+// Exportar la instancia singleton
 const previewManager = new PreviewManager();
 export default previewManager; 

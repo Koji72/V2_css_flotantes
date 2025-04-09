@@ -1,5 +1,5 @@
 import React from 'react';
-import { Save, FolderOpen } from 'lucide-react'; // Importar icono de guardar y FolderOpen
+import { Save, FolderOpen, FileUp, Printer } from 'lucide-react'; // Importar icono de guardar, FolderOpen y FileUp
 
 interface ToolbarProps {
   // Función para aplicar sintaxis Markdown alrededor de la selección
@@ -7,23 +7,20 @@ interface ToolbarProps {
   onInsertBlock: (blockText: string) => void; // Nuevo prop para insertar bloques
   onSave: () => void; // Nuevo prop para guardar
   onLoad: () => void; // Nuevo prop para disparar la carga
+  onExportPDF?: () => void; // Opcional para compatibilidad con versiones anteriores
 }
 
 // Plantillas para bloques comunes y personalizados
 const quoteTemplate = `> `;
 const codeBlockTemplate = "```\n\n```";
 // Envolver Metamatrix en su propio panel
-const metamatrixTemplate = `::: panel-data-matrix
-<div class="panel-header">
-<span class="header-icon"></span> Data Matrix Title
-</div>
-<div class="panel-content">
+const metamatrixTemplate = `::: datamatrix Data Matrix Title
 
 | Meta              | Value      |
 | ----------------- | ---------- |
 | Key1              | Value1     |
 | Key2              | Value2     |
-</div>
+
 :::`;
 // Simplificar headers en plantillas de paneles
 const statusPanelTemplate = `::: panel-unit-status
@@ -65,7 +62,7 @@ Relevant info...
 </div>
 :::`;
 
-const Toolbar: React.FC<ToolbarProps> = ({ onApplyStyle, onInsertBlock, onSave, onLoad }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ onApplyStyle, onInsertBlock, onSave, onLoad, onExportPDF }) => {
   const buttonClass = "px-2 py-1 rounded bg-gray-600 hover:bg-gray-500 text-white text-xs sm:text-sm flex items-center gap-1"; // Añadido flex y gap
 
   return (
@@ -87,7 +84,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ onApplyStyle, onInsertBlock, onSave, 
 
       {/* Botón Cargar MD */}
       <button title="Load Markdown File" onClick={onLoad} className={buttonClass}>
-        <FolderOpen size={16} />
+        <FileUp size={16} />
         Load MD
       </button>
 
@@ -99,6 +96,18 @@ const Toolbar: React.FC<ToolbarProps> = ({ onApplyStyle, onInsertBlock, onSave, 
         <Save size={16} /> {/* Icono */}
         Save
       </button>
+
+      {/* Botón Exportar PDF */}
+      {onExportPDF && (
+        <button 
+          title="Export as PDF" 
+          onClick={onExportPDF} 
+          className={buttonClass}
+        >
+          <Printer size={16} />
+          Export PDF
+        </button>
+      )}
     </div>
   );
 };

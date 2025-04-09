@@ -2,17 +2,23 @@ import { useState, useEffect, useRef } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { markdown as markdownLanguage } from '@codemirror/lang-markdown';
 import { create } from 'zustand';
-import { FileUp } from 'lucide-react';
+import { FileUp, Moon, Sun } from 'lucide-react';
 import { EditorView, keymap } from '@codemirror/view';
 import Toolbar from './components/Toolbar';
 import markdownProcessor from './utils/markdownProcessor';
 import Alert from './components/Alert';
+import TemplateSelector from './components/TemplateSelector';
+import { TemplateManager } from './utils/templateManager';
 
 interface AppState {
   markdown: string;
   setMarkdown: (markdown: string) => void;
   css: string;
   setCSS: (css: string) => void;
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+  currentTemplate: string;
+  setCurrentTemplate: (template: string) => void;
 }
 
 const useStore = create<AppState>((set) => ({
@@ -20,10 +26,30 @@ const useStore = create<AppState>((set) => ({
   setMarkdown: (markdown) => set({ markdown }),
   css: '',
   setCSS: (css) => set({ css }),
+  darkMode: localStorage.getItem('darkMode') === 'true',
+  toggleDarkMode: () => set((state) => {
+    const newValue = !state.darkMode;
+    localStorage.setItem('darkMode', String(newValue));
+    return { darkMode: newValue };
+  }),
+  currentTemplate: localStorage.getItem('currentTemplate') || 'default',
+  setCurrentTemplate: (template) => {
+    localStorage.setItem('currentTemplate', template);
+    set({ currentTemplate: template });
+  }
 }));
 
 function App() {
-  const { markdown, setMarkdown, css, setCSS } = useStore();
+  const { 
+    markdown, 
+    setMarkdown, 
+    css, 
+    setCSS, 
+    darkMode, 
+    toggleDarkMode,
+    currentTemplate,
+    setCurrentTemplate 
+  } = useStore();
   const [editorView, setEditorView] = useState<EditorView | null>(null);
   const markdownInputRef = useRef<HTMLInputElement>(null);
   const cssInputRef = useRef<HTMLInputElement>(null);
@@ -41,158 +67,353 @@ function App() {
     setTimeout(() => setAlertInfo(null), 5000);
   };
   
-  // Initialize iframe when component mounts
+  // Inicializar iframe cuando se monta el componente
   useEffect(() => {
-    // Define the base HTML for the iframe
-    const baseHtml = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <base target="_blank">
-          <style id="base-styles">
-            body { 
-              margin: 0; 
-              padding: 10px; 
-              font-family: Arial, sans-serif;
-              color: #333;
-              background-color: #fff;
-            }
-            #content {
-              min-height: 100%;
-            }
-            .data-matrix {
-              width: 100%;
-              border-collapse: collapse;
-            }
-            .data-matrix th {
-              text-align: left;
-              padding: 8px;
-              border-bottom: 2px solid #1e90ff;
-              color: #1e90ff;
-            }
-            .data-matrix td {
-              text-align: left;
-              padding: 8px;
-              border-bottom: 1px solid #ddd;
-            }
-            .panel-header {
-              margin-bottom: 10px;
-              padding-bottom: 5px;
-              border-bottom: 2px solid #1e90ff;
-            }
-          </style>
-          <style id="custom-css"></style>
-        </head>
-        <body>
-          <div id="content"></div>
-          <script>
-            // Notificar que estamos listos
-            window.addEventListener('load', function() {
-              console.log('iframe fully loaded');
-              
-              // Asegurarse de que los estilos se apliquen forzando un redibujado
-              setTimeout(function() {
-                document.body.style.opacity = '0.99';
-                setTimeout(function() {
-                  document.body.style.opacity = '1';
-                }, 10);
-              }, 10);
-            });
-          </script>
-        </body>
-      </html>
-    `;
-    
-    // Set the iframe source document
     if (iframeRef.current) {
+      // Configuración inicial del iframe
+      const baseHtml = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <base target="_blank">
+            <style id="base-styles">
+              body { 
+                margin: 0; 
+                padding: 10px; 
+                font-family: Arial, sans-serif;
+                color: #333;
+                background-color: #fff;
+              }
+              #content {
+                min-height: 100%;
+              }
+            </style>
+            <style id="custom-theme-style"></style>
+          </head>
+          <body>
+            <div id="content">
+              <h1>Loading preview...</h1>
+            </div>
+          </body>
+        </html>
+      `;
+      
       iframeRef.current.srcdoc = baseHtml;
       
-      // Setup onload handler
+      // Aplicar el Markdown actual cuando el iframe esté listo
       iframeRef.current.onload = () => {
-        console.log("Iframe loaded successfully");
+        console.log('Iframe loaded, updating content and applying CSS');
+        // Cargar la plantilla actual o la predeterminada
+        const currentTemplateId = localStorage.getItem('currentTemplate') || 'aegis_overdrive';
+        setCurrentTemplate(currentTemplateId);
+        loadTemplate(currentTemplateId);
         
-        // Apply initial CSS if any
-        if (css) {
-          applyCSS(css);
-        }
-        
-        // Update content if there's markdown
-        if (markdown) {
+        // Esperar un momento para que se apliquen los estilos
+        setTimeout(() => {
           updateIframeContent(markdown);
-        }
+        }, 300);
       };
     }
-    
-    // Cleanup function
-    return () => {
-      if (iframeRef.current) {
-        iframeRef.current.onload = null;
-      }
-    };
   }, []);
   
   // Apply CSS to the iframe
   const applyCSS = (cssText: string): boolean => {
+    console.log(`[ApplyCSS] Applying CSS to iframe (length: ${cssText.length})`);
     if (!iframeRef.current || !iframeRef.current.contentWindow || !iframeRef.current.contentWindow.document) {
-      console.warn("Cannot apply CSS: iframe not available");
+      console.warn("[ApplyCSS] Cannot apply CSS: iframe not available");
       return false;
     }
     
     try {
+      // Get document and head
       const doc = iframeRef.current.contentWindow.document;
-      let styleEl = doc.getElementById('custom-css') as HTMLStyleElement;
+      const head = doc.head;
       
-      if (!styleEl) {
-        styleEl = doc.createElement('style');
-        styleEl.id = 'custom-css';
-        doc.head.appendChild(styleEl);
-        console.log("CSS style element created");
+      // Verificar si hay reglas para .data-matrix en el CSS
+      const hasDataMatrixStyles = cssText.includes('.data-matrix') || cssText.includes('.datamatrix');
+      
+      if (hasDataMatrixStyles) {
+        console.log('[ApplyCSS] CSS contiene reglas para .data-matrix o .datamatrix');
+        
+        // Extraer las reglas específicas para data-matrix
+        const cssRules = cssText.match(/\.data-matrix\s*{[^}]*}/g);
+        if (cssRules && cssRules.length > 0) {
+          console.log('[ApplyCSS] Reglas específicas para .data-matrix encontradas:');
+          cssRules.forEach(rule => console.log(rule));
+        }
+      } else {
+        console.warn('[ApplyCSS] ¡ALERTA! CSS no contiene reglas para .data-matrix');
       }
       
-      // Aplicar CSS directamente al elemento style
-      styleEl.textContent = cssText;
+      console.log("[ApplyCSS] Applying CSS content:");
+      console.log(cssText.slice(0, 200) + "..."); // Log the first 200 chars of CSS
       
-      // Asegurarse de que el CSS se aplique correctamente
+      // Obtener información sobre el tema actual
+      const themeMatch = cssText.match(/\/\*\s*Theme:\s*([^*]*?)\s*\*\//);
+      const themeName = themeMatch?.[1]?.trim() || 'default-theme';
+      console.log(`[ApplyCSS] Detected theme: ${themeName}`);
+      
+      // Limpiar fuentes antiguas para evitar conflictos
+      const existingFontLinks = head.querySelectorAll('link[href*="fonts.googleapis.com"]');
+      existingFontLinks.forEach(link => {
+        console.log(`[ApplyCSS] Removing old font link: ${link.getAttribute('href')}`);
+        link.remove();
+      });
+      
+      // Buscar o crear elemento style
+      let styleElement = doc.getElementById('custom-theme-style') as HTMLStyleElement | null;
+      if (!styleElement) {
+        styleElement = doc.createElement('style');
+        styleElement.id = 'custom-theme-style';
+        head.appendChild(styleElement);
+        console.log("[ApplyCSS] Created new style element with id 'custom-theme-style'");
+      } else {
+        console.log("[ApplyCSS] Found existing style element");
+        // Limpiar estilos anteriores
+        styleElement.textContent = '';
+      }
+      
+      // Actualizar contenido CSS con el tema y marca temporal para forzar repintado
+      const timestamp = new Date().getTime();
+      styleElement.textContent = `/* CSS Theme: ${themeName} - Applied at ${timestamp} */\n${cssText}`;
+      console.log("[ApplyCSS] Updated style element content with new theme");
+      
+      // Marcar el tema en el documento
+      doc.documentElement.setAttribute('data-theme', themeName.toLowerCase().replace(/\s+/g, '-'));
+      
+      // Cargar fuentes si es necesario
+      const fontImports = cssText.match(/@import\s+url\(['"](.+?)['"]\)/g);
+      if (fontImports && fontImports.length > 0) {
+        console.log(`[ApplyCSS] Found ${fontImports.length} font imports in CSS`);
+        
+        // Extraer URLs de fuentes
+        fontImports.forEach(importRule => {
+          const urlMatch = importRule.match(/url\(['"](.+?)['"]\)/);
+          if (urlMatch && urlMatch[1]) {
+            const fontUrl = urlMatch[1];
+            if (fontUrl.includes('fonts.googleapis.com')) {
+              const link = doc.createElement('link');
+              link.rel = 'stylesheet';
+              link.href = fontUrl;
+              head.appendChild(link);
+              console.log(`[ApplyCSS] Added font: ${fontUrl}`);
+            }
+          }
+        });
+      }
+      
+      // Forzar repintado completo para asegurar que los estilos se apliquen
+      doc.body.style.display = 'none';
       setTimeout(() => {
-        doc.body.classList.add('css-applied');
-        doc.body.classList.remove('css-applied');
-      }, 10);
+        doc.body.style.display = '';
+        
+        // Verificar si hay tablas en el DOM
+        const tables = doc.querySelectorAll('table.data-matrix, table[data-matrix-table="true"]');
+        console.log(`[ApplyCSS] Found ${tables.length} tables with class 'data-matrix' or data-attribute`);
+        
+        if (tables.length > 0) {
+          setTimeout(() => {
+            const table = tables[0];
+            console.log('[ApplyCSS] Contenido HTML de la primera tabla:', table.outerHTML.slice(0, 500) + '...');
+            
+            const computedStyle = doc.defaultView?.getComputedStyle(table);
+            console.log('[ApplyCSS] Estilos computados de la tabla:', {
+              width: computedStyle?.width,
+              borderCollapse: computedStyle?.borderCollapse,
+              backgroundColor: computedStyle?.backgroundColor,
+              color: computedStyle?.color,
+              border: computedStyle?.border
+            });
+            
+            // Verificar clases aplicadas
+            console.log(`[ApplyCSS] Clases en la tabla: "${table.className}"`);
+            console.log(`[ApplyCSS] Atributos de la tabla:`, {
+              'data-matrix-table': table.getAttribute('data-matrix-table'),
+              id: table.id
+            });
+            
+            // Verificar celdas th
+            const thCells = table.querySelectorAll('th');
+            if (thCells.length > 0) {
+              const thStyle = doc.defaultView?.getComputedStyle(thCells[0]);
+              console.log('[ApplyCSS] Estilos de celda TH:', {
+                backgroundColor: thStyle?.backgroundColor,
+                color: thStyle?.color,
+                borderBottom: thStyle?.borderBottom
+              });
+            }
+            
+            // Inspeccionar reglas CSS aplicadas
+            console.log(`[ApplyCSS] Comprobando si el CSS se aplicó correctamente para .data-matrix:`);
+            if (styleElement) {
+              if (styleElement.sheet) {
+                let dataMatrixRuleFound = false;
+                for (let i = 0; i < styleElement.sheet.cssRules.length; i++) {
+                  const rule = styleElement.sheet.cssRules[i];
+                  if (rule.cssText.includes('.data-matrix') || rule.cssText.includes('data-matrix-table')) {
+                    console.log(`[ApplyCSS] Regla CSS encontrada: ${rule.cssText.slice(0, 100)}...`);
+                    dataMatrixRuleFound = true;
+                  }
+                }
+                if (!dataMatrixRuleFound) {
+                  console.warn('[ApplyCSS] ¡ADVERTENCIA! No se encontraron reglas para .data-matrix en el CSS aplicado');
+                }
+              } else {
+                console.warn('[ApplyCSS] No se pudo acceder a styleElement.sheet');
+              }
+            }
+          }, 300);
+        } else {
+          console.warn('[ApplyCSS] No se encontraron tablas con clase data-matrix después de aplicar el CSS');
+        }
+      }, 50);
       
-      console.log("CSS applied successfully", cssText.substring(0, 50) + "...");
+      // Verificar clases aplicadas después de aplicar el CSS
+      setTimeout(() => {
+        // Verificar si es un tema específico que requiere tratamiento especial
+        const isAetheriumTheme = themeName.toLowerCase().includes('aetherium') || 
+                                themeName.toLowerCase().includes('aegis');
+        
+        if (isAetheriumTheme) {
+          console.log('[ApplyCSS] Detectado tema Aetherium/Aegis, aplicando clases adicionales');
+          
+          // Aplicar estilos específicos para títulos de data-matrix en Aetherium
+          const matrixTitles = doc.querySelectorAll('.data-matrix-title');
+          matrixTitles.forEach(title => {
+            title.classList.add('aetherium-data-title');
+            console.log('[ApplyCSS] Añadida clase aetherium-data-title a título de data-matrix');
+            
+            // Añadir un elemento antes para el efecto especial de Aetherium
+            const titleElement = title as HTMLElement;
+            if (!titleElement.querySelector('.title-crystal')) {
+              const crystal = doc.createElement('span');
+              crystal.className = 'title-crystal';
+              titleElement.prepend(crystal);
+              console.log('[ApplyCSS] Añadido decorador crystal al título');
+            }
+          });
+          
+          // Añadir clases especiales a las tablas data-matrix para Aetherium
+          const matrixTables = doc.querySelectorAll('table.data-matrix, table[data-matrix-table="true"]');
+          matrixTables.forEach(table => {
+            table.classList.add('aetherium-matrix');
+            console.log('[ApplyCSS] Añadida clase aetherium-matrix a tabla');
+          });
+          
+          // Añadir estilos específicos inline si es necesario
+          const styleElement = doc.getElementById('custom-theme-style') as HTMLStyleElement;
+          if (styleElement && !styleElement.textContent?.includes('.aetherium-data-title')) {
+            const aetheriumAdditions = `
+              /* Aetherium theme additions */
+              .aetherium-data-title {
+                font-family: var(--font-title, 'Electrolize', sans-serif);
+                color: var(--aether-secondary, #00f0ff);
+                letter-spacing: 2px;
+                margin-bottom: 0.5em;
+                text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+              }
+              .title-crystal {
+                display: inline-block;
+                width: 8px;
+                height: 12px;
+                background-color: var(--aether-secondary, #00f0ff);
+                margin-right: 8px;
+                transform: rotate(45deg);
+                box-shadow: 0 0 8px var(--aether-secondary-glow, rgba(0, 240, 255, 0.5));
+              }
+            `;
+            styleElement.textContent += aetheriumAdditions;
+            console.log('[ApplyCSS] Añadidos estilos específicos para Aetherium');
+          }
+        }
+      }, 300);
+      
+      showAlert(`Tema "${themeName}" aplicado`, 'success');
       return true;
     } catch (error) {
-      console.error("Error applying CSS:", error);
+      console.error("[ApplyCSS] Error applying CSS:", error);
+      showAlert(`Error al aplicar CSS: ${error instanceof Error ? error.message : 'Desconocido'}`, 'error');
       return false;
     }
   };
   
   // Update content in the iframe
   const updateIframeContent = (markdownText: string): boolean => {
+    console.log(`[UpdateContent] Updating iframe content with markdown (${markdownText.length} chars)`);
+    
     if (!iframeRef.current || !iframeRef.current.contentWindow || !iframeRef.current.contentWindow.document) {
-      console.warn("Cannot update content: iframe not available");
+      console.warn("[UpdateContent] Cannot update content: iframe not available");
       return false;
     }
     
     try {
       // Process markdown to HTML
+      console.log(`[UpdateContent] Processing markdown through markdownProcessor...`);
       const html = markdownProcessor.process(markdownText);
+      console.log(`[UpdateContent] Received HTML from markdownProcessor (${html.length} chars):`);
+      console.log(html.slice(0, 300) + '...');
       
       // Update content
       const doc = iframeRef.current.contentWindow.document;
       const contentElement = doc.getElementById('content');
       
       if (contentElement) {
+        console.log(`[UpdateContent] Content element found, updating innerHTML`);
+        
+        // Verificar si hay datamatrix en el HTML
+        const hasDataMatrix = html.includes('data-matrix') || 
+                             html.includes('datamatrix-raw-output') || 
+                             html.includes('datamatrix-container');
+        
+        if (hasDataMatrix) {
+          console.log(`[UpdateContent] ¡DATAMATRIX detectado en el HTML! Esto debería aparecer en el iframe.`);
+        }
+        
         contentElement.innerHTML = html;
-        console.log("Iframe content updated");
+        
+        // Verificar si hay tablas en el DOM después de actualizar
+        const tables = doc.querySelectorAll('table.data-matrix');
+        console.log(`[UpdateContent] After update, found ${tables.length} tables with class 'data-matrix'`);
+        
+        if (tables.length > 0) {
+          console.log(`[UpdateContent] First table HTML:`, tables[0].outerHTML.slice(0, 200) + '...');
+          
+          // Volver a aplicar el CSS después de actualizar el contenido
+          console.log(`[UpdateContent] Detectadas tablas data-matrix, replicando CSS para asegurar aplicación...`);
+          // Reaplica el CSS después de una breve pausa para asegurar que el DOM esté actualizado
+          setTimeout(() => {
+            if (css) {
+              console.log(`[UpdateContent] Reaplicando CSS para asegurar que se aplique a elementos data-matrix...`);
+              applyCSS(css);
+            }
+          }, 50);
+          
+          // Verificar estilos computados
+          setTimeout(() => {
+            const computedStyle = doc.defaultView?.getComputedStyle(tables[0]);
+            console.log(`[UpdateContent] Table computed style after CSS reapplication:`, {
+              width: computedStyle?.width,
+              borderCollapse: computedStyle?.borderCollapse,
+              backgroundColor: computedStyle?.backgroundColor
+            });
+            
+            // Verificar si los estilos están siendo aplicados
+            if (computedStyle?.borderCollapse !== 'collapse') {
+              console.warn(`[UpdateContent] ¡ALERTA! Los estilos CSS no parecen estar aplicándose a la tabla`);
+            }
+          }, 300);
+        }
+        
+        console.log("[UpdateContent] Iframe content updated successfully");
         return true;
       } else {
-        console.warn("Content element not found in iframe");
+        console.warn("[UpdateContent] Content element not found in iframe");
         return false;
       }
     } catch (error) {
-      console.error("Error updating iframe content:", error);
+      console.error("[UpdateContent] Error updating iframe content:", error);
       return false;
     }
   };
@@ -240,7 +461,17 @@ function App() {
           const content = e.target?.result as string;
           console.log("CSS content loaded, length:", content?.length);
           setCSS(content);
-          showAlert(`CSS loaded successfully: ${file.name}`, "success");
+          
+          // Aplicar CSS inmediatamente
+          setTimeout(() => {
+            const success = applyCSS(content);
+            if (success) {
+              showAlert(`CSS loaded and applied: ${file.name}`, "success");
+            } else {
+              showAlert(`CSS loaded but failed to apply: ${file.name}. Try using Apply CSS button.`, "info");
+            }
+          }, 100);
+          
           if (e.target) {
             (e.target as unknown as HTMLInputElement).value = '';
           }
@@ -461,8 +692,140 @@ function App() {
     },
   ]);
   
+  // Export as PDF
+  const exportAsPDF = async () => {
+    if (!markdown) {
+      showAlert("No content to export!", "info");
+      return;
+    }
+    
+    try {
+      // Preparar el HTML para imprimir
+      const doc = document.createElement('div');
+      doc.innerHTML = markdownProcessor.process(markdown);
+      
+      // Aplicar estilos
+      const style = document.createElement('style');
+      style.textContent = css || ''; // Usar el CSS cargado o vacío
+      doc.prepend(style);
+      
+      // Crear un iframe temporal para imprimir
+      const printFrame = document.createElement('iframe');
+      printFrame.style.position = 'fixed';
+      printFrame.style.right = '0';
+      printFrame.style.bottom = '0';
+      printFrame.style.width = '0';
+      printFrame.style.height = '0';
+      printFrame.style.border = '0';
+      
+      document.body.appendChild(printFrame);
+      
+      printFrame.onload = () => {
+        if (!printFrame.contentWindow) {
+          showAlert("Error preparing PDF export", "error");
+          return;
+        }
+        
+        // Añadir contenido al iframe
+        const frameDoc = printFrame.contentWindow.document;
+        frameDoc.open();
+        frameDoc.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Export - V2 CSS Flotantes</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              @media print {
+                body { margin: 0; padding: 10px; }
+                @page { size: A4; margin: 10mm; }
+              }
+              ${css || ''}
+            </style>
+          </head>
+          <body>
+            ${markdownProcessor.process(markdown)}
+          </body>
+          </html>
+        `);
+        frameDoc.close();
+        
+        // Retraso para asegurar que los estilos se apliquen
+        setTimeout(() => {
+          try {
+            printFrame.contentWindow?.print();
+            showAlert("PDF export initiated", "success");
+          } catch (e) {
+            console.error("Error printing:", e);
+            showAlert("Error during PDF export", "error");
+          }
+          
+          // Limpiar después de un tiempo
+          setTimeout(() => {
+            document.body.removeChild(printFrame);
+          }, 5000);
+        }, 500);
+      };
+    } catch (error) {
+      console.error("Error exporting to PDF:", error);
+      showAlert("Error preparing PDF export", "error");
+    }
+  };
+  
+  // Aplicar el modo oscuro al documento
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
+  }, [darkMode]);
+  
+  // Cargar plantilla CSS
+  const loadTemplate = async (templateId: string) => {
+    try {
+      console.log(`Loading template: ${templateId}`);
+      const templateManager = TemplateManager.getInstance();
+      const cssText = await templateManager.loadTemplate(templateId);
+      
+      console.log(`Template ${templateId} loaded, length: ${cssText.length} chars`);
+      
+      // Guardar la plantilla actual
+      templateManager.setCurrentTemplateId(templateId);
+      
+      // Actualizar el estado de CSS
+      setCSS(cssText);
+      
+      // Aplicar inmediatamente el CSS (no esperar al efecto)
+      setTimeout(() => {
+        const success = applyCSS(cssText);
+        if (success) {
+          console.log(`Template CSS for '${templateId}' applied successfully`);
+          showAlert(`Template '${templateId}' loaded successfully`, 'success');
+          
+          // Actualizar el contenido para que refleje los nuevos estilos
+          updateIframeContent(markdown);
+        } else {
+          console.error(`Failed to apply template CSS for '${templateId}'`);
+          showAlert(`Template '${templateId}' loaded but styles not applied. Try "Apply CSS" button.`, 'info');
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Error loading template:', error);
+      showAlert(`Error loading template '${templateId}'`, 'error');
+    }
+  };
+  
+  // Cargar la plantilla cuando cambia
+  useEffect(() => {
+    if (currentTemplate) {
+      loadTemplate(currentTemplate);
+    }
+  }, [currentTemplate]);
+  
   return (
-    <div className="h-screen flex flex-col">
+    <div className={`h-screen flex flex-col ${darkMode ? 'dark-mode' : ''}`}>
       {/* Alert component */}
       {alertInfo && (
         <Alert
@@ -490,8 +853,15 @@ function App() {
       />
       
       {/* Header */}
-      <header className="bg-inf-tertiary p-4">
+      <header className="bg-inf-tertiary p-4 flex justify-between items-center">
         <h1 className="text-2xl font-title text-inf-primary">Infinity Game Visual Aesthetic</h1>
+        <button 
+          className="p-2 rounded-full hover:bg-inf-accent1 transition-colors"
+          onClick={toggleDarkMode}
+          title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        >
+          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
       </header>
       
       {/* Main content */}
@@ -503,6 +873,7 @@ function App() {
             onInsertBlock={insertBlock}
             onSave={handleSave}
             onLoad={handleLoadMarkdownTrigger}
+            onExportPDF={exportAsPDF}
           />
           
           <div className="flex-1 p-4 overflow-auto" onScroll={handleEditorScroll}>
@@ -529,6 +900,11 @@ function App() {
             <h2 className="text-xl font-title text-inf-primary">Preview</h2>
             
             <div className="flex items-center gap-2">
+              <TemplateSelector 
+                onSelectTemplate={setCurrentTemplate}
+                currentTemplate={currentTemplate}
+              />
+              
               <label
                 htmlFor="css-file"
                 className="flex items-center gap-2 px-4 py-2 bg-inf-accent1 text-inf-secondary rounded cursor-pointer hover:bg-inf-accent2 transition-colors"

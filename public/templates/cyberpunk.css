@@ -1,0 +1,309 @@
+/* Theme: Cyberpunk */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+  /* Colores básicos */
+  --main-bg-color: #0d0221;
+  --text-color: #defff2;
+  --accent-color: #ff00a0;
+  --accent-color-2: #00f2ff;
+  --border-color: #31087b;
+  --header-color: #ff00a0;
+  
+  /* Estados */
+  --status-ok: #00ff9d;
+  --status-warn: #ffef00;
+  --status-error: #ff0057;
+  --status-neutral: #8d86c9;
+  
+  /* Fuentes */
+  --main-font: 'Orbitron', sans-serif;
+  --mono-font: 'Share Tech Mono', monospace;
+}
+
+body {
+  font-family: var(--mono-font);
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--main-bg-color);
+  margin: 0;
+  padding: 20px;
+  background-image: 
+    linear-gradient(0deg, rgba(0, 242, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 242, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  text-shadow: 0 0 5px rgba(0, 242, 255, 0.2);
+}
+
+/* Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--main-font);
+  color: var(--header-color);
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 
+    0 0 5px var(--accent-color),
+    0 0 10px rgba(255, 0, 160, 0.5);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1.1rem; }
+
+/* Paneles */
+.mixed-panel {
+  border: 1px solid var(--accent-color);
+  border-radius: 0;
+  background-color: rgba(13, 2, 33, 0.9);
+  margin-bottom: 25px;
+  overflow: hidden;
+  box-shadow: 
+    0 0 10px rgba(255, 0, 160, 0.5),
+    0 0 20px rgba(49, 8, 123, 0.3);
+  position: relative;
+}
+
+.mixed-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+}
+
+.panel-header {
+  padding: 15px 20px;
+  background-color: rgba(49, 8, 123, 0.5);
+  border-bottom: 1px solid var(--accent-color);
+  display: flex;
+  align-items: center;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.panel-content {
+  padding: 20px;
+}
+
+/* Tabla data-matrix */
+.data-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-family: var(--mono-font);
+}
+
+.data-matrix th {
+  background-color: rgba(49, 8, 123, 0.5);
+  color: var(--accent-color-2);
+  font-weight: 500;
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 2px solid var(--accent-color);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.data-matrix td {
+  padding: 10px 15px;
+  border-bottom: 1px solid rgba(255, 0, 160, 0.3);
+}
+
+.data-matrix tr:hover {
+  background-color: rgba(0, 242, 255, 0.1);
+}
+
+/* Estados */
+.status-ok { 
+  color: var(--status-ok);
+  text-shadow: 0 0 5px var(--status-ok);
+}
+.status-warn { 
+  color: var(--status-warn);
+  text-shadow: 0 0 5px var(--status-warn);
+}
+.status-error { 
+  color: var(--status-error);
+  text-shadow: 0 0 5px var(--status-error);
+}
+.status-neutral { 
+  color: var(--status-neutral);
+}
+
+/* Nota bloques */
+.note-block {
+  background-color: rgba(0, 242, 255, 0.1);
+  border-left: 4px solid var(--accent-color-2);
+  padding: 15px 20px;
+  margin: 20px 0;
+  font-style: italic;
+}
+
+/* Listas */
+ul, ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+
+li {
+  margin-bottom: 8px;
+}
+
+ul li::marker {
+  color: var(--accent-color);
+}
+
+ol li::marker {
+  color: var(--accent-color-2);
+}
+
+/* Código */
+code {
+  font-family: var(--mono-font);
+  background-color: rgba(49, 8, 123, 0.5);
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-size: 0.95em;
+  color: var(--accent-color-2);
+}
+
+pre {
+  background-color: rgba(13, 2, 33, 0.8);
+  color: var(--accent-color-2);
+  padding: 20px;
+  border-radius: 0;
+  overflow-x: auto;
+  margin: 20px 0;
+  border-left: 3px solid var(--accent-color);
+}
+
+pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Enlaces */
+a {
+  color: var(--accent-color-2);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+a:hover {
+  color: var(--accent-color);
+  text-shadow: 0 0 5px var(--accent-color);
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent-color-2), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Separador */
+hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+  margin: 30px 0;
+}
+
+/* Otros elementos */
+blockquote {
+  margin: 20px 0;
+  padding-left: 20px;
+  border-left: 4px solid var(--accent-color);
+  font-style: italic;
+}
+
+/* Clases específicas */
+.log-list p {
+  margin-bottom: 10px;
+  padding-left: 15px;
+  border-left: 2px solid var(--accent-color-2);
+}
+
+.objective-list li {
+  list-style-type: none;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: baseline;
+}
+
+.objective-list li input[type="checkbox"] {
+  margin-right: 10px;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--accent-color);
+  position: relative;
+  cursor: pointer;
+}
+
+.objective-list li input[type="checkbox"]:checked::before {
+  content: "✓";
+  position: absolute;
+  color: var(--accent-color-2);
+  font-size: 14px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.redacted {
+  background-color: var(--accent-color);
+  color: var(--accent-color);
+  user-select: none;
+  padding: 0 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.redacted::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--accent-color),
+    var(--accent-color) 5px,
+    rgba(255, 0, 160, 0.7) 5px,
+    rgba(255, 0, 160, 0.7) 10px
+  );
+  opacity: 0.3;
+}
+
+.redacted:hover {
+  color: var(--main-bg-color);
+} 

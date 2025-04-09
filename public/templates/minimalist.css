@@ -1,0 +1,312 @@
+/* Theme: Minimalist */
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&family=Fira+Mono:wght@400&display=swap');
+
+:root {
+  /* Colores básicos */
+  --main-bg-color: #ffffff;
+  --text-color: #333333;
+  --accent-color: #555555;
+  --secondary-color: #777777;
+  --border-color: #ececec;
+  --header-color: #000000;
+  
+  /* Estados */
+  --status-ok: #63a375;
+  --status-warn: #e3aa75;
+  --status-error: #d16b6b;
+  --status-neutral: #a0a0a0;
+  
+  /* Fuentes */
+  --main-font: 'Work Sans', sans-serif;
+  --mono-font: 'Fira Mono', monospace;
+}
+
+body {
+  font-family: var(--main-font);
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--main-bg-color);
+  margin: 0;
+  padding: 40px;
+  font-size: 16px;
+  font-weight: 300;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--header-color);
+  margin-top: 1.8em;
+  margin-bottom: 0.7em;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+h1 { 
+  font-size: 2.2rem;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+h2 { 
+  font-size: 1.7rem;
+  letter-spacing: -0.02em;
+}
+
+h3 { 
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+}
+
+h4 { 
+  font-size: 1.2rem;
+  color: var(--accent-color);
+}
+
+h5 { 
+  font-size: 1.1rem;
+  color: var(--accent-color);
+}
+
+h6 { 
+  font-size: 1rem;
+  color: var(--accent-color);
+  font-weight: normal;
+}
+
+/* Paneles */
+.mixed-panel {
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: white;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 16px 20px;
+  background-color: #fafafa;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--header-color);
+}
+
+.panel-content {
+  padding: 24px;
+}
+
+/* Tabla data-matrix */
+.data-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+
+.data-matrix th {
+  background-color: #fafafa;
+  color: var(--header-color);
+  font-weight: 500;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-matrix td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-matrix tr:hover {
+  background-color: #f8f8f8;
+}
+
+/* Estados */
+.status-ok { 
+  color: var(--status-ok);
+}
+
+.status-warn { 
+  color: var(--status-warn);
+}
+
+.status-error { 
+  color: var(--status-error);
+}
+
+.status-neutral { 
+  color: var(--status-neutral);
+}
+
+/* Nota bloques */
+.note-block {
+  background-color: #f8f8f8;
+  border-left: 2px solid var(--accent-color);
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+
+/* Listas */
+ul, ol {
+  padding-left: 1.5em;
+  margin-bottom: 1.6em;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* Código */
+code {
+  font-family: var(--mono-font);
+  background-color: #f5f5f5;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+pre {
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 1.2em;
+  border-radius: 3px;
+  overflow-x: auto;
+  margin: 1.5em 0;
+  font-size: 0.9em;
+  border: 1px solid var(--border-color);
+}
+
+pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Enlaces */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  border-bottom: 1px solid #ddd;
+  transition: border-color 0.2s;
+}
+
+a:hover {
+  border-color: var(--accent-color);
+}
+
+/* Separador */
+hr {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+  margin: 2.5em 0;
+}
+
+/* Otros elementos */
+blockquote {
+  margin: 1.5em 0;
+  padding: 0.5em 1.5em;
+  border-left: 2px solid var(--border-color);
+  color: var(--secondary-color);
+  font-style: italic;
+}
+
+/* Clases específicas */
+.log-list p {
+  margin-bottom: 0.8em;
+  padding-left: 1em;
+  border-left: 2px solid #eee;
+  line-height: 1.6;
+}
+
+.objective-list li {
+  list-style-type: none;
+  margin-bottom: 0.75em;
+  display: flex;
+  align-items: baseline;
+}
+
+.objective-list li input[type="checkbox"] {
+  margin-right: 0.75em;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  position: relative;
+  top: 3px;
+}
+
+.objective-list li input[type="checkbox"]:checked {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.objective-list li input[type="checkbox"]:checked::after {
+  content: "✓";
+  color: white;
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  font-size: 12px;
+}
+
+.redacted {
+  background-color: #eee;
+  color: #eee;
+  padding: 0 4px;
+  border-radius: 2px;
+}
+
+.redacted:hover {
+  color: #555;
+}
+
+/* Impresión */
+@media print {
+  body {
+    font-size: 11pt;
+    color: black;
+    background: white;
+    padding: 0;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  
+  h1 {
+    font-size: 21pt;
+  }
+  
+  h2 {
+    font-size: 16pt;
+  }
+  
+  h3 {
+    font-size: 14pt;
+  }
+  
+  img, table, pre {
+    page-break-inside: avoid;
+  }
+  
+  ul, ol, dl {
+    page-break-before: avoid;
+  }
+  
+  a {
+    border-bottom: none;
+    color: black;
+  }
+} 
