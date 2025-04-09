@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+@layer base {
+  :root {
+    --inf-primary: #00FFFF;
+    --inf-secondary: #000000;
+    --inf-tertiary: #808080;
+    --inf-accent1: #00CED1;
+    --inf-accent2: #FFA500;
+    --inf-glow: #00FFFF;
+  }
+}
+
+@layer components {
+  .mixed-panel {
+    @apply border border-inf-primary rounded-lg p-4 my-4;
+  }
+
+  .panel-header {
+    @apply flex items-center gap-2 mb-4;
+  }
+
+  .header-icon {
+    @apply w-6 h-6 bg-inf-accent1 rounded-full;
+  }
+
+  .panel-content {
+    @apply text-inf-primary;
+  }
+
+  .status-ok {
+    @apply text-green-500;
+  }
+
+  .status-warn {
+    @apply text-yellow-500;
+  }
+
+  .status-error {
+    @apply text-red-500;
+  }
+
+  .status-neutral {
+    @apply text-gray-500;
+  }
+
+  .data-matrix {
+    @apply w-full border-collapse;
+  }
+
+  .data-matrix th {
+    @apply bg-inf-tertiary text-inf-primary p-2;
+  }
+
+  .data-matrix td {
+    @apply border border-inf-primary p-2;
+  }
+
+  .note-block {
+    @apply border-l-4 border-inf-accent1 pl-4 italic;
+  }
+} 
