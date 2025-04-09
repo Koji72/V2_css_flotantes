@@ -1,11 +1,12 @@
 import React from 'react';
-import { Save } from 'lucide-react'; // Importar icono de guardar
+import { Save, FolderOpen } from 'lucide-react'; // Importar icono de guardar y FolderOpen
 
 interface ToolbarProps {
   // Función para aplicar sintaxis Markdown alrededor de la selección
   onApplyStyle: (syntaxStart: string, syntaxEnd?: string) => void;
   onInsertBlock: (blockText: string) => void; // Nuevo prop para insertar bloques
   onSave: () => void; // Nuevo prop para guardar
+  onLoad: () => void; // Nuevo prop para disparar la carga
 }
 
 // Plantillas para bloques comunes y personalizados
@@ -64,7 +65,7 @@ Relevant info...
 </div>
 :::`;
 
-const Toolbar: React.FC<ToolbarProps> = ({ onApplyStyle, onInsertBlock, onSave }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ onApplyStyle, onInsertBlock, onSave, onLoad }) => {
   const buttonClass = "px-2 py-1 rounded bg-gray-600 hover:bg-gray-500 text-white text-xs sm:text-sm flex items-center gap-1"; // Añadido flex y gap
 
   return (
@@ -83,6 +84,12 @@ const Toolbar: React.FC<ToolbarProps> = ({ onApplyStyle, onInsertBlock, onSave }
       <button title="Log Panel" onClick={() => onInsertBlock(logPanelTemplate)} className={buttonClass}>Log P.</button>
       <button title="Objectives Panel" onClick={() => onInsertBlock(objectivesPanelTemplate)} className={buttonClass}>Objectives P.</button>
       <button title="Info Panel" onClick={() => onInsertBlock(infoPanelTemplate)} className={buttonClass}>Info P.</button>
+
+      {/* Botón Cargar MD */}
+      <button title="Load Markdown File" onClick={onLoad} className={buttonClass}>
+        <FolderOpen size={16} />
+        Load MD
+      </button>
 
       {/* Separador visual opcional */}
       <div className="border-l border-gray-500 h-5 mx-1"></div> 
