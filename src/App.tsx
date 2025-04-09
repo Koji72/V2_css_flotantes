@@ -4,9 +4,10 @@ import { markdown as markdownLanguage } from '@codemirror/lang-markdown';
 import { create } from 'zustand';
 // import { ResizablePanelGroup, ResizablePanel, PanelResizeHandle } from 'react-resizable-panels'; // Eliminada importación no usada
 import { FileUp } from 'lucide-react';
-import { marked } from 'marked';
+// import { marked } from 'marked';
 import { EditorView, keymap } from '@codemirror/view';
 import Toolbar from './components/Toolbar';
+import markdownProcessor from './utils/markdownProcessor'; // Import the custom processor
 
 interface AppState {
   markdown: string;
@@ -27,31 +28,27 @@ function App() {
   const [previewHtml, setPreviewHtml] = useState('');
   const [editorView, setEditorView] = useState<EditorView | null>(null);
   const markdownInputRef = useRef<HTMLInputElement>(null);
+  // Simplificar - eliminar las URLs Blob y usar un contador simple para recarga
+  const [cssChangeCounter, setCssChangeCounter] = useState(0);
+
+  // Efecto simplificado - solo incrementar el contador cuando cambia el CSS
+  useEffect(() => {
+    if (css) {
+      setCssChangeCounter(prev => prev + 1);
+      console.log("CSS updated, forcing iframe reload");
+    }
+  }, [css]);
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
-      // Restaurar lógica original
       try {
         console.log("Processing Markdown after debounce...");
-
-        let processedMd = markdown.replace(/::: *([\w-]+) */g, '<div class="mixed-panel $1">');
-        processedMd = processedMd.replace(/:::/g, '</div>');
-
-        // Usar marked.parse() con opciones para asegurar que GFM (tablas) esté activo
-        // y confiar en que no sanitiza por defecto (o configurar según sea necesario)
-        const html = marked.parse(processedMd, { gfm: true }); 
-        setPreviewHtml(html as string);
-
+        const html = markdownProcessor.process(markdown);
+        setPreviewHtml(html);
       } catch (error) {
         console.error("Error processing Markdown:", error);
-        setPreviewHtml('<p style="color: red;">Error rendering preview</p>'); // Mostrar error en preview
+        setPreviewHtml('<p style="color: red;">Error rendering preview</p>');
       }
-      // ---- Fin lógica original ----
-
-      // ---- Quitar HTML fijo ----
-      // setPreviewHtml(`<h1>Preview Test</h1><p>Markdown content: ${markdown}</p>`);
-      // ---- Fin quitar ----
-
     }, 250);
 
     return () => {
@@ -59,15 +56,27 @@ function App() {
     };
   }, [markdown]);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLoadCssFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("CSS File input changed");
     const file = e.target.files?.[0];
     if (file) {
+      console.log("CSS File selected:", file.name);
       const reader = new FileReader();
       reader.onload = (e) => {
         const content = e.target?.result as string;
+        console.log("CSS content loaded, length:", content?.length);
         setCSS(content);
+        if (e.target) {
+          (e.target as unknown as HTMLInputElement).value = '';
+        }
+      };
+      reader.onerror = (error) => {
+        console.error("Error reading css file:", error);
+        alert("Error reading the css file.");
       };
       reader.readAsText(file);
+    } else {
+      console.log("No CSS file selected or input cleared");
     }
   };
 
@@ -75,8 +84,15 @@ function App() {
     <!DOCTYPE html>
     <html>
     <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>
-        body { margin: 0; padding: 10px; }
+        body { 
+          margin: 0; 
+          padding: 10px; 
+        }
+        
+        /* CSS cargado por el usuario */
         ${css}
       </style>
     </head>
@@ -225,31 +241,6 @@ function App() {
     }
   };
 
-  // Función para cargar CSS (cambiado nombre para claridad)
-  const handleLoadCssFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("CSS File input changed"); // Log 1
-    const file = e.target.files?.[0];
-    if (file) {
-      console.log("CSS File selected:", file.name); // Log 2
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        console.log("CSS content loaded, length:", content?.length); // Log 3
-        setCSS(content);
-         if (e.target) {
-          (e.target as unknown as HTMLInputElement).value = '';
-        }
-      };
-       reader.onerror = (error) => {
-        console.error("Error reading css file:", error);
-        alert("Error reading the css file.");
-      };
-      reader.readAsText(file);
-    } else {
-      console.log("No CSS file selected or input cleared"); // Log 4
-    }
-  };
-
   // Definir los atajos de teclado DENTRO de App
   const markdownKeymap = keymap.of([
     {
@@ -332,6 +323,7 @@ function App() {
             </div>
           </div>
           <iframe
+            key={`iframe-${cssChangeCounter}`}
             srcDoc={iframeSrcDoc}
             title="Preview"
             sandbox="allow-scripts"

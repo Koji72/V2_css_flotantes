@@ -1,4 +1,4 @@
-import { marked, Token, TokenizerAndRendererExtension } from "marked";
+import { marked } from "marked";
 
 // --- Status Definitions ---
 const statusKeywords: { [key: string]: string } = {
@@ -28,14 +28,14 @@ function findStatusClass(text: string): string | null {
 }
 
 // --- Custom Block Extension ---
-const customBlockExtension: TokenizerAndRendererExtension = {
+const customBlockExtension: any = {
     name: 'customBlock',
     level: 'block',
     start(src: string) { 
         const cap = /^(?: {0,3}|\t):::(\w+)\s*(.*?)\s*(?:\n|$)/.exec(src); 
         return cap ? cap.index : undefined; 
     },
-    tokenizer(src: string): Token | undefined {
+    tokenizer(src: string): any | undefined {
         const rule = /^(?: {0,3}|\t):::(\w+)\s*(.*?)\s*(?:\n|$)([\s\S]*?)(?:\n(?: {0,3}|\t):::\s*(?:\n|$)|$)/;
         const match = rule.exec(src);
         if (match) {
@@ -59,7 +59,7 @@ const customBlockExtension: TokenizerAndRendererExtension = {
                 title = type.charAt(0).toUpperCase() + type.slice(1);
             }
             
-            const tokens: Token[] = [];
+            const tokens: any[] = [];
             this.lexer.blockTokens(content, tokens);
             
             return { 
@@ -67,17 +67,17 @@ const customBlockExtension: TokenizerAndRendererExtension = {
                 raw: match[0], 
                 blockType: type, 
                 title: title, 
+                text: '',
                 tokens: tokens 
             };
         }
         return undefined;
     },
-    renderer(token: Token & { blockType: string; title: string; tokens: marked.Token[] }): string {
+    renderer(token: any): string {
         const { blockType, title, tokens } = token;
         let processedContent = '';
         
         try {
-            // @ts-ignore
             processedContent = this.parser.parse(tokens);
         } catch(e) {
             console.warn("Renderer fallback: parsing raw content for block", blockType);
@@ -144,19 +144,20 @@ class MarkdownProcessor {
                 if (table) {
                     table.classList.add('data-matrix');
                     table.querySelectorAll('tbody td').forEach(cell => {
-                        if (!cell.querySelector('span[class^="status-"]')) {
-                            const statusClass = findStatusClass(cell.textContent || '');
+                        const element = cell as HTMLElement;
+                        if (!element.querySelector('span[class^="status-"]')) {
+                            const statusClass = findStatusClass(element.textContent || '');
                             if (statusClass) {
                                 const span = doc.createElement('span');
                                 span.className = statusClass;
-                                while (cell.firstChild) {
-                                    span.appendChild(cell.firstChild);
+                                while (element.firstChild) {
+                                    span.appendChild(element.firstChild);
                                 }
-                                cell.appendChild(span);
+                                element.appendChild(span);
                             }
                         }
-                        if (cell.textContent?.trim().startsWith('[REDACTED')) {
-                            cell.classList.add('redacted');
+                        if (element.textContent?.trim().startsWith('[REDACTED')) {
+                            element.classList.add('redacted');
                         }
                     });
                     
@@ -169,7 +170,8 @@ class MarkdownProcessor {
                         parent.insertBefore(container, wrapper);
                         container.appendChild(table);
                         
-                        const title = wrapper.dataset.title;
+                        const htmlWrapper = wrapper as HTMLElement;
+                        const title = htmlWrapper.dataset.title;
                         if (title) {
                             const titleEl = doc.createElement('h3');
                             titleEl.className = 'data-matrix-title';
@@ -197,23 +199,28 @@ class MarkdownProcessor {
                         container.appendChild(table);
                         
                         table.querySelectorAll('tbody td').forEach(cell => {
-                            if (!cell.querySelector('span[class^="status-"]')) {
-                                const statusClass = findStatusClass(cell.textContent || '');
+                            const element = cell as HTMLElement;
+                            if (!element.querySelector('span[class^="status-"]')) {
+                                const statusClass = findStatusClass(element.textContent || '');
                                 if (statusClass) {
                                     const span = doc.createElement('span');
                                     span.className = statusClass;
-                                    while (cell.firstChild) {
-                                        span.appendChild(cell.firstChild);
+                                    while (element.firstChild) {
+                                        span.appendChild(element.firstChild);
                                     }
-                                    cell.appendChild(span);
+                                    element.appendChild(span);
                                 }
                             }
-                            if (cell.textContent?.trim().startsWith('[REDACTED')) {
-                                cell.classList.add('redacted');
+                            if (element.textContent?.trim().startsWith('[REDACTED')) {
+                                element.classList.add('redacted');
                             }
                         });
                     }
                 }
+            });
+
+            body.querySelectorAll('p, li').forEach(element => {
+                this.processElementContent(element as HTMLElement, doc);
             });
 
             body.querySelectorAll('p:empty').forEach(p => p.remove());
@@ -221,6 +228,39 @@ class MarkdownProcessor {
         } catch (e) {
             console.error("Error post-processing HTML:", e);
             return html;
+        }
+    }
+
+    private processElementContent(element: HTMLElement, doc: Document): void {
+        if (!element.querySelector('span[class^="status-"]')) {
+            const statusClass = findStatusClass(element.textContent || '');
+            if (statusClass) {
+                const span = doc.createElement('span');
+                span.className = statusClass;
+                while (element.firstChild) { span.appendChild(element.firstChild); }
+                element.appendChild(span);
+            }
+        }
+        const text = element.textContent || '';
+        const valueMaxMatch = text.match(/([a-zA-Z\s]+):\s*(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/i);
+        if (valueMaxMatch) {
+            element.dataset.stat = valueMaxMatch[1].trim();
+            element.dataset.value = valueMaxMatch[2];
+            element.dataset.max = valueMaxMatch[3];
+        } else {
+            const percentageMatch = text.match(/([a-zA-Z\s]+):\s*(\d+(?:\.\d+)?)\s*%/i);
+            if (percentageMatch) {
+                element.dataset.stat = percentageMatch[1].trim();
+                element.dataset.value = percentageMatch[2];
+                element.dataset.max = "100";
+            }
+        }
+        if (text.trim().startsWith('[REDACTED')) {
+            element.classList.add('redacted');
+        }
+        const timestampMatch = text.match(/(\[[\+\-]\d+(?:\.\d+)?s\])$/);
+        if (timestampMatch) {
+            element.dataset.timestamp = Date.now().toString();
         }
     }
 }
