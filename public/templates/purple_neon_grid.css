@@ -1,0 +1,675 @@
+/* ============================================== */
+/*      Purple Neon Grid Theme (V2.5)           */
+/*     (Adapted for Universal Scribe)           */
+/* ============================================== */
+
+/* 0. IMPORTAR FUENTES */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&family=Rajdhani:wght@400;600;700&display=swap'); /* Exo 2 o Rajdhani */
+
+/* 1. Variables Fundamentales (Paleta Neón Púrpura) */
+:root {
+    /* Theme Name */
+    /* Theme: Purple Neon Grid */
+
+    /* Colores Base (Oscuridad Profunda) */
+    --neon-bg-deep: #050308;           /* Negro violáceo */
+    --neon-bg-panel: rgba(15, 10, 25, 0.6); /* Púrpura oscuro translúcido */
+    --neon-bg-panel-hover: rgba(25, 15, 40, 0.7);
+    --neon-border-dark: #2a1a4a;
+    --neon-border-medium: #402860;
+    --neon-border-light: #604090;     /* Violeta más claro */
+
+    /* Acento Principal (Violeta Neón) */
+    --neon-accent-purple: #c080ff;     /* Violeta brillante */
+    --neon-accent-purple-glow: rgba(192, 128, 255, 0.7);
+    --neon-accent-purple-dark: #9050e0;
+    --neon-highlight: #f0e8ff;       /* Blanco lavanda muy pálido */
+
+    /* Texto (Alto Contraste) */
+    --neon-text-light: var(--neon-highlight);
+    --neon-text-medium: #d8c8f0;     /* Lavanda pálido */
+    --neon-text-dark: #9080b0;       /* Gris violáceo */
+
+    /* Estados */
+    --neon-status-ok: #80ffc0;       /* Verde menta neón */
+    --neon-status-warn: #ffdd80;     /* Ámbar neón */
+    --neon-status-error: #ff6080;    /* Rosa/Rojo neón */
+    --neon-status-neutral: var(--neon-text-dark);
+
+    /* Glows */
+    --neon-glow-ok: rgba(128, 255, 192, 0.6);
+    --neon-glow-warn: rgba(255, 221, 128, 0.6);
+    --neon-glow-error: rgba(255, 96, 128, 0.6);
+
+    /* Sombras (Mínimas) */
+    --neon-shadow-dark: rgba(0, 0, 0, 0.6);
+    --neon-panel-shadow: 0 0 15px rgba(192, 128, 255, 0.15); /* Glow púrpura alrededor */
+
+    /* Fuentes */
+    --font-main: 'Exo 2', sans-serif; /* Limpia y tech */
+    --font-title: 'Rajdhani', sans-serif; /* Condensada para títulos */
+    --font-tech: 'Orbitron', monospace; /* Para detalles */
+
+    --background-color: #100020;
+    --text-color: #e0e0ff;
+    --accent-color: #bb00ff;
+    --grid-color: rgba(187, 0, 255, 0.3);
+    --panel-bg: rgba(30, 0, 60, 0.8);
+    --panel-border: 1px solid var(--accent-color);
+    --neon-glow: 0 0 5px #bb00ff, 0 0 10px #bb00ff, 0 0 15px #bb00ff;
+    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    --font-header: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 2. Estilos Base Generales */
+body, .markdown-preview-view, .cm-editor,
+.universal-scribe-output {
+    background-color: var(--neon-bg-deep);
+    color: var(--neon-text-medium);
+    font-family: var(--font-main);
+    font-weight: 400;
+    line-height: 1.6;
+    font-size: 16px;
+    padding: 25px;
+    /* Fondo con rejilla energética muy sutil */
+    background-image:
+        linear-gradient(rgba(144, 112, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(144, 112, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px; /* Tamaño rejilla */
+}
+
+/* Scrollbars (Estilo Neón) */
+::-webkit-scrollbar { height: 8px; width: 8px; background-color: var(--neon-bg-panel); }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: var(--neon-border-medium); border-radius: 0; border: 1px solid var(--neon-border-dark); }
+::-webkit-scrollbar-thumb:hover { background-color: var(--neon-accent-purple); }
+* { scrollbar-width: thin; scrollbar-color: var(--neon-border-medium) var(--neon-bg-panel); }
+
+
+/* 3. Estilos para Elementos Comunes (Estilo Purple Neon Grid) */
+
+/* --- ENCABEZADOS (Fuente Rajdhani, Acento Púrpura) --- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-title); /* Rajdhani */
+    color: var(--neon-text-light);
+    margin-top: 1.6em; margin-bottom: 0.8em; font-weight: 700;
+    letter-spacing: 1px; line-height: 1.2; text-transform: uppercase;
+    border: none; padding-bottom: 0.3em; position: relative;
+}
+/* Línea fina Neón */
+h1::after, h2::after {
+    content: ''; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%;
+    background: linear-gradient(90deg, var(--neon-accent-purple), transparent 80%);
+    box-shadow: 0 0 8px var(--neon-accent-purple-glow);
+    opacity: 0.7;
+}
+h2::after { width: 70%; opacity: 0.5; }
+h3::after { content: none; }
+
+h1 { font-size: 2.8em; letter-spacing: 2px; color: var(--neon-accent-purple); text-shadow: 0 0 10px var(--neon-accent-purple-glow); margin-bottom: 1em;}
+h2 { font-size: 1.8em; color: var(--neon-highlight); text-shadow: 0 0 5px var(--neon-shadow-light);}
+h3 { font-size: 1.4em; color: var(--neon-text-light); font-weight: 600; text-transform: none; }
+h4 { font-size: 1.1em; color: var(--neon-text-medium); font-weight: 600; text-transform: none; margin-bottom: 0.4em;}
+h5, h6 { font-size: 1.0em; color: var(--neon-text-dark); font-weight: 600; text-transform: none; margin-bottom: 0.3em;}
+
+p { margin-bottom: 1.1em; color: var(--neon-text-medium); }
+h1 + p, h2 + p, h3 + p, h4 + p { margin-top: 0.6em; }
+
+/* Enlaces: Púrpura brillante */
+a { color: var(--neon-accent-purple); text-decoration: none; border-bottom: 1px dotted rgba(192, 128, 255, 0.5); transition: all 0.2s ease; font-weight: 600;}
+a:hover, a:focus { color: var(--neon-highlight); border-bottom-color: var(--neon-accent-purple); text-shadow: 0 0 8px var(--neon-accent-purple-glow); background-color: rgba(192, 128, 255, 0.05);}
+
+strong, b { color: var(--neon-text-light); font-weight: 700; }
+em, i { color: var(--neon-highlight); font-style: italic; } /* Cursiva clara */
+
+/* Listas (Marcadores de Puntos Neón) */
+ul, ol { margin-left: 15px; margin-bottom: 1.1em; padding-left: 20px; list-style: none; }
+li { margin-bottom: 0.5em; color: var(--neon-text-medium); position: relative; }
+ul li::before { /* Punto neón */
+    content: ''; position: absolute; left: -15px; top: 0.5em; transform: translateY(-50%);
+    width: 6px; height: 6px; background-color: var(--neon-accent-purple);
+    border-radius: 50%; box-shadow: 0 0 6px var(--neon-accent-purple-glow);
+}
+ol { counter-reset: list-counter; }
+ol li { counter-increment: list-counter; }
+ol li::before { /* Contador numérico */
+    content: counter(list-counter); position: absolute; left: -20px; top: 0.05em;
+    color: var(--neon-accent-purple); font-weight: 600; font-family: var(--font-tech); font-size: 0.9em;
+    text-shadow: 0 0 5px var(--neon-accent-purple-glow);
+}
+
+
+/* ---- TABLA: Estilo Rejilla de Datos Neón ---- */
+div:has(> table), .table-container {
+    max-width: 100%; overflow-x: auto; margin: 1.8em 0;
+    border: none; /* Sin borde exterior */
+    background-color: var(--neon-bg-panel);
+    border-radius: 4px;
+    box-shadow: var(--neon-panel-shadow);
+    padding: 1px; /* Espacio para borde interno */
+}
+
+table {
+     width: 100%; border-collapse: separate; border-spacing: 0; /* Separado para bordes internos */
+     font-size: 0.9em; table-layout: auto; border: none; margin: 0;
+     background: var(--neon-bg-panel); /* Fondo interior */
+     border-radius: 3px; /* Redondeo interior */
+}
+table.data-matrix { position: relative; } /* Para hover */
+
+thead { background-color: transparent; border-bottom: 1px solid var(--neon-border-medium); }
+
+th { /* Cabecera Neón */
+    color: var(--neon-highlight); font-family: var(--font-tech); /* Orbitron */
+    font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    padding: 10px 15px; text-align: left;
+    border-bottom: none; border-left: none; /* Sin bordes internos */
+    text-shadow: 0 0 4px var(--neon-shadow-light);
+    white-space: nowrap; vertical-align: middle;
+}
+th:last-child { text-align: right; }
+
+tbody tr { border: none; transition: background-color 0.15s ease-out; }
+tbody tr:nth-child(even) { background-color: rgba(15, 10, 25, 0.3); } /* Alternancia sutil */
+tbody tr:last-child td { border-bottom: none; } /* Quitar borde inferior última fila */
+
+/* Hover con glow */
+tbody tr:hover {
+    background-color: var(--neon-bg-panel-hover);
+    box-shadow: inset 0 0 10px var(--neon-accent-purple-glow); /* Glow interno */
+}
+
+td {
+    padding: 9px 15px; color: var(--neon-text-medium);
+    border: none; /* Sin bordes internos por defecto */
+    border-top: 1px solid var(--neon-border-dark); /* Solo separador horizontal */
+    vertical-align: middle; white-space: normal; overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.5; position: relative;
+}
+td:first-child { color: var(--neon-text-light); font-weight: 600; }
+td:last-child { text-align: right; }
+tbody tr:hover td { color: var(--neon-highlight); } /* Texto más claro en hover */
+tbody tr:hover td:first-child { color: var(--neon-accent-purple); }
+
+/* Spans de Estado Neón */
+td span.status-ok { color: var(--neon-status-ok); text-shadow: 0 0 6px var(--neon-glow-ok); }
+td span.status-warn { color: var(--neon-status-warn); text-shadow: 0 0 6px var(--neon-glow-warn); }
+td span.status-error { color: var(--neon-status-error); text-shadow: 0 0 6px var(--neon-glow-error); }
+td span.status-neutral { color: var(--neon-status-neutral); }
+td span[class*="status-"] { font-weight: 700; white-space: nowrap; display: inline-block; font-family: var(--font-tech); }
+td.redacted { color: var(--neon-text-dark); font-style: italic; opacity: 0.5; }
+
+
+/* Blockquote (Mensaje de Sistema) */
+blockquote {
+    border: none;
+    border-left: 3px solid var(--neon-accent-purple);
+    margin: 1.8em 0; padding: 1em 15px;
+    color: var(--neon-text-medium);
+    background-color: var(--neon-bg-panel-light);
+    border-radius: 2px;
+    font-family: var(--font-main); font-size: 0.95em;
+}
+blockquote p { margin-bottom: 0.5em; color: inherit; }
+blockquote p:last-child { margin-bottom: 0; }
+blockquote strong:first-child { /* "Nota:" */
+    color: var(--neon-accent-purple); font-weight: 700; margin-right: 6px;
+    font-family: inherit; background: none; padding: 0; box-shadow: none;
+    text-transform: none; font-size: inherit; letter-spacing: normal;
+}
+
+/* Código (Estilo Terminal Neón) */
+code { font-family: var(--font-tech), monospace; background-color: var(--neon-bg-panel-light); color: var(--neon-highlight); padding: 0.2em 0.5em; font-size: 0.9em; border-radius: 2px; border: 1px solid var(--neon-border-dark); }
+pre { background-color: var(--neon-bg-deep); border: 1px solid var(--neon-border-medium); padding: 15px; margin: 1.8em 0; overflow-x: auto; border-radius: 3px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+pre code { background-color: transparent; color: var(--neon-text-medium); padding: 0; font-size: 0.9em; white-space: pre; border: none;}
+
+hr { border: none; height: 1px; background-image: linear-gradient(to right, transparent, var(--neon-border-medium), transparent); margin: 2.5em 0; opacity: 0.4; }
+
+/* --- Estilos para Bloques ::: (Paneles con Marcos Neón) --- */
+.mixed-panel {
+    margin-bottom: 30px;
+    border: none; /* Sin borde sólido */
+    border-radius: 5px;
+    background-color: var(--neon-bg-panel); /* Fondo oscuro translúcido */
+    box-shadow: var(--neon-panel-shadow);
+    position: relative;
+    overflow: hidden;
+    padding: 1px; /* Espacio para el borde simulado con gradiente */
+}
+/* Borde/Marco Neón usando pseudo-elemento */
+.mixed-panel::before {
+    content: ''; position: absolute; inset: 0; z-index: 0;
+    border-radius: inherit;
+    padding: 2px; /* Grosor del "borde" */
+    background: linear-gradient(135deg, var(--neon-accent-purple), var(--neon-accent-purple-dark));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+    animation: neon-border-pulse 4s infinite alternate ease-in-out; /* Animación pulso */
+}
+@keyframes neon-border-pulse {
+    from { box-shadow: 0 0 8px var(--neon-accent-purple-glow); }
+    to   { box-shadow: 0 0 16px var(--neon-accent-purple-glow), 0 0 4px var(--neon-highlight); }
+}
+
+/* Cabecera simulada (Primer H2/H3/H4) */
+.mixed-panel > h2:first-child,
+.mixed-panel > h3:first-child,
+.mixed-panel > h4:first-child {
+    font-family: var(--font-title) !important; font-size: 1.2em !important; font-weight: 700 !important;
+    color: var(--neon-accent-purple) !important; /* Título Púrpura */
+    background: transparent; /* Cabecera transparente sobre fondo panel */
+    padding: 12px 18px !important; margin: 0 !important;
+    border-bottom: 1px solid var(--neon-border-medium) !important; /* Línea separadora */
+    text-transform: uppercase !important; letter-spacing: 1.2px !important;
+    text-shadow: 0 0 8px var(--neon-accent-purple-glow) !important;
+    display: flex; align-items: center;
+    position: relative; z-index: 1; /* Encima del borde ::before */
+}
+/* Icono simulado */
+.mixed-panel > h2:first-child::before,
+.mixed-panel > h3:first-child::before,
+.mixed-panel > h4:first-child::before {
+    content: '::'; margin-right: 10px; color: var(--neon-accent-purple); opacity: 0.7; font-family: monospace; font-weight: bold;
+}
+
+.panel-content {
+    padding: 18px 20px; font-size: 0.95em; color: var(--neon-text-medium);
+    position: relative; z-index: 1; /* Encima del borde ::before */
+}
+
+/* Ajustes específicos */
+.readaloud .panel-content { font-style: italic; color: var(--neon-text-light); }
+.note .panel-content { font-family: var(--font-main); color: var(--neon-text-medium); }
+
+
+/* --- Animaciones y Mejoras JS (V2.5) --- */
+
+/* Barras de Progreso (Estilo Neón Púrpura) */
+.dynamic-progress-bar {
+    display: block; width: 100%; height: 4px; /* Muy finas */
+    background-color: var(--neon-border-dark); border: none;
+    border-radius: 2px; margin-top: 8px; margin-bottom: 6px;
+    overflow: hidden; position: relative;
+}
+.dynamic-progress-bar .bar-fill {
+    display: block; height: 100%; border-radius: 2px;
+    transition: width 0.4s ease-out; position: relative;
+    background: var(--neon-accent-purple);
+    box-shadow: 0 0 6px var(--neon-accent-purple-glow);
+    /* Animación de pulso para la barra */
+    animation: neon-bar-pulse 2s infinite ease-in-out;
+}
+@keyframes neon-bar-pulse { 0%, 100% { filter: brightness(0.8); } 50% { filter: brightness(1.2); } }
+/* Colores de estado para la barra (opcional, podría ser siempre púrpura) */
+/* .dynamic-progress-bar .bar-fill.ok { background: var(--neon-status-ok); box-shadow: 0 0 6px var(--neon-glow-ok); animation: none; } */
+/* .dynamic-progress-bar .bar-fill.warn { background: var(--neon-status-warn); box-shadow: 0 0 6px var(--neon-glow-warn); } */
+/* .dynamic-progress-bar .bar-fill.error { background: var(--neon-status-error); box-shadow: 0 0 6px var(--neon-glow-error); } */
+
+/* Estado Hover añadido por JS (Sutil) */
+.mixed-panel.hover-active, tbody tr.hover-active {
+     /* No añadir efectos extra para mantener limpieza */
+     background-color: rgba(192, 128, 255, 0.06) !important; /* Fondo hover púrpura tenue */
+}
+
+/* Datos obsoletos */
+.data-stale { opacity: 0.5; filter: grayscale(50%); }
+.data-stale::after { content: ' [OLD DATA]'; color: var(--neon-text-dark); font-size: 0.8em; margin-left: 5px;}
+
+/* Animación Estado Error */
+@keyframes alert-pulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+
+/* --- Fin --- */
+
+/* Grid Background Animation */
+@keyframes grid-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 50px; }
+}
+
+/* Floating Elements Animation */
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0% { box-shadow: 0 0 5px rgba(187, 0, 255, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(187, 0, 255, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(187, 0, 255, 0.5); }
+}
+
+/* Main Document Setup */
+body {
+  font-family: var(--font-main);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 0;
+  padding: 2rem;
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: grid-scroll 20s linear infinite;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-header);
+  color: #fff;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  text-shadow: var(--neon-glow);
+  animation: float 6s ease-in-out infinite;
+}
+
+h1 {
+  font-size: 3rem;
+  text-align: center;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 0.5rem;
+  letter-spacing: 2px;
+}
+
+h2 {
+  font-size: 2.2rem;
+  color: var(--accent-color);
+  border-left: 4px solid var(--accent-color);
+  padding-left: 1rem;
+}
+
+h3 {
+  font-size: 1.8rem;
+  color: #d580ff;
+}
+
+p {
+  margin-bottom: 1.5rem;
+  animation: float 8s ease-in-out infinite;
+}
+
+a {
+  color: #00ffff;
+  text-decoration: none;
+  transition: all 0.3s;
+  text-shadow: 0 0 5px #00ffff;
+}
+
+a:hover {
+  color: #00ffee;
+  text-shadow: 0 0 10px #00ffee;
+}
+
+code {
+  font-family: var(--font-mono);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid #333;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  color: #00ffaa;
+  text-shadow: 0 0 3px #00ffaa;
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid var(--accent-color);
+  margin: 1.5rem 0;
+  padding: 1rem 2rem;
+  background-color: rgba(187, 0, 255, 0.1);
+  border-radius: 0 10px 10px 0;
+  animation: pulse 4s infinite;
+}
+
+blockquote p {
+  font-style: italic;
+  color: #d8d8ff;
+}
+
+/* Lists */
+ul, ol {
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+ul {
+  list-style-type: none;
+}
+
+ul li:before {
+  content: "►";
+  color: var(--accent-color);
+  display: inline-block;
+  width: 1.5em;
+  margin-left: -1.5em;
+}
+
+/* Code Blocks */
+pre {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--accent-color);
+  border-radius: 5px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  box-shadow: var(--panel-shadow);
+}
+
+pre code {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  font-size: 0.9rem;
+  color: #00ffaa;
+  display: block;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background-color: var(--panel-bg);
+  border: var(--panel-border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--panel-shadow);
+  animation: float 7s ease-in-out infinite;
+}
+
+th {
+  background-color: rgba(187, 0, 255, 0.3);
+  color: white;
+  padding: 0.8rem;
+  text-align: left;
+  font-family: var(--font-header);
+  letter-spacing: 1px;
+}
+
+td {
+  padding: 0.8rem;
+  border-top: 1px solid rgba(187, 0, 255, 0.2);
+  transition: background-color 0.3s;
+}
+
+tr:hover td {
+  background-color: rgba(187, 0, 255, 0.1);
+}
+
+/* Status Colors */
+.status-high, .status-critical {
+  color: #ff4081;
+  font-weight: bold;
+  text-shadow: 0 0 5px #ff4081;
+}
+
+.status-medium, .status-low {
+  color: #00ffaa;
+  font-weight: bold;
+  text-shadow: 0 0 5px #00ffaa;
+}
+
+.status-standby {
+  color: #ffcc00;
+  font-weight: bold;
+  text-shadow: 0 0 5px #ffcc00;
+}
+
+.status-error {
+  color: #ff0000;
+  font-weight: bold;
+  text-shadow: 0 0 5px #ff0000;
+}
+
+.status-unknown {
+  color: #8080ff;
+  font-weight: bold;
+  text-shadow: 0 0 5px #8080ff;
+}
+
+/* Custom Blocks */
+.custom-block {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border-radius: 10px;
+  background-color: var(--panel-bg);
+  border: var(--panel-border);
+  box-shadow: var(--panel-shadow);
+  animation: float 9s ease-in-out infinite;
+}
+
+.custom-block-title {
+  font-family: var(--font-header);
+  font-size: 1.5rem;
+  color: var(--accent-color);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--accent-color);
+  text-shadow: 0 0 5px var(--accent-color);
+}
+
+/* DataMatrix Block */
+.datamatrix-block table {
+  animation: none;
+  box-shadow: none;
+  margin: 0;
+  border: none;
+}
+
+.datamatrix-block {
+  position: relative;
+  overflow: hidden;
+}
+
+.datamatrix-block::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background: 
+    linear-gradient(45deg, var(--accent-color) 25%, transparent 25%) -50px 0,
+    linear-gradient(45deg, transparent 75%, var(--accent-color) 75%) -50px 0,
+    linear-gradient(45deg, transparent 75%, var(--accent-color) 75%) 0 -50px,
+    linear-gradient(45deg, var(--accent-color) 25%, transparent 25%) 0 -50px;
+  background-size: 100px 100px;
+  background-color: var(--panel-bg);
+  opacity: 0.05;
+  z-index: -1;
+}
+
+/* Info Panel Block */
+.panel-info-box {
+  border-left: 4px solid #00ffcc;
+  background-color: rgba(0, 255, 204, 0.1);
+}
+
+.panel-info-box .custom-block-title {
+  color: #00ffcc;
+  text-shadow: 0 0 5px #00ffcc;
+  border-bottom-color: #00ffcc;
+}
+
+/* Statblock Block */
+.statblock {
+  box-shadow: 0 0 20px rgba(187, 0, 255, 0.7);
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  border-radius: 5px;
+  border: 2px solid var(--accent-color);
+  box-shadow: var(--panel-shadow);
+  transition: all 0.3s;
+  opacity: 0.9;
+}
+
+img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(187, 0, 255, 0.8);
+  opacity: 1;
+}
+
+/* Horizonteal Rule */
+hr {
+  border: 0;
+  height: 2px;
+  background-image: linear-gradient(to right, transparent, var(--accent-color), transparent);
+  margin: 2rem 0;
+}
+
+/* ScrollBar Styling */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d580ff;
+}
+
+/* Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+  }
+  
+  .custom-block {
+    padding: 1rem;
+  }
+} 

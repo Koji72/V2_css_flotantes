@@ -1,4 +1,5 @@
 import markdownProcessor from './markdownProcessor';
+import { useAppStore } from './markdownProcessor';
 
 /**
  * Gestor de la previsualización en iframe V2.5.
@@ -15,7 +16,22 @@ class PreviewManager {
     private lastKnownMarkdown: string = '';
     private interactionListenersAttached: boolean = false; // Para evitar duplicar listeners
 
+    // --- Logging Helpers as private methods ---
+    private logDebug(message: string, ...optionalParams: any[]): void {
+        if (useAppStore.getState().isDebugMode) {
+            console.log(`[PM] ${message}`, ...optionalParams);
+        }
+    }
+    private logWarn(message: string, ...optionalParams: any[]): void {
+        console.warn(`[PM] ${message}`, ...optionalParams);
+    }
+    private logError(message: string, ...optionalParams: any[]): void {
+        console.error(`[PM] ${message}`, ...optionalParams);
+    }
+    // --- End Logging Helpers ---
+
     initialize(iframe: HTMLIFrameElement): void {
+        this.logDebug('Initializing PreviewManager with iframe:', iframe);
         if (this.iframe) { this.destroy(); }
         console.log(`PreviewManager: Initializing (V2.5 Enhanced Adapter Mode)...`);
         this.iframe = iframe; 
@@ -57,7 +73,7 @@ class PreviewManager {
         
         iframe.onload = () => {
             if (!this.iframe?.contentWindow?.document) { 
-                console.error('PM: Iframe doc not accessible.'); 
+                this.logError('PM: Iframe doc not accessible.'); 
                 this.isReady = false; 
                 return; 
             }
@@ -67,11 +83,12 @@ class PreviewManager {
             this.updateContent(this.lastKnownMarkdown); // Aplica contenido inicial y mejoras
             this.setupScrollListener();
             this.setupInteractionListeners(); // Configurar listeners generales una vez
+            this.logDebug('Initialization complete. Ready.');
         };
     }
 
     destroy(): void {
-        console.log("PM: Destroying...");
+        this.logDebug('Destroying PreviewManager instance.');
         if (this.iframe && this.iframe.contentWindow) {
              this.iframe.contentWindow.removeEventListener('scroll', this.handleIframeScroll);
              // Limpiar listeners de interacción
@@ -79,14 +96,15 @@ class PreviewManager {
         }
         this.iframe = null; this.isReady = false; this.currentCSSText = ''; this.loadedFonts.clear();
         if (this.scrollSyncTimeout) clearTimeout(this.scrollSyncTimeout); this.lastScrollSource = null; this.interactionListenersAttached = false;
-        console.log("PM: Destroyed.");
+        this.logDebug('PreviewManager destroyed.');
     }
 
     updateContent(markdown: string): void {
         this.lastKnownMarkdown = markdown;
+        this.logDebug('UpdateContent called. Markdown length:', markdown.length);
         
         if (!this.isReady || !this.iframe?.contentWindow?.document) {
-            console.warn('PM: Cannot update content - iframe not ready');
+            this.logWarn('PM: Cannot update content - iframe not ready');
             return;
         }
 
@@ -94,7 +112,7 @@ class PreviewManager {
         const contentDiv = doc.getElementById('content');
         
         if (!contentDiv) {
-            console.error('PM: Content div not found');
+            this.logError('PM: Content div not found');
             return;
         }
 
@@ -124,7 +142,7 @@ class PreviewManager {
     }
 
     applyCustomCSS(cssContent: string): void {
-        console.log("PM: Applying new custom CSS (V2.5 Mode).");
+        this.logDebug('ApplyCustomCSS called. CSS length:', cssContent?.length ?? 0);
         if (typeof cssContent !== 'string') { console.error("Invalid CSS content"); return; }
         this.currentCSSText = cssContent;
         this.loadedFonts.clear();
@@ -136,7 +154,7 @@ class PreviewManager {
 
     private applyStyles(): void {
         if (!this.isReady || !this.iframe?.contentWindow?.document) {
-            console.warn('PM: Cannot apply styles - iframe not ready');
+            this.logWarn('PM: Cannot apply styles - iframe not ready');
             return;
         }
 
@@ -197,29 +215,66 @@ class PreviewManager {
     // --- Funciones de Mejora JS ---
 
     private renderProgressBars(doc: Document): void {
-        doc.querySelectorAll('[data-value][data-max]').forEach(element => {
-            // Limpiar barras antiguas si existen
-            element.querySelectorAll('.dynamic-progress-bar').forEach(oldBar => oldBar.remove());
+        this.logDebug('Rendering progress bars...');
+        let count = 0;
+        const elements = doc.querySelectorAll('[data-value][data-max]'); 
+        this.logDebug(`Found ${elements.length} potential elements for progress bars.`);
 
-            // Ignorar celdas de tabla por ahora
-            if (element.tagName === 'TD') return;
+        elements.forEach((el, index) => {
+            if (!(el instanceof HTMLElement)) return;
 
-            // Cast element to HTMLElement to access dataset
-            const htmlElement = element as HTMLElement;
-            const value = parseFloat(htmlElement.dataset.value || "0");
-            const max = parseFloat(htmlElement.dataset.max || "100");
-            if (isNaN(value) || isNaN(max) || max <= 0) return;
-            const percent = Math.max(0, Math.min(100, (value / max) * 100));
-            let barClass = 'ok'; if (percent < 60) barClass = 'warn'; if (percent < 30) barClass = 'error';
+            el.querySelectorAll('.dynamic-progress-bar').forEach(oldBar => oldBar.remove());
 
-            const barContainer = doc.createElement('div');
-            barContainer.className = 'dynamic-progress-bar status-bar';
-            const barFill = doc.createElement('span');
-            barFill.className = `bar-fill ${barClass}`;
-            barFill.style.width = `${percent}%`;
-            barContainer.appendChild(barFill);
-            element.appendChild(barContainer);
+             try {
+                const valueStr = el.dataset.value;
+                const maxStr = el.dataset.max;
+                const stat = el.dataset.stat || 'value';
+
+                if (valueStr === undefined || maxStr === undefined) {
+                     this.logWarn(`Skipping element ${index} (${el.tagName}): Missing data-value or data-max.`);
+                     return;
+                 }
+
+                const value = parseFloat(valueStr);
+                const max = parseFloat(maxStr);
+
+                if (isNaN(value) || isNaN(max) || max <= 0) {
+                    this.logWarn(`Invalid numeric value/max for element ${index} (${stat}): value='${valueStr}', max='${maxStr}'. Skipping.`);
+                    return;
+                }
+
+                const percentage = Math.max(0, Math.min(100, (value / max) * 100));
+                this.logDebug(`  Element ${index} (${stat}): Value=${value}, Max=${max}, Percentage=${percentage.toFixed(1)}%`);
+
+                const progressBarContainer = doc.createElement('div');
+                progressBarContainer.className = 'dynamic-progress-bar'; 
+                progressBarContainer.setAttribute('data-stat', stat);
+                progressBarContainer.setAttribute('role', 'progressbar');
+                progressBarContainer.setAttribute('aria-valuenow', value.toString());
+                progressBarContainer.setAttribute('aria-valuemin', '0');
+                progressBarContainer.setAttribute('aria-valuemax', max.toString());
+                progressBarContainer.title = `${stat}: ${value} / ${max}`;
+
+                const barFill = doc.createElement('div');
+                barFill.className = 'bar-fill';
+                barFill.style.width = `${percentage}%`;
+
+                let statusClass = 'ok';
+                if (percentage < 30) statusClass = 'error';
+                else if (percentage < 60) statusClass = 'warn';
+                barFill.classList.add(statusClass);
+
+                progressBarContainer.appendChild(barFill);
+
+                el.appendChild(progressBarContainer);
+                count++;
+                this.logDebug(`    -> Progress bar added to element ${index} (${stat})`);
+
+            } catch (error) {
+                this.logError(`Error rendering progress bar for element ${index}:`, el, error);
+            }
         });
+         this.logDebug(`Finished rendering progress bars. ${count} bars added/updated.`);
     }
 
     // Configura listeners DELEGADOS en el body del iframe
@@ -227,7 +282,7 @@ class PreviewManager {
         if (!this.iframe?.contentWindow?.document || this.interactionListenersAttached) return;
         const doc = this.iframe.contentWindow.document;
 
-        console.log("PM: Setting up interaction listeners.");
+        this.logDebug('Setting up delegated interaction listeners (mouseover/mouseout) on iframe body.');
 
         // Usar delegación de eventos en el body para hover
         doc.body.addEventListener('mouseover', this.handleMouseOver);
@@ -237,12 +292,13 @@ class PreviewManager {
         // doc.body.addEventListener('click', this.handleClick);
 
         this.interactionListenersAttached = true;
+        this.logDebug('Interaction listeners attached to body.');
     }
 
      // Quita listeners delegados
      private removeInteractionListeners(doc: Document | null): void {
          if (!doc?.body) return;
-         console.log("PM: Removing interaction listeners.");
+         this.logDebug('Removing interaction listeners from iframe body.');
          doc.body.removeEventListener('mouseover', this.handleMouseOver);
          doc.body.removeEventListener('mouseout', this.handleMouseOut);
          // doc.body.removeEventListener('click', this.handleClick);
@@ -250,29 +306,60 @@ class PreviewManager {
 
     // Handler para mouseover (delegado)
     private handleMouseOver = (event: MouseEvent): void => {
-        // Buscar el ancestro interactivo más cercano (panel o fila)
-        const targetElement = (event.target as Element)?.closest('.mixed-panel, tbody tr');
-        if (targetElement) {
-            // Añadir clase solo a este elemento
-            targetElement.classList.add('hover-active');
-            // Quitarla de otros elementos que pudieran tenerla por error
-            const otherActives = targetElement.parentElement?.querySelectorAll('.hover-active');
-            otherActives?.forEach(el => {
-                if (el !== targetElement) el.classList.remove('hover-active');
-            });
+        const isDebug = useAppStore.getState().isDebugMode;
+        if (isDebug) this.logDebug(`MouseOver detected. Target: ${event.target ? (event.target as Element).tagName : 'null'}`);
+
+        try {
+            if (!(event.target instanceof Element)) return;
+
+            const interactiveContainer = (event.target as Element).closest('[data-interactive-container="true"]');
+
+            if (interactiveContainer) {
+                const hoverClass = 'is-hovered';
+                if (!interactiveContainer.classList.contains(hoverClass)) {
+                   interactiveContainer.classList.add(hoverClass);
+                   if (isDebug) this.logDebug(`  -> Added class "${hoverClass}" to:`, interactiveContainer.tagName, interactiveContainer.classList);
+                } else {
+                    if (isDebug) this.logDebug(`  -> Class "${hoverClass}" already present on:`, interactiveContainer.tagName);
+                }
+            } else {
+                 if (isDebug) this.logDebug('  -> No interactive container ancestor found for target.');
+            }
+        } catch (error) {
+             this.logError('Error in handleMouseOver:', error);
         }
     };
 
     // Handler para mouseout (delegado)
     private handleMouseOut = (event: MouseEvent): void => {
-        const targetElement = (event.target as Element)?.closest('.mixed-panel, tbody tr');
-         // El relatedTarget nos dice hacia dónde se movió el ratón
-         const relatedTarget = event.relatedTarget as Element | null;
+        const isDebug = useAppStore.getState().isDebugMode;
+        if (isDebug) this.logDebug(`MouseOut detected. Target: ${event.target ? (event.target as Element).tagName : 'null'}, RelatedTarget: ${event.relatedTarget ? (event.relatedTarget as Element).tagName : 'null'}`);
 
-        // Solo quitar la clase si el ratón realmente salió del elemento (y no entró en un hijo)
-         if (targetElement && !targetElement.contains(relatedTarget)) {
-             targetElement.classList.remove('hover-active');
-         }
+         try {
+             if (!(event.target instanceof Element)) return;
+
+            const interactiveContainer = (event.target as Element).closest('[data-interactive-container="true"]');
+            const hoverClass = 'is-hovered';
+
+            if (interactiveContainer) {
+                 const relatedTarget = event.relatedTarget as Node | null;
+                 if (!relatedTarget || !interactiveContainer.contains(relatedTarget)) {
+                    interactiveContainer.classList.remove(hoverClass);
+                    if (isDebug) this.logDebug(`  -> Removed class "${hoverClass}" from:`, interactiveContainer.tagName, interactiveContainer.classList);
+                 } else {
+                      if (isDebug) this.logDebug(`  -> Mouse moved within interactive container, class "${hoverClass}" kept.`);
+                 }
+            } else {
+                if (!event.relatedTarget && this.iframe?.contentWindow?.document) { 
+                    this.logDebug('Mouse left iframe, clearing all hover states.');
+                    this.iframe.contentWindow.document.querySelectorAll('.' + hoverClass).forEach(el => el.classList.remove(hoverClass));
+                } else {
+                     if (isDebug) this.logDebug('  -> Target was not within an interactive container.');
+                }
+            }
+          } catch (error) {
+               this.logError('Error in handleMouseOut:', error);
+          }
     };
 
     // Placeholder para futura interactividad de click

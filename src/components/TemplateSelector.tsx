@@ -3,12 +3,9 @@ import { ChevronDown, Check } from 'lucide-react';
 
 // Definición de plantillas disponibles
 const TEMPLATES = [
-  { id: 'default', name: 'Default Theme', description: 'Tema base simple y minimalista' },
-  { id: 'minimalist', name: 'Minimalist', description: 'Diseño limpio con estética minimalista y espacios en blanco' },
-  { id: 'modern', name: 'Modern', description: 'Tema moderno con efectos sutiles y diseño contemporáneo' },
-  { id: 'cyberpunk', name: 'Cyberpunk', description: 'Estilo futurista con neones y estética de alta tecnología' },
-  { id: 'corporate', name: 'Corporate', description: 'Diseño empresarial limpio y profesional' },
-  { id: 'aegis_overdrive', name: 'Aegis Overdrive', description: 'Tema V2.5 con barras de progreso y efectos avanzados' },
+  { id: 'purple_neon_grid', name: 'Purple Neon Grid', description: 'Tema V2.5 con rejilla y neón púrpura' },
+  { id: 'aetherium_codex', name: 'Aetherium Codex', description: 'Tema V2.5 con estilo de códice místico arcano' },
+  { id: 'infinitycommand', name: 'Infinity Command', description: 'Tema V2.5 con interfaz de comando militar avanzada' },
 ];
 
 interface TemplateSelectorProps {

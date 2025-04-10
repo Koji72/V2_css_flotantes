@@ -1,5 +1,5 @@
 import React from 'react';
-import { Save, FolderOpen, FileUp, Printer } from 'lucide-react'; // Importar icono de guardar, FolderOpen y FileUp
+import { Save, FolderOpen, FileUp, Printer, Book, Wand2, Command } from 'lucide-react'; // Importar icono de guardar, FolderOpen y FileUp, y añadido iconos Book, Wand2 y Command
 
 interface ToolbarProps {
   // Función para aplicar sintaxis Markdown alrededor de la selección
@@ -8,61 +8,72 @@ interface ToolbarProps {
   onSave: () => void; // Nuevo prop para guardar
   onLoad: () => void; // Nuevo prop para disparar la carga
   onExportPDF?: () => void; // Opcional para compatibilidad con versiones anteriores
+  onLoadMasterDemo?: () => void; // Nuevo prop para cargar directamente Master v2.5.md
+  onLoadCodexDemo?: () => void; // Nuevo prop para cargar directamente aetherium_codex_demo.md
+  onLoadInfinityDemo?: () => void; // Nuevo prop para cargar el demo con Infinity Command
 }
 
 // Plantillas para bloques comunes y personalizados
 const quoteTemplate = `> `;
 const codeBlockTemplate = "```\n\n```";
-// Envolver Metamatrix en su propio panel
-const metamatrixTemplate = `::: datamatrix Data Matrix Title
+// Plantilla de datamatrix simplificada y compatible con todos los temas
+const metamatrixTemplate = `::: datamatrix Matriz de Datos
 
-| Meta              | Value      |
+| Campo             | Valor      |
 | ----------------- | ---------- |
-| Key1              | Value1     |
-| Key2              | Value2     |
+| Estado            | Activo     |
+| Prioridad         | Alta       |
+| Completado        | 75%        |
 
 :::`;
-// Simplificar headers en plantillas de paneles
-const statusPanelTemplate = `::: panel-unit-status
-<div class="panel-header">
-<span class="header-icon"></span> Unit Status
-</div>
-<div class="panel-content">
+// Plantillas de paneles genéricas y compatibles con todos los temas
+const statusPanelTemplate = `::: panel-unit-status Estado de Unidad
 
-Status details...
-</div>
+* Estado: **Operativo** (OK)
+* Energía: 75/100
+* Comunicaciones: **Activas** (OK)
+* Munición: **Baja** (WARN)
+* Combustible: 45/100
+
 :::`;
-const logPanelTemplate = `::: panel-event-log
-<div class="panel-header">
-<span class="header-icon"></span> Event Log
-</div>
-<div class="panel-content">
+const logPanelTemplate = `::: panel-event-log Registro de Eventos
 
-- Log entry 1
-- Log entry 2
-</div>
+- 08:45 - Contacto inicial establecido
+- 09:30 - Perímetro asegurado
+- 10:15 - **¡Alerta!** Detección de intrusos (ERROR)
+- 10:45 - Situación contenida
+
 :::`;
-const objectivesPanelTemplate = `::: panel-objectives
-<div class="panel-header">
-<span class="header-icon"></span> Objectives
-</div>
-<div class="panel-content">
+const objectivesPanelTemplate = `::: panel-objectives Objetivos de Misión
 
-- [ ] Objective 1
-- [x] Objective 2
-</div>
+- [x] Establecer perímetro seguro
+- [x] Contactar con equipo de avanzada
+- [ ] Asegurar los recursos críticos
+- [ ] Extraer información del terminal principal
+
 :::`;
-const infoPanelTemplate = `::: panel-info-box
-<div class="panel-header">
-<span class="header-icon"></span> Information
-</div>
-<div class="panel-content">
+const infoPanelTemplate = `::: panel-info-box Información Importante
 
-Relevant info...
-</div>
+Esta es información crítica para la misión. Todos los agentes deben estar al tanto de:
+
+1. Protocolos de comunicación encriptados
+2. Puntos de extracción designados
+3. Procedimientos de descontaminación
+
+**Nota:** Esta información debe tratarse con nivel de seguridad ALPHA.
+
 :::`;
 
-const Toolbar: React.FC<ToolbarProps> = ({ onApplyStyle, onInsertBlock, onSave, onLoad, onExportPDF }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ 
+  onApplyStyle, 
+  onInsertBlock, 
+  onSave, 
+  onLoad, 
+  onExportPDF, 
+  onLoadMasterDemo, 
+  onLoadCodexDemo,
+  onLoadInfinityDemo
+}) => {
   const buttonClass = "px-2 py-1 rounded bg-gray-600 hover:bg-gray-500 text-white text-xs sm:text-sm flex items-center gap-1"; // Añadido flex y gap
 
   return (
@@ -87,6 +98,28 @@ const Toolbar: React.FC<ToolbarProps> = ({ onApplyStyle, onInsertBlock, onSave, 
         <FileUp size={16} />
         Load MD
       </button>
+
+      {/* Botones Demo */}
+      {onLoadMasterDemo && (
+        <button title="Load Master Demo" onClick={onLoadMasterDemo} className={`${buttonClass} bg-purple-700 hover:bg-purple-600`}>
+          <Book size={16} />
+          Master Demo
+        </button>
+      )}
+      
+      {onLoadCodexDemo && (
+        <button title="Load Aetherium Codex Demo" onClick={onLoadCodexDemo} className={`${buttonClass} bg-blue-700 hover:bg-blue-600`}>
+          <Wand2 size={16} />
+          Codex Demo
+        </button>
+      )}
+
+      {onLoadInfinityDemo && (
+        <button title="Load Infinity Command Demo" onClick={onLoadInfinityDemo} className={`${buttonClass} bg-green-700 hover:bg-green-600`}>
+          <Command size={16} />
+          Command Demo
+        </button>
+      )}
 
       {/* Separador visual opcional */}
       <div className="border-l border-gray-500 h-5 mx-1"></div> 

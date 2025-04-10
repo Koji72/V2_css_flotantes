@@ -1,43 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { markdown as markdownLanguage } from '@codemirror/lang-markdown';
 import { create } from 'zustand';
-import { FileUp, Moon, Sun } from 'lucide-react';
+import { FileUp, Moon, Sun, Save, FolderOpen, Palette, Bug } from 'lucide-react';
 import { EditorView, keymap } from '@codemirror/view';
 import Toolbar from './components/Toolbar';
-import markdownProcessor from './utils/markdownProcessor';
+import previewManager from './utils/previewManager';
+import { readCSSFile } from './utils/cssLoader';
 import Alert from './components/Alert';
 import TemplateSelector from './components/TemplateSelector';
-import { TemplateManager } from './utils/templateManager';
-
-interface AppState {
-  markdown: string;
-  setMarkdown: (markdown: string) => void;
-  css: string;
-  setCSS: (css: string) => void;
-  darkMode: boolean;
-  toggleDarkMode: () => void;
-  currentTemplate: string;
-  setCurrentTemplate: (template: string) => void;
-}
-
-const useStore = create<AppState>((set) => ({
-  markdown: '',
-  setMarkdown: (markdown) => set({ markdown }),
-  css: '',
-  setCSS: (css) => set({ css }),
-  darkMode: localStorage.getItem('darkMode') === 'true',
-  toggleDarkMode: () => set((state) => {
-    const newValue = !state.darkMode;
-    localStorage.setItem('darkMode', String(newValue));
-    return { darkMode: newValue };
-  }),
-  currentTemplate: localStorage.getItem('currentTemplate') || 'default',
-  setCurrentTemplate: (template) => {
-    localStorage.setItem('currentTemplate', template);
-    set({ currentTemplate: template });
-  }
-}));
+import { useAppStore } from './utils/markdownProcessor';
+import { EditorState, EditorSelection } from '@codemirror/state';
+import markdownProcessor from './utils/markdownProcessor';
 
 function App() {
   const { 
@@ -48,8 +22,10 @@ function App() {
     darkMode, 
     toggleDarkMode,
     currentTemplate,
-    setCurrentTemplate 
-  } = useStore();
+    setCurrentTemplate,
+    isDebugMode,
+    toggleDebugMode,
+  } = useAppStore();
   const [editorView, setEditorView] = useState<EditorView | null>(null);
   const markdownInputRef = useRef<HTMLInputElement>(null);
   const cssInputRef = useRef<HTMLInputElement>(null);
@@ -60,12 +36,284 @@ function App() {
     type: 'success' | 'error' | 'info';
   } | null>(null);
   
+  const [themeName, setThemeName] = useState('Default Theme');
+  
   // Función para mostrar alertas
   const showAlert = (message: string, type: 'success' | 'error' | 'info'): void => {
     setAlertInfo({ message, type });
     // Auto-dismiss after 5 seconds
     setTimeout(() => setAlertInfo(null), 5000);
   };
+  
+  // Función para aplicar CSS al iframe
+  const applyCSS = useCallback((cssText: string, templateId: string) => {
+    console.log(`[applyCSS] Attempting to apply CSS (length: ${cssText.length})`);
+    const iframe = iframeRef.current;
+    if (!iframe || !iframe.contentDocument) {
+      console.error('[applyCSS] Iframe or contentDocument not ready.');
+      return false;
+    }
+    const doc = iframe.contentDocument;
+    const head = doc.head;
+
+    // Limpiar estilos anteriores
+    const existingStyles = head.querySelectorAll('style[data-theme], link[data-theme]');
+    existingStyles.forEach(el => el.remove());
+    console.log(`[applyCSS] Removed ${existingStyles.length} previous theme styles/links.`);
+    
+    // Limpiar cualquier clase de tema anterior del body
+    const bodyEl = doc.body;
+    if (bodyEl) {
+      // Remover todas las clases de temas anteriores
+      Array.from(bodyEl.classList).forEach(cls => {
+        if (cls.startsWith('theme-') || cls.includes('bg-')) {
+          bodyEl.classList.remove(cls);
+        }
+      });
+      
+      // Añadir la clase de tema actual
+      const themeClass = templateId.replace(/_/g, '-').toLowerCase();
+      bodyEl.classList.add(`theme-${themeClass}`);
+      
+      // Agregar un atributo data-theme para CSS que quiera usarlo como selector
+      bodyEl.setAttribute('data-theme', templateId);
+      
+      console.log(`[applyCSS] Set theme classes on body: theme-${themeClass}`);
+    }
+
+    // Aplicar los estilos de floating-blocks.css
+    fetch('/styles/floating-blocks.css')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error loading floating-blocks.css: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(floatingBlocksCSS => {
+        const floatingBlocksStyle = doc.createElement('style');
+        floatingBlocksStyle.setAttribute('data-theme', 'floating-blocks');
+        floatingBlocksStyle.textContent = floatingBlocksCSS;
+        head.appendChild(floatingBlocksStyle);
+        console.log('[applyCSS] Added floating-blocks.css styles to iframe');
+      })
+      .catch(error => {
+        console.error('[applyCSS] Error loading floating-blocks.css:', error);
+      });
+
+    // Extraer nombre del tema del comentario
+    console.log(`[applyCSS] CSS Text Start: \"${cssText.substring(0, 50)}...\"`);
+    let currentThemeName = 'Unknown Theme';
+    
+    // Buscar tema en comentario /* Theme: Nombre del Tema */
+    const themeCommentMatch = cssText.match(/\/\*\s*Theme:\s*([\s\S]*?)\s*\*\//i);
+    if (themeCommentMatch && themeCommentMatch[1]) {
+      currentThemeName = themeCommentMatch[1].trim();
+    } 
+    // Segunda forma alternativa: /* Theme Name: Nombre del Tema */
+    else {
+      const themeNameMatch = cssText.match(/\/\*\s*Theme\s*Name\s*:\s*([\s\S]*?)\s*\*\//i);
+      if (themeNameMatch && themeNameMatch[1]) {
+        currentThemeName = themeNameMatch[1].trim();
+      }
+      // Tercera forma: Extraer el nombre del archivo
+      else if (templateId) {
+        // Convertir template_id a un nombre más legible (ej. purple_neon_grid -> Purple Neon Grid)
+        currentThemeName = templateId
+          .split('_')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+      }
+    }
+    
+    setThemeName(currentThemeName);
+    console.log(`[applyCSS] Applying theme: ${currentThemeName}`);
+
+    // Crear y añadir nuevo estilo con prioridad !important para propiedades clave
+    const style = doc.createElement('style');
+    style.setAttribute('data-theme', currentThemeName.replace(/\s+/g, '-').toLowerCase());
+    
+    // Modificar el CSS para añadir !important a las propiedades de fondo y color
+    let enhancedCSS = cssText;
+    
+    // 1. Mejorar selectores para body, :root y .universal-scribe-output
+    enhancedCSS = enhancedCSS.replace(
+      /(body|:root|\.universal-scribe-output)\s*{([^}]*)}/g, 
+      (match, selector, properties) => {
+        // Reemplazar propiedades específicas añadiendo !important
+        let newProps = properties.replace(
+          /(background-color|background-image|color|background)\s*:\s*([^;]+);/g,
+          '$1: $2 !important;'
+        );
+        return `${selector} {${newProps}}`;
+      }
+    );
+    
+    // 2. Mejorar selectores para tablas y elementos relacionados
+    enhancedCSS = enhancedCSS.replace(
+      /(table|th|td|thead|tbody|tr)(\.[a-zA-Z0-9_-]*)*\s*{([^}]*)}/g,
+      (match, selector, classes, properties) => {
+        // Añadir !important a propiedades de fondo, color y bordes para tablas
+        let newProps = properties.replace(
+          /(background-color|background-image|background|color|border|border-color|border-style|border-width)\s*:\s*([^;]+);/g,
+          '$1: $2 !important;'
+        );
+        // Añadir attr selector para aumentar especificidad
+        const selectorWithAttr = classes 
+          ? `${selector}${classes}[data-table-type="datamatrix"]`
+          : `${selector}[data-table-type="datamatrix"]`;
+        
+        // Devolver versión original y versión mejorada para mayor compatibilidad
+        return `${match}\n${selectorWithAttr} {${newProps}}`;
+      }
+    );
+    
+    // 3. Mejorar selectores específicos para datamatrix
+    enhancedCSS += `
+    /* Estilos adicionales para asegurar que se apliquen a las tablas */
+    [data-matrix-table="true"] .data-matrix {
+      background-color: inherit !important;
+      color: inherit !important;
+    }
+    
+    .theme-${templateId.replace(/_/g, '-').toLowerCase()} .data-matrix,
+    .theme-${templateId.replace(/_/g, '-').toLowerCase()} .data-matrix th,
+    .theme-${templateId.replace(/_/g, '-').toLowerCase()} .data-matrix td {
+      border-color: inherit !important;
+      color: inherit !important;
+    }
+    
+    /* Asegurar que el fondo del bloque datamatrix se aplique */
+    .floating-block.datamatrix {
+      position: relative !important;
+      z-index: 1 !important;
+    }
+    
+    /* Estos selectores deberían tener mayor especificidad */
+    body[data-theme="${templateId}"] .datamatrix table,
+    body[data-theme="${templateId}"] .datamatrix th,
+    body[data-theme="${templateId}"] .datamatrix td {
+      background-color: inherit !important;
+      color: inherit !important;
+      border-color: rgba(255,255,255,0.2) !important;
+    }
+    `;
+    
+    // Añadir timestamp para forzar recarga
+    style.textContent = enhancedCSS + `\n/* Timestamp: ${Date.now()} */`;
+    head.appendChild(style);
+    console.log(`[applyCSS] Appended new <style> tag for theme: ${currentThemeName}`);
+
+    // Extraer y cargar fuentes @import
+    const fontImports = cssText.match(/@import\s+url\(([^)]+)\);/g) || [];
+    fontImports.forEach(imp => {
+      const urlMatch = imp.match(/url\(([^)]+)\)/);
+      if (urlMatch && urlMatch[1]) {
+        const fontUrl = urlMatch[1].replace(/['"]/g, '');
+        let link = doc.createElement('link');
+        link.href = fontUrl;
+        link.rel = 'stylesheet';
+        link.setAttribute('data-theme-font', 'true');
+        head.appendChild(link);
+        console.log(`[applyCSS] Added font link: ${fontUrl}`);
+      }
+    });
+
+    // Forzar repintado completo
+    bodyEl.style.display = 'none';
+    bodyEl.offsetHeight; // trigger reflow
+    bodyEl.style.display = '';
+    console.log('[applyCSS] Forced repaint attempt.');
+    
+    // Verificar si el estilo se aplicó (ej. color de fondo)
+    setTimeout(() => {
+      if (doc.body) {
+        const bgColor = window.getComputedStyle(doc.body).backgroundColor;
+        console.log(`[applyCSS] Verification: Body background color after apply: ${bgColor}`);
+        
+        // Verificar si hay tablas y sus estilos
+        const tables = doc.querySelectorAll('table');
+        console.log(`[applyCSS] Found ${tables.length} tables in document`);
+        
+        // Verificar bloques flotantes
+        const floatingBlocks = doc.querySelectorAll('.floating-block');
+        console.log(`[applyCSS] Found ${floatingBlocks.length} floating blocks in document`);
+        
+        // Inyectar CSS adicional directo al body como fallback
+        if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent' || bgColor === 'rgb(255, 255, 255)') {
+          console.log('[applyCSS] Background color not applied properly, using fallback method');
+          try {
+            // Intentar extraer fondo del CSS
+            const bgMatch = cssText.match(/body\s*{[^}]*background-color\s*:\s*([^;]+);/);
+            const bgImage = cssText.match(/body\s*{[^}]*background-image\s*:\s*([^;]+);/);
+            
+            if (bgMatch && bgMatch[1]) {
+              doc.body.style.backgroundColor = bgMatch[1] + ' !important';
+              console.log(`[applyCSS] Applied fallback background-color: ${bgMatch[1]}`);
+            } else if (templateId === 'purple_neon_grid') {
+              // Valores fijos para purple_neon_grid como fallback
+              doc.body.style.backgroundColor = '#100020 !important';
+              console.log('[applyCSS] Applied hardcoded purple_neon_grid background-color');
+            }
+            
+            if (bgImage && bgImage[1]) {
+              doc.body.style.backgroundImage = bgImage[1] + ' !important';
+              console.log(`[applyCSS] Applied fallback background-image: ${bgImage[1]}`);
+            }
+          } catch (e) {
+            console.error('[applyCSS] Error applying fallback background:', e);
+          }
+        }
+      }
+    }, 200); // Dar más tiempo a que se apliquen los estilos
+
+    return true;
+  }, [setThemeName]);
+  
+  // Función para cargar template CSS
+  const loadTemplate = useCallback(async (templateId: string) => {
+    console.log(`[loadTemplate] Called with templateId: ${templateId}`);
+    setCurrentTemplate(templateId);
+    setCSS('');
+    setThemeName('Loading...');
+    markdownProcessor.clearCache();
+    console.log('[loadTemplate] Markdown processor cache cleared.');
+
+    try {
+      const cssPath = `/templates/${templateId}.css`;
+      console.log(`[loadTemplate] Fetching CSS from: ${cssPath}`);
+      const response = await fetch(cssPath);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const newCss = await response.text();
+      console.log(`[loadTemplate] Fetched CSS successfully (length: ${newCss.length}) for template: ${templateId}`);
+      
+      if (applyCSS(newCss, templateId)) {
+        setCSS(newCss);
+        console.log(`[loadTemplate] Successfully applied CSS for: ${templateId}`);
+      } else {
+        throw new Error('Failed to apply CSS to iframe.');
+      }
+    } catch (error) {
+      console.error('[loadTemplate] Error loading template:', error);
+      alert(`Error loading template '${templateId}': ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // Podríamos volver al default o manejar el error de otra forma
+      setThemeName('Error loading theme');
+    }
+  }, [applyCSS, setCSS, setCurrentTemplate]);
+  
+  // Efecto para cargar el CSS inicial o cuando cambie el templateId en el store
+  useEffect(() => {
+    const currentId = useAppStore.getState().currentTemplate;
+    console.log(`[Effect Load Template] Detected template change in store: ${currentId}`);
+    if (currentId) {
+      loadTemplate(currentId);
+    } else {
+      console.warn('[Effect Load Template] No current template ID found in store on init/change.');
+      // Opcional: Cargar un default si no hay ninguno
+      // loadTemplate('default'); 
+    }
+  }, [currentTemplate, loadTemplate]); // Depende de currentTemplate del store
   
   // Inicializar iframe cuando se monta el componente
   useEffect(() => {
@@ -81,16 +329,91 @@ function App() {
             <style id="base-styles">
               body { 
                 margin: 0; 
-                padding: 10px; 
-                font-family: Arial, sans-serif;
-                color: #333;
-                background-color: #fff;
+                padding: 0;
+                font-family: inherit;
+                color: inherit;
+                background-color: inherit;
+                overflow-x: hidden;
               }
               #content {
-                min-height: 100%;
+                min-height: 100vh;
+                padding: 20px;
+                position: relative;
+                z-index: 1;
+              }
+              /* Estilos mínimos para floating-blocks por si acaso */
+              .floating-block {
+                position: relative;
+                margin: 1rem 0;
+                padding: 1rem;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                background-color: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(224, 224, 224, 0.2);
+              }
+              .floating-block .block-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0.5rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid rgba(224, 224, 224, 0.2);
+              }
+              .floating-block .block-header h3 {
+                margin: 0;
+                font-size: 1.1rem;
+                color: inherit;
+              }
+              .floating-block .block-content {
+                padding: 0.5rem 0;
+              }
+              
+              /* Estilos específicos para tablas */
+              table.data-matrix {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 1rem 0;
+                background-color: inherit;
+                color: inherit;
+              }
+              
+              table.data-matrix thead th {
+                background-color: rgba(0, 0, 0, 0.2);
+                color: inherit;
+                padding: 0.5rem;
+                text-align: left;
+                border: 1px solid rgba(224, 224, 224, 0.2);
+              }
+              
+              table.data-matrix tbody td {
+                padding: 0.5rem;
+                text-align: left;
+                border: 1px solid rgba(224, 224, 224, 0.2);
+                background-color: inherit;
+              }
+              
+              table.data-matrix tr:nth-child(odd) {
+                background-color: rgba(0, 0, 0, 0.1);
+              }
+              
+              .floating-block.datamatrix {
+                overflow: visible;
+                background-color: rgba(0, 0, 0, 0.2);
+              }
+              
+              .status-ok {
+                color: #80ffc0;
+              }
+              
+              .status-warn {
+                color: #ffdd80;
+              }
+              
+              .status-error {
+                color: #ff6080;
               }
             </style>
-            <style id="custom-theme-style"></style>
+            <!-- Preload de fuentes esenciales -->
+            <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
           </head>
           <body>
             <div id="content">
@@ -105,318 +428,119 @@ function App() {
       // Aplicar el Markdown actual cuando el iframe esté listo
       iframeRef.current.onload = () => {
         console.log('Iframe loaded, updating content and applying CSS');
-        // Cargar la plantilla actual o la predeterminada
-        const currentTemplateId = localStorage.getItem('currentTemplate') || 'aegis_overdrive';
-        setCurrentTemplate(currentTemplateId);
-        loadTemplate(currentTemplateId);
         
-        // Esperar un momento para que se apliquen los estilos
-        setTimeout(() => {
-          updateIframeContent(markdown);
-        }, 300);
+        // Cargar la plantilla actual o la predeterminada
+        const currentTemplateId = localStorage.getItem('currentTemplate') || 'purple_neon_grid';
+        console.log(`[Iframe onload] Loading template: ${currentTemplateId}`);
+        setCurrentTemplate(currentTemplateId);
+        
+        // Dar prioridad a la carga de estilos antes de procesar el contenido
+        loadTemplate(currentTemplateId)
+          .then(() => {
+            console.log('[Iframe onload] Template loaded, now updating content');
+            // Esperar un momento para que se apliquen los estilos
+            setTimeout(() => {
+              updateIframeContent(markdown);
+              console.log('[Iframe onload] Content updated');
+            }, 500);
+          })
+          .catch(error => {
+            console.error('[Iframe onload] Error loading template:', error);
+            // Intentar actualizar el contenido de todas formas
+            updateIframeContent(markdown);
+          });
       };
     }
   }, []);
   
-  // Apply CSS to the iframe
-  const applyCSS = (cssText: string): boolean => {
-    console.log(`[ApplyCSS] Applying CSS to iframe (length: ${cssText.length})`);
-    if (!iframeRef.current || !iframeRef.current.contentWindow || !iframeRef.current.contentWindow.document) {
-      console.warn("[ApplyCSS] Cannot apply CSS: iframe not available");
+  // Update content in the iframe
+  const updateIframeContent = useCallback((markdownText: string) => {
+    console.log('[UpdateContent] Called with markdown text length:', markdownText.length);
+    const iframe = iframeRef.current;
+    
+    if (!iframe || !iframe.contentDocument) {
+      console.error('[UpdateContent] Iframe o contentDocument no disponible.');
       return false;
     }
     
     try {
-      // Get document and head
-      const doc = iframeRef.current.contentWindow.document;
-      const head = doc.head;
+      const doc = iframe.contentDocument;
       
-      // Verificar si hay reglas para .data-matrix en el CSS
-      const hasDataMatrixStyles = cssText.includes('.data-matrix') || cssText.includes('.datamatrix');
+      // Preservar estilos: guardar todas las referencias a elementos style y link antes de actualizar
+      const stylesToPreserve = Array.from(doc.head.querySelectorAll('style[data-theme], link[data-theme]'));
+      console.log(`[UpdateContent] Preservando ${stylesToPreserve.length} elementos de estilo.`);
       
-      if (hasDataMatrixStyles) {
-        console.log('[ApplyCSS] CSS contiene reglas para .data-matrix o .datamatrix');
-        
-        // Extraer las reglas específicas para data-matrix
-        const cssRules = cssText.match(/\.data-matrix\s*{[^}]*}/g);
-        if (cssRules && cssRules.length > 0) {
-          console.log('[ApplyCSS] Reglas específicas para .data-matrix encontradas:');
-          cssRules.forEach(rule => console.log(rule));
-        }
-      } else {
-        console.warn('[ApplyCSS] ¡ALERTA! CSS no contiene reglas para .data-matrix');
-      }
-      
-      console.log("[ApplyCSS] Applying CSS content:");
-      console.log(cssText.slice(0, 200) + "..."); // Log the first 200 chars of CSS
-      
-      // Obtener información sobre el tema actual
-      const themeMatch = cssText.match(/\/\*\s*Theme:\s*([^*]*?)\s*\*\//);
-      const themeName = themeMatch?.[1]?.trim() || 'default-theme';
-      console.log(`[ApplyCSS] Detected theme: ${themeName}`);
-      
-      // Limpiar fuentes antiguas para evitar conflictos
-      const existingFontLinks = head.querySelectorAll('link[href*="fonts.googleapis.com"]');
-      existingFontLinks.forEach(link => {
-        console.log(`[ApplyCSS] Removing old font link: ${link.getAttribute('href')}`);
-        link.remove();
+      // Preservar clases y atributos del body
+      const bodyClasses = doc.body.className;
+      const bodyAttrs: Record<string, string> = {};
+      Array.from(doc.body.attributes).forEach(attr => {
+        bodyAttrs[attr.name] = attr.value;
       });
       
-      // Buscar o crear elemento style
-      let styleElement = doc.getElementById('custom-theme-style') as HTMLStyleElement | null;
-      if (!styleElement) {
-        styleElement = doc.createElement('style');
-        styleElement.id = 'custom-theme-style';
-        head.appendChild(styleElement);
-        console.log("[ApplyCSS] Created new style element with id 'custom-theme-style'");
-      } else {
-        console.log("[ApplyCSS] Found existing style element");
-        // Limpiar estilos anteriores
-        styleElement.textContent = '';
-      }
+      // Obtener el HTML procesado desde markdownProcessor
+      const renderedHTML = markdownProcessor.process(markdownText);
+      console.log('[UpdateContent] Received HTML from markdownProcessor (' + renderedHTML.length + ' chars):', renderedHTML.substring(0, 100) + '...');
       
-      // Actualizar contenido CSS con el tema y marca temporal para forzar repintado
-      const timestamp = new Date().getTime();
-      styleElement.textContent = `/* CSS Theme: ${themeName} - Applied at ${timestamp} */\n${cssText}`;
-      console.log("[ApplyCSS] Updated style element content with new theme");
-      
-      // Marcar el tema en el documento
-      doc.documentElement.setAttribute('data-theme', themeName.toLowerCase().replace(/\s+/g, '-'));
-      
-      // Cargar fuentes si es necesario
-      const fontImports = cssText.match(/@import\s+url\(['"](.+?)['"]\)/g);
-      if (fontImports && fontImports.length > 0) {
-        console.log(`[ApplyCSS] Found ${fontImports.length} font imports in CSS`);
-        
-        // Extraer URLs de fuentes
-        fontImports.forEach(importRule => {
-          const urlMatch = importRule.match(/url\(['"](.+?)['"]\)/);
-          if (urlMatch && urlMatch[1]) {
-            const fontUrl = urlMatch[1];
-            if (fontUrl.includes('fonts.googleapis.com')) {
-              const link = doc.createElement('link');
-              link.rel = 'stylesheet';
-              link.href = fontUrl;
-              head.appendChild(link);
-              console.log(`[ApplyCSS] Added font: ${fontUrl}`);
-            }
+      // Actualizar el contenido pero preservar clases y atributos del div contenedor
+      const contentDiv = doc.getElementById('content');
+      if (contentDiv) {
+        // Preservar clases del div content antes de actualizar su contenido
+        const contentClass = contentDiv.className;
+        const contentAttrs: Record<string, string> = {};
+        Array.from(contentDiv.attributes).forEach(attr => {
+          if (attr.name !== 'id') {
+            contentAttrs[attr.name] = attr.value;
           }
         });
-      }
-      
-      // Forzar repintado completo para asegurar que los estilos se apliquen
-      doc.body.style.display = 'none';
-      setTimeout(() => {
-        doc.body.style.display = '';
         
-        // Verificar si hay tablas en el DOM
-        const tables = doc.querySelectorAll('table.data-matrix, table[data-matrix-table="true"]');
-        console.log(`[ApplyCSS] Found ${tables.length} tables with class 'data-matrix' or data-attribute`);
+        // Actualizar contenido
+        contentDiv.innerHTML = renderedHTML;
         
-        if (tables.length > 0) {
-          setTimeout(() => {
-            const table = tables[0];
-            console.log('[ApplyCSS] Contenido HTML de la primera tabla:', table.outerHTML.slice(0, 500) + '...');
-            
-            const computedStyle = doc.defaultView?.getComputedStyle(table);
-            console.log('[ApplyCSS] Estilos computados de la tabla:', {
-              width: computedStyle?.width,
-              borderCollapse: computedStyle?.borderCollapse,
-              backgroundColor: computedStyle?.backgroundColor,
-              color: computedStyle?.color,
-              border: computedStyle?.border
-            });
-            
-            // Verificar clases aplicadas
-            console.log(`[ApplyCSS] Clases en la tabla: "${table.className}"`);
-            console.log(`[ApplyCSS] Atributos de la tabla:`, {
-              'data-matrix-table': table.getAttribute('data-matrix-table'),
-              id: table.id
-            });
-            
-            // Verificar celdas th
-            const thCells = table.querySelectorAll('th');
-            if (thCells.length > 0) {
-              const thStyle = doc.defaultView?.getComputedStyle(thCells[0]);
-              console.log('[ApplyCSS] Estilos de celda TH:', {
-                backgroundColor: thStyle?.backgroundColor,
-                color: thStyle?.color,
-                borderBottom: thStyle?.borderBottom
-              });
-            }
-            
-            // Inspeccionar reglas CSS aplicadas
-            console.log(`[ApplyCSS] Comprobando si el CSS se aplicó correctamente para .data-matrix:`);
-            if (styleElement) {
-              if (styleElement.sheet) {
-                let dataMatrixRuleFound = false;
-                for (let i = 0; i < styleElement.sheet.cssRules.length; i++) {
-                  const rule = styleElement.sheet.cssRules[i];
-                  if (rule.cssText.includes('.data-matrix') || rule.cssText.includes('data-matrix-table')) {
-                    console.log(`[ApplyCSS] Regla CSS encontrada: ${rule.cssText.slice(0, 100)}...`);
-                    dataMatrixRuleFound = true;
-                  }
-                }
-                if (!dataMatrixRuleFound) {
-                  console.warn('[ApplyCSS] ¡ADVERTENCIA! No se encontraron reglas para .data-matrix en el CSS aplicado');
-                }
-              } else {
-                console.warn('[ApplyCSS] No se pudo acceder a styleElement.sheet');
-              }
-            }
-          }, 300);
+        // Restaurar clases y atributos
+        contentDiv.className = contentClass;
+        Object.entries(contentAttrs).forEach(([name, value]) => {
+          contentDiv.setAttribute(name, value);
+        });
+        
+        console.log('[UpdateContent] Iframe body innerHTML after update:', doc.body.innerHTML.substring(0, 100) + '...');
+        
+        // Restaurar atributos y clases del body
+        doc.body.className = bodyClasses;
+        Object.entries(bodyAttrs).forEach(([name, value]) => {
+          doc.body.setAttribute(name, value);
+        });
+        
+        // Restaurar todos los estilos previamente guardados
+        if (stylesToPreserve.length > 0) {
+          // Limpiar estilos actuales para evitar duplicados
+          const existingStyles = doc.head.querySelectorAll('style[data-theme], link[data-theme]');
+          existingStyles.forEach(el => el.remove());
+          
+          // Restaurar estilos preservados
+          stylesToPreserve.forEach(style => {
+            doc.head.appendChild(style);
+          });
+          console.log(`[UpdateContent] Restored ${stylesToPreserve.length} style elements.`);
         } else {
-          console.warn('[ApplyCSS] No se encontraron tablas con clase data-matrix después de aplicar el CSS');
-        }
-      }, 50);
-      
-      // Verificar clases aplicadas después de aplicar el CSS
-      setTimeout(() => {
-        // Verificar si es un tema específico que requiere tratamiento especial
-        const isAetheriumTheme = themeName.toLowerCase().includes('aetherium') || 
-                                themeName.toLowerCase().includes('aegis');
-        
-        if (isAetheriumTheme) {
-          console.log('[ApplyCSS] Detectado tema Aetherium/Aegis, aplicando clases adicionales');
-          
-          // Aplicar estilos específicos para títulos de data-matrix en Aetherium
-          const matrixTitles = doc.querySelectorAll('.data-matrix-title');
-          matrixTitles.forEach(title => {
-            title.classList.add('aetherium-data-title');
-            console.log('[ApplyCSS] Añadida clase aetherium-data-title a título de data-matrix');
-            
-            // Añadir un elemento antes para el efecto especial de Aetherium
-            const titleElement = title as HTMLElement;
-            if (!titleElement.querySelector('.title-crystal')) {
-              const crystal = doc.createElement('span');
-              crystal.className = 'title-crystal';
-              titleElement.prepend(crystal);
-              console.log('[ApplyCSS] Añadido decorador crystal al título');
-            }
-          });
-          
-          // Añadir clases especiales a las tablas data-matrix para Aetherium
-          const matrixTables = doc.querySelectorAll('table.data-matrix, table[data-matrix-table="true"]');
-          matrixTables.forEach(table => {
-            table.classList.add('aetherium-matrix');
-            console.log('[ApplyCSS] Añadida clase aetherium-matrix a tabla');
-          });
-          
-          // Añadir estilos específicos inline si es necesario
-          const styleElement = doc.getElementById('custom-theme-style') as HTMLStyleElement;
-          if (styleElement && !styleElement.textContent?.includes('.aetherium-data-title')) {
-            const aetheriumAdditions = `
-              /* Aetherium theme additions */
-              .aetherium-data-title {
-                font-family: var(--font-title, 'Electrolize', sans-serif);
-                color: var(--aether-secondary, #00f0ff);
-                letter-spacing: 2px;
-                margin-bottom: 0.5em;
-                text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
-              }
-              .title-crystal {
-                display: inline-block;
-                width: 8px;
-                height: 12px;
-                background-color: var(--aether-secondary, #00f0ff);
-                margin-right: 8px;
-                transform: rotate(45deg);
-                box-shadow: 0 0 8px var(--aether-secondary-glow, rgba(0, 240, 255, 0.5));
-              }
-            `;
-            styleElement.textContent += aetheriumAdditions;
-            console.log('[ApplyCSS] Añadidos estilos específicos para Aetherium');
+          // Si no hay estilos para preservar, reaplicar el CSS
+          console.log('[UpdateContent] Reaplicando CSS después de actualizar el contenido...');
+          if (css) { 
+            applyCSS(css, currentTemplate);
+          } else {
+            console.warn('[UpdateContent] No current CSS found in state hook to reapply.');
           }
         }
-      }, 300);
-      
-      showAlert(`Tema "${themeName}" aplicado`, 'success');
-      return true;
-    } catch (error) {
-      console.error("[ApplyCSS] Error applying CSS:", error);
-      showAlert(`Error al aplicar CSS: ${error instanceof Error ? error.message : 'Desconocido'}`, 'error');
-      return false;
-    }
-  };
-  
-  // Update content in the iframe
-  const updateIframeContent = (markdownText: string): boolean => {
-    console.log(`[UpdateContent] Updating iframe content with markdown (${markdownText.length} chars)`);
-    
-    if (!iframeRef.current || !iframeRef.current.contentWindow || !iframeRef.current.contentWindow.document) {
-      console.warn("[UpdateContent] Cannot update content: iframe not available");
-      return false;
-    }
-    
-    try {
-      // Process markdown to HTML
-      console.log(`[UpdateContent] Processing markdown through markdownProcessor...`);
-      const html = markdownProcessor.process(markdownText);
-      console.log(`[UpdateContent] Received HTML from markdownProcessor (${html.length} chars):`);
-      console.log(html.slice(0, 300) + '...');
-      
-      // Update content
-      const doc = iframeRef.current.contentWindow.document;
-      const contentElement = doc.getElementById('content');
-      
-      if (contentElement) {
-        console.log(`[UpdateContent] Content element found, updating innerHTML`);
         
-        // Verificar si hay datamatrix en el HTML
-        const hasDataMatrix = html.includes('data-matrix') || 
-                             html.includes('datamatrix-raw-output') || 
-                             html.includes('datamatrix-container');
-        
-        if (hasDataMatrix) {
-          console.log(`[UpdateContent] ¡DATAMATRIX detectado en el HTML! Esto debería aparecer en el iframe.`);
-        }
-        
-        contentElement.innerHTML = html;
-        
-        // Verificar si hay tablas en el DOM después de actualizar
-        const tables = doc.querySelectorAll('table.data-matrix');
-        console.log(`[UpdateContent] After update, found ${tables.length} tables with class 'data-matrix'`);
-        
-        if (tables.length > 0) {
-          console.log(`[UpdateContent] First table HTML:`, tables[0].outerHTML.slice(0, 200) + '...');
-          
-          // Volver a aplicar el CSS después de actualizar el contenido
-          console.log(`[UpdateContent] Detectadas tablas data-matrix, replicando CSS para asegurar aplicación...`);
-          // Reaplica el CSS después de una breve pausa para asegurar que el DOM esté actualizado
-          setTimeout(() => {
-            if (css) {
-              console.log(`[UpdateContent] Reaplicando CSS para asegurar que se aplique a elementos data-matrix...`);
-              applyCSS(css);
-            }
-          }, 50);
-          
-          // Verificar estilos computados
-          setTimeout(() => {
-            const computedStyle = doc.defaultView?.getComputedStyle(tables[0]);
-            console.log(`[UpdateContent] Table computed style after CSS reapplication:`, {
-              width: computedStyle?.width,
-              borderCollapse: computedStyle?.borderCollapse,
-              backgroundColor: computedStyle?.backgroundColor
-            });
-            
-            // Verificar si los estilos están siendo aplicados
-            if (computedStyle?.borderCollapse !== 'collapse') {
-              console.warn(`[UpdateContent] ¡ALERTA! Los estilos CSS no parecen estar aplicándose a la tabla`);
-            }
-          }, 300);
-        }
-        
-        console.log("[UpdateContent] Iframe content updated successfully");
         return true;
       } else {
-        console.warn("[UpdateContent] Content element not found in iframe");
+        console.error('[UpdateContent] Content div not found in iframe.');
         return false;
       }
     } catch (error) {
-      console.error("[UpdateContent] Error updating iframe content:", error);
+      console.error('[UpdateContent] Error updating iframe content:', error);
       return false;
     }
-  };
+  }, [applyCSS, css, currentTemplate]);
   
   // Update content when markdown changes (with debounce)
   useEffect(() => {
@@ -427,7 +551,7 @@ function App() {
     return () => {
       clearTimeout(debounceTimer);
     };
-  }, [markdown]);
+  }, [markdown, updateIframeContent]);
   
   // Apply CSS when it changes (with slight delay to ensure iframe is ready)
   useEffect(() => {
@@ -436,7 +560,7 @@ function App() {
     console.log("Attempting to apply CSS, length:", css.length);
     
     const cssTimer = setTimeout(() => {
-      const success = applyCSS(css);
+      const success = applyCSS(css, currentTemplate);
       if (success) {
         console.log("CSS applied automatically");
       } else {
@@ -446,51 +570,31 @@ function App() {
     }, 500);
     
     return () => clearTimeout(cssTimer);
-  }, [css]);
+  }, [css, currentTemplate]);
   
   // Handle CSS file selection
-  const handleLoadCssFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("CSS File input changed");
+  const handleLoadCssFileSelected = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      console.log("CSS File selected:", file.name);
-      const reader = new FileReader();
-      
-      reader.onload = (e) => {
-        try {
-          const content = e.target?.result as string;
-          console.log("CSS content loaded, length:", content?.length);
-          setCSS(content);
-          
-          // Aplicar CSS inmediatamente
-          setTimeout(() => {
-            const success = applyCSS(content);
-            if (success) {
-              showAlert(`CSS loaded and applied: ${file.name}`, "success");
-            } else {
-              showAlert(`CSS loaded but failed to apply: ${file.name}. Try using Apply CSS button.`, "info");
-            }
-          }, 100);
-          
-          if (e.target) {
-            (e.target as unknown as HTMLInputElement).value = '';
+      console.log("[App] CSS file selected:", file.name);
+      readCSSFile(file)
+        .then(content => {
+          console.log("[App] CSS content loaded, length:", content?.length);
+          if (content !== null) {
+              setCSS(content); // Save full CSS content to store
+              showAlert(`CSS loaded: ${file.name}`, "success");
+              previewManager.applyCustomCSS(content); // Apply via PreviewManager
+          } else {
+               throw new Error("Failed to read CSS file content.");
           }
-        } catch (error) {
-          console.error("Error processing CSS:", error);
-          showAlert("Error loading CSS", "error");
-        }
-      };
-      
-      reader.onerror = (error) => {
-        console.error("Error reading css file:", error);
-        showAlert("Error reading CSS file", "error");
-      };
-      
-      reader.readAsText(file);
-    } else {
-      console.log("No CSS file selected or input cleared");
+        })
+        .catch(error => {
+          console.error("[App] Error reading css file:", error);
+          showAlert("Error reading CSS file", "error");
+        });
+      if (e.target) e.target.value = ''; // Reset input
     }
-  };
+  }, [setCSS, showAlert]); // Include dependencies
   
   // Handle editor scrolling (for sync with preview)
   const handleEditorScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -509,269 +613,126 @@ function App() {
     }
   };
   
-  // Apply markdown style (bold, italic, etc.)
-  const applyMarkdownStyle = (syntaxStart: string, syntaxEnd?: string) => {
-    console.log(`applyMarkdownStyle called with: ${syntaxStart}`);
-    if (!editorView) {
-      console.log('Editor view not found');
-      return;
-    }
-    
-    const end = syntaxEnd ?? syntaxStart;
-    
-    const changes = editorView.state.changeByRange((range) => {
-      if (range.from === range.to) {
-        return { range };
-      }
-      
-      const textBefore = editorView.state.doc.sliceString(
-        Math.max(0, range.from - syntaxStart.length), 
-        range.from
-      );
-      
-      const textAfter = editorView.state.doc.sliceString(
-        range.to, 
-        Math.min(editorView.state.doc.length, range.to + end.length)
-      );
-      
-      const isAlreadyWrapped = textBefore === syntaxStart && textAfter === end;
-      
-      if (isAlreadyWrapped) {
-        return {
-          changes: [
-            { from: range.from - syntaxStart.length, to: range.from },
-            { from: range.to, to: range.to + end.length },
-          ],
-          range: range
-        };
-      } else {
-        return {
-          changes: [
-            { from: range.from, insert: syntaxStart },
-            { from: range.to, insert: end },
-          ],
-          range: range
-        };
-      }
-    });
-    
-    editorView.dispatch(changes);
-    editorView.focus();
-    
-    setMarkdown(editorView.state.doc.toString());
-  };
-  
   // Insert a block of text
-  const insertBlock = (blockText: string) => {
+  const insertBlock = useCallback((blockText: string) => {
     if (!editorView) return;
-    
-    const { from, to } = editorView.state.selection.main;
-    editorView.dispatch({
-      changes: { from, to, insert: blockText },
-      selection: { anchor: from + blockText.length }
+    const { state, dispatch } = editorView;
+    const { from, to } = state.selection.main;
+    const insertPos = state.doc.lineAt(to).from === to ? to : to + 1;
+    const textToInsert = (state.doc.lineAt(to).from === to ? "" : "\n") + blockText + "\n";
+
+    dispatch({
+      changes: { from: insertPos, insert: textToInsert },
+      selection: { anchor: insertPos + textToInsert.length }
     });
-    
     editorView.focus();
-    setMarkdown(editorView.state.doc.toString());
-  };
+  }, [editorView]);
   
   // Save markdown file
-  const handleSave = async () => {
-    const currentMarkdown = useStore.getState().markdown;
-    if (!currentMarkdown && currentMarkdown !== '') {
-      showAlert("Nothing to save!", "info");
-      return;
-    }
-    
-    const blob = new Blob([currentMarkdown], { type: 'text/markdown;charset=utf-8' });
-    const defaultFilename = 'saved_content.md';
-    
-    if (window.showSaveFilePicker) {
-      try {
-        const handle = await window.showSaveFilePicker({
-          suggestedName: defaultFilename,
-          types: [{
-            description: 'Markdown Files',
-            accept: { 'text/markdown': ['.md'] },
-          }],
-        });
-        
+  const handleSave = useCallback(async () => {
+    console.log("[App] Saving Markdown...");
+    const currentMarkdown = useAppStore.getState().markdown; // Read latest before save
+    try {
+      if ('showSaveFilePicker' in window) {
+        const handle = await window.showSaveFilePicker({ suggestedName: 'document.md', types: [{ description: 'Markdown Files', accept: { 'text/markdown': ['.md'] } }] });
         const writable = await handle.createWritable();
-        await writable.write(blob);
+        await writable.write(currentMarkdown);
         await writable.close();
-        
-        console.log('File saved successfully using File System Access API');
-        showAlert('File saved successfully!', 'success');
-      } catch (err) {
-        if (err instanceof DOMException && err.name === 'AbortError') {
-          console.log('Save dialog was cancelled by the user.');
-          showAlert('Save dialog was cancelled.', 'info');
-        } else {
-          console.error('Error saving file:', err);
-          showAlert('Could not save the file.', 'error');
-          
-          // Fallback for browsers that don't support File System Access API
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = defaultFilename;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }
+        showAlert('Markdown saved successfully!', 'success');
+        console.log("[App] Markdown saved using File System Access API.");
+      } else {
+        const blob = new Blob([currentMarkdown], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'document.md';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showAlert('Markdown downloaded.', 'info');
+        console.log("[App] Markdown saved using fallback download.");
       }
-    } else {
-      // Fallback for browsers that don't support File System Access API
-      console.warn('File System Access API not supported, using fallback download.');
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = defaultFilename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      showAlert('File downloaded (File System API not supported in your browser).', 'info');
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        console.log('[App] Save file dialog aborted by user.');
+        showAlert('Save cancelled.', 'info');
+        return;
+      }
+      console.error("[App] Error saving file:", error);
+      showAlert('Error saving Markdown.', 'error');
     }
-  };
+  }, [showAlert]); // markdown state is read directly
   
   // Trigger markdown file input
-  const handleLoadMarkdownTrigger = () => {
-    markdownInputRef.current?.click();
-  };
+  const handleLoadMarkdownTrigger = () => { markdownInputRef.current?.click(); };
   
   // Handle markdown file selection
-  const handleMarkdownFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMarkdownFileSelected = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      console.log("[App] Markdown file selected:", file.name);
       const reader = new FileReader();
-      
       reader.onload = (event) => {
         const content = event.target?.result as string;
-        setMarkdown(content);
-        showAlert(`Markdown file loaded: ${file.name}`, "success");
-        
-        // Reset input value
-        if (e.target) {
-          e.target.value = '';
-        }
+        console.log("[App] Markdown content loaded, length:", content?.length);
+        setMarkdown(content); // Update store, which triggers preview update via useEffect
+        showAlert(`Markdown loaded: ${file.name}`, 'success');
       };
-      
       reader.onerror = (error) => {
-        console.error("Error reading markdown file:", error);
-        showAlert("Error reading the markdown file", "error");
+        console.error("[App] Error reading markdown file:", error);
+        showAlert('Error loading Markdown file.', 'error');
       };
-      
       reader.readAsText(file);
+      if(e.target) e.target.value = ''; // Reset input
     }
-  };
+  }, [setMarkdown, showAlert]); // Dependencies
   
   // Define keyboard shortcuts
   const markdownKeymap = keymap.of([
-    {
-      key: "Mod-b",
-      run: () => {
-        applyMarkdownStyle('**', '**');
-        return true;
-      },
-    },
-    {
-      key: "Mod-i",
-      run: () => {
-        applyMarkdownStyle('*', '*');
-        return true;
-      },
-    },
-    {
-      key: "Mod-`",
-      run: () => {
-        applyMarkdownStyle('`', '`');
-        return true;
-      },
-    },
+    { key: "Mod-b", run: () => { applyMarkdownStyle("**", "**"); return true; } },
+    { key: "Mod-i", run: () => { applyMarkdownStyle("*", "*"); return true; } },
+    { key: "Mod-`", run: () => { applyMarkdownStyle("`", "`"); return true; } },
   ]);
   
   // Export as PDF
-  const exportAsPDF = async () => {
-    if (!markdown) {
-      showAlert("No content to export!", "info");
+  const exportAsPDF = useCallback(async () => {
+    showAlert('Exporting to PDF... please wait.', 'info');
+    console.log('[App] PDF Export requested.');
+
+    if (!previewManager.isReady || !iframeRef.current?.contentWindow?.document) {
+      console.error('[App] Preview not ready for PDF export.');
+      showAlert('Preview is not ready. Cannot export PDF.', 'error');
       return;
     }
-    
+    const iframeDoc = iframeRef.current.contentWindow.document;
+    // Use a more robust check in case print window is blocked silently
+    let printWindow: Window | null = null;
     try {
-      // Preparar el HTML para imprimir
-      const doc = document.createElement('div');
-      doc.innerHTML = markdownProcessor.process(markdown);
-      
-      // Aplicar estilos
-      const style = document.createElement('style');
-      style.textContent = css || ''; // Usar el CSS cargado o vacío
-      doc.prepend(style);
-      
-      // Crear un iframe temporal para imprimir
-      const printFrame = document.createElement('iframe');
-      printFrame.style.position = 'fixed';
-      printFrame.style.right = '0';
-      printFrame.style.bottom = '0';
-      printFrame.style.width = '0';
-      printFrame.style.height = '0';
-      printFrame.style.border = '0';
-      
-      document.body.appendChild(printFrame);
-      
-      printFrame.onload = () => {
-        if (!printFrame.contentWindow) {
-          showAlert("Error preparing PDF export", "error");
-          return;
-        }
-        
-        // Añadir contenido al iframe
-        const frameDoc = printFrame.contentWindow.document;
-        frameDoc.open();
-        frameDoc.write(`
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>Export - V2 CSS Flotantes</title>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <style>
-              @media print {
-                body { margin: 0; padding: 10px; }
-                @page { size: A4; margin: 10mm; }
-              }
-              ${css || ''}
-            </style>
-          </head>
-          <body>
-            ${markdownProcessor.process(markdown)}
-          </body>
-          </html>
-        `);
-        frameDoc.close();
-        
-        // Retraso para asegurar que los estilos se apliquen
-        setTimeout(() => {
-          try {
-            printFrame.contentWindow?.print();
-            showAlert("PDF export initiated", "success");
-          } catch (e) {
-            console.error("Error printing:", e);
-            showAlert("Error during PDF export", "error");
-          }
-          
-          // Limpiar después de un tiempo
-          setTimeout(() => {
-            document.body.removeChild(printFrame);
-          }, 5000);
-        }, 500);
-      };
+      printWindow = window.open('', '_blank');
+      if (!printWindow) {
+        throw new Error("Popup blocked or failed to open.");
+      }
     } catch (error) {
-      console.error("Error exporting to PDF:", error);
-      showAlert("Error preparing PDF export", "error");
+      showAlert('Could not open print window. Please check pop-up blocker.', 'error');
+      console.error('[App] Error opening print window:', error);
+      return;
     }
-  };
+
+    try {
+      // Clone styles
+      const styles = Array.from(iframeDoc.head.querySelectorAll('style, link[rel="stylesheet"]'));
+      styles.forEach(style => { printWindow?.document.head.appendChild(style.cloneNode(true)); });
+      // Clone body content
+      printWindow.document.body.innerHTML = iframeDoc.body.innerHTML;
+      // Wait for styles (optional but safer)
+      await new Promise(resolve => setTimeout(resolve, 500));
+      printWindow.document.title = "Universal Scribe Export";
+      printWindow.print();
+      console.log('[App] Print dialog opened for PDF export.');
+      showAlert('Print dialog opened. Choose "Save as PDF".', 'success');
+    } catch (error) {
+      console.error("[App] Error during PDF preparation/print:", error);
+      showAlert('Error preparing PDF content.', 'error');
+      try { printWindow?.close(); } catch (e) {} // Close if possible on error
+    }
+  }, [showAlert]); // Dependency
   
   // Aplicar el modo oscuro al documento
   useEffect(() => {
@@ -782,47 +743,123 @@ function App() {
     }
   }, [darkMode]);
   
-  // Cargar plantilla CSS
-  const loadTemplate = async (templateId: string) => {
-    try {
-      console.log(`Loading template: ${templateId}`);
-      const templateManager = TemplateManager.getInstance();
-      const cssText = await templateManager.loadTemplate(templateId);
-      
-      console.log(`Template ${templateId} loaded, length: ${cssText.length} chars`);
-      
-      // Guardar la plantilla actual
-      templateManager.setCurrentTemplateId(templateId);
-      
-      // Actualizar el estado de CSS
-      setCSS(cssText);
-      
-      // Aplicar inmediatamente el CSS (no esperar al efecto)
-      setTimeout(() => {
-        const success = applyCSS(cssText);
-        if (success) {
-          console.log(`Template CSS for '${templateId}' applied successfully`);
-          showAlert(`Template '${templateId}' loaded successfully`, 'success');
-          
-          // Actualizar el contenido para que refleje los nuevos estilos
-          updateIframeContent(markdown);
-        } else {
-          console.error(`Failed to apply template CSS for '${templateId}'`);
-          showAlert(`Template '${templateId}' loaded but styles not applied. Try "Apply CSS" button.`, 'info');
-        }
-      }, 100);
-    } catch (error) {
-      console.error('Error loading template:', error);
-      showAlert(`Error loading template '${templateId}'`, 'error');
-    }
-  };
-  
-  // Cargar la plantilla cuando cambia
+  // Initialize PreviewManager on mount
   useEffect(() => {
-    if (currentTemplate) {
-      loadTemplate(currentTemplate);
+    console.log('[App] Initializing useEffect for PreviewManager.');
+    if (iframeRef.current) {
+      console.log('[App] Iframe ref available, initializing PreviewManager.');
+      previewManager.initialize(iframeRef.current);
+
+      // Apply initial CSS from store if available
+      const initialCss = useAppStore.getState().css; // Read directly only on init
+      if (initialCss) {
+        console.log('[App] Applying initial CSS from store.');
+        previewManager.applyCustomCSS(initialCss);
+      } else {
+        console.log('[App] No initial CSS found in store.');
+        // Optional: Load default CSS?
+        // loadTemplate('default'); // Needs definition if kept
+      }
+
+      // Load initial markdown
+      const initialMarkdown = useAppStore.getState().markdown;
+      previewManager.updateContent(initialMarkdown);
+
+    } else {
+      console.warn('[App] Iframe ref not available on initial mount.');
     }
-  }, [currentTemplate]);
+    // Cleanup on unmount
+    return () => {
+      console.log('[App] Cleanup: Destroying PreviewManager.');
+      previewManager.destroy();
+    };
+  }, []); // Run only on mount
+
+  // Update preview content when markdown state changes
+  useEffect(() => {
+    console.log('[App] Markdown state changed, updating preview.');
+    previewManager.updateContent(markdown);
+  }, [markdown]);
+  
+  const applyMarkdownStyle = useCallback((syntaxStart: string, syntaxEnd: string = '') => {
+    if (!editorView) return;
+    const { state, dispatch } = editorView;
+    const changes = state.changeByRange(range => {
+      let text = state.sliceDoc(range.from, range.to);
+      let from = range.from;
+      let to = range.to;
+
+      if (text.startsWith(syntaxStart) && text.endsWith(syntaxEnd)) {
+        text = text.substring(syntaxStart.length, text.length - syntaxEnd.length);
+        return {
+          changes: { from: from, to: to, insert: text },
+          range: EditorSelection.range(from, from + text.length)
+        }
+      } else {
+        const newText = `${syntaxStart}${text}${syntaxEnd}`;
+        return {
+          changes: { from: from, to: to, insert: newText },
+          range: EditorSelection.range(from + syntaxStart.length, from + text.length + syntaxStart.length)
+        }
+      }
+    });
+    dispatch(state.update(changes));
+    editorView.focus();
+  }, [editorView]);
+  
+  // Nuevas funciones para cargar los demos
+  const loadMasterDemo = useCallback(async () => {
+    try {
+      console.log("[App] Loading Master Demo...");
+      const response = await fetch('/Master v2.5.md');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const content = await response.text();
+      console.log("[App] Master Demo loaded, length:", content.length);
+      setMarkdown(content);
+      showAlert("Master Demo v2.5 cargado correctamente", "success");
+    } catch (error) {
+      console.error("[App] Error loading Master Demo:", error);
+      showAlert(`Error al cargar el demo: ${error instanceof Error ? error.message : 'Unknown error'}`, "error");
+    }
+  }, [setMarkdown, showAlert]);
+
+  const loadCodexDemo = useCallback(async () => {
+    try {
+      console.log("[App] Loading Aetherium Codex Demo...");
+      const response = await fetch('/aetherium_codex_demo.md');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const content = await response.text();
+      console.log("[App] Aetherium Codex Demo loaded, length:", content.length);
+      setMarkdown(content);
+      setCurrentTemplate('aetherium_codex'); // Cambiar también al tema correspondiente
+      showAlert("Demo Aetherium Codex cargado y tema aplicado", "success");
+    } catch (error) {
+      console.error("[App] Error loading Aetherium Codex Demo:", error);
+      showAlert(`Error al cargar el demo: ${error instanceof Error ? error.message : 'Unknown error'}`, "error");
+    }
+  }, [setMarkdown, setCurrentTemplate, showAlert]);
+
+  const loadInfinityDemo = useCallback(async () => {
+    try {
+      console.log("[App] Loading Infinity Command Demo...");
+      const response = await fetch('/purple_neon_grid_demo.md'); // Usar el demo de Purple Neon Grid
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const content = await response.text();
+      console.log("[App] Infinity Command Demo loaded, length:", content.length);
+      setMarkdown(content);
+      setCurrentTemplate('infinitycommand'); // Cambiar al tema Infinity Command
+      showAlert("Demo Infinity Command cargado y tema aplicado", "success");
+    } catch (error) {
+      console.error("[App] Error loading Infinity Command Demo:", error);
+      showAlert(`Error al cargar el demo: ${error instanceof Error ? error.message : 'Unknown error'}`, "error");
+    }
+  }, [setMarkdown, setCurrentTemplate, showAlert]);
   
   return (
     <div className={`h-screen flex flex-col ${darkMode ? 'dark-mode' : ''}`}>
@@ -874,6 +911,9 @@ function App() {
             onSave={handleSave}
             onLoad={handleLoadMarkdownTrigger}
             onExportPDF={exportAsPDF}
+            onLoadMasterDemo={loadMasterDemo}
+            onLoadCodexDemo={loadCodexDemo}
+            onLoadInfinityDemo={loadInfinityDemo}
           />
           
           <div className="flex-1 p-4 overflow-auto" onScroll={handleEditorScroll}>
@@ -921,7 +961,7 @@ function App() {
                     return;
                   }
                   
-                  const success = applyCSS(css);
+                  const success = applyCSS(css, currentTemplate);
                   if (success) {
                     showAlert("CSS applied successfully", "success");
                   } else {

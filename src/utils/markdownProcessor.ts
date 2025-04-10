@@ -1,7 +1,42 @@
 import { marked } from "marked";
+import { create } from 'zustand';
+
+// --- STORE DEFINITION MOVED HERE TEMPORARILY ---
+export interface AppState {
+  markdown: string;
+  setMarkdown: (markdown: string) => void;
+  css: string;
+  setCSS: (css: string) => void;
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+  currentTemplate: string;
+  setCurrentTemplate: (template: string) => void;
+  isDebugMode: boolean;
+  toggleDebugMode: () => void;
+}
+export const useAppStore = create<AppState>((set) => ({
+  markdown: localStorage.getItem('markdown') || '',
+  setMarkdown: (markdown) => { localStorage.setItem('markdown', markdown); set({ markdown }); },
+  css: localStorage.getItem('currentCSS') || '',
+  setCSS: (css) => { localStorage.setItem('currentCSS', css); set({ css }); },
+  darkMode: localStorage.getItem('darkMode') === 'true',
+  toggleDarkMode: () => set((state) => { const v = !state.darkMode; localStorage.setItem('darkMode', String(v)); return { darkMode: v }; }),
+  currentTemplate: localStorage.getItem('currentTemplate') || 'default',
+  setCurrentTemplate: (template) => { localStorage.setItem('currentTemplate', template); set({ currentTemplate: template }); },
+  isDebugMode: localStorage.getItem('isDebugMode') === 'true',
+  toggleDebugMode: () => set((state) => { const v = !state.isDebugMode; localStorage.setItem('isDebugMode', String(v)); console.log(`[App] Debug Mode ${v ? 'ENABLED' : 'DISABLED'}`); return { isDebugMode: v }; }),
+}));
+// --- END STORE DEFINITION ---
+
+// --- Logging Helpers (Now correctly use the defined store) ---
+const logDebug = (message: string, ...optionalParams: any[]) => {
+    if (useAppStore.getState().isDebugMode) { console.log(`[MP] ${message}`, ...optionalParams); }
+};
+const logWarn = (message: string, ...optionalParams: any[]) => {
+    if (useAppStore.getState().isDebugMode) { console.warn(`[MP] ${message}`, ...optionalParams); }
+};
 
 // Definición de tipos para hacer TypeScript feliz
-type Token = any;
 type TokenizerAndRendererExtension = any;
 
 /**
@@ -39,149 +74,135 @@ function findStatusClass(text: string): string | null {
  * Extensión de Marked para reconocer y renderizar bloques personalizados :::type Título...
  * Genera HTML con estructura de paneles (<section class="mixed-panel...">)
  */
-const customBlockExtension: TokenizerAndRendererExtension = {
+const customBlockExtension: marked.TokenizerExtension & marked.RendererExtension = {
     name: 'customBlock',
     level: 'block',
-    start(src: string) { const cap = /^(?: {0,3}|\t):::(\w+)\s*(.*?)\s*(?:\n|$)/.exec(src); return cap ? cap.index : undefined; },
-    tokenizer(src: string): Token | undefined {
-         const rule = /^(?: {0,3}|\t):::(\w+)\s*(.*?)\s*(?:\n|$)([\s\S]*?)(?:\n(?: {0,3}|\t):::\s*(?:\n|$)|$)/;
+    tokenizer: (src: string): marked.Token | undefined => {
+        // Detecta bloques con formato :::tipo [título]\ncontenido\n:::
+        const rule = /^:::\s*(\w+)(?:\s+(.+))?\n([\s\S]*?)\n:::/;
         const match = rule.exec(src);
+        
         if (match) {
-            const type = match[1].trim().toLowerCase();
-            let title = match[2] ? match[2].trim() : '';
-            let content = match[3] ? match[3].trim() : '';
-            // Extracción de título si no está en la primera línea
-            if (!title && content) { const lines = content.split('\n'); const pt = lines[0].trim(); if (lines.length > 1 && !pt.match(/^#{1,6}\s|^[\*\->+\|]\s|^\s*$/) && /^[a-zA-Z0-9\s,:;\.\(\)\[\]\{\}\-_\/\\#@!¡¿?'"]+$/.test(pt) && pt.length < 100) { title = pt; content = lines.slice(1).join('\n').trim(); } else { title = type.charAt(0).toUpperCase() + type.slice(1); } } else if (!title) { title = type.charAt(0).toUpperCase() + type.slice(1); }
-            const tokens: marked.Token[] = []; // Especificar tipo
-            // @ts-ignore - Acceder a this.lexer es necesario aquí
-            this.lexer.blockTokens(content, tokens);
-            return { type: 'customBlock', raw: match[0], blockType: type, title: title, tokens: tokens };
-        } return undefined;
-    },
-    renderer(token: Token & { blockType: string; title: string; tokens: marked.Token[] }): string {
-        const { blockType, title, tokens } = token;
-        console.log(`[CustomBlock] Rendering block type: ${blockType}, title: ${title}`);
-        
-        let processedContent = '';
-        try { // Parsear tokens internos
-            // @ts-ignore - Acceder a this.parser
-            processedContent = this.parser.parse(tokens);
-            console.log(`[CustomBlock] Parsed tokens content length: ${processedContent.length}`);
-        } catch(e) { // Fallback
-             console.error(`[CustomBlock] Error parsing tokens, using fallback:`, e);
-             const contentRule = /^(?: {0,3}|\t):::\w+\s*.*?\s*(?:\n|$)([\s\S]*?)(?:\n(?: {0,3}|\t):::\s*(?:\n|$)|$)/;
-             const contentMatch = contentRule.exec(token.raw);
-             processedContent = marked.parse(contentMatch?.[1]?.trim() ?? '');
-        }
-
-        // Renderizado específico por tipo
-        if (blockType === 'note') {
-            const titleHTML = title && title.toLowerCase() !== 'note' ? `<strong>${title}:</strong> ` : '';
-            return `<blockquote class="note-block">${titleHTML}${processedContent}</blockquote>`;
-        }
-        
-        if (blockType === 'panel-data-matrix' || blockType === 'datamatrix') {
-            console.log(`[DataMatrix] Processing datamatrix block '${title}'`);
-            console.log(`[DataMatrix] Original token.raw: `, token.raw.slice(0, 150) + '...');
-            console.log(`[DataMatrix] Initial processedContent:`, processedContent.slice(0, 150) + '...');
+            logDebug("Tokenizer encontró un bloque custom:", `Tipo: ${match[1]}, Título: ${match[2] || 'Sin título'}, Contenido: ${match[3].length} caracteres`);
             
-            // Asegurar que el contenido sea una tabla HTML adecuada
-            if (!processedContent.includes('<table')) {
-                console.log(`[DataMatrix] No <table> found in content, converting text to HTML table`);
-                // Convertir el contenido de texto a una tabla HTML
-                const lines = token.raw.split('\n').filter((line: string) => line.trim().length > 0 && !line.includes(':::'));
-                console.log(`[DataMatrix] Found ${lines.length} lines to process`);
-                
-                let tableHTML = '<table><thead><tr>';
-                
-                // Determinar si tenemos cabecera basado en la línea de separación con guiones
-                const hasSeparatorRow = lines.some((line: string) => /^\s*\|[\s\-]+\|/.test(line));
-                console.log(`[DataMatrix] Has separator row: ${hasSeparatorRow}`);
-                
-                let inHeader = true;
-                let rowIndex = 0;
-                
-                for (const line of lines) {
-                    const trimmedLine = line.trim();
-                    console.log(`[DataMatrix] Processing line: "${trimmedLine}"`);
-                    
-                    if (!trimmedLine || trimmedLine.startsWith(':::')) {
-                        console.log(`[DataMatrix] Skipping empty or ::: line`);
-                        continue;
-                    }
-                    
-                    // Detectar fila separadora
-                    if (/^\s*\|[\s\-]+\|/.test(trimmedLine)) {
-                        console.log(`[DataMatrix] Separator row detected`);
-                        inHeader = false;
-                        continue;
-                    }
-                    
-                    // Procesar filas de datos
-                    const cells = trimmedLine.split('|').map((cell: string) => cell.trim())
-                        .filter((cell: string, i: number, arr: string[]) => i > 0 && i < arr.length - 1);
-                    
-                    console.log(`[DataMatrix] Found ${cells.length} cells in row: ${cells.join('|')}`);
-                    
-                    if (rowIndex === 0 || (hasSeparatorRow && inHeader)) {
-                        // Primera fila como cabecera
-                        tableHTML += cells.map((cell: string) => `<th>${cell}</th>`).join('');
-                        if (rowIndex === 0 && !hasSeparatorRow) {
-                            tableHTML += '</tr></thead><tbody><tr>';
-                            inHeader = false;
-                            console.log(`[DataMatrix] Added header row (no separator) and starting body`);
-                        } else {
-                            tableHTML += '</tr>';
-                            console.log(`[DataMatrix] Added header row with separator`);
-                        }
-                    } else {
-                        // Filas de datos
-                        if (rowIndex === 1 && hasSeparatorRow) {
-                            tableHTML += '<tbody><tr>';
-                            console.log(`[DataMatrix] Starting body after separator`);
-                        } else {
-                            tableHTML += '<tr>';
-                        }
-                        tableHTML += cells.map((cell: string) => `<td>${cell}</td>`).join('') + '</tr>';
-                        console.log(`[DataMatrix] Added data row`);
-                    }
-                    
-                    rowIndex++;
+            const type = match[1];
+            // Si no hay título, usar cadena vacía en lugar de undefined
+            const title = match[2] ? match[2].trim() : '';
+            const content = match[3];
+            
+            return {
+                type: 'customBlock',
+                raw: match[0],
+                blockType: type,
+                title,
+                content,
+                tokens: []
+            } as unknown as marked.Token;
+        }
+        
+        return undefined;
+    },
+    
+    renderer: (token: any) => {
+        logDebug("Renderizando bloque custom:", `Tipo: ${token.blockType}, Título: ${token.title || 'Sin título'}`);
+        
+        // Extraer parámetros de la clase si están presentes en el título
+        let title = token.title || '';
+        const floatMatch = title.match(/\s+float-(left|right)/i);
+        let floatClass = '';
+        
+        if (floatMatch) {
+            floatClass = `float-${floatMatch[1]}`;
+            // Eliminar el parámetro float del título
+            title = title.replace(floatMatch[0], '').trim();
+        }
+        
+        try {
+            if (token.blockType === 'datamatrix') {
+                if (!token.content || !token.content.trim()) {
+                    return `<div class="datamatrix-container error ${floatClass}" data-title="${title}">
+                        <div class="error-message">Error: Datamatrix content is empty</div>
+                    </div>`;
                 }
                 
-                tableHTML += '</tbody></table>';
-                console.log(`[DataMatrix] Final tableHTML:`, tableHTML);
-                processedContent = tableHTML;
+                const lines = token.content.split('\n').filter((line: string) => line.trim() && !line.includes(':::'));
+                
+                if (lines.length === 0) {
+                    return `<div class="datamatrix-container error ${floatClass}" data-title="${title}">
+                        <div class="error-message">Error: No valid content lines in datamatrix</div>
+                    </div>`;
+                }
+                
+                // Extraer encabezados de la primera línea
+                const headers = lines[0].split('|')
+                    .map((header: string) => header.trim())
+                    .filter((header: string) => header);
+                
+                if (headers.length === 0) {
+                    return `<div class="datamatrix-container error ${floatClass}" data-title="${title}">
+                        <div class="error-message">Error: Invalid table format - No headers found</div>
+                    </div>`;
+                }
+                
+                // Construir la tabla
+                let tableHTML = `<div class="datamatrix-container ${floatClass}" data-title="${title}">\n`;
+                tableHTML += '<table class="data-matrix" data-matrix-table="true">\n';
+                
+                // Añadir encabezados
+                tableHTML += '<thead>\n<tr>\n';
+                headers.forEach((header: string) => {
+                    tableHTML += `<th>${header}</th>\n`;
+                });
+                tableHTML += '</tr>\n</thead>\n';
+                
+                // Añadir filas de datos
+                tableHTML += '<tbody>\n';
+                for (let i = 1; i < lines.length; i++) {
+                    const cells = lines[i].split('|')
+                        .map((cell: string) => cell.trim())
+                        .filter((_: string, index: number) => index < headers.length);
+                    
+                    if (cells.length === 0) continue;
+                    
+                    tableHTML += '<tr>\n';
+                    
+                    // Rellenar con celdas vacías si faltan
+                    while (cells.length < headers.length) {
+                        cells.push('');
+                    }
+                    
+                    cells.forEach((cell: string) => {
+                        tableHTML += `<td>${cell}</td>\n`;
+                    });
+                    
+                    tableHTML += '</tr>\n';
+                }
+                tableHTML += '</tbody>\n';
+                tableHTML += '</table>\n</div>';
+                
+                return tableHTML;
+            } else if (token.blockType === 'panel') {
+                // Tratar los bloques "panel" como paneles personalizados
+                return `<div class="custom-panel ${floatClass}" data-panel-type="${token.blockType}" data-title="${title}">${marked.parse(token.content)}</div>`;
             } else {
-                console.log(`[DataMatrix] <table> already in processedContent, keeping it`);
+                // Para otros tipos, crear un panel genérico
+                return `<div class="custom-panel ${floatClass}" data-panel-type="${token.blockType}" data-title="${title}">${marked.parse(token.content)}</div>`;
             }
-            
-            // El contenido ya es <table>. El post-procesador la finalizará.
-            const result = `<div class="datamatrix-raw-output" data-title="${title}">${processedContent}</div>`;
-            console.log(`[DataMatrix] Final result:`, result.slice(0, 150) + '...');
-            return result;
+        } catch (error) {
+            logDebug("Error al renderizar bloque custom:", error);
+            return `<div class="datamatrix-container error ${floatClass}" data-title="${title}">
+                <div class="error-message">Error rendering custom block: ${error instanceof Error ? error.message : String(error)}</div>
+            </div>`;
         }
-
-        // Mapeo para paneles
-        const panelClassMap: { [key: string]: { panel: string, icon: string, content?: string } } = {
-            'statblock': { panel: 'panel-unit-status', icon: 'icon-status' },
-            'readaloud': { panel: 'panel-event-log', icon: 'icon-log', content: 'log-list'},
-            'objectives': { panel: 'panel-objectives', icon: 'icon-objective', content: 'objective-list'},
-            'encounter': { panel: 'panel-mission-intel', icon: 'icon-objective'}, // Añadir más según necesites
-        };
-        const { panel: panelClassSpecific, icon: iconClass, content: contentClass = '' } = panelClassMap[blockType] || { panel: `custom-${blockType}`, icon: '', content: '' };
-        const panelClasses = ['mixed-panel', panelClassSpecific, blockType]; // Clase base + específica + tipo
-        const headerIcon = iconClass ? `<span class="header-icon ${iconClass}"></span>` : '';
-        // Usar H3 como título de panel por defecto para mejor jerarquía semántica
-        const headerHTML = `<div class="panel-header">${headerIcon}<h3>${title}</h3></div>`;
-
-        return `<section class="${panelClasses.join(' ')}">${headerHTML}<div class="panel-content ${contentClass}">${processedContent}</div></section>`;
     }
 };
 
 // Aplicar extensión y opciones
 marked.use({ extensions: [customBlockExtension] });
+console.log('[MarkdownProcessor] Marked extension registered.');
+
 marked.setOptions({ gfm: true, breaks: true, headerIds: false, mangle: false });
+console.log('[MarkdownProcessor] Marked options set.');
 
 /**
  * Clase MarkdownProcessor V2.5
@@ -193,40 +214,43 @@ class MarkdownProcessor {
     private readonly DEBUG = false;
 
     process(markdown: string): string {
+        // console.log(`[MD Process DEBUG] Processing called with markdown length: ${markdown.length}`);
+        // --- COMPLETELY BYPASS PROCESSING FOR DEBUGGING ---
+        // return '<p>Markdown processing temporarily bypassed.</p>';
+        /* --- Original Code Start --- */
         try {
-            console.log(`[MD Process] Processing markdown (${markdown.length} chars)`);
+            console.log('[MD Process] Processing markdown (' + markdown.length + ' chars)');
+            // Reactivate Cache
             if (this.cache.has(markdown)) { 
-                if (this.DEBUG) console.log("[MD Proc] Cache hit"); 
-                console.log(`[MD Process] Using cached result`);
+                if (this.DEBUG) console.log('[MD Proc] Cache hit'); 
+                console.log('[MD Process] Using cached result');
                 return this.cache.get(markdown)!; 
             }
+            // console.log("[MD Process] Cache check bypassed for debugging.");
             
             // Preprocesar el markdown para detectar bloques personalizados
             const preprocessed = this.preProcessMarkdown(markdown);
-            console.log(`[MD Process] Preprocessing completed`);
+            console.log('[MD Process] Preprocessing completed');
             
-            // Convertir a HTML con marked
+            // Convertir a HTML con marked (esto ejecuta la extensión)
             let html = marked.parse(preprocessed);
-            console.log(`[MD Process] Initial HTML from marked:`, html.slice(0, 150) + '...');
-            
-            // Procesar bloques personalizados como datamatrix
-            html = this.parseCustomBlocks(html);
-            console.log(`[MD Process] HTML after block parsing:`, html.slice(0, 150) + '...');
+            console.log('[MD Process] HTML after marked.parse (renderer executed):', html.slice(0, 150) + '...');
             
             // Procesamiento final del DOM
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
-            this.postProcessHTML(doc);
+            this.postProcessHTML(doc); // Trabaja directamente sobre el HTML generado por el renderer
             html = doc.body.innerHTML;
             
-            console.log(`[MD Process] Post-processed HTML:`, html.slice(0, 150) + '...');
+            console.log('[MD Process] Post-processed HTML:', html.slice(0, 250) + '...');
             
-            this.updateCache(markdown, html);
+            this.updateCache(markdown, html); // Reactivate cache update
             return html;
         } catch (error: unknown) { 
             console.error('[MD Proc] Error:', error); 
-            return `<div class="error-message">Markdown Error: ${error instanceof Error ? error.message : 'Unknown'}</div>`; 
+            return '<div class="error-message">Markdown Error: ' + (error instanceof Error ? error.message : 'Unknown') + '</div>'; 
         }
+        /* --- Original Code End --- */
     }
 
     private preProcessMarkdown(markdown: string): string {
@@ -235,7 +259,7 @@ class MarkdownProcessor {
             (_match, content: string) => {
                 // Asegurarse de que content nunca sea undefined
                 const safeContent = content ? content.trim() : '';
-                return `<span class="dice-roll" data-roll="${safeContent}">${safeContent}</span>`;
+                return '<span class="dice-roll" data-roll="' + safeContent + '">' + safeContent + '</span>';
             }
         );
     }
@@ -270,117 +294,104 @@ class MarkdownProcessor {
      * Post-procesamiento: Finaliza tablas, añade spans de estado y data-attributes.
      */
     private postProcessHTML(doc: Document): void {
-        if (!doc || !doc.body) return;
+        console.log('[PostProcessHTML DEBUG] Starting postProcessHTML...');
+        if (!doc || !doc.body) {
+            console.error('[PostProcessHTML DEBUG] No doc or body found!');
+            return;
+        }
         
-        // Primero procesar los datamatrix para asegurar que se procesen antes que otras tablas
-        console.log('[PostProcessHTML] Buscando elementos datamatrix-raw-output');
-        const dataMatrixWrappers = doc.querySelectorAll('div.datamatrix-raw-output, div[data-title]');
-        console.log(`[PostProcessHTML] Found ${dataMatrixWrappers.length} datamatrix wrappers (raw output divs)`);
+        /* --- REACTIVATING STEPS 1, 2, & 3 --- */
+        // Procesar los paneles primero
+        this.processPanels(doc);
+        console.log('[PostProcessHTML DEBUG] processPanels executed.');
         
-        dataMatrixWrappers.forEach(wrapper => {
-            this.processDataMatrixTable(wrapper as HTMLElement, doc);
+        // Procesar datamatrix
+        const dataMatrixContainers = doc.querySelectorAll('div.datamatrix-container'); 
+        console.log('[PostProcessHTML DEBUG] Found ' + dataMatrixContainers.length + ' datamatrix containers.');
+        dataMatrixContainers.forEach((container, index) => {
+            if (!container.classList.contains('error')) { 
+                 this.processDataMatrixTable(container as HTMLElement, doc, index);
+            } else {
+                 console.log('[PostProcessHTML DEBUG] Skipping error datamatrix container #' + (index + 1));
+            }
         });
+        console.log('[PostProcessHTML DEBUG] Datamatrix processing executed.');
         
-        // Procesar tablas estándar después
+        // Procesar tablas estándar
         const tables = doc.querySelectorAll('table:not(.data-matrix):not([data-matrix-table="true"])');
-        console.log(`[PostProcessHTML] Processing ${tables.length} standard tables`);
+        console.log('[PostProcessHTML DEBUG] Found ' + tables.length + ' standard tables.');
         tables.forEach(table => {
             this.processStandardTable(table as HTMLTableElement, doc);
         });
+        console.log('[PostProcessHTML DEBUG] Standard table processing executed.');
         
+        /* --- REACTIVATING STEP 4 --- */
         // Aplicar estilos a elementos con atributos de estado
         this.applyStateStyling(doc);
+        console.log('[PostProcessHTML DEBUG] applyStateStyling executed.');
         
-        // Procesar otros elementos
+        /* --- STEPS STILL COMMENTED OUT --- */
+        /*
+        // Procesar otros elementos (p, li, headings)
         const allParagraphs = doc.querySelectorAll('p');
-        console.log(`[PostProcessHTML] Processing ${allParagraphs.length} paragraphs`);
+        console.log('[PostProcessHTML] Processing ' + allParagraphs.length + ' paragraphs');
         allParagraphs.forEach(p => {
             this.processElementContent(p as HTMLElement, doc);
         });
         
         const allListItems = doc.querySelectorAll('li');
-        console.log(`[PostProcessHTML] Processing ${allListItems.length} list items`);
+        console.log('[PostProcessHTML] Processing ' + allListItems.length + ' list items');
         allListItems.forEach(li => {
             this.processElementContent(li as HTMLElement, doc);
         });
+        
+        // Procesar encabezados especiales para temas específicos
+        const allHeadings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        console.log('[PostProcessHTML] Processing ' + allHeadings.length + ' headings');
+        allHeadings.forEach(heading => {
+            heading.setAttribute('data-heading-level', heading.tagName.toLowerCase());
+        });
+        */
+        console.log('[PostProcessHTML DEBUG] Remaining internal processing steps skipped.');
     }
 
-    /** Finaliza la tabla datamatrix: añade clase, spans, envuelve, añade título */
-    private processDataMatrixTable(wrapper: HTMLElement, doc: Document): void {
-        console.log(`[ProcessDataMatrix] Processing wrapper with id: ${wrapper.id}, class: ${wrapper.className}`);
-        console.log(`[ProcessDataMatrix] Wrapper data-title: ${wrapper.getAttribute('data-title') || 'none'}`);
-        console.log(`[ProcessDataMatrix] Wrapper innerHTML (first 150 chars):`, wrapper.innerHTML.slice(0, 150) + '...');
+    /** Finaliza la tabla datamatrix: añade spans/clases a celdas, añade título */
+    private processDataMatrixTable(container: HTMLElement, doc: Document, index: number): void {
+        console.log('[ProcessDataMatrix #' + (index + 1) + '] Processing container class: ' + container.className);
+        const title = container.dataset.title || container.getAttribute('data-title');
+        console.log('[ProcessDataMatrix #' + (index + 1) + '] Container data-title: ' + (title || 'none'));
         
-        const table = wrapper.querySelector('table');
+        const table = container.querySelector('table.data-matrix[data-matrix-table="true"]');
+        
         if (table) {
-            console.log(`[ProcessDataMatrix] Table found inside wrapper: ${table.className}`);
+            console.log('[ProcessDataMatrix #' + (index + 1) + '] Found table.data-matrix inside container.');
             
-            // Crear primero el contenedor final para preservar referencias
-            const container = doc.createElement('div'); 
-            container.className = 'table-container datamatrix-container';
-            console.log(`[ProcessDataMatrix] Created container with class: ${container.className}`);
+            // Procesar las celdas de la tabla existente
+            const tdCells = table.querySelectorAll('tbody td');
+            console.log('[ProcessDataMatrix #' + (index + 1) + '] Processing ' + tdCells.length + ' td cells in existing table');
+            tdCells.forEach((cell) => { 
+                this.processElementContent(cell as HTMLElement, doc); 
+            });
             
-            // Mover la tabla al contenedor ANTES de modificarla
-            container.appendChild(table.cloneNode(true));
-            const tableInContainer = container.querySelector('table');
-            
-            if (tableInContainer) {
-                // Ahora aplicar la clase a la tabla que ya está en el contenedor final
-                tableInContainer.classList.add('data-matrix');
-                console.log(`[ProcessDataMatrix] Added data-matrix class to table in container. Classes: ${tableInContainer.className}`);
-                
-                // Añadir atributo data-matrix-table="true" para ayudar con la selección CSS
-                tableInContainer.setAttribute('data-matrix-table', 'true');
-                
-                // Procesar las celdas de la tabla en el contenedor
-                const tdCells = tableInContainer.querySelectorAll('tbody td');
-                console.log(`[ProcessDataMatrix] Processing ${tdCells.length} td cells`);
-                
-                tdCells.forEach((cell, i) => { 
-                    this.processElementContent(cell as HTMLElement, doc); 
-                });
-                
-                // Insertar contenedor y título en el DOM
-                const panelContent = wrapper.closest('.panel-content'); 
-                const parent = panelContent || wrapper.parentNode;
-                if (parent) {
-                    console.log(`[ProcessDataMatrix] Parent node found ${panelContent ? '(panel-content)' : '(fallback to parentNode)'}`);
-                    
-                    // Verificar si necesitamos crear un título
-                    const title = wrapper.dataset.title || wrapper.getAttribute('data-title'); 
-                    if (title) { 
-                        // En lugar de crear un h4, usar un p con clase especial para el formato de título correcto
-                        const titleEl = doc.createElement('p'); 
-                        titleEl.className = 'data-matrix-title'; 
-                        titleEl.textContent = title.toUpperCase(); 
-                        parent.insertBefore(titleEl, wrapper);
-                        console.log(`[ProcessDataMatrix] Added title element: "${title}"`);
-                    }
-                    
-                    // Insertar la tabla dentro del contenedor 
-                    parent.insertBefore(container, wrapper);
-                    
-                    console.log(`[ProcessDataMatrix] Removing original wrapper`);
-                    wrapper.remove();
-                    
-                    // Verificar después de procesar
-                    const tablesAfter = doc.querySelectorAll('table.data-matrix, table[data-matrix-table="true"]');
-                    console.log(`[ProcessDataMatrix] DOM CHECK: ${tablesAfter.length} tables with .data-matrix class found after processing`);
-                    
-                    // Verificar contenido exacto de la tabla procesada
-                    if (tablesAfter.length > 0) {
-                        console.log(`[ProcessDataMatrix] First table classes: ${tablesAfter[0].className}`);
-                        console.log(`[ProcessDataMatrix] First table attributes: data-matrix-table="${tablesAfter[0].getAttribute('data-matrix-table')}"`);
-                    }
-                } else {
-                    console.warn(`[ProcessDataMatrix] No parent node found!`);
-                }
-            } else {
-                console.error(`[ProcessDataMatrix] Failed to find the table in the container after cloning!`);
+            // Añadir el título ANTES del contenedor si existe
+            if (title && container.parentNode && !container.previousElementSibling?.classList.contains('data-matrix-title')) { 
+                const titleEl = doc.createElement('p'); 
+                titleEl.className = 'data-matrix-title'; 
+                titleEl.textContent = title.toUpperCase(); 
+                container.parentNode.insertBefore(titleEl, container);
+                console.log('[ProcessDataMatrix #' + (index + 1) + '] Added title element: "' + title + '"');
             }
+            
+            // Marcar como procesado para evitar reprocesamiento accidental
+            container.dataset.processed = 'true';
+            console.log('[ProcessDataMatrix #' + (index + 1) + '] Marked container as processed.');
+            
         } else { 
-            console.error(`[ProcessDataMatrix] No table found in wrapper!`);
-            wrapper.innerHTML = '<div class="error-message">Error: No table in datamatrix block.</div>'; 
+            // Esto no debería ocurrir si el renderer funcionó, pero es una salvaguarda
+            console.error('[ProcessDataMatrix #' + (index + 1) + '] No table.data-matrix found inside the container generated by the renderer! Container HTML: ' + container.innerHTML.slice(0, 200));
+            // Opcionalmente, mostrar un error en la UI
+            container.innerHTML = '<div class="error-message">Internal Error: Failed to find table structure after rendering.</div>';
+            container.classList.add('error'); 
         }
     }
 
@@ -416,29 +427,13 @@ class MarkdownProcessor {
     // Detectar si una tabla está dentro de un bloque personalizado tipo datamatrix
     private isDataMatrixTable(container: Element): boolean {
         const isContainer: boolean = container.tagName === 'DIV' && 
-            (container.className.includes('datamatrix-raw-output') || 
+            (container.className.includes('datamatrix-container') ||
              container.hasAttribute('data-title') ||
              container.previousElementSibling?.textContent?.includes('datamatrix') || false);
         
-        console.log(`[isDataMatrixTable] Checking container: ${container.tagName}, class=${container.className}`);
-        console.log(`[isDataMatrixTable] Result: ${isContainer}`);
+        console.log('[isDataMatrixTable] Checking container: ' + container.tagName + ', class=' + container.className);
+        console.log('[isDataMatrixTable] Result: ' + isContainer);
         return isContainer;
-    }
-
-    // Analizar bloques personalizados
-    private parseCustomBlocks(html: string): string {
-        console.log(`[parseCustomBlocks] Analizando bloques personalizados...`);
-        
-        // Patrón para detectar bloques datamatrix en formato ::: datamatrix
-        const blockRegex = /:::\s*datamatrix\s+(.*?)\s*\n([\s\S]*?):::/g;
-        
-        // Reemplazar bloques datamatrix con divs con atributo de título
-        let processed = html.replace(blockRegex, (match, title, content) => {
-            console.log(`[parseCustomBlocks] Found datamatrix block with title: ${title}`);
-            return `<div class="datamatrix-raw-output" data-title="${title || ''}">${content}</div>`;
-        });
-        
-        return processed;
     }
 
     /** Aplica estilos a elementos con atributos data-* */
@@ -449,7 +444,7 @@ class MarkdownProcessor {
         
         // Procesar elementos con data-value y data-max para barras de progreso
         const progressElements = doc.querySelectorAll('[data-value][data-max]');
-        console.log(`[ApplyStateStyling] Found ${progressElements.length} elements with data-value/data-max`);
+        console.log('[ApplyStateStyling] Found ' + progressElements.length + ' elements with data-value/data-max');
         
         progressElements.forEach(element => {
             // Verificar si ya tiene una barra de progreso
@@ -475,13 +470,13 @@ class MarkdownProcessor {
                 barContainer.className = 'dynamic-progress-bar status-bar';
                 
                 const barFill = doc.createElement('span');
-                barFill.className = `bar-fill ${barClass}`;
-                barFill.style.width = `${percent}%`;
+                barFill.className = 'bar-fill ' + barClass;
+                barFill.style.width = percent + '%';
                 
                 barContainer.appendChild(barFill);
                 element.appendChild(barContainer);
                 
-                console.log(`[ApplyStateStyling] Added progress bar to element: ${value}/${max} (${percent}%)`);
+                console.log('[ApplyStateStyling] Added progress bar to element: ' + value + '/' + max + ' (' + percent + '%)');
             } catch (error) {
                 console.error('[ApplyStateStyling] Error creating progress bar:', error);
             }
@@ -489,7 +484,125 @@ class MarkdownProcessor {
         
         // Procesar otros elementos con clases de estado para asegurar consistencia
         const statusElements = doc.querySelectorAll('.status-ok, .status-warn, .status-error, .status-neutral');
-        console.log(`[ApplyStateStyling] Found ${statusElements.length} elements with status classes`);
+        console.log('[ApplyStateStyling] Found ' + statusElements.length + ' elements with status classes');
+    }
+
+    // Procesar paneles después de la conversión HTML
+    private processPanels(doc: Document): void {
+        if (!doc || !doc.body) return;
+        
+        // Procesar primero los paneles personalizados
+        const customPanels = doc.querySelectorAll('div.custom-panel');
+        console.log('[ProcessPanels] Found ' + customPanels.length + ' custom panels');
+        
+        customPanels.forEach((panel, index) => {
+            const panelType = panel.getAttribute('data-panel-type') || 'generic';
+            const panelTitle = panel.getAttribute('data-title') || '';
+            console.log('[ProcessPanels] Processing panel #' + (index+1) + ', type: ' + panelType + ', title: ' + panelTitle);
+            
+            // Convertir a mixed-panel
+            panel.classList.add('mixed-panel');
+            
+            // Crear estructura interna del panel si no existe
+            if (!panel.querySelector('.panel-header')) {
+                const content = panel.innerHTML;
+                panel.innerHTML = '';
+                
+                // Crear header
+                const header = doc.createElement('div');
+                header.className = 'panel-header';
+                
+                // Añadir icono para el header
+                const headerIcon = doc.createElement('span');
+                headerIcon.className = 'header-icon';
+                header.appendChild(headerIcon);
+                
+                // Añadir título del panel según su tipo
+                let headerText = '';
+                switch (panelType) {
+                    case 'status':
+                        headerText = 'Unit Status';
+                        break;
+                    case 'log':
+                        headerText = 'Event Log';
+                        break;
+                    case 'info':
+                        headerText = 'Information';
+                        break;
+                    case 'warning':
+                        headerText = 'Warning';
+                        break;
+                    case 'error':
+                        headerText = 'Error';
+                        break;
+                    default:
+                        headerText = panelTitle || 'Panel';
+                }
+                
+                // Crear y añadir encabezado al panel
+                const headerTitle = doc.createElement('span');
+                headerTitle.textContent = headerText;
+                header.appendChild(headerTitle);
+                panel.appendChild(header);
+                
+                // Crear contenedor para el contenido
+                const contentDiv = doc.createElement('div');
+                contentDiv.className = 'panel-content';
+                contentDiv.innerHTML = content;
+                panel.appendChild(contentDiv);
+                
+                console.log('[ProcessPanels] Panel structure created for ' + panelType);
+            }
+        });
+        
+        // Procesar mixed-panels existentes (compatibilidad con versiones anteriores)
+        const mixedPanels = doc.querySelectorAll('.mixed-panel:not(.custom-panel)');
+        console.log('[ProcessPanels] Found ' + mixedPanels.length + ' additional mixed panels');
+        
+        mixedPanels.forEach((panel, index) => {
+            console.log('[ProcessPanels] Processing mixed panel #' + (index+1));
+            
+            // Si no tiene estructura interna, crearla
+            if (!panel.querySelector('.panel-header') && !panel.querySelector('.panel-content')) {
+                const content = panel.innerHTML;
+                
+                // Intentar extraer un título de un h2/h3 al principio del contenido
+                let title = '';
+                let restContent = content;
+                
+                const headerMatch = content.match(/<h[23][^>]*>(.*?)<\/h[23]>/i);
+                if (headerMatch) {
+                    title = headerMatch[1];
+                    restContent = content.replace(headerMatch[0], '');
+                    console.log('[ProcessPanels] Extracted title from h2/h3: ' + title);
+                }
+                
+                panel.innerHTML = '';
+                
+                // Crear header
+                const header = doc.createElement('div');
+                header.className = 'panel-header';
+                
+                // Añadir icono
+                const headerIcon = doc.createElement('span');
+                headerIcon.className = 'header-icon';
+                header.appendChild(headerIcon);
+                
+                // Añadir título
+                const headerTitle = doc.createElement('span');
+                headerTitle.textContent = title || 'Panel';
+                header.appendChild(headerTitle);
+                panel.appendChild(header);
+                
+                // Añadir contenido
+                const contentDiv = doc.createElement('div');
+                contentDiv.className = 'panel-content';
+                contentDiv.innerHTML = restContent;
+                panel.appendChild(contentDiv);
+                
+                console.log('[ProcessPanels] Panel structure created with title: ' + (title || 'Panel'));
+            }
+        });
     }
 }
 

@@ -5,7 +5,7 @@
 export class TemplateManager {
   private static instance: TemplateManager;
   private templates: Map<string, string> = new Map();
-  private currentTemplateId: string = 'default';
+  private currentTemplateId: string = 'purple_neon_grid';
   private embeddedTemplates: { [key: string]: string } = {};
 
   // Singleton pattern
@@ -77,11 +77,11 @@ export class TemplateManager {
     }
     
     // Fallback to default embedded template
-    console.warn(`TemplateManager: Template '${templateId}' not found in any source, using default template as fallback`);
-    const defaultCSS = this.embeddedTemplates.default;
-    if (!defaultCSS) {
-      console.error(`TemplateManager: DEFAULT TEMPLATE IS MISSING! This should never happen.`);
-      return `/* Error: Default template not found */
+    console.warn(`TemplateManager: Template '${templateId}' not found in any source, using purple_neon_grid template as fallback`);
+    const fallbackCSS = this.embeddedTemplates.purple_neon_grid || this.embeddedTemplates.default;
+    if (!fallbackCSS) {
+      console.error(`TemplateManager: FALLBACK TEMPLATE IS MISSING! This should never happen.`);
+      return `/* Error: Fallback template not found */
       body { 
         font-family: sans-serif;
         color: red;
@@ -93,8 +93,8 @@ export class TemplateManager {
       `;
     }
     
-    this.templates.set(templateId, defaultCSS);
-    return defaultCSS;
+    this.templates.set(templateId, fallbackCSS);
+    return fallbackCSS;
   }
 
   /**
@@ -102,12 +102,7 @@ export class TemplateManager {
    */
   public getAvailableTemplates(): { id: string, name: string }[] {
     return [
-      { id: 'default', name: 'Default' },
-      { id: 'minimalist', name: 'Minimalist' },
-      { id: 'modern', name: 'Modern' },
-      { id: 'cyberpunk', name: 'Cyberpunk' },
-      { id: 'corporate', name: 'Corporate' },
-      { id: 'aegis_overdrive', name: 'Aegis Overdrive' }
+      { id: 'purple_neon_grid', name: 'Purple Neon Grid' }
     ];
   }
 
