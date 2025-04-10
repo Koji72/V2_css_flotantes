@@ -37,7 +37,7 @@ Para acceder a zonas restringidas, se requiere autenticación de nivel Omega. Lo
 
 ## Métricas del Sistema
 
-::: datamatrix Rendimiento de la Red Neural
+::: datamatrix Rendimiento de la Red Neural float-left
 | Métrica | Valor Actual | Umbral Mínimo | Estado |
 |---------|--------------|--------------|--------|
 | Latencia Sináptica | 1.3ms | 5.0ms | <span class="status-high">Óptimo</span> |
@@ -47,13 +47,15 @@ Para acceder a zonas restringidas, se requiere autenticación de nivel Omega. Lo
 | Inmunidad Viral | 76.12% | 85.00% | <span class="status-low">Subóptimo</span> |
 :::
 
-::: panel Alerta de Seguridad
+::: panel Alerta de Seguridad float-right
 ### Brecha de Seguridad Detectada
 
 Se ha detectado una posible intrusión en el sector Gamma-7. Los protocolos de contención han sido activados. Se recomienda a todas las entidades autorizadas realizar un escaneo completo de sus interfaces neurales.
 
 **Código de Alerta:** XJ-7729-ALPHA
 :::
+
+La Red Neural Cuántica presenta un rendimiento general óptimo, aunque con algunas áreas que requieren atención. La Inmunidad Viral está por debajo del umbral mínimo establecido, lo que podría representar un punto vulnerable en las defensas de la red. Al mismo tiempo, se ha detectado una posible brecha de seguridad en el sector Gamma-7, potencialmente relacionada con esta vulnerabilidad.
 
 ## Fragmento de Código de Acceso
 
@@ -99,7 +101,7 @@ Durante estas ventanas de mantenimiento, se implementarán mejoras en los siguie
 
 Se han registrado las siguientes anomalías en el sistema en los últimos 30 ciclos:
 
-::: datamatrix Registro de Anomalías
+::: datamatrix Registro de Anomalías float-right
 | ID | Tipo | Ubicación | Severidad | Estado |
 |----|------|-----------|-----------|--------|
 | ANM-4721 | Fluctuación Cuántica | Sector Beta-12 | Media | <span class="status-medium">En Investigación</span> |
@@ -107,6 +109,14 @@ Se han registrado las siguientes anomalías en el sistema en los últimos 30 cic
 | ANM-4723 | Intrusión Externa | Sector Delta-3 | Crítica | <span class="status-critical">Activa</span> |
 | ANM-4724 | Desincronización Temporal | Sector Alpha-9 | Baja | <span class="status-low">Resuelta</span> |
 | ANM-4725 | Fragmentación Memética | Sector Epsilon-0 | Media | <span class="status-medium">En Reparación</span> |
+:::
+
+::: panel Nota Técnica float-left
+### Evaluación de Riesgos
+
+La anomalía ANM-4723 representa la mayor amenaza actual para la estabilidad del sistema. Los equipos de seguridad cuántica están desplegando contramedidas avanzadas para contener la intrusión.
+
+Mantenga sus protocolos de seguridad actualizados a la versión QSP-9.7.3 o superior para garantizar compatibilidad con las nuevas barreras defensivas.
 :::
 
 > "Las anomalías no son errores en la matriz, sino ventanas a realidades alternativas que nuestro sistema aún no comprende."

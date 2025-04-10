@@ -1,24 +1,43 @@
-# El Grimorio Etéreo
+# Aetherium Codex - Una demostración de manuscrito arcano
 
-*Bienvenido al Aetherium Codex - Una demostración de Universal Scribe V2.5*
+Bienvenido al **Aetherium Codex**, un repositorio ancestral de conocimiento arcano y poder místico. Este manuscrito contiene secretos de la naturaleza del cosmos y las fuerzas que lo gobiernan.
 
 ## La Naturaleza del Conocimiento Arcano
 
 El poder de los códices etéreos se encuentra en su capacidad para manifestar los conocimientos olvidados. Este documento muestra las capacidades visuales del tema **Aetherium Codex**.
 
-### Elementos Básicos
+::: panel Advertencia float-right
+### PRECAUCIÓN
 
-- Fuego Elemental
-- Agua Primordial
-- Tierra Ancestral
-- Aire Etéreo
-- Éter Cósmico
-- Vacío Primigenio
+La información contenida en este códice está protegida por múltiples sellos arcanos. La lectura no autorizada podría provocar alteraciones en la percepción de la realidad.
 
-### Pasos para la Correcta Invocación
+*Por orden del Alto Consejo Arcano*
+:::
+
+## Elementos Básicos
+
+* Fuego Elemental
+* Agua Primordial
+* Tierra Ancestral
+* Aire Etéreo
+* Éter Cósmico
+* Vacío Primigenio
+
+::: datamatrix Guardián del Códice float-left
+| Atributo | Valor | Estado |
+|----------|-------|--------|
+| Vitalidad | 450 | High |
+| Resistencia Mágica | 320 | Medium |
+| Velocidad | 120 | Low |
+| Percepción | 600 | Critical |
+| Poder Arcano | 780 | Error |
+| Edad | 12,452 años | Unknown |
+:::
+
+## Pasos para la Correcta Invocación
 
 1. Preparación del círculo de contención
-2. Alineación con la fase lunar correspondiente
+2. Alineación con la fase lunar correspondiente 
 3. Activación de los sellos de protección
 4. Canalización del flujo etéreo
 5. Pronunciación de las palabras de invocación
@@ -36,6 +55,29 @@ El poder de los códices etéreos se encuentra en su capacidad para manifestar l
 | Error | Distorsión Temporal |
 
 ## Estadísticas Actuales
+
+::: datamatrix Conjuntos de Hechizos float-right
+| Escuela de Magia | Hechizos Conocidos | Nivel Promedio | Potencia |
+|------------------|-------------------|---------------|----------|
+| Evocación | 17 | 7.3 | <span class="status-high">Alta</span> |
+| Abjuración | 12 | 4.8 | <span class="status-medium">Media</span> |
+| Transmutación | 9 | 2.5 | <span class="status-low">Baja</span> |
+| Adivinación | 14 | 6.1 | <span class="status-high">Alta</span> |
+| Conjuración | 8 | 5.4 | <span class="status-medium">Media</span> |
+| Ilusión | 11 | 3.7 | <span class="status-low">Baja</span> |
+| Encantamiento | 15 | 6.9 | <span class="status-high">Alta</span> |
+| Nigromancia | 6 | 8.2 | <span class="status-critical">Crítica</span> |
+:::
+
+::: panel Incantación Reciente float-left
+### Velo de Sombras Etéreas
+
+*"Velum umbra aeternum, protego arcanum sanctorum"*
+
+Este encantamiento crea un campo de distorsión perceptiva que oculta la presencia del lanzador de ojos curiosos y sentidos mágicos menores. Su duración depende del poder arcano del conjurador.
+
+**Componentes materiales**: Polvo de obsidiana, esencia de sombra, lágrima de espectro
+:::
 
 ### Mana: 78/100
 ### Energía: 45/100
@@ -55,11 +97,43 @@ El poder de los códices etéreos se encuentra en su capacidad para manifestar l
 | Edad | 12,452 años | Unknown |
 :::
 
-::: panel-info-box El susurro del códice
-Cuando tocas las páginas del Códice Etéreo, puedes escuchar los susurros de los antiguos maestros que volcaron su conocimiento en él. Sus palabras te guían hacia secretos olvidados por el tiempo.
+::: panel Ritual de Despertar
+### Activación del Códice
 
-*Lee estas palabras al grupo cuando abran el códice por primera vez.*
+Para despertar las páginas inactivas del códice, el siguiente ritual debe realizarse bajo la luna llena:
+
+1. Dibuja un pentagrama con tiza de hueso de dragón
+2. Coloca una vela de cera de abeja en cada punta
+3. Deposita el códice en el centro
+4. Recita el cántico ancestral tres veces:
+   *"Aetheria manuscriptum, illumina secretum, revela mysterium"*
+5. Deja caer tres gotas de sangre sobre la portada
+
+**Advertencia**: Una vez despierto, el códice no podrá volver a ser sellado por medios convencionales.
 :::
+
+## Traducción Automática del Lenguaje Arcano
+
+```
+func translateArcaneSigils(sigils []ArcaneSymbol) (string, error) {
+    var translation strings.Builder
+    
+    for _, sigil := range sigils {
+        meaning, exists := arcaneDict[sigil.Pattern]
+        if !exists {
+            return "", fmt.Errorf("unknown sigil pattern: %v", sigil.Pattern)
+        }
+        
+        power := calculateSigilPower(sigil.Resonance, sigil.Age)
+        if power < thresholdPower {
+            meaning = "???" // sigil too weak to translate
+        }
+        
+        translation.WriteString(meaning + " ")
+    }
+    
+    return translation.String(), nil
+}
 
 ## Tablas Estándar y Matriz de Datos
 
