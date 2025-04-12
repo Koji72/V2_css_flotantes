@@ -347,36 +347,6 @@ Recomendación: Desplegar sondas de reconocimiento.
         )}
       </div>
 
-      <div className="h-6 w-px bg-gray-700 mx-1"></div>
-
-      {/* Insertar bloques temáticos */}
-      <button 
-        className="p-2 hover:bg-gray-700 rounded flex items-center gap-1 border border-gray-600" 
-        onClick={() => onInsertBlock(characterStatBlock)}
-        title="Insertar bloque de estadísticas de personaje"
-      >
-        <Sword size={16} />
-        <span className="text-sm">Ficha de Personaje</span>
-      </button>
-
-      <button 
-        className="p-2 hover:bg-gray-700 rounded flex items-center gap-1 border border-gray-600" 
-        onClick={() => onInsertBlock(mapPanel)}
-        title="Insertar panel de mapa"
-      >
-        <Map size={16} />
-        <span className="text-sm">Panel de Mapa</span>
-      </button>
-
-      <button 
-        className="p-2 hover:bg-gray-700 rounded flex items-center gap-1 border border-gray-600" 
-        onClick={() => onInsertBlock(explorationMatrix)}
-        title="Insertar matriz de datos de exploración"
-      >
-        <CornerDownRight size={16} />
-        <span className="text-sm">Matriz de Exploración</span>
-      </button>
-
       <div className="flex-grow"></div>
 
       {/* Controles de carga */}
@@ -388,44 +358,35 @@ Recomendación: Desplegar sondas de reconocimiento.
         <span className="text-sm">Cargar MD</span>
       </button>
 
-      <button 
-        className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 flex items-center gap-2" 
-        onClick={() => onLoadDemo()}
-        disabled={isLoading}
-      >
-        {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Layout size={16} />}
-        <span className="text-sm">Cargar Demo</span>
-      </button>
+      <div className="flex items-center border-l border-gray-700 ml-2 pl-2">
+        <button 
+          className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 bg-blue-800'}`}
+          onClick={() => onLoadDemo('panel-showcase-v2.6.md')}
+          disabled={isLoading}
+          title="Ver Showcase de Paneles V2.6"
+        >
+          <Layout size={16} />
+          <span className="text-sm">Showcase Paneles</span>
+        </button>
+
+        <button 
+          className={`p-2 rounded flex items-center gap-1 ml-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700 bg-green-600'}`}
+          onClick={() => onLoadDemo('flotantes-demo-v2.6.md')}
+          disabled={isLoading}
+          title="Ver demostración de elementos flotantes V2.6"
+          style={{ fontWeight: 'bold' }}
+        >
+          <PanelLeft size={16} />
+          <span className="text-sm">Demo Flotantes</span>
+        </button>
+      </div>
 
       <button 
-        className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 flex items-center gap-2" 
-        onClick={() => onLoadDemo('rpg_fantasy_demo.md')}
-        disabled={isLoading}
-        title="Cargar demo del estilo RPG Fantasy"
+        className={`p-2 rounded ml-2 ${darkMode ? 'bg-yellow-600 hover:bg-yellow-500' : 'bg-indigo-800 hover:bg-indigo-700'}`}
+        onClick={onDarkModeToggle}
+        title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
       >
-        <Book size={16} />
-        <span className="text-sm">Demo RPG</span>
-      </button>
-
-      <button 
-        className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-700 bg-blue-800'}`}
-        onClick={() => onLoadDemo('panel-showcase-v2.6.md')}
-        disabled={isLoading}
-        title="Ver Showcase de Paneles V2.6"
-      >
-        <Layout size={16} />
-        <span>Showcase V2.6</span>
-      </button>
-
-      <button 
-        className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700 bg-green-600'}`}
-        onClick={() => onLoadDemo('flotantes-demo-v2.6.md')}
-        disabled={isLoading}
-        title="Ver demostración de elementos flotantes V2.6"
-        style={{ fontWeight: 'bold', border: '2px solid white' }}
-      >
-        <PanelLeft size={16} />
-        <span>Demo Flotantes V2.6</span>
+        {darkMode ? <Sun size={16} /> : <Moon size={16} />}
       </button>
     </div>
   );
