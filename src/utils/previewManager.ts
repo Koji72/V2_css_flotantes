@@ -466,18 +466,14 @@ class PreviewManager {
         // Esta es la parte nueva para eliminar el texto de los atributos que aparece incorrectamente
         let cleanInnerContent = innerContent;
         
-        // Solo limpiar la primera línea si no comienza con ###
-        const lines = cleanInnerContent.split('\n');
-        if (lines.length > 0 && !lines[0].trim().startsWith('###')) {
-            lines[0] = lines[0]
-                .replace(/layout\s*=\s*["'].*?["']/g, '')
-                .replace(/style\s*=\s*["'].*?["']/g, '')
-                .replace(/animation\s*=\s*["'].*?["']/g, '')
-                .replace(/class\s*=\s*["'].*?["']/g, '');
-        }
-        
-        // Reconstruir el contenido limpio
-        cleanInnerContent = lines.join('\n');
+        // Eliminar todas las ocurrencias de layout=, style=, etc.
+        cleanInnerContent = cleanInnerContent
+            .replace(/layout\s*=\s*["']floating-left["']/gi, '')
+            .replace(/layout\s*=\s*["']floating-right["']/gi, '')
+            .replace(/layout\s*=\s*["']centered["']/gi, '')
+            .replace(/style\s*=\s*["'][^"']*["']/gi, '')
+            .replace(/animation\s*=\s*["'][^"']*["']/gi, '')
+            .replace(/class\s*=\s*["'][^"']*["']/gi, '');
         
         this.logDebug(`  [renderPanel DEBUG] Cleaned content (first 50 chars): "${cleanInnerContent.substring(0, 50)}..."`);
         
