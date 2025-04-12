@@ -111,62 +111,47 @@ export class MarkdownProcessor {
         console.log(`[markdownProcessor] Raw input length: ${markdown.length}`);
         console.log(`[markdownProcessor] Raw input preview: ${markdown.substring(0, 100)}`);
         
-        // Detectar si hay bloques de panel en el contenido
-        const hasPanels = /:::(panel|datamatrix)/.test(markdown);
+        // NUEVA DETECCIÓN: También detecta el formato :::panel[][...] y :::panel[]{...}
+        const hasPanels = /:::(panel|datamatrix)(\[|\{|\[\]|\{\})/.test(markdown);
         console.log(`[markdownProcessor] Contains panel blocks: ${hasPanels}`);
         
         let processedMarkdown = markdown;
         
         try {
-            // Detectar y contar todos los paneles en el markdown original
-            const panelMatches = markdown.match(/:::(panel|datamatrix)(\{[^}]*\})[\s\S]*?:::/g) || [];
-            console.log(`[markdownProcessor] Detected ${panelMatches.length} panel blocks in original text`);
+            // Vamos a trabajar con expresiones regulares más específicas para cada caso
             
-            if (panelMatches.length > 0) {
-                // Mostrar ejemplos de los primeros paneles encontrados
-                console.log('[markdownProcessor] First panel sample:', panelMatches[0]?.substring(0, 100));
-            }
+            // CASO 1: Formato estándar con llaves o corchetes: :::panel{title="..."} o :::panel[title="..."]
+            const standardRegex = /:::(panel|datamatrix)(\{[^}]*\}|\[[^\]]*\])([\s\S]*?):::/g;
             
-            // Expresión regular para buscar bloques de panel completos
-            const panelRegex = /:::(panel|datamatrix)(\{[^}]*\})([\s\S]*?):::/g;
+            // CASO 2: Formato con corchetes vacíos: :::panel[][title="..."] o :::panel[]{title="..."}
+            const emptyBracketsRegex = /:::(panel|datamatrix)(?:\[\]|\{\})(\[[^\]]*\]|\{[^}]*\})([\s\S]*?):::/g;
             
-            // Reemplazar cada bloque de panel con HTML
-            processedMarkdown = markdown.replace(panelRegex, (match, type, attributes, content) => {
-                console.log(`[markdownProcessor] Processing panel match: type=${type}, attr=${attributes}`);
-                
-                // Extraer título y estilo de los atributos
-                let title = '';
-                let style = '';
-                let layout = '';
-                
-                // Limpiar las llaves de los atributos
-                const attrContent = attributes.replace(/[{}]/g, '').trim();
+            // CASO 3: Formato plano sin delimitadores: :::panel title="..."
+            const plainRegex = /:::(panel|datamatrix)(?!\[|\{)\s+([^\n]+)([\s\S]*?):::/g;
+            
+            // CASO 4: Formato con separación por pipe: :::panel[]{title="..."} | style=tech-corners
+            const pipeRegex = /:::(panel|datamatrix)(?:\[\]|\{\}|\[|\{)([^\n]*?)\|\s*style=([^\s,}]+)([\s\S]*?):::/g;
+            
+            // Log de depuración para encontrar la coincidencia
+            console.log('[markdownProcessor] Searching for pattern in:', markdown.substring(0, 200));
+            
+            // NUEVA FORMA DE REEMPLAZO: Intentamos cada patrón por separado para simplificar
+            
+            // Intento 1: Capturar el caso del pipe (más específico primero)
+            processedMarkdown = processedMarkdown.replace(pipeRegex, (match, type, attributes, style, content) => {
+                console.log(`[markdownProcessor] 🎯 MATCHED PIPE FORMAT: ${match.substring(0, 50)}...`);
                 
                 // Extraer título
-                const titleMatch = attrContent.match(/title\s*=\s*["']([^"']*)["']/i);
+                let title = '';
+                const titleMatch = attributes.match(/title\s*=\s*["']([^"']*)["']/i);
                 if (titleMatch) {
                     title = titleMatch[1];
                     console.log(`[markdownProcessor] Extracted title: "${title}"`);
                 }
                 
-                // Extraer estilo
-                const styleMatch = attrContent.match(/style\s*=\s*["']?([^"'\s]*)["']?/i);
-                if (styleMatch) {
-                    style = styleMatch[1];
-                    console.log(`[markdownProcessor] Extracted style: "${style}"`);
-                }
-                
-                // Extraer layout
-                const layoutMatch = attrContent.match(/layout\s*=\s*["']?([^"'\s]*)["']?/i);
-                if (layoutMatch) {
-                    layout = layoutMatch[1];
-                    console.log(`[markdownProcessor] Extracted layout: "${layout}"`);
-                }
-                
                 // Construir clases CSS
                 let cssClasses = `mixed-panel panel-${type}`;
                 if (style) cssClasses += ` panel-style--${style}`;
-                if (layout) cssClasses += ` layout--${layout}`;
                 
                 // Construir HTML para el panel
                 let html = `<section class="${cssClasses}" data-panel-type="${type}" data-interactive-container="true">`;
@@ -179,13 +164,185 @@ export class MarkdownProcessor {
                 // Añadir contenido
                 html += `\n  <div class="panel-content">\n${content}\n  </div>\n</section>`;
                 
-                console.log(`[markdownProcessor] Generated HTML for panel (truncated): ${html.substring(0, 100)}...`);
+                return html;
+            });
+            
+            // Intento 2: Capturar el formato con corchetes vacíos
+            processedMarkdown = processedMarkdown.replace(emptyBracketsRegex, (match, type, attributes, content) => {
+                console.log(`[markdownProcessor] 🎯 MATCHED EMPTY BRACKETS: ${match.substring(0, 50)}...`);
+                
+                // Limpiar las llaves o corchetes de los atributos
+                const attrContent = attributes.replace(/[{}\[\]]/g, '').trim();
+                
+                // Extraer título y estilo
+                let title = '';
+                let style = '';
+                
+                const titleMatch = attrContent.match(/title\s*=\s*["']([^"']*)["']/i);
+                if (titleMatch) {
+                    title = titleMatch[1];
+                }
+                
+                const styleMatch = attrContent.match(/style\s*=\s*["']?([^"'\s,}]*)["']?/i);
+                if (styleMatch) {
+                    style = styleMatch[1];
+                }
+                
+                // Construir clases CSS
+                let cssClasses = `mixed-panel panel-${type}`;
+                if (style) cssClasses += ` panel-style--${style}`;
+                
+                // Construir HTML
+                let html = `<section class="${cssClasses}" data-panel-type="${type}" data-interactive-container="true">`;
+                if (title) {
+                    html += `\n  <h3 class="panel-header">${title}</h3>`;
+                }
+                html += `\n  <div class="panel-content">\n${content}\n  </div>\n</section>`;
+                
+                return html;
+            });
+            
+            // Intento 3: Capturar el formato estándar
+            processedMarkdown = processedMarkdown.replace(standardRegex, (match, type, attributes, content) => {
+                console.log(`[markdownProcessor] 🎯 MATCHED STANDARD: ${match.substring(0, 50)}...`);
+                
+                // Limpiar las llaves o corchetes de los atributos
+                const attrContent = attributes.replace(/[{}\[\]]/g, '').trim();
+                
+                // Extraer título y estilo
+                let title = '';
+                let style = '';
+                let layout = '';
+                
+                // Procesar partes separadas por pipe (|)
+                const parts = attrContent.split('|');
+                const mainAttributes = parts[0].trim();
+                
+                // Extraer título del atributo principal
+                const titleMatch = mainAttributes.match(/title\s*=\s*["']([^"']*)["']/i);
+                if (titleMatch) {
+                    title = titleMatch[1];
+                }
+                
+                // Procesar atributos adicionales después del pipe
+                if (parts.length > 1) {
+                    for (let i = 1; i < parts.length; i++) {
+                        const part = parts[i].trim();
+                        
+                        // Buscar style=valor
+                        const styleMatch = part.match(/style\s*=\s*([^,\s}]+)/i);
+                        if (styleMatch) {
+                            style = styleMatch[1];
+                        }
+                        
+                        // Buscar layout=valor
+                        const layoutMatch = part.match(/layout\s*=\s*([^,\s}]+)/i);
+                        if (layoutMatch) {
+                            layout = layoutMatch[1];
+                        }
+                    }
+                } else {
+                    // Si no hay pipes, buscar en el atributo principal
+                    const styleMatch = mainAttributes.match(/style\s*=\s*["']?([^"'\s}]*)["']?/i);
+                    if (styleMatch) {
+                        style = styleMatch[1];
+                    }
+                    
+                    const layoutMatch = mainAttributes.match(/layout\s*=\s*["']?([^"'\s}]*)["']?/i);
+                    if (layoutMatch) {
+                        layout = layoutMatch[1];
+                    }
+                }
+                
+                // Construir clases CSS
+                let cssClasses = `mixed-panel panel-${type}`;
+                if (style) cssClasses += ` panel-style--${style}`;
+                if (layout) cssClasses += ` layout--${layout}`;
+                
+                // Construir HTML
+                let html = `<section class="${cssClasses}" data-panel-type="${type}" data-interactive-container="true">`;
+                if (title) {
+                    html += `\n  <h3 class="panel-header">${title}</h3>`;
+                }
+                html += `\n  <div class="panel-content">\n${content}\n  </div>\n</section>`;
+                
+                return html;
+            });
+            
+            // Intento 4: Capturar el formato plano
+            processedMarkdown = processedMarkdown.replace(plainRegex, (match, type, attributes, content) => {
+                console.log(`[markdownProcessor] 🎯 MATCHED PLAIN: ${match.substring(0, 50)}...`);
+                
+                // Extraer título y estilo de los atributos planos
+                let title = '';
+                let style = '';
+                
+                const titleMatch = attributes.match(/title\s*=\s*["']([^"']*)["']/i);
+                if (titleMatch) {
+                    title = titleMatch[1];
+                }
+                
+                const styleMatch = attributes.match(/style\s*=\s*["']?([^"'\s}]*)["']?/i);
+                if (styleMatch) {
+                    style = styleMatch[1];
+                }
+                
+                // Construir clases CSS
+                let cssClasses = `mixed-panel panel-${type}`;
+                if (style) cssClasses += ` panel-style--${style}`;
+                
+                // Construir HTML
+                let html = `<section class="${cssClasses}" data-panel-type="${type}" data-interactive-container="true">`;
+                if (title) {
+                    html += `\n  <h3 class="panel-header">${title}</h3>`;
+                }
+                html += `\n  <div class="panel-content">\n${content}\n  </div>\n</section>`;
+                
+                return html;
+            });
+            
+            // SOLUCIÓN ESPECÍFICA para el caso de la imagen en la consulta
+            const specificPipeFormatRegex = /:::(panel)\[\](?:\{(?:[^}]*)\})?\s*\|\s*style=([^,\s}]+)([\s\S]*?):::/g;
+            processedMarkdown = processedMarkdown.replace(specificPipeFormatRegex, (match, type, style, content) => {
+                console.log(`[markdownProcessor] 🎯 MATCHED SPECIFIC FORMAT: ${match.substring(0, 50)}...`);
+                
+                // Extraer título si está disponible
+                let title = '';
+                const titleMatch = match.match(/title\s*=\s*["']([^"']*)["']/i);
+                if (titleMatch) {
+                    title = titleMatch[1];
+                }
+                
+                // Construir clases CSS
+                let cssClasses = `mixed-panel panel-${type}`;
+                if (style) cssClasses += ` panel-style--${style}`;
+                
+                // Construir HTML
+                let html = `<section class="${cssClasses}" data-panel-type="${type}" data-interactive-container="true">`;
+                if (title) {
+                    html += `\n  <h3 class="panel-header">${title}</h3>`;
+                }
+                html += `\n  <div class="panel-content">\n${content}\n  </div>\n</section>`;
                 
                 return html;
             });
             
             console.log(`[markdownProcessor] Panel replacement complete. Output length: ${processedMarkdown.length}`);
             console.log(`[markdownProcessor] Output preview: ${processedMarkdown.substring(0, 100)}`);
+            
+            // Verificación final para asegurarnos de que se han reemplazado todos los paneles
+            const stillHasPanels = /:::(panel|datamatrix)/.test(processedMarkdown);
+            if (stillHasPanels) {
+                console.error("[markdownProcessor] ⚠️ WARNING: Hay paneles que no fueron reemplazados!");
+                // Último intento desesperado: capturar cualquier formato de panel no procesado aún
+                const lastResortRegex = /:::(panel|datamatrix)[^\n]*([\s\S]*?):::/g;
+                processedMarkdown = processedMarkdown.replace(lastResortRegex, (match, type, content) => {
+                    console.log(`[markdownProcessor] 🚨 LAST RESORT MATCHED: ${match.substring(0, 50)}...`);
+                    return `<section class="mixed-panel panel-${type}" data-panel-type="${type}">
+                      <div class="panel-content">${content}</div>
+                    </section>`;
+                });
+            }
         } catch (e) {
             console.error("[markdownProcessor] Error during panel processing:", e);
             // En caso de error, devolvemos el markdown original sin cambios
