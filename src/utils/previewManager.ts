@@ -464,15 +464,22 @@ class PreviewManager {
 
         // --- Limpiar el contenido interno de textos como layout="..." ---
         // Esta es la parte nueva para eliminar el texto de los atributos que aparece incorrectamente
-        const cleanInnerContent = innerContent
-            // Eliminar atributos que aparecen al principio del contenido o en las primeras líneas
-            .replace(/^\s*layout\s*=\s*["'](.*?)["']/im, '')
-            .replace(/^\s*style\s*=\s*["'](.*?)["']/im, '')
-            .replace(/^\s*animation\s*=\s*["'](.*?)["']/im, '')
-            .replace(/^\s*class\s*=\s*["'](.*?)["']/im, '')
-            // Eliminar también cuando aparecen en cualquier parte del texto
-            .replace(/layout\s*=\s*["'](floating-left|floating-right|centered)["']/g, '')
-            .replace(/style\s*=\s*["']([^"']+)["']/g, '');
+        let cleanInnerContent = innerContent;
+        
+        // Solo limpiar la primera línea si no comienza con ###
+        const lines = cleanInnerContent.split('\n');
+        if (lines.length > 0 && !lines[0].trim().startsWith('###')) {
+            lines[0] = lines[0]
+                .replace(/layout\s*=\s*["'].*?["']/g, '')
+                .replace(/style\s*=\s*["'].*?["']/g, '')
+                .replace(/animation\s*=\s*["'].*?["']/g, '')
+                .replace(/class\s*=\s*["'].*?["']/g, '');
+        }
+        
+        // Reconstruir el contenido limpio
+        cleanInnerContent = lines.join('\n');
+        
+        this.logDebug(`  [renderPanel DEBUG] Cleaned content (first 50 chars): "${cleanInnerContent.substring(0, 50)}..."`);
         
         // --- Parsear Contenido Interno (Sin Cambios) ---
         let parsedContent = ''; 
