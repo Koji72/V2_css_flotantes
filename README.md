@@ -2,11 +2,13 @@
 
 Una aplicación moderna para la visualización de documentos Markdown con plantillas CSS personalizables, construida con React, TypeScript y Vite.
 
-## Versión Actual: 2.6.0
+## Versión Actual: 2.6.1
 
-Esta versión incluye mejoras significativas en el procesamiento de markdown, con especial énfasis en la estabilidad y el correcto funcionamiento de los paneles con la sintaxis `:::panel{title="..."}`.
+Esta versión incluye mejoras significativas en el procesamiento de markdown, con especial énfasis en la estabilidad y el correcto funcionamiento de los paneles con la sintaxis `:::panel{title="..."}`, así como la incorporación del sistema de paneles flotantes.
 
-### Mejoras Destacadas en v2.6:
+### Mejoras Destacadas en v2.6.1:
+- **¡NUEVO!** Sistema de paneles flotantes para diseños avanzados
+- **¡NUEVO!** Animaciones mejoradas para elementos visuales
 - Procesamiento robusto de paneles de markdown
 - Sistema mejorado de logs para facilitar la depuración
 - Mayor estabilidad y resistencia a errores
@@ -29,14 +31,39 @@ Contenido del panel...
 | Valor 1   | Valor 2   |
 :::
 
-:::panel{title="Panel Flotante" layout="float-right"}
+:::panel{title="Panel Flotante Izquierda" style="tech-corners" layout="floating-left"}
+Este panel flota a la izquierda del documento permitiendo que el texto fluya a su alrededor.
+:::
+
+:::panel{title="Panel Flotante Derecha" style="hologram" layout="floating-right"}
 Este panel flota a la derecha del documento.
+:::
+
+:::panel{title="Panel Centrado" layout="centered" style="neo-frame"}
+Este panel aparece centrado con ancho limitado.
+:::
+
+:::panel{title="Panel con Animación" style="tech-corners" animation="pulse"}
+Este panel tiene una animación de pulso.
 :::
 ```
 
+## Sistema de Paneles Flotantes (Nuevo en v2.6.1)
+
+El nuevo sistema de paneles flotantes permite crear diseños más dinámicos y atractivos:
+
+- **Paneles Flotantes**: Usando `layout="floating-left"` o `layout="floating-right"` para que el texto fluya alrededor
+- **Paneles Centrados**: Con `layout="centered"` para enfatizar contenido importante
+- **Combinaciones de Estilos**: Todos los estilos de panel pueden combinarse con los layouts flotantes
+- **Animaciones**: Añade `animation="pulse"`, `animation="glow"` o `animation="scan"` para efectos visuales
+
+Los paneles flotantes son totalmente responsivos y se adaptan automáticamente a dispositivos móviles.
+
 ## Características
 
-- **V2.5: Plantillas CSS Adaptadas + Mejoras JS** - La última versión combina la flexibilidad de las plantillas CSS con mejoras visuales dinámicas mediante JavaScript
+- **V2.6.1: Paneles Flotantes + Animaciones** - La última versión incluye un avanzado sistema de paneles flotantes y animaciones mejoradas
+- **V2.6: Procesamiento Robusto de Markdown** - Corrección de errores y mejoras en el procesamiento de paneles
+- **V2.5: Plantillas CSS Adaptadas + Mejoras JS** - Combina la flexibilidad de las plantillas CSS con mejoras visuales dinámicas
 - Desarrollo rápido con Vite
 - Tipado estático con TypeScript
 - Estilos CSS modernos y personalizables

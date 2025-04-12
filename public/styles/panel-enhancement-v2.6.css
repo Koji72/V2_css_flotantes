@@ -6,6 +6,9 @@
 /* Importar fuentes adicionales */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap');
 
+/* Importar extensiones adicionales */
+@import url('./flotantes.css');
+
 /* Variables extendidas para efectos avanzados */
 :root {
   /* Efectos de neón y glow */

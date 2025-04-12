@@ -10,6 +10,8 @@ import {
   ChevronDown, ChevronUp, Book,
   CornerDownRight, Moon, Sun
 } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 
 interface ToolbarProps {
   onApplyStyle?: (style: string) => void;
@@ -415,6 +417,40 @@ Recomendación: Desplegar sondas de reconocimiento.
       >
         <Layout size={16} />
         <span>Showcase V2.6</span>
+      </button>
+
+      <button 
+        className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-700 bg-green-700'}`}
+        onClick={() => onLoadDemo('flotantes-demo.md')}
+        disabled={isLoading}
+        title="Ver demostración de elementos flotantes"
+      >
+        <PanelLeft size={16} />
+        <span>Demo Flotantes</span>
+      </button>
+
+      <button
+        className="editor-button"
+        title="Cargar panel basico"
+        onClick={() => handleLoadTemplate(1)}
+      >
+        <FontAwesomeIcon icon={faClipboard} /> Panel Básico
+      </button>
+
+      <button
+        className="editor-button"
+        title="Cargar demostración de paneles v2.6"
+        onClick={() => openFile('/panel-showcase-v2.6.md')}
+      >
+        <FontAwesomeIcon icon={faClipboard} /> Demo Paneles v2.6
+      </button>
+
+      <button
+        className="editor-button highlight-button"
+        title="Cargar demostración de paneles flotantes"
+        onClick={() => openFile('/flotantes-demo.md')}
+      >
+        <FontAwesomeIcon icon={faClipboard} /> Demo Flotantes
       </button>
     </div>
   );

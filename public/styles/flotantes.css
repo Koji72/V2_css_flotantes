@@ -1,0 +1,134 @@
+/* 
+ * Estilos de Paneles Flotantes V2.6 
+ * ================================
+ * Este archivo contiene estilos específicos para los paneles flotantes
+ * que permiten un mejor aprovechamiento del espacio y una experiencia
+ * visual más rica.
+ */
+
+/* Estilos base para todos los paneles flotantes */
+.layout--floating-left,
+.layout--floating-right {
+  position: relative;
+  max-width: 40%;
+  margin-bottom: 1.5rem;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Panel flotante a la izquierda */
+.layout--floating-left {
+  float: left;
+  margin-right: 2rem;
+  margin-left: 0;
+  clear: left;
+}
+
+/* Panel flotante a la derecha */
+.layout--floating-right {
+  float: right;
+  margin-left: 2rem;
+  margin-right: 0;
+  clear: right;
+}
+
+/* Panel centrado con ancho limitado */
+.layout--centered {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+  clear: both;
+  max-width: 80%;
+  text-align: center;
+}
+
+/* Asegurar que el texto fluya alrededor de los paneles */
+p, ul, ol, h1, h2, h3, h4, h5, h6 {
+  overflow: auto; /* Ayuda a manejar el flujo correcto */
+}
+
+/* Estilos para el contenido dentro de paneles flotantes */
+.layout--floating-left .panel-content,
+.layout--floating-right .panel-content {
+  padding: 0.75rem; /* Reducir el padding para optimizar espacio */
+}
+
+/* Mejoras específicas para paneles flotantes con otros estilos */
+
+/* Tech-corners flotante */
+.panel-style--tech-corners.layout--floating-left,
+.panel-style--tech-corners.layout--floating-right {
+  border: 1px solid var(--neon-border-color, rgba(0, 255, 255, 0.5));
+}
+
+/* Hologramas flotantes */
+.panel-style--hologram.layout--floating-left,
+.panel-style--hologram.layout--floating-right {
+  background-color: rgba(0, 20, 40, 0.7);
+}
+
+/* Neo-frame flotante */
+.panel-style--neo-frame.layout--floating-left,
+.panel-style--neo-frame.layout--floating-right {
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.4);
+}
+
+/* Circuit nodes flotante */
+.panel-style--circuit-nodes.layout--floating-left,
+.panel-style--circuit-nodes.layout--floating-right {
+  border-width: 1px;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+  .layout--floating-left,
+  .layout--floating-right,
+  .layout--centered {
+    float: none;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    clear: both;
+  }
+}
+
+/* Animaciones específicas para elementos flotantes */
+.layout--floating-left.animation--float,
+.layout--floating-right.animation--float {
+  animation: gentle-float 6s ease-in-out infinite;
+}
+
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Panel de alerta cuando se usa como flotante */
+.panel-warning.layout--floating-left,
+.panel-warning.layout--floating-right,
+.panel-error.layout--floating-left,
+.panel-error.layout--floating-right {
+  box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+  animation: pulse-warning 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% { box-shadow: 0 0 25px rgba(255, 0, 0, 0.4); }
+  50% { box-shadow: 0 0 35px rgba(255, 60, 0, 0.7); }
+}
+
+/* Altura máxima para paneles flotantes largos con scroll interno */
+.layout--floating-left .panel-content,
+.layout--floating-right .panel-content {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* Botonera para limpiar flotantes si es necesario */
+.clear-floats {
+  clear: both;
+  display: block;
+  margin: 1rem 0;
+  width: 100%;
+  height: 1px;
+} 
