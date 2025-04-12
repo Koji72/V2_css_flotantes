@@ -4,6 +4,36 @@
  * Actualizado con estilos de Codex Antiqua (RPG Fantasy)
  */
 
+/* ================================================== */
+/*                 MASTER TEMPLATE V2.6                 */
+/*       Template central con todos los estilos         */
+/* ================================================== */
+
+/* 0. IMPORTAR FUENTES */
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600&family=Exo+2:wght@400;500;600;700&family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap');
+
+/* Variables extendidas (V2.6) */
+:root {
+  /* Efectos de neón y glow */
+  --neon-blue-glow: 0 0 5px rgba(0, 195, 255, 0.4), 0 0 20px rgba(0, 195, 255, 0.2);
+  --neon-green-glow: 0 0 5px rgba(0, 255, 195, 0.4), 0 0 20px rgba(0, 255, 195, 0.2);
+  --neon-purple-glow: 0 0 5px rgba(195, 0, 255, 0.4), 0 0 20px rgba(195, 0, 255, 0.2);
+  
+  /* Fuentes alternativas high-tech */
+  --font-tech: 'Orbitron', sans-serif;
+  --font-tech-alt: 'Rajdhani', sans-serif;
+  --font-tech-display: 'Syncopate', sans-serif;
+  
+  /* Gradientes para tech-corners */
+  --tech-gradient-blue: linear-gradient(135deg, rgba(0, 150, 255, 0.7), rgba(0, 80, 180, 0.2));
+  --tech-gradient-dark: linear-gradient(135deg, rgba(10, 20, 40, 0.9), rgba(5, 10, 20, 0.7));
+  
+  /* Animaciones */
+  --animation-speed-slow: 3s;
+  --animation-speed-medium: 1.5s;
+  --animation-speed-fast: 0.5s;
+}
+
 /* --- Variables root --- */
 :root {
   /* Colores base (actualizados con la paleta de Codex Antiqua) */
@@ -334,4 +364,166 @@ blockquote {
   body {
     padding: calc(var(--spacing-unit) * 1.5);
   }
+}
+
+/* =================================== */
+/* Nuevo estilo: panel-style--hologram (V2.6) */
+/* =================================== */
+
+.panel-style--hologram {
+  background: linear-gradient(135deg, rgba(0, 20, 40, 0.8), rgba(0, 10, 30, 0.8));
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(0, 195, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 100, 200, 0.2), inset 0 0 20px rgba(0, 100, 200, 0.1);
+  position: relative;
+  overflow: hidden;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+/* Efecto de línea de escaneo holográfico */
+.panel-style--hologram::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgba(0, 195, 255, 0.8), transparent);
+  animation: hologram-scan 3s linear infinite;
+  z-index: 5;
+  pointer-events: none;
+}
+
+@keyframes hologram-scan {
+  0% { top: 0; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Líneas de ruido horizontal */
+.panel-style--hologram::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 195, 255, 0.03) 2px,
+    rgba(0, 195, 255, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.panel-style--hologram > .panel-header,
+.panel-style--hologram > h2:first-child {
+  font-family: var(--font-tech);
+  color: rgba(0, 225, 255, 0.9);
+  text-shadow: 0 0 5px rgba(0, 195, 255, 0.7);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(0, 195, 255, 0.3);
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}
+
+/* =================================== */
+/* Nuevo estilo: panel-style--neo-frame (V2.6) */
+/* =================================== */
+
+.panel-style--neo-frame {
+  background-color: rgba(15, 20, 35, 0.9);
+  border: none;
+  border-radius: 2px;
+  position: relative;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+/* Marco de neón */
+.panel-style--neo-frame::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid transparent;
+  border-image: linear-gradient(45deg, 
+    #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
+  ) 1;
+  animation: neo-border-flow 3s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes neo-border-flow {
+  0% {
+    border-image: linear-gradient(45deg, 
+      #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
+    ) 1;
+  }
+  25% {
+    border-image: linear-gradient(45deg, 
+      #00ffcc, #00aaff, #00ffcc, #00aaff, #00ffcc
+    ) 1;
+  }
+  50% {
+    border-image: linear-gradient(45deg, 
+      #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
+    ) 1;
+  }
+  75% {
+    border-image: linear-gradient(45deg, 
+      #00ffcc, #00aaff, #00ffcc, #00aaff, #00ffcc
+    ) 1;
+  }
+  100% {
+    border-image: linear-gradient(45deg, 
+      #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
+    ) 1;
+  }
+}
+
+.panel-style--neo-frame > .panel-header,
+.panel-style--neo-frame > h2:first-child {
+  font-family: var(--font-tech);
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 170, 255, 0.7), 0 0 15px rgba(0, 170, 255, 0.4);
+  border-bottom: 1px solid rgba(0, 195, 255, 0.3);
+  padding-bottom: 10px;
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+/* === Animaciones adicionales (V2.6) === */
+
+@keyframes soft-pulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+@keyframes slow-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(359deg); }
+}
+
+.animate-pulse {
+  animation: soft-pulse var(--animation-speed-medium) ease-in-out infinite;
+}
+
+.animate-rotate {
+  animation: slow-rotate var(--animation-speed-slow) linear infinite;
 } 

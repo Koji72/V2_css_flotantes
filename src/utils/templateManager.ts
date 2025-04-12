@@ -39,62 +39,99 @@ export class TemplateManager {
   /**
    * Loads a template by ID, first trying external files, then fallbacks
    */
-  public async loadTemplate(templateId: string): Promise<string> {
-    console.log(`TemplateManager: Loading template: ${templateId}`);
-    let css: string | null = null;
-    
-    // Try to load from file system
+  public async loadTemplate(templateId: string): Promise<void> {
     try {
-      css = await this.loadFromFiles(templateId);
-      if (css) {
-        this.templates.set(templateId, css);
-        console.log(`TemplateManager: Template '${templateId}' loaded from file, length: ${css.length} chars`);
-        return css;
-      } else {
-        console.log(`TemplateManager: No external file found for template '${templateId}'`);
+      const templates = [
+        {
+          id: 'default',
+          path: 'templates/default.css',
+        },
+        {
+          id: 'purple_neon_grid',
+          path: 'templates/purple_neon_grid.css',
+        },
+        {
+          id: 'michael_noir',
+          path: 'templates/michael_noir.css',
+        },
+        {
+          id: 'aegis-tactical-interface-v2.6',
+          path: 'templates/aegis-tactical-interface-v2.6.css',
+        },
+        {
+          id: 'aegis-tactical-interface-v2.5',
+          path: 'templates/aegis-tactical-interface-v2.5.css',
+        },
+        {
+          id: 'aetherium_codex',
+          path: 'templates/aetherium_codex.css',
+        },
+        {
+          id: 'rpg_fantasy',
+          path: 'templates/rpg_fantasy.css',
+        },
+        {
+          id: 'infinitycommand',
+          path: 'templates/infinitycommand.css',
+        },
+        {
+          id: 'grid_halo',
+          path: 'templates/grid_halo.css',
+        },
+        {
+          id: 'halo_infini',
+          path: 'templates/halo_infini.css',
+        },
+        {
+          id: 'master_template',
+          path: 'templates/master_template.css',
+        },
+      ];
+      
+      const selectedTemplate = templates.find(t => t.id === templateId);
+      if (!selectedTemplate) {
+        console.error(`Template no encontrado para el ID: ${templateId}`);
+        return;
       }
+      
+      const cssPath = selectedTemplate.path;
+      const cssContent = await this.loadFromFiles(cssPath);
+      
+      const iframe = document.getElementById('preview') as HTMLIFrameElement;
+      if (!iframe) {
+        console.error('IFrame no encontrado');
+        return;
+      }
+      
+      this.templates.set(templateId, cssContent);
+      this.applyTemplateCSS(iframe, cssContent);
+      console.log(`Template ${templateId} cargado correctamente.`);
     } catch (error) {
-      console.warn(`TemplateManager: Error loading template from files:`, error);
+      console.error('Error al cargar el template:', error);
+    }
+  }
+
+  /**
+   * Apply CSS content to the iframe
+   */
+  private applyTemplateCSS(iframe: HTMLIFrameElement, css: string): void {
+    if (!iframe || !iframe.contentDocument) {
+      console.error('No se puede aplicar CSS: iframe o documento no disponible');
+      return;
+    }
+
+    const iframeDoc = iframe.contentDocument;
+    
+    // Buscar o crear el elemento <style> para el template
+    let styleElement = iframeDoc.getElementById('template-styles');
+    if (!styleElement) {
+      styleElement = iframeDoc.createElement('style');
+      styleElement.id = 'template-styles';
+      iframeDoc.head.appendChild(styleElement);
     }
     
-    // Try cached template
-    const cachedTemplate = this.templates.get(templateId);
-    if (cachedTemplate) {
-      console.log(`TemplateManager: Using cached template '${templateId}', length: ${cachedTemplate.length} chars`);
-      return cachedTemplate;
-    } else {
-      console.log(`TemplateManager: No cached version found for template '${templateId}'`);
-    }
-    
-    // Use embedded template
-    if (this.embeddedTemplates[templateId]) {
-      const embeddedCSS = this.embeddedTemplates[templateId];
-      this.templates.set(templateId, embeddedCSS);
-      console.log(`TemplateManager: Using embedded template '${templateId}', length: ${embeddedCSS.length} chars`);
-      return embeddedCSS;
-    } else {
-      console.warn(`TemplateManager: No embedded template found for '${templateId}'`);
-    }
-    
-    // Fallback to default embedded template
-    console.warn(`TemplateManager: Template '${templateId}' not found in any source, using purple_neon_grid template as fallback`);
-    const fallbackCSS = this.embeddedTemplates.purple_neon_grid || this.embeddedTemplates.default;
-    if (!fallbackCSS) {
-      console.error(`TemplateManager: FALLBACK TEMPLATE IS MISSING! This should never happen.`);
-      return `/* Error: Fallback template not found */
-      body { 
-        font-family: sans-serif;
-        color: red;
-        background-color: white;
-        padding: 20px;
-      }
-      h1 { color: red; }
-      p::before { content: "ERROR: Template not found - "; color: red; }
-      `;
-    }
-    
-    this.templates.set(templateId, fallbackCSS);
-    return fallbackCSS;
+    // Actualizar el CSS
+    styleElement.textContent = css;
   }
 
   /**
@@ -109,50 +146,17 @@ export class TemplateManager {
   /**
    * Attempts to load a template from various possible file paths
    */
-  private async loadFromFiles(templateId: string): Promise<string | null> {
-    // Determinar la URL base actual
-    const baseUrl = window.location.origin;
-    
-    const paths = [
-      // Rutas absolutas (desde raíz)
-      `${baseUrl}/templates/${templateId}.css`,
-      `${baseUrl}/public/templates/${templateId}.css`,
-      // Rutas relativas
-      `/templates/${templateId}.css`,
-      `/public/templates/${templateId}.css`,
-      `./templates/${templateId}.css`,
-      `../public/templates/${templateId}.css`,
-      // Otras rutas adicionales
-      `/src/templates/${templateId}.css`,
-      `./public/templates/${templateId}.css`,
-    ];
-    
-    console.log(`TemplateManager: Attempting to load template '${templateId}' from ${paths.length} possible locations`);
-    
-    for (const path of paths) {
-      try {
-        console.log(`TemplateManager: Trying path: ${path}`);
-        const response = await fetch(path, {
-          cache: 'no-cache',
-          headers: {
-            'Content-Type': 'text/css'
-          }
-        });
-        
-        if (response.ok) {
-          const css = await response.text();
-          console.log(`TemplateManager: Template '${templateId}' loaded successfully from: ${path}`);
-          return css;
-        } else {
-          console.log(`TemplateManager: Path ${path} returned status ${response.status}`);
-        }
-      } catch (error) {
-        console.warn(`TemplateManager: Path ${path} failed:`, error);
+  private async loadFromFiles(filePath: string): Promise<string> {
+    try {
+      const response = await fetch(filePath);
+      if (!response.ok) {
+        throw new Error(`Failed to load CSS file ${filePath}: ${response.status} ${response.statusText}`);
       }
+      return await response.text();
+    } catch (error) {
+      console.error(`Error loading CSS file ${filePath}:`, error);
+      throw error;
     }
-    
-    console.warn(`TemplateManager: Template '${templateId}' not found in any external location, falling back to embedded templates`);
-    return null;
   }
 
   /**
