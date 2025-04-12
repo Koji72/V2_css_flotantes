@@ -1,0 +1,337 @@
+/* ============================================== */
+/*      Michael Noir Theme (V2.5)               */
+/*     (Adapted for Universal Scribe)           */
+/* ============================================== */
+
+/* 0. IMPORTAR FUENTES */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+/* 1. Variables Fundamentales (Paleta Noir) */
+:root {
+    /* Theme Name */
+    /* Theme: Michael Noir */
+
+    /* Colores Base (Escala de Grises) */
+    --noir-bg-deep: #0a0a0a;           /* Negro profundo */
+    --noir-bg-panel: rgba(20, 20, 20, 0.8); /* Gris oscuro translúcido */
+    --noir-bg-panel-hover: rgba(30, 30, 30, 0.9);
+    --noir-border-dark: #2a2a2a;
+    --noir-border-medium: #404040;
+    --noir-border-light: #606060;
+
+    /* Acentos (Rojo Sangre) */
+    --noir-accent: #8b0000;            /* Rojo oscuro */
+    --noir-accent-glow: rgba(139, 0, 0, 0.3);
+    --noir-accent-dark: #5a0000;
+    --noir-highlight: #d4af37;         /* Dorado vintage */
+
+    /* Texto (Blanco Roto) */
+    --noir-text-light: #f0f0f0;
+    --noir-text-medium: #d0d0d0;
+    --noir-text-dark: #a0a0a0;
+
+    /* Estados */
+    --noir-status-ok: #4a8b00;         /* Verde oscuro */
+    --noir-status-warn: #8b5a00;       /* Ámbar oscuro */
+    --noir-status-error: #8b0000;      /* Rojo oscuro */
+    --noir-status-neutral: var(--noir-text-dark);
+
+    /* Sombras */
+    --noir-shadow-dark: rgba(0, 0, 0, 0.8);
+    --noir-panel-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+
+    /* Fuentes */
+    --font-main: 'Crimson Text', serif;
+    --font-title: 'Playfair Display', serif;
+    --font-tech: 'Special Elite', cursive;
+
+    /* Variables específicas para V2.5 */
+    --hover-effect-color: rgba(139, 0, 0, 0.2);
+    --float-width: 45%;
+    --panel-header-bg: rgba(40, 40, 40, 0.9);
+    --scroll-thumb-color: var(--noir-accent);
+}
+
+/* 2. Estilos Base Generales */
+body, .markdown-preview-view, .cm-editor,
+.universal-scribe-output {
+    background-color: var(--noir-bg-deep) !important;
+    color: var(--noir-text-medium) !important;
+    font-family: var(--font-main) !important;
+    font-weight: 400;
+    line-height: 1.6;
+    font-size: 16px;
+    padding: 25px;
+    background-image: 
+        linear-gradient(rgba(139, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 0, 0, 0.05) 1px, transparent 1px) !important;
+    background-size: 40px 40px !important;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { height: 8px; width: 8px; background-color: var(--noir-bg-panel); }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: var(--noir-border-medium); border-radius: 0; border: 1px solid var(--noir-border-dark); }
+::-webkit-scrollbar-thumb:hover { background-color: var(--noir-accent); }
+* { scrollbar-width: thin; scrollbar-color: var(--noir-border-medium) var(--noir-bg-panel); }
+
+/* 3. Estilos para Elementos Comunes */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-title) !important;
+    color: var(--noir-text-light) !important;
+    margin-top: 1.6em; margin-bottom: 0.8em; font-weight: 700;
+    letter-spacing: 1px; line-height: 1.2; text-transform: uppercase;
+    border: none; padding-bottom: 0.3em; position: relative;
+}
+
+h1::after, h2::after {
+    content: ''; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%;
+    background: linear-gradient(90deg, var(--noir-accent), transparent 80%);
+    box-shadow: 0 0 8px var(--noir-accent-glow);
+    opacity: 0.7;
+}
+
+h1 { font-size: 2.8em; letter-spacing: 2px; color: var(--noir-highlight) !important; text-shadow: 0 0 10px var(--noir-accent-glow); margin-bottom: 1em;}
+h2 { font-size: 1.8em; color: var(--noir-text-light) !important; text-shadow: 0 0 5px var(--noir-shadow-dark);}
+h3 { font-size: 1.4em; color: var(--noir-text-light) !important; font-weight: 600; text-transform: none; }
+h4 { font-size: 1.1em; color: var(--noir-text-medium) !important; font-weight: 600; text-transform: none; margin-bottom: 0.4em;}
+h5, h6 { font-size: 1.0em; color: var(--noir-text-dark) !important; font-weight: 600; text-transform: none; margin-bottom: 0.3em;}
+
+p { margin-bottom: 1.1em; color: var(--noir-text-medium) !important; }
+h1 + p, h2 + p, h3 + p, h4 + p { margin-top: 0.6em; }
+
+a { color: var(--noir-accent) !important; text-decoration: none; border-bottom: 1px dotted rgba(139, 0, 0, 0.5); transition: all 0.2s ease; font-weight: 600;}
+a:hover, a:focus { color: var(--noir-highlight) !important; border-bottom-color: var(--noir-accent); text-shadow: 0 0 8px var(--noir-accent-glow); background-color: rgba(139, 0, 0, 0.05);}
+
+strong, b { color: var(--noir-text-light) !important; font-weight: 700; }
+em, i { color: var(--noir-highlight) !important; font-style: italic; }
+
+/* Listas */
+ul, ol { margin-left: 15px; margin-bottom: 1.1em; padding-left: 20px; list-style: none; }
+li { margin-bottom: 0.5em; color: var(--noir-text-medium) !important; position: relative; }
+ul li::before {
+    content: ''; position: absolute; left: -15px; top: 0.5em; transform: translateY(-50%);
+    width: 6px; height: 6px; background-color: var(--noir-accent);
+    border-radius: 50%; box-shadow: 0 0 6px var(--noir-accent-glow);
+}
+
+/* Tablas */
+div:has(> table), .table-container, [data-matrix-table="true"] {
+    max-width: 100%; overflow-x: auto; margin: 1.8em 0;
+    border: none;
+    background-color: var(--noir-bg-panel) !important;
+    border-radius: 4px;
+    box-shadow: var(--noir-panel-shadow);
+    padding: 1px;
+}
+
+table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    font-size: 0.9em; table-layout: auto; border: none !important; margin: 0;
+    background: var(--noir-bg-panel) !important;
+    border-radius: 3px;
+}
+
+th, .table-header-cell {
+    color: var(--noir-text-light) !important; font-family: var(--font-tech) !important;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    padding: 10px 15px; text-align: left;
+    border-bottom: none !important; border-left: none !important;
+    text-shadow: 0 0 4px var(--noir-shadow-dark);
+    white-space: nowrap; vertical-align: middle;
+    background-color: rgba(40, 40, 40, 0.4) !important;
+}
+
+td {
+    padding: 9px 15px; color: var(--noir-text-medium) !important;
+    border: none !important;
+    border-top: 1px solid var(--noir-border-dark) !important;
+    vertical-align: middle; white-space: normal; overflow-wrap: break-word; word-break: break-word;
+    line-height: 1.5; position: relative;
+}
+
+/* Bloques Personalizados V2.5 */
+.mixed-panel, [class*="panel-"], .datamatrix, .statblock, .note, .warning, .error, .codeblock, .quote, .image {
+    background-color: var(--noir-bg-panel) !important;
+    border: 1px solid var(--noir-border-medium) !important;
+    border-radius: 4px !important;
+    margin: 1.5em 0 !important;
+    box-shadow: var(--noir-panel-shadow) !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.panel-header, .mixed-panel > h2:first-child {
+    background-color: var(--panel-header-bg) !important;
+    color: var(--noir-highlight) !important;
+    font-family: var(--font-title) !important;
+    font-weight: 600 !important;
+    font-size: 1.25em !important;
+    padding: 12px 15px !important;
+    margin: 0 !important;
+    border-bottom: 1px solid var(--noir-border-dark) !important;
+    text-shadow: 0 0 5px var(--noir-accent-glow) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+.panel-content {
+    padding: 15px !important;
+    font-size: 0.95em !important;
+}
+
+/* Bloques Flotantes */
+.float-left {
+    float: left !important;
+    margin-right: 20px !important;
+    margin-bottom: 20px !important;
+    width: var(--float-width) !important;
+    clear: left !important;
+}
+
+.float-right {
+    float: right !important;
+    margin-left: 20px !important;
+    margin-bottom: 20px !important;
+    width: var(--float-width) !important;
+    clear: right !important;
+}
+
+/* Estilos Específicos por Tipo de Bloque */
+.panel-warning, .warning {
+    border-left: 4px solid var(--noir-status-warn) !important;
+}
+.panel-warning .panel-header, .warning .panel-header {
+    color: var(--noir-status-warn) !important;
+}
+
+.panel-error, .error {
+    border-left: 4px solid var(--noir-status-error) !important;
+}
+.panel-error .panel-header, .error .panel-header {
+    color: var(--noir-status-error) !important;
+}
+
+.panel-info-box, .note {
+    border-left: 4px solid var(--noir-accent) !important;
+}
+
+/* Estilos para Bloques RPG */
+.panel-character, .panel-npc, .panel-location, .panel-encounter, 
+.panel-quest, .panel-treasure, .panel-map {
+    margin: 25px 0 !important;
+    border: 1px solid var(--noir-border-light) !important;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+.panel-character {
+    border-left: 4px solid var(--noir-status-ok) !important;
+}
+.panel-character .panel-header {
+    color: var(--noir-status-ok) !important;
+}
+
+.panel-npc {
+    border-left: 4px solid var(--noir-accent-dark) !important;
+}
+
+.panel-location {
+    border-left: 4px solid #606060 !important;
+}
+
+.panel-encounter {
+    border-left: 4px solid var(--noir-status-error) !important;
+}
+.panel-encounter .panel-header {
+    color: var(--noir-status-error) !important;
+}
+
+.panel-quest {
+    border-left: 4px solid #8b5a00 !important;
+}
+.panel-quest .panel-header {
+    color: #8b5a00 !important;
+}
+
+.panel-treasure {
+    border-left: 4px solid var(--noir-highlight) !important;
+    background-image: linear-gradient(to bottom, 
+        rgba(40, 30, 0, 0.3), 
+        rgba(20, 15, 0, 0.3)
+    ) !important;
+}
+.panel-treasure .panel-header {
+    color: var(--noir-highlight) !important;
+}
+
+.panel-map {
+    border-left: 4px solid #4a4a4a !important;
+}
+.panel-map .panel-header {
+    color: #4a4a4a !important;
+}
+
+/* Tiradas de Dados */
+.dice-roll {
+    display: inline-block !important;
+    font-family: var(--font-tech) !important;
+    font-weight: 600 !important;
+    color: var(--noir-highlight) !important;
+    text-shadow: 0 0 5px var(--noir-accent-glow) !important;
+    background-color: rgba(139, 0, 0, 0.1) !important;
+    padding: 3px 8px !important;
+    border-radius: 3px !important;
+    border: 1px solid rgba(139, 0, 0, 0.3) !important;
+    margin: 0 2px !important;
+}
+
+/* Elementos Interactivos */
+[data-interactive-container="true"], .is-interactive {
+    transition: all 0.2s ease-out !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+[data-interactive-container="true"]:hover, 
+[data-interactive-container="true"].is-hovered,
+.is-interactive:hover {
+    box-shadow: 0 0 15px var(--noir-accent-glow) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Barras de Progreso */
+.dynamic-progress-bar {
+    height: 15px !important;
+    background-color: var(--noir-bg-panel) !important;
+    border: 1px solid var(--noir-border-dark) !important;
+    border-radius: 7px !important;
+    overflow: hidden !important;
+    margin: 5px 0 !important;
+    position: relative !important;
+}
+
+.dynamic-progress-bar .bar-fill {
+    height: 100% !important;
+    background: linear-gradient(to right, var(--noir-accent-dark), var(--noir-accent)) !important;
+    box-shadow: 0 0 8px var(--noir-accent-glow) !important;
+    transition: width 0.5s ease-out !important;
+    animation: noir-bar-pulse 2s infinite !important;
+}
+
+.dynamic-progress-bar .bar-fill.ok {
+    background: linear-gradient(to right, #2a4a00, var(--noir-status-ok)) !important;
+}
+
+.dynamic-progress-bar .bar-fill.warn {
+    background: linear-gradient(to right, #5a3a00, var(--noir-status-warn)) !important;
+}
+
+.dynamic-progress-bar .bar-fill.error {
+    background: linear-gradient(to right, #5a0000, var(--noir-status-error)) !important;
+}
+
+@keyframes noir-bar-pulse {
+    0%, 100% { filter: brightness(0.8); }
+    50% { filter: brightness(1.2); }
+}

@@ -1,0 +1,431 @@
+/* ================================================== */
+/*       THEME: Halo Infinite (V2.5)                  */
+/*   (Inspired by Halo Infinite Interface)            */
+/* ================================================== */
+
+/* 0. IMPORTAR FUENTES */
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600&family=Exo+2:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+/* 1. VARIABLES FUNDAMENTALES */
+:root {
+    /* -- Base de Comandancia -- */
+    --infinite-bg-deep: #0a0c12;
+    --infinite-bg-grid: #12151c;
+    --infinite-bg-surface: #1a1d26;
+    --infinite-bg-elevated: #232631;
+    --infinite-glass-bg: rgba(20, 30, 45, 0.75);
+    --infinite-border-fine: rgba(100, 150, 200, 0.2);
+    --infinite-border-medium: rgba(150, 200, 255, 0.4);
+    --infinite-border-main: #4a6b9c;
+    --infinite-text-primary: #e0f0ff;
+    --infinite-text-secondary: #a0b8d0;
+    --infinite-text-disabled: #607080;
+
+    /* -- Acentos Tácticos -- */
+    --infinite-blue-primary: #00aaff;
+    --infinite-blue-secondary: #60d0ff;
+    --infinite-blue-dark: #0077cc;
+    --infinite-green-primary: #00ff88;
+    --infinite-green-secondary: #80ffc0;
+    --infinite-green-dark: #00b060;
+    --infinite-amber-primary: #ffc800;
+    --infinite-red-primary: #ff4040;
+
+    /* -- Tipografía -- */
+    --font-display: 'Teko', sans-serif;
+    --font-body: 'Exo 2', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* -- Efectos -- */
+    --glow-blue-text: 0 0 4px var(--infinite-blue-primary);
+    --glow-blue-border: 0 0 6px 1px var(--infinite-blue-primary);
+    --glow-green-text: 0 0 4px var(--infinite-green-primary);
+    --glow-green-border: 0 0 6px 1px var(--infinite-green-primary);
+    --glow-amber-text: 0 0 4px var(--infinite-amber-primary);
+    --glow-red-text: 0 0 4px var(--infinite-red-primary);
+    --inset-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+    --outset-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+    /* -- Métricas -- */
+    --spacing-unit: 8px;
+    --radius-sharp: 2px;
+    --radius-medium: 4px;
+    --border-width-fine: 1px;
+    --border-width-medium: 2px;
+    --border-width-main: 3px;
+}
+
+/* 2. ESTILOS BASE */
+body, .universal-scribe-output {
+    background-color: var(--infinite-bg-deep);
+    color: var(--infinite-text-primary);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    padding: calc(var(--spacing-unit) * 2.5);
+    margin: 0;
+    background-image:
+        linear-gradient(rgba(0, 170, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 170, 255, 0.02) 1px, transparent 1px);
+    background-size: 30px 30px;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--infinite-bg-grid); border: 1px solid var(--infinite-border-fine); }
+::-webkit-scrollbar-thumb { background: var(--infinite-border-main); border-radius: var(--radius-sharp); border: 1px solid var(--infinite-bg-grid); }
+::-webkit-scrollbar-thumb:hover { background: var(--infinite-blue-secondary); }
+
+/* 3. ELEMENTOS COMUNES */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--infinite-text-primary);
+    margin: calc(var(--spacing-unit) * 2) 0 calc(var(--spacing-unit) * 1.5) 0;
+    padding-bottom: calc(var(--spacing-unit) * 0.5);
+    border-bottom: var(--border-width-fine) solid var(--infinite-border-medium);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+h1 { 
+    font-size: 2.5em; 
+    font-weight: 600; 
+    color: var(--infinite-blue-primary); 
+    text-shadow: var(--glow-blue-text); 
+    border-bottom-width: var(--border-width-medium); 
+    border-color: var(--infinite-blue-dark); 
+}
+
+h2 { 
+    font-size: 2em; 
+    color: var(--infinite-green-primary); 
+    text-shadow: var(--glow-green-text); 
+}
+
+h3 { 
+    font-size: 1.6em; 
+    border-bottom-style: dashed; 
+    border-color: var(--infinite-border-fine); 
+}
+
+h4 { 
+    font-size: 1.4em; 
+    border-bottom: none; 
+    color: var(--infinite-text-secondary); 
+    text-transform: none; 
+}
+
+h5 { 
+    font-size: 1.2em; 
+    border-bottom: none; 
+    color: var(--infinite-text-secondary); 
+    font-style: italic; 
+    text-transform: none; 
+}
+
+h6 { 
+    font-size: 1.1em; 
+    border-bottom: none; 
+    color: var(--infinite-text-disabled); 
+    font-weight: 400; 
+    text-transform: none; 
+}
+
+/* Prefijo de Display */
+h1::before, h2::before {
+    content: "► ";
+    color: var(--infinite-amber-primary);
+    margin-right: var(--spacing-unit);
+}
+
+p {
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+}
+
+a {
+    color: var(--infinite-blue-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--infinite-blue-dark);
+    transition: color 0.2s ease, text-shadow 0.2s ease, border-bottom-color 0.2s ease;
+}
+
+a:hover {
+    color: var(--infinite-text-primary);
+    text-shadow: var(--glow-blue-text);
+    border-bottom-color: var(--infinite-blue-primary);
+}
+
+strong, b {
+    font-weight: 600;
+    color: var(--infinite-text-primary);
+}
+
+em, i {
+    font-style: italic;
+    color: var(--infinite-text-secondary);
+}
+
+ul, ol {
+    margin-left: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    padding-left: calc(var(--spacing-unit) * 2);
+}
+
+li {
+    margin-bottom: calc(var(--spacing-unit) * 0.75);
+}
+
+ul li::marker {
+    content: "// ";
+    color: var(--infinite-green-secondary);
+    font-size: 1em;
+}
+
+ol {
+    list-style-type: none;
+    counter-reset: tactical-counter;
+}
+
+ol li {
+    counter-increment: tactical-counter;
+}
+
+ol li::marker {
+    content: "0" counter(tactical-counter) ".";
+    color: var(--infinite-amber-primary);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.9em;
+    margin-right: var(--spacing-unit);
+}
+
+/* Blockquote */
+blockquote {
+    margin: calc(var(--spacing-unit) * 2) 0;
+    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+    border-left: var(--border-width-main) solid var(--infinite-green-primary);
+    background-color: var(--infinite-glass-bg);
+    backdrop-filter: blur(4px) brightness(0.9);
+    border-radius: var(--radius-medium);
+    box-shadow: var(--glow-green-border), var(--inset-shadow);
+    color: var(--infinite-text-secondary);
+    font-size: 0.95em;
+}
+
+blockquote p:last-child { 
+    margin-bottom: 0; 
+}
+
+blockquote strong:first-child {
+    color: var(--infinite-green-secondary);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    margin-right: var(--spacing-unit);
+}
+
+/* Código */
+code {
+    font-family: var(--font-mono);
+    background-color: rgba(0, 255, 136, 0.05);
+    color: var(--infinite-amber-primary);
+    padding: 0.15em 0.4em;
+    border-radius: var(--radius-sharp);
+    font-size: 0.95em;
+    border: 1px solid var(--infinite-border-fine);
+}
+
+pre {
+    background-color: var(--infinite-bg-grid);
+    border: 1px solid var(--infinite-border-medium);
+    border-radius: var(--radius-medium);
+    padding: var(--spacing-unit);
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    overflow-x: auto;
+    box-shadow: var(--inset-shadow);
+    font-size: 0.95em;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    line-height: 1.5;
+    color: var(--infinite-text-secondary);
+}
+
+hr {
+    border: none;
+    height: var(--border-width-medium);
+    background-color: var(--infinite-border-main);
+    box-shadow: 0 0 6px rgba(74, 107, 156, 0.5);
+    margin: calc(var(--spacing-unit) * 3) 0;
+}
+
+/* --- TABLA --- */
+.table-wrapper {
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    border: 1px solid var(--infinite-border-medium);
+    border-radius: var(--radius-medium);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+thead {
+    background-color: rgba(40, 40, 40, 0.7);
+    backdrop-filter: blur(3px);
+    border-bottom: var(--border-width-medium) solid var(--infinite-blue-primary);
+}
+
+th {
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--infinite-blue-secondary);
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+    text-align: left;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 1.1em;
+}
+
+tbody tr {
+    background-color: var(--infinite-bg-surface);
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: var(--infinite-bg-elevated);
+}
+
+td {
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+    border-bottom: 1px solid var(--infinite-border-fine);
+    color: var(--infinite-text-secondary);
+}
+
+/* --- ELEMENTOS FLOTANTES --- */
+.floating-block {
+    background-color: var(--infinite-glass-bg);
+    border: 1px solid var(--infinite-border-medium);
+    border-radius: var(--radius-medium);
+    padding: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    backdrop-filter: blur(4px);
+    box-shadow: var(--outset-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.floating-block:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* --- ESTADOS DE TABLA --- */
+.table-state-active {
+    background-color: rgba(0, 170, 255, 0.1);
+    border-left: 3px solid var(--infinite-blue-primary);
+}
+
+.table-state-warning {
+    background-color: rgba(255, 200, 0, 0.1);
+    border-left: 3px solid var(--infinite-amber-primary);
+}
+
+.table-state-error {
+    background-color: rgba(255, 64, 64, 0.1);
+    border-left: 3px solid var(--infinite-red-primary);
+}
+
+/* --- EFECTOS HOVER --- */
+.hover-effect {
+    transition: all 0.2s ease;
+}
+
+.hover-effect:hover {
+    transform: scale(1.02);
+    box-shadow: var(--glow-blue-border);
+}
+
+/* --- ANIMACIONES --- */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* --- EFECTOS DE GRID --- */
+.grid-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+.grid-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(0, 170, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 170, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+}
+
+/* --- BORDES Y EFECTOS --- */
+.border-effect {
+    position: relative;
+    border: 1px solid var(--infinite-border-medium);
+    border-radius: var(--radius-medium);
+}
+
+.border-effect::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px solid var(--infinite-blue-primary);
+    border-radius: var(--radius-medium);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.border-effect:hover::after {
+    opacity: 0.5;
+}
+
+/* --- MEDIA QUERIES --- */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@media (max-width: 768px) {
+    body, .universal-scribe-output {
+        padding: var(--spacing-unit);
+    }
+    
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.6em; }
+    h3 { font-size: 1.4em; }
+    
+    .floating-block {
+        padding: var(--spacing-unit);
+    }
+} 

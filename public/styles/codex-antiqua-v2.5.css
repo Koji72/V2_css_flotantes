@@ -1,0 +1,461 @@
+/* --- Variables Globales --- */
+:root {
+    /* Colores base */
+    --codex-bg: #f5f0e6;
+    --codex-bg-alt: #f5e8d7;
+    --codex-text: #2c1810;
+    --codex-border: #d4c4a7;
+    --codex-border-dark: #543;
+    --codex-accent: #831;
+    
+    /* Tipografía */
+    --font-script: 'MedievalSharp', cursive;
+    --font-body: 'Crimson Text', serif;
+    --font-heading: 'UnifrakturCook', serif;
+    
+    /* Espaciado */
+    --spacing-unit: 8px;
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 8px rgba(0,0,0,0.2);
+    --shadow-lg: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+/* --- Estilos Base --- */
+body {
+    background-color: var(--codex-bg);
+    color: var(--codex-text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    padding: calc(var(--spacing-unit) * 4);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--codex-accent);
+    margin-top: calc(var(--spacing-unit) * 3);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+/* --- Layout de Columnas --- */
+.panel-columns-2 {
+    column-count: 2;
+    column-gap: calc(var(--spacing-unit) * 4);
+    column-rule: 1px solid var(--codex-border);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+.panel-columns-3 {
+    column-count: 3;
+    column-gap: calc(var(--spacing-unit) * 4);
+    column-rule: 1px solid var(--codex-border);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+/* Evitar que ciertos elementos se rompan entre columnas */
+.panel-columns-2 h2,
+.panel-columns-2 h3,
+.panel-columns-2 h4,
+.panel-columns-2 .inset-box,
+.panel-columns-3 h2,
+.panel-columns-3 h3,
+.panel-columns-3 h4,
+.panel-columns-3 .inset-box {
+    break-inside: avoid-column;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+/* --- Layout Flotante --- */
+.layout--float-left {
+    float: left;
+    width: calc(35% - (var(--spacing-unit) * 2));
+    margin-right: calc(var(--spacing-unit) * 2);
+    margin-bottom: var(--spacing-unit);
+    display: inline-block;
+    vertical-align: top;
+}
+
+.layout--float-right {
+    float: right;
+    width: calc(35% - (var(--spacing-unit) * 2));
+    margin-left: calc(var(--spacing-unit) * 2);
+    margin-bottom: var(--spacing-unit);
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* Limpiador de Floats */
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* --- Estilos de Paneles --- */
+.panel {
+    border: 1px solid var(--codex-border);
+    background-color: var(--codex-bg);
+    padding: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    border-radius: 4px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* --- Estilo: Caja Inset --- */
+.inset-box {
+    border: 1px solid var(--codex-border-dark);
+    background-color: var(--codex-bg-alt);
+    padding: calc(var(--spacing-unit) * 1.5);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+    border-radius: 3px;
+    margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+.inset-box h4 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-unit);
+    font-family: var(--font-script);
+    color: var(--codex-accent);
+    border-bottom: 1px dashed var(--codex-border);
+    font-size: 1.1em;
+    text-align: center;
+}
+
+/* --- Estilos Específicos --- */
+.panel-style--parchment {
+    background-image: url('/images/grunge-paper-background.jpg');
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--codex-border-dark);
+    box-shadow: var(--shadow-md);
+    padding: calc(var(--spacing-unit) * 3);
+    position: relative;
+}
+
+.panel-style--parchment::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(245, 240, 230, 0.7);
+    z-index: 0;
+}
+
+.panel-style--parchment > * {
+    position: relative;
+    z-index: 1;
+}
+
+.panel-style--metal {
+    background: linear-gradient(135deg, #e6e6e6, #c0c0c0);
+    border: 1px solid #999;
+    box-shadow: var(--shadow-md);
+}
+
+.panel-style--arcane {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #e6e6e6;
+    border: 1px solid #4a4a8a;
+    box-shadow: 0 0 10px rgba(74, 74, 138, 0.5);
+}
+
+.panel-style--scroll {
+    background-image: url('/images/grunge-paper-background.jpg');
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--codex-border-dark);
+    box-shadow: var(--shadow-lg);
+    padding: calc(var(--spacing-unit) * 3);
+    position: relative;
+    border-radius: 8px;
+}
+
+.panel-style--scroll::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(245, 240, 230, 0.85);
+    z-index: 0;
+    border-radius: 8px;
+}
+
+.panel-style--scroll > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Estilos de Tablas --- */
+.panel-style--grid table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: calc(var(--spacing-unit) * 2) 0;
+}
+
+.panel-style--grid th,
+.panel-style--grid td {
+    border: 1px solid var(--codex-border);
+    padding: calc(var(--spacing-unit) * 1.5);
+    text-align: left;
+}
+
+.panel-style--grid th {
+    background-color: var(--codex-bg-alt);
+    font-family: var(--font-script);
+    color: var(--codex-accent);
+}
+
+/* --- Estilos de Advertencia --- */
+.panel-style--warning {
+    background-color: #fff3f3;
+    border: 1px solid #ff6b6b;
+    color: #831;
+}
+
+/* --- Estilos de Juego --- */
+.panel-style--game {
+    background-color: var(--codex-bg-alt);
+    border: 2px solid var(--codex-border-dark);
+    padding: calc(var(--spacing-unit) * 2);
+    font-family: var(--font-script);
+}
+
+/* --- Estilos de Mapa --- */
+.panel-style--map {
+    background-color: var(--codex-bg);
+    border: 2px solid var(--codex-border-dark);
+    padding: calc(var(--spacing-unit) * 2);
+    font-family: var(--font-script);
+}
+
+/* --- Media Queries --- */
+@media (max-width: 768px) {
+    .panel-columns-2,
+    .panel-columns-3 {
+        column-count: 1;
+        column-rule: none;
+    }
+
+    .layout--float-left,
+    .layout--float-right {
+        float: none;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        display: block;
+    }
+}
+
+/* Paneles con marquesina decorativa */
+.panel-decorated {
+    position: relative;
+    padding: 2rem;
+    background-image: url('../images/vecteezy_classic-calligraphic-ornament-in-a-vintage-abstract-corner_57089644.png');
+    background-repeat: no-repeat;
+    background-position: top right;
+    background-size: 150px;
+}
+
+.panel-decorated::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../images/vecteezy_classic-calligraphic-ornament-in-a-vintage-abstract-corner_57089644.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: 150px;
+    transform: scaleX(-1);
+    pointer-events: none;
+}
+
+.panel-decorated::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../images/vecteezy_classic-calligraphic-ornament-in-a-vintage-abstract-corner_57089644.png');
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: 150px;
+    transform: rotate(180deg);
+    pointer-events: none;
+}
+
+.panel-decorated .panel-header {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background: var(--codex-bg-secondary);
+    border: 1px solid var(--codex-border);
+    border-radius: 4px;
+    text-align: center;
+}
+
+.panel-decorated .panel-content {
+    padding: 1rem;
+    background: var(--codex-bg-secondary);
+    border: 1px solid var(--codex-border);
+    border-radius: 4px;
+}
+
+/* Variantes de paneles decorados */
+.panel-decorated.panel-statblock {
+    background-color: var(--codex-bg-primary);
+    border: 2px solid var(--codex-border);
+    box-shadow: var(--codex-shadow);
+}
+
+.panel-decorated.panel-info-box {
+    background-color: var(--codex-bg-secondary);
+    border: 2px solid var(--codex-border);
+    box-shadow: var(--codex-shadow);
+}
+
+.panel-decorated.panel-warning {
+    background-color: var(--codex-bg-warning);
+    border: 2px solid var(--codex-border-warning);
+    box-shadow: var(--codex-shadow);
+}
+
+/* --- Estilos de Marquesinas Seleccionables --- */
+
+/* Configuración Base para Paneles con Estilos */
+.mixed-panel[class*="panel-style--"] {
+    position: relative;
+    padding: calc(var(--spacing-unit, 8px) * 2);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+/* --- Estilo 1: Esquinas Tecnológicas --- */
+.panel-style--tech-corners {
+    padding: calc(var(--spacing-unit, 8px) * 2.5);
+    background-color: var(--codex-bg-secondary);
+    border: 1px solid var(--codex-accent);
+    box-shadow: 0 0 5px rgba(0, 224, 255, 0.3);
+}
+
+.panel-style--tech-corners::before,
+.panel-style--tech-corners::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpolyline points='0,30 0,0 30,0' style='fill:none; stroke:%2300e0ff; stroke-width:2.5' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 10;
+}
+
+.panel-style--tech-corners::before { top: 5px; left: 5px; }
+.panel-style--tech-corners::after { bottom: 5px; right: 5px; transform: rotate(180deg); }
+
+/* --- Estilo 2: Borde con Brillo --- */
+.panel-style--glow-border {
+    border: 2px solid var(--codex-accent);
+    box-shadow: 0 0 15px var(--codex-accent), 0 0 30px var(--codex-accent);
+}
+
+/* --- Estilo 3: Arcos Góticos --- */
+.panel-style--gothic-arches {
+    border: 2px solid var(--codex-border);
+    background-color: var(--codex-bg-secondary);
+    box-shadow: var(--codex-shadow);
+    padding: 0;
+}
+
+.panel-style--gothic-arches > .panel-header {
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 3);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid var(--codex-border);
+}
+
+.panel-style--gothic-arches > .panel-header::before,
+.panel-style--gothic-arches > .panel-header::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    width: 30px;
+    height: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath d='M 0 30 Q 15 0 30 30' fill='none' stroke='%23444444' stroke-width='2.5'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 10;
+}
+
+.panel-style--gothic-arches > .panel-header::before { left: 5px; }
+.panel-style--gothic-arches > .panel-header::after { right: 5px; }
+
+.panel-style--gothic-arches > .panel-content {
+    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+}
+
+/* --- Estilo 4: Textura Sutil --- */
+.panel-style--subtle-texture {
+    background-color: var(--codex-bg-secondary);
+    background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 0h2v2H1V0zm3 3h2v2H4V3z' fill='%23000000' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
+    border: 1px solid var(--codex-border);
+}
+
+/* --- Estilo 5: Nodos de Circuito --- */
+.panel-style--circuit-nodes {
+    padding: calc(var(--spacing-unit) * 2);
+    border: 1px solid var(--codex-accent);
+    background-color: var(--codex-bg-secondary);
+    position: relative;
+}
+
+.panel-style--circuit-nodes::before,
+.panel-style--circuit-nodes::after,
+.panel-style--circuit-nodes .panel-header::before,
+.panel-style--circuit-nodes .panel-header::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: var(--codex-accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--codex-accent);
+    z-index: 10;
+}
+
+.panel-style--circuit-nodes::before { top: -6px; left: -6px; }
+.panel-style--circuit-nodes::after { bottom: -6px; right: -6px; }
+.panel-style--circuit-nodes .panel-header::before { top: -6px; right: -6px; }
+.panel-style--circuit-nodes .panel-header::after { bottom: -6px; left: -6px; }
+
+/* --- Estilo 6: Marco Simple --- */
+.panel-style--simple-frame {
+    padding: var(--spacing-unit);
+    border: 1px solid var(--codex-border);
+    background-color: var(--codex-bg-secondary);
+    position: relative;
+}
+
+.panel-style--simple-frame::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid var(--codex-border);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* --- Combinación de Estilos --- */
+.panel-style--tech-corners.panel-style--glow-border {
+    padding: calc(var(--spacing-unit) * 2.5);
+    border: 2px solid var(--codex-accent);
+    box-shadow: 0 0 15px var(--codex-accent), 0 0 30px var(--codex-accent);
+} 

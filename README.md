@@ -2,6 +2,38 @@
 
 Una aplicación moderna para la visualización de documentos Markdown con plantillas CSS personalizables, construida con React, TypeScript y Vite.
 
+## Versión Actual: 2.6.0
+
+Esta versión incluye mejoras significativas en el procesamiento de markdown, con especial énfasis en la estabilidad y el correcto funcionamiento de los paneles con la sintaxis `:::panel{title="..."}`.
+
+### Mejoras Destacadas en v2.6:
+- Procesamiento robusto de paneles de markdown
+- Sistema mejorado de logs para facilitar la depuración
+- Mayor estabilidad y resistencia a errores
+- Mejor rendimiento en el procesamiento de documentos complejos
+
+Para detalles completos de los cambios, consultar los archivos:
+- [VERSION.md](./VERSION.md) - Historial de versiones
+- [MEJORAS-V2.6.md](./MEJORAS-V2.6.md) - Documentación técnica detallada
+
+## Ejemplos de Sintaxis de Paneles (Ahora Funcionando Correctamente)
+
+```markdown
+:::panel{title="Título del Panel"}
+Contenido del panel...
+:::
+
+:::panel{title="Panel con Estilo" style="tech-corners"}
+| Columna 1 | Columna 2 |
+|-----------|-----------|
+| Valor 1   | Valor 2   |
+:::
+
+:::panel{title="Panel Flotante" layout="float-right"}
+Este panel flota a la derecha del documento.
+:::
+```
+
 ## Características
 
 - **V2.5: Plantillas CSS Adaptadas + Mejoras JS** - La última versión combina la flexibilidad de las plantillas CSS con mejoras visuales dinámicas mediante JavaScript

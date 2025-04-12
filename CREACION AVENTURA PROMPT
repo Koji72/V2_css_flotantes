@@ -1,0 +1,239 @@
+¡Perfecto! Tomemos uno de los ejemplos visuales, como el estilo de libro de rol de fantasía (similar a D&D o la 5ª imagen con el pergamino lateral), y veamos cómo lo implementarías con Markdown V2.5 extendido y el CSS correspondiente.
+
+Objetivo: Crear un layout con texto principal a dos columnas y una caja inset tipo pergamino flotando a la derecha.
+
+1. Modificaciones Necesarias (Asumidas):
+
+markdownProcessor.ts:
+
+Reconoce :::columns-2 ... ::: y genera <section class="mixed-panel panel-columns-2">...</section>.
+
+Reconoce :::inset-box [Título] | style=scroll,ornate-edges | layout=float-right ::: y genera <aside class="inset-box panel-style--scroll panel-style--ornate-edges layout--float-right"><h2>[Título]</h2>...</aside> (usar <aside> es semánticamente mejor para contenido tangencial).
+
+Archivos de Imagen: Asumimos que tienes imágenes en public/images/ como scroll-background.jpg y ornate-corner.svg.
+
+2. Ejemplo de Markdown (V2.5 Extendido):
+
+# Capítulo I: El Viaje Comienza
+
+:::columns-2
+
+Este es el comienzo de nuestra épica aventura. El camino se extiende ante nosotros, lleno de promesas y peligros. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Proin eget tortor risus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.
+
+:::inset-box Sabiduría del Escriba | style=scroll,ornate-edges | layout=float-right :::
+#### Una Nota Importante
+Recuerda siempre llevar una ración extra. Los caminos son traicioneros y los suministros, escasos.
+*   **Agua:** Esencial.
+*   **Comida:** No perecedera.
+*   **Mapa:** ¡No te pierdas!
+:::
+
+Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec sollicitudin molestie malesuada. Pellentesque in ipsum id orci porta dapibus.
+
+Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Sed porttitor lectus nibh.
+
+**Encuentros en el Camino**
+
+No todo es paisajismo. Criaturas acechan en las sombras. Cras ultricies ligula sed magna dictum porta. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+
+Donec rutrum congue leo eget malesuada. Proin eget tortor risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
+
+:::
+
+---
+<div class="clearfix"></div> <!-- Necesario para limpiar el float -->
+
+## Siguiente Sección
+
+Esta sección aparecerá debajo de las columnas y la caja flotante gracias al clearfix.
+
+
+3. Salida HTML Esperada (Simplificada):
+
+<h1>Capítulo I: El Viaje Comienza</h1>
+
+<section class="mixed-panel panel-columns-2">
+
+  <p>Este es el comienzo...</p>
+
+  <aside class="inset-box panel-style--scroll panel-style--ornate-edges layout--float-right">
+    <h4>Una Nota Importante</h4>
+    <p>Recuerda siempre...</p>
+    <ul>
+        <li><strong>Agua:</strong> Esencial.</li>
+        <!-- ...más lista... -->
+    </ul>
+  </aside>
+
+  <p>Vivamus suscipit tortor...</p>
+
+  <p>Praesent sapien massa...</p>
+
+  <strong>Encuentros en el Camino</strong>
+
+  <p>No todo es paisajismo...</p>
+
+  <p>Donec rutrum congue...</p>
+
+</section>
+
+<hr>
+<div class="clearfix"></div>
+
+<h2>Siguiente Sección</h2>
+<p>Esta sección aparecerá...</p>
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Html
+IGNORE_WHEN_COPYING_END
+
+4. Ejemplo CSS (Fragmento para una Plantilla "Codex Antiqua V2.5"):
+
+/* --- EN codex-antiqua-v2.5.css --- */
+
+/* ... (Variables :root, estilos base, h1, p, etc. definidos previamente) ... */
+/* Asumimos variables como --codex-bg, --codex-text, --codex-border, --font-script, etc. */
+
+/* --- Layout de Columnas --- */
+.panel-columns-2 {
+    column-count: 2;
+    column-gap: calc(var(--spacing-unit, 8px) * 4); /* Espacio entre columnas */
+    column-rule: 1px solid var(--codex-border, #ccc); /* Línea opcional entre columnas */
+    margin-bottom: calc(var(--spacing-unit, 8px) * 2); /* Espacio después del bloque de columnas */
+}
+/* Evitar que ciertos elementos se rompan entre columnas (puede necesitar ajustes) */
+.panel-columns-2 h2,
+.panel-columns-2 h3,
+.panel-columns-2 h4,
+.panel-columns-2 .inset-box { /* Evitar que la caja inset se rompa */
+    break-inside: avoid-column;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+
+/* --- Layout Flotante --- */
+.layout--float-left {
+    float: left;
+    width: calc(35% - (var(--spacing-unit, 8px) * 2)); /* Ancho de la caja flotante */
+    margin-right: calc(var(--spacing-unit, 8px) * 2);
+    margin-bottom: var(--spacing-unit, 8px);
+    /* Necesario para que funcione bien dentro de columnas */
+    display: inline-block; /* O display: block; */
+    vertical-align: top; /* Alinear arriba */
+}
+.layout--float-right {
+    float: right;
+    width: calc(35% - (var(--spacing-unit, 8px) * 2)); /* Ancho de la caja flotante */
+    margin-left: calc(var(--spacing-unit, 8px) * 2);
+    margin-bottom: var(--spacing-unit, 8px);
+    display: inline-block;
+    vertical-align: top;
+}
+/* Limpiador de Floats */
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+/* --- Estilo: Caja Inset --- */
+.inset-box { /* Estilo base para todas las cajas inset */
+    border: 1px solid var(--codex-border-dark, #543); /* Borde oscuro */
+    background-color: var(--codex-bg-alt, #f5e8d7); /* Fondo ligeramente diferente */
+    padding: calc(var(--spacing-unit, 8px) * 1.5);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.2); /* Sombra interior */
+    border-radius: 3px; /* Bordes suaves */
+}
+.inset-box h4 { /* Cabecera específica para inset */
+    margin-top: 0;
+    margin-bottom: var(--spacing-unit, 8px);
+    font-family: var(--font-script, cursive); /* Fuente decorativa */
+    color: var(--codex-accent, #831); /* Color de acento */
+    border-bottom: 1px dashed var(--codex-border, #ccc);
+    font-size: 1.1em;
+    text-align: center;
+}
+
+
+/* --- Estilo: Fondo de Pergamino (para inset-box) --- */
+.panel-style--scroll {
+    background-image: url('/images/scroll-background.jpg'); /* URL relativa a /public */
+    background-size: cover; /* O contain, o repeat */
+    background-position: center center;
+    border: 1px solid transparent; /* Puede necesitar ajustar borde */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Sombra exterior para destacar */
+}
+
+/* --- Estilo: Bordes Ornamentales (para inset-box) --- */
+.panel-style--ornate-edges {
+    position: relative; /* Necesario para pseudo-elementos */
+    border: none; /* Quitar borde base si se usa esto */
+    padding: calc(var(--spacing-unit, 8px) * 2); /* Más padding para los bordes */
+}
+.panel-style--ornate-edges::before,
+.panel-style--ornate-edges::after {
+    content: '';
+    position: absolute;
+    width: 25px; /* Tamaño del ornamento */
+    height: 25px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.8;
+}
+/* Esquina Superior Izquierda */
+.panel-style--ornate-edges::before {
+    top: 0;
+    left: 0;
+    background-image: url('/images/ornate-corner-tl.svg'); /* SVG para esquina sup-izq */
+}
+/* Esquina Inferior Derecha */
+.panel-style--ornate-edges::after {
+    bottom: 0;
+    right: 0;
+    background-image: url('/images/ornate-corner-br.svg'); /* SVG para esquina inf-der */
+}
+/* Nota: Crear SVG/imágenes separadas para cada esquina y añadirlas con más pseudo-elementos
+   o usando border-image (más complejo) para tener las 4 esquinas. */
+
+
+/* --- Media Query para Responsividad --- */
+@media (max-width: 768px) {
+  /* Desactivar columnas en pantallas pequeñas */
+  .panel-columns-2 {
+    column-count: 1;
+    column-rule: none;
+  }
+  /* Desactivar floats */
+  .layout--float-left,
+  .layout--float-right {
+    float: none;
+    width: 100%; /* Ocupar ancho completo */
+    margin-left: 0;
+    margin-right: 0;
+    display: block; /* Volver a block */
+  }
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Css
+IGNORE_WHEN_COPYING_END
+
+Explicación del Ejemplo:
+
+El Markdown define un bloque :::columns-2 para el contenido principal.
+
+Dentro de las columnas, se inserta un bloque <aside class="inset-box..."> (generado desde :::inset-box...) con los estilos scroll y ornate-edges, y el layout float-right.
+
+Un <div class="clearfix"></div> (añadido manualmente o quizás por un bloque :::clear) se coloca después del bloque de columnas para asegurar que el <h2>Siguiente Sección</h2> aparezca debajo.
+
+El CSS define cómo se ven las columnas (column-count), cómo flotan las cajas (float, width), y aplica los estilos visuales específicos a .inset-box, .panel-style--scroll, y .panel-style--ornate-edges (usando fondos, bordes y pseudo-elementos con imágenes SVG/JPG desde /public/images/).
+
+Se incluye una media query básica para desactivar las columnas y los floats en pantallas pequeñas.
+
+Este ejemplo muestra cómo combinar diferentes bloques ::: con parámetros de style y layout para construir layouts complejos y visualmente ricos, directamente desde Markdown, y estilizarlos completamente a través de las plantillas CSS V2.5.

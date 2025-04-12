@@ -1,0 +1,465 @@
+/* ============================================== */
+/*   THEME: Infinity Command */
+/*      (For Universal Scribe V2.5 Architecture)  */
+/* ============================================== */
+
+/* 0. IMPORTAR FUENTES (Funcionales y Tech) */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;1,400&family=Roboto+Mono:wght@400;500&display=swap');
+
+/* 1. Variables Fundamentales (Paleta UNSC + Tech Accents) */
+:root {
+    /* -- Colores Base (UNSC Palette) -- */
+    --unsc-bg-dark: #1c2128;    /* Azul acero muy oscuro */
+    --unsc-bg-medium: #2a313b;   /* Azul acero medio */
+    --unsc-bg-light: #3c4552;   /* Azul acero claro (para hover/énfasis) */
+    --unsc-border-dark: #4a5566;  /* Borde gris azulado oscuro */
+    --unsc-border-light: #6a788d; /* Borde gris azulado claro */
+    --unsc-text-primary: #ccd6e4; /* Texto principal blanco azulado */
+    --unsc-text-secondary: #a0aec0;/* Texto secundario gris azulado */
+
+    /* -- Colores de Acento (Infinity Tech / Interfaz) -- */
+    --tech-cyan-primary: #00e0ff; /* Cian brillante principal */
+    --tech-cyan-secondary: #60efff; /* Cian más claro */
+    --tech-cyan-dark: #00a8c0;   /* Cian oscuro */
+    --tech-amber-warning: #ffb700; /* Ámbar/Naranja para alertas */
+    --tech-red-error: #ff4d4d;     /* Rojo claro para errores */
+    --tech-green-ok: #4dff88;     /* Verde brillante para OK */
+    --tech-purple-neutral: #b380ff; /* Púrpura sutil para neutral/énfasis */
+
+    /* -- Tipografía -- */
+    --font-headings: 'Orbitron', sans-serif; /* Fuente angular, tech */
+    --font-body: 'Exo 2', sans-serif;       /* Fuente limpia, moderna */
+    --font-code: 'Roboto Mono', monospace;   /* Monospace clara */
+
+    /* -- Sombras y Efectos -- */
+    --glow-cyan-text: 0 0 6px var(--tech-cyan-primary);
+    --glow-cyan-box-soft: 0 0 12px rgba(0, 224, 255, 0.4);
+    --glow-cyan-box-hard: 0 0 8px var(--tech-cyan-primary);
+    --glow-amber-text: 0 0 6px var(--tech-amber-warning);
+    --glow-red-text: 0 0 6px var(--tech-red-error);
+    --glow-green-text: 0 0 6px var(--tech-green-ok);
+    --inset-shadow-light: inset 0 1px 2px rgba(255, 255, 255, 0.05);
+    --inset-shadow-dark: inset 0 2px 5px rgba(0, 0, 0, 0.4);
+
+    /* -- Espaciado y Radios -- */
+    --spacing-unit: 8px;
+    --radius-sharp: 2px; /* Bordes casi rectos */
+    --radius-medium: 4px;
+}
+
+/* 2. Estilos Base Generales (Consola de Mando) */
+body, .universal-scribe-output, #content {  /* (MODIFICADO: Añadido #content) */
+    background-color: var(--unsc-bg-dark);
+    color: var(--unsc-text-primary);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    padding: calc(var(--spacing-unit) * 2.5);
+    margin: 0;
+    /* Fondo con rejilla hexagonal sutil */
+    background-image:
+        linear-gradient(rgba(0, 224, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 224, 255, 0.03) 1px, transparent 1px),
+        radial-gradient(circle at center, rgba(0, 224, 255, 0.02) 0%, transparent 60%);
+    background-size: 40px 40px, 40px 40px, 100% 100%; /* Ajustar tamaño hex */
+    background-position: center center;
+}
+
+/* Scrollbars (Estilo UNSC) */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+::-webkit-scrollbar-track {
+    background: var(--unsc-bg-dark);
+    border: 1px solid var(--unsc-border-dark);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--unsc-bg-light);
+    border: 1px solid var(--unsc-border-dark);
+    border-radius: var(--radius-sharp);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--unsc-border-light);
+}
+
+/* 3. Estilos para Elementos Comunes */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-headings);
+    color: var(--tech-cyan-primary);
+    text-shadow: var(--glow-cyan-text);
+    margin: calc(var(--spacing-unit) * 2.5) 0 calc(var(--spacing-unit) * 1.5) 0;
+    padding-bottom: calc(var(--spacing-unit) * 0.75);
+    border-bottom: 1px solid var(--unsc-border-dark);
+    font-weight: 700; /* Orbitron es grueso */
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+h1 { font-size: 2.2em; font-weight: 900; border-bottom-width: 2px; border-color: var(--tech-cyan-dark); }
+h2 { font-size: 1.8em; }
+h3 { font-size: 1.5em; color: var(--tech-cyan-secondary); border-bottom-style: dashed; border-color: var(--unsc-border-light); text-shadow: none; }
+h4 { font-size: 1.2em; color: var(--unsc-text-primary); border-bottom: none; text-shadow: none; text-transform: none; }
+h5 { font-size: 1em; border-bottom: none; color: var(--unsc-text-secondary); font-style: italic; text-transform: none; }
+h6 { font-size: 0.9em; border-bottom: none; color: var(--unsc-text-secondary); font-weight: 500; text-transform: none; }
+
+/* Decoración angular para cabeceras */
+h1::before, h2::before {
+    content: "// "; /* Indicador tipo consola */
+    color: var(--tech-amber-warning);
+    opacity: 0.8;
+    margin-right: var(--spacing-unit);
+}
+
+p {
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+}
+
+a {
+    color: var(--tech-cyan-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--tech-cyan-dark);
+    transition: color 0.2s ease, text-shadow 0.2s ease, border-bottom-color 0.2s ease;
+}
+a:hover {
+    color: var(--unsc-text-primary);
+    text-shadow: var(--glow-cyan-text);
+    border-bottom-color: var(--tech-cyan-primary);
+}
+
+strong, b {
+    font-weight: 600;
+    color: var(--unsc-text-primary);
+}
+em, i {
+    font-style: italic;
+    color: var(--unsc-text-secondary);
+}
+
+ul, ol {
+    margin-left: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    padding-left: calc(var(--spacing-unit) * 2);
+}
+li {
+    margin-bottom: calc(var(--spacing-unit) * 0.75);
+}
+
+ul li::marker {
+    content: "> "; /* Marcador tipo prompt */
+    color: var(--tech-cyan-primary);
+    font-size: 1em;
+}
+
+ol {
+    list-style-type: none;
+    counter-reset: command-counter;
+}
+ol li {
+    counter-increment: command-counter;
+}
+ol li::marker {
+    content: "0" counter(command-counter) ":"; /* Contador estilo comando */
+    color: var(--tech-amber-warning);
+    font-family: var(--font-code);
+    font-weight: 500;
+    font-size: 0.9em;
+    margin-right: var(--spacing-unit);
+}
+
+/* Blockquote - Transmisión de Datos */
+blockquote {
+    margin: calc(var(--spacing-unit) * 2) 0;
+    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+    border-left: 3px solid var(--tech-cyan-primary);
+    background-color: var(--unsc-bg-medium);
+    border-radius: 0 var(--radius-medium) var(--radius-medium) 0;
+    box-shadow: var(--inset-shadow-dark);
+    color: var(--unsc-text-secondary);
+    font-family: var(--font-code);
+    font-size: 0.95em;
+}
+blockquote p:last-child {
+    margin-bottom: 0;
+}
+blockquote strong:first-child { /* Origen de la transmisión */
+    color: var(--tech-cyan-secondary);
+    font-family: var(--font-headings);
+    margin-right: var(--spacing-unit);
+    text-transform: uppercase;
+}
+
+/* Código - Logs del Sistema */
+code {
+    font-family: var(--font-code);
+    background-color: var(--unsc-bg-dark);
+    color: var(--tech-green-ok);
+    padding: 0.15em 0.4em;
+    border-radius: var(--radius-sharp);
+    font-size: 0.9em;
+    border: 1px solid var(--unsc-border-dark);
+}
+pre {
+    background-color: var(--unsc-bg-dark);
+    border: 1px solid var(--unsc-border-light);
+    border-radius: var(--radius-medium);
+    padding: var(--spacing-unit);
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    overflow-x: auto;
+    box-shadow: var(--inset-shadow-dark);
+    font-size: 0.9em;
+}
+pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    line-height: 1.5;
+}
+
+hr { /* Divisor Tech */
+    border: none;
+    height: 1px;
+    background-image: linear-gradient(to right, transparent, var(--unsc-border-light), transparent);
+    margin: calc(var(--spacing-unit) * 3) 0;
+}
+
+/* --- TABLA: Estilo Rejilla de Datos Táctica --- */
+.table-container, /* (MODIFICADO: Añadido selector corregido) */
+.datamatrix-container,
+.table-wrapper { 
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    border: 1px solid var(--unsc-border-light);
+    border-radius: var(--radius-medium);
+    overflow: hidden;
+    background-color: var(--unsc-bg-medium);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+thead {
+    background-color: rgba(60, 69, 82, 0.7); /* Fondo cabecera translúcido */
+    border-bottom: 2px solid var(--tech-cyan-primary);
+    backdrop-filter: blur(2px); /* Efecto cristal esmerilado */
+}
+th {
+    font-family: var(--font-headings);
+    font-weight: 500; /* Orbitron es grueso */
+    color: var(--tech-cyan-secondary);
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+    text-align: left;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--unsc-border-dark);
+    transition: background-color 0.15s ease;
+}
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+tbody tr:hover {  /* (MODIFICADO: Añadido estado hover) */
+    background-color: var(--unsc-bg-light);
+}
+
+td {
+    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+    vertical-align: middle;
+    font-size: 0.95em;
+}
+
+/* --- TABLA: Data Matrix Específico --- */
+table.data-matrix,
+[data-matrix-table="true"] {  /* (MODIFICADO: Añadido selector para atributo data) */
+    /* Estilo más denso/táctico */
+}
+table.data-matrix th,
+[data-matrix-table="true"] th {  /* (MODIFICADO: Consistencia en selectores) */
+    color: var(--tech-cyan-primary);
+    font-size: 0.85em;
+}
+table.data-matrix td,
+[data-matrix-table="true"] td {  /* (MODIFICADO: Consistencia en selectores) */
+    padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 1.5);
+}
+
+/* Título para Data Matrix (AÑADIDO) */
+.data-matrix-title,
+.panel__title {
+    font-family: var(--font-headings);
+    color: var(--tech-cyan-primary);
+    text-shadow: var(--glow-cyan-text);
+    font-size: 1.2em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.5em;
+}
+
+/* --- CLASES DE ESTADO (En CELDAS) --- */
+td.status-ok, 
+td.status-neutral, 
+td.status-warn, 
+td.status-error,
+.status-ok, .status-neutral, .status-warn, .status-error {  /* (MODIFICADO: Generalizado selectores) */
+    position: relative;
+}
+
+td.status-ok, .status-ok {
+    color: var(--tech-green-ok) !important;
+    text-shadow: var(--glow-green-text);
+}
+
+td.status-warn, .status-warn {
+    color: var(--tech-amber-warning) !important;
+    text-shadow: var(--glow-amber-text);
+}
+
+td.status-error, .status-error {
+    color: var(--tech-red-error) !important;
+    text-shadow: var(--glow-red-text);
+}
+
+td.status-neutral, .status-neutral {
+    color: var(--tech-purple-neutral) !important;
+}
+
+/* --- ESTILOS PARA MEJORAS JS (V2.5) --- */
+
+/* 1. Hover Interactivo (Filas, Paneles con `data-interactive-container`) */
+.is-hovered { /* Clase añadida por JS */
+    background-color: var(--unsc-bg-light) !important;
+    box-shadow: var(--glow-cyan-box-soft) !important;
+    cursor: default; /* O 'pointer' si lleva a acción */
+}
+
+/* 5. Barras de Progreso Dinámicas (Añadidas por JS) */
+.dynamic-progress-bar {
+    width: 100%;
+    height: 8px; /* Barra delgada, estilo UI */
+    background-color: var(--unsc-bg-dark);
+    border-radius: var(--radius-sharp);
+    overflow: hidden;
+    margin-top: calc(var(--spacing-unit) * 0.25);
+    border: 1px solid var(--unsc-border-dark);
+    box-shadow: var(--inset-shadow-dark);
+}
+
+.dynamic-progress-bar .bar-fill {
+    height: 100%;
+    border-radius: 0; /* Relleno recto */
+    transition: width 0.4s ease-out, background-color 0.4s ease;
+    box-shadow: var(--inset-shadow-light); /* Ligero brillo interior */
+    /* Efecto scanline sutil */
+    background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.08) 25%, transparent 25%,
+        transparent 50%, rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.08) 75%, transparent 75%,
+        transparent
+    );
+    background-size: 10px 10px;
+}
+
+.dynamic-progress-bar .bar-fill.ok {
+    background-color: var(--tech-cyan-primary);
+    box-shadow: 0 0 5px var(--tech-cyan-dark);
+}
+.dynamic-progress-bar .bar-fill.warn {
+    background-color: var(--tech-amber-warning);
+    box-shadow: 0 0 5px var(--tech-amber-warning);
+}
+.dynamic-progress-bar .bar-fill.error {
+    background-color: var(--tech-red-error);
+    box-shadow: 0 0 5px var(--tech-red-error);
+}
+
+
+/* --- Estilos para Bloques ::: (Paneles de Consola) --- */
+.panel, /* (MODIFICADO: Añadido selector de clase panel según arquitectura V2.5) */
+.mixed-panel {
+    background-color: var(--unsc-bg-medium);
+    border: 1px solid var(--unsc-border-light);
+    border-radius: var(--radius-medium);
+    margin: calc(var(--spacing-unit) * 3) 0;
+    padding: 0;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), var(--inset-shadow-dark);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Paneles específicos con clases según arquitectura V2.5 */
+.panel--event-log,
+.panel--unit-status,
+.panel--info-box,
+.panel--objectives {
+    border-top: 2px solid var(--tech-cyan-primary);
+}
+
+.panel--unit-status .panel__title {
+    color: var(--tech-green-ok);
+    text-shadow: var(--glow-green-text);
+}
+
+.panel--objectives .panel__title {
+    color: var(--tech-amber-warning);
+    text-shadow: var(--glow-amber-text);
+}
+
+.panel--event-log .panel__title {
+    color: var(--tech-purple-neutral);
+}
+
+/* Cabecera del Panel */
+.panel__title,
+.mixed-panel > h2:first-child,
+.mixed-panel > h3:first-child {
+    background: linear-gradient(to right, var(--unsc-bg-light), var(--unsc-bg-medium));
+    color: var(--tech-cyan-primary);
+    text-shadow: var(--glow-cyan-text);
+    padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.5);
+    margin: 0;
+    border-bottom: 1px solid var(--unsc-border-light);
+    font-size: 1.1em; /* Más pequeñas las cabeceras de panel */
+    font-weight: 700;
+    display: flex; /* Para alinear icono */
+    align-items: center;
+}
+
+/* Contenido del panel */
+.panel__content,
+.panel-content { 
+     padding: calc(var(--spacing-unit) * 1.5);
+}
+
+/* Checkbox listas en panel de objetivos */
+.panel--objectives li {
+    list-style-type: none;
+}
+
+.panel--objectives input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1em;
+    height: 1em;
+    border: 1px solid var(--tech-amber-warning);
+    border-radius: 2px;
+    margin-right: 8px;
+    position: relative;
+    vertical-align: -2px;
+    cursor: pointer;
+}
+
+.panel--objectives input[type="checkbox"]:checked::before {
+    content: "✓";
+    position: absolute;
+    top: -0.2em;
+    left: 0.15em;
+    color: var(--tech-amber-warning);
+    font-size: 0.9em;
+}
+
+/* --- Fin de Infinity Command Interface --- */ 

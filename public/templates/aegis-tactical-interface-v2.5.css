@@ -1,0 +1,780 @@
+/* ================================================== */
+/*       THEME: Aegis Tactical Interface (V2.5)       */
+/*   (Halo UNSC x Infinity Tech - Universal Scribe)   */
+/*        >>> CON MARQUESINAS SVG <<<                 */
+/* ================================================== */
+
+/* 0. IMPORTAR FUENTES */
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600&family=Exo+2:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+/* 1. VARIABLES FUNDAMENTALES (Paleta Aegis) */
+:root {
+    /* Fondo y Colores principales */
+    --aegis-bg-deep: #080a0f;
+    --aegis-bg-graphite: #1c1e24;
+    --aegis-bg-metal-dark: #2a2d35;
+    --aegis-bg-metal-light: #3e4148;
+    --aegis-bg-glass: rgba(30, 42, 56, 0.7);
+    
+    /* Azules Cyber */
+    --cyber-blue-primary: #00aaff;
+    --cyber-blue-dark: #0077cc;
+    --cyber-blue-bright: #60d0ff;
+    --cyber-blue-glow: rgba(0, 170, 255, 0.5);
+    
+    /* Verdes Tacticos */
+    --tactical-green-bright: #80ff00;
+    --tactical-green-medium: #60cc00;
+    --tactical-green-dark: #3a7a00;
+    
+    /* Acentos y Alertas */
+    --alert-red: #ff3333;
+    --alert-yellow: #ffcc00;
+    --alert-green: #33ff66;
+    --alert-blue: #00aaff;
+    
+    /* Bordes y Líneas */
+    --aegis-border-main: rgba(0, 170, 255, 0.8);
+    --aegis-border-medium: rgba(0, 170, 255, 0.5);
+    --aegis-border-fine: rgba(0, 170, 255, 0.3);
+    --aegis-border-subtle: rgba(255, 255, 255, 0.1);
+    
+    /* Tipografía */
+    --font-heading: 'Teko', sans-serif;
+    --font-body: 'Exo 2', sans-serif; 
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-base-size: 16px;
+    
+    /* Espaciado */
+    --spacing-unit: 8px;
+    --radius-small: 2px;
+    --radius-medium: 4px;
+    --radius-large: 8px;
+    
+    /* Sombras */
+    --outset-shadow-ui: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --inset-shadow-ui: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    --text-shadow-normal: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --glow-active-box: 0 0 10px var(--cyber-blue-glow);
+    --glow-active-text: 0 0 5px var(--cyber-blue-glow);
+}
+
+/* 2. ESTILOS BASE */
+body, .universal-scribe-output {
+    background-color: var(--aegis-bg-deep);
+    color: #e0e0e0;
+    font-family: var(--font-body);
+    font-size: var(--font-base-size);
+    line-height: 1.5;
+    margin: 0;
+    padding: 20px;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background-color: var(--aegis-bg-graphite);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--cyber-blue-dark);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--cyber-blue-primary);
+}
+
+/* 3. ELEMENTOS COMUNES */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--cyber-blue-bright);
+    margin-top: calc(var(--spacing-unit) * 3);
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    letter-spacing: 0.03em;
+    text-shadow: var(--text-shadow-normal);
+    text-transform: uppercase;
+}
+
+h1 {
+    font-size: 1.8em;
+    border-bottom: 2px solid var(--cyber-blue-primary);
+    padding-bottom: var(--spacing-unit);
+    position: relative;
+}
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(to right, var(--cyber-blue-bright), transparent);
+}
+
+h2 {
+    font-size: 1.5em;
+    color: var(--cyber-blue-primary);
+}
+
+h3 {
+    font-size: 1.3em;
+    color: var(--cyber-blue-primary);
+}
+
+p {
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    text-align: justify;
+}
+
+a {
+    color: var(--cyber-blue-primary);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--cyber-blue-dark);
+    transition: all 0.2s ease;
+}
+a:hover {
+    color: var(--cyber-blue-bright);
+    border-bottom: 1px solid var(--cyber-blue-primary);
+    text-shadow: var(--glow-active-text);
+}
+
+code, pre {
+    font-family: var(--font-mono);
+    background-color: var(--aegis-bg-graphite);
+    padding: 2px 4px;
+    border-radius: var(--radius-small);
+    border-left: 2px solid var(--cyber-blue-dark);
+}
+
+pre {
+    padding: var(--spacing-unit);
+    overflow-x: auto;
+    margin: calc(var(--spacing-unit) * 1.5) 0;
+    border: 1px solid var(--aegis-border-subtle);
+    box-shadow: var(--outset-shadow-ui);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: calc(var(--spacing-unit) * 2) 0;
+    background-color: var(--aegis-bg-graphite);
+    border: 1px solid var(--aegis-border-fine);
+}
+
+th, td {
+    padding: var(--spacing-unit);
+    text-align: left;
+    border: 1px solid var(--aegis-border-fine);
+}
+
+th {
+    background-color: var(--aegis-bg-metal-dark);
+    color: var(--cyber-blue-bright);
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+tr:nth-child(odd) {
+    background-color: rgba(0, 170, 255, 0.05);
+}
+
+/* --- ESTILOS PARA MEJORAS JS V2.5 --- */
+.is-hovered {
+    box-shadow: var(--glow-active-box);
+    transition: all 0.3s ease;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: var(--spacing-unit);
+    position: relative;
+}
+.status-indicator::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    border-radius: 50%;
+    background: inherit;
+    animation: pulse 1.5s infinite;
+}
+.status-error { background-color: var(--alert-red); }
+.status-warn { background-color: var(--alert-yellow); }
+.status-ok { background-color: var(--alert-green); }
+.status-neutral { background-color: var(--cyber-blue-primary); }
+
+.dynamic-progress-bar {
+    height: 20px;
+    background-color: var(--aegis-bg-graphite);
+    border: 1px solid var(--aegis-border-medium);
+    border-radius: var(--radius-small);
+    overflow: hidden;
+    position: relative;
+}
+.dynamic-progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: var(--progress, 50%); /* Valor por defecto 50%, se cambia por JS */
+    background: linear-gradient(to right, var(--cyber-blue-dark), var(--cyber-blue-primary));
+    transition: width 0.3s ease;
+}
+.dynamic-progress-bar::after {
+    content: attr(data-value);
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+}
+
+/* --- PANELES ::: (Módulos de Interfaz Táctica - Estilo Base) --- */
+.mixed-panel {
+    /* Fondo metálico cepillado por defecto */
+    background-color: var(--aegis-bg-metal-dark);
+    background-image: linear-gradient(170deg, var(--aegis-bg-metal-light) 0%, var(--aegis-bg-metal-dark) 100%);
+    border: 1px solid var(--aegis-border-main);
+    border-radius: var(--radius-medium);
+    margin: calc(var(--spacing-unit) * 3) 0;
+    padding: 0; /* Padding se manejará internamente o por estilos */
+    box-shadow: var(--outset-shadow-ui), var(--inset-shadow-ui);
+    position: relative; /* Necesario para pseudo-elementos */
+    overflow: hidden; /* Por defecto */
+}
+
+/* Estilo cabecera cristal por defecto */
+.mixed-panel > h2:first-child,
+.mixed-panel > h3:first-child,
+.mixed-panel > .panel-header {
+    background-color: var(--aegis-glass-bg);
+    background: linear-gradient(to bottom, rgba(0, 170, 255, 0.15), rgba(0, 0, 0, 0));
+    backdrop-filter: blur(5px) brightness(1.1);
+    margin: 0;
+    padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.5);
+    border-bottom: 1px solid var(--aegis-border-main);
+    color: var(--cyber-blue-bright);
+    font-size: 1.25em;
+    display: flex;
+    align-items: center;
+}
+
+/* Añadir decoración en forma de triángulo a las cabeceras */
+.mixed-panel > h2:first-child::before,
+.mixed-panel > h3:first-child::before,
+.mixed-panel > .panel-header::before {
+    content: '►';
+    font-size: 0.9em;
+    margin-right: var(--spacing-unit);
+    color: var(--cyber-blue-primary);
+}
+
+.panel-content, /* Si usas wrapper */
+.mixed-panel > *:not(h2:first-child):not(h3:first-child):not(.panel-header) { /* Si no hay wrapper */
+     padding: calc(var(--spacing-unit) * 1.5); /* Padding interno base */
+}
+
+/* ============================================== */
+/* === NUEVAS MARQUESINAS ESTILIZADAS (SVG) === */
+/* ============================================== */
+
+/* Configuración Base para Paneles con Estilos */
+.mixed-panel[class*="panel-style--"] {
+    border: none; /* Anular borde base para estilos personalizados */
+    background-image: none; /* Anular fondo metálico base */
+    background-color: var(--aegis-bg-graphite); /* Fondo más neutro para estilos */
+    padding: calc(var(--spacing-unit) * 2); /* Padding general para contenido */
+}
+.mixed-panel[class*="panel-style--"] > h2:first-child,
+.mixed-panel[class*="panel-style--"] > h3:first-child,
+.mixed-panel[class*="panel-style--"] > .panel-header {
+    /* Anular estilo cristal por defecto para estilos personalizados */
+    background-color: transparent;
+    background-image: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    border-bottom: 1px solid var(--aegis-border-medium); /* Borde simple cabecera */
+    padding: var(--spacing-unit) 0; /* Ajustar padding cabecera */
+    margin-bottom: var(--spacing-unit); /* Espacio después de cabecera */
+    margin-left: calc(var(--spacing-unit) * 1.5); /* Indentar texto cabecera */
+    margin-right: calc(var(--spacing-unit) * 1.5);
+}
+
+/* Redefinir decoración */
+.mixed-panel[class*="panel-style--"] > h2:first-child::before,
+.mixed-panel[class*="panel-style--"] > h3:first-child::before,
+.mixed-panel[class*="panel-style--"] > .panel-header::before {
+    content: '►';
+    font-size: 0.8em;
+    color: var(--cyber-blue-primary);
+}
+
+/* --- Estilo 1: Esquinas Tecnológicas (SVG Simple) --- */
+.panel-style--tech-corners {
+    position: relative;
+    border: 3px solid var(--cyber-blue-bright) !important;
+    background-color: rgba(10, 25, 40, 0.8) !important;
+    padding: 20px !important;
+    z-index: 1 !important;
+    border-radius: var(--radius-small);
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.6) !important;
+    overflow: visible !important;
+}
+
+.panel-style--tech-corners::before,
+.panel-style--tech-corners::after,
+.panel-style--tech-corners > div::before,
+.panel-style--tech-corners > div::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 40px !important; /* Tamaño aumentado */
+    height: 40px !important; /* Tamaño aumentado */
+    z-index: 5 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M2,14 L2,2 L14,2' stroke='%2360D0FF' stroke-width='4' fill='none' stroke-linecap='square'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+    filter: drop-shadow(0 0 8px rgba(96, 208, 255, 0.9)) !important;
+}
+
+.panel-style--tech-corners::before { top: -5px !important; left: -5px !important; /* Superior Izquierda */ }
+.panel-style--tech-corners::after { bottom: -5px !important; right: -5px !important; transform: rotate(180deg) !important; /* Inferior Derecha */ }
+
+/* Agregar esquinas adicionales */
+.panel-style--tech-corners {
+    /* Necesario para los pseudo-elementos */
+    position: relative !important;
+}
+
+/* Creamos un div invisible para las esquinas adicionales */
+.panel-style--tech-corners::after {
+    content: '' !important;
+}
+
+/* Creamos esquinas superiores derechas e inferiores izquierdas */
+.panel-style--tech-corners:before {
+    transform: rotate(0deg) !important;
+    top: -5px !important; 
+    left: -5px !important;
+    filter: drop-shadow(0 0 10px rgba(96, 208, 255, 0.9)) !important;
+}
+
+.panel-style--tech-corners:after {
+    transform: rotate(180deg) !important;
+    bottom: -5px !important; 
+    right: -5px !important;
+    filter: drop-shadow(0 0 10px rgba(96, 208, 255, 0.9)) !important;
+}
+
+/* Esquinas adicionales */
+.mixed-panel.panel-style--tech-corners::before {
+    box-shadow: 
+        120px -30px 0 -20px var(--cyber-blue-bright),
+        -30px 120px 0 -20px var(--cyber-blue-bright) !important;
+}
+
+/* --- Estilo 2: Nodos de Circuito (SVG en Esquinas y Bordes) --- */
+.panel-style--circuit-nodes {
+    position: relative !important;
+    border: 3px solid var(--cyber-blue-bright) !important; 
+    background-color: rgba(10, 25, 40, 0.8) !important;
+    border-radius: var(--radius-small) !important;
+    padding: 20px !important;
+    z-index: 1 !important;
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.6) !important;
+    overflow: visible !important;
+}
+
+.panel-style--circuit-nodes::before,
+.panel-style--circuit-nodes::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 36px !important; /* Tamaño aumentado */ 
+    height: 36px !important; /* Tamaño aumentado */
+    z-index: 5 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='8' fill='%2360D0FF' stroke='%23FFFFFF' stroke-width='2'/%3E%3Ccircle cx='18' cy='18' r='14' stroke='%2360D0FF' stroke-width='3' fill='none'/%3E%3Cpath d='M18,3 L18,0 M33,18 L36,18 M18,36 L18,33 M0,18 L3,18' stroke='%2360D0FF' stroke-width='3'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+    filter: drop-shadow(0 0 8px rgba(96, 208, 255, 0.9)) !important;
+}
+
+.panel-style--circuit-nodes::before { top: -15px !important; left: -15px !important; } /* Sup Izq - Ajustado para tamaño aumentado */
+.panel-style--circuit-nodes::after { bottom: -15px !important; right: -15px !important; } /* Inf Der - Ajustado para tamaño aumentado */
+
+/* Agregar líneas de conexión visibles entre los nodos */
+.panel-style--circuit-nodes:before,
+.panel-style--circuit-nodes:after {
+    content: '' !important;
+}
+
+/* Líneas conectoras */
+.panel-style--circuit-nodes {
+    position: relative !important;
+}
+
+.panel-style--circuit-nodes:before {
+    content: '' !important;
+    position: absolute !important;
+    top: 3px !important;
+    left: 3px !important;
+    right: 3px !important;
+    height: 2px !important;
+    background: linear-gradient(to right, transparent 0%, var(--cyber-blue-bright) 50%, transparent 100%) !important;
+    box-shadow: 0 0 10px 2px rgba(96, 208, 255, 0.8) !important;
+    z-index: 4 !important;
+}
+
+.panel-style--circuit-nodes:after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 3px !important;
+    left: 3px !important;
+    right: 3px !important;
+    height: 2px !important;
+    background: linear-gradient(to right, transparent 0%, var(--cyber-blue-bright) 50%, transparent 100%) !important;
+    box-shadow: 0 0 10px 2px rgba(96, 208, 255, 0.8) !important;
+    z-index: 4 !important;
+}
+
+/* Nodos adicionales en los costados */
+.mixed-panel.panel-style--circuit-nodes {
+    position: relative !important;
+}
+
+.mixed-panel.panel-style--circuit-nodes:before,
+.mixed-panel.panel-style--circuit-nodes:after {
+    box-shadow: 
+        0 0 10px 2px rgba(96, 208, 255, 0.8),
+        -15px calc(50% - 15px) 0 -15px var(--cyber-blue-bright),
+        calc(100% + 15px) calc(50% - 15px) 0 -15px var(--cyber-blue-bright) !important;
+}
+
+/* ============================================== */
+/* === FIN NUEVAS MARQUESINAS ESTILIZADAS === */
+/* ============================================== */
+
+/* --- Layout Flotante --- */
+.layout--float-left {
+    float: left;
+    width: calc(35% - var(--spacing-unit) * 2);
+    margin-right: calc(var(--spacing-unit) * 2);
+    margin-bottom: var(--spacing-unit);
+    clear: left;
+}
+
+.layout--float-right {
+    float: right;
+    width: calc(35% - var(--spacing-unit) * 2);
+    margin-left: calc(var(--spacing-unit) * 2);
+    margin-bottom: var(--spacing-unit);
+    clear: right;
+}
+
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* --- Paneles Especiales --- */
+.panel-warning,
+.status-warning,
+.status-panel.status-warning {
+    border-color: var(--alert-yellow);
+    background-color: rgba(255, 204, 0, 0.05);
+}
+
+.panel-warning > h2:first-child,
+.panel-warning > h3:first-child,
+.panel-warning > .panel-header,
+.status-warning > h2:first-child,
+.status-warning > h3:first-child,
+.status-warning > .panel-header,
+.status-panel.status-warning > h2:first-child,
+.status-panel.status-warning > h3:first-child,
+.status-panel.status-warning > .panel-header {
+    background: linear-gradient(to bottom, rgba(255, 204, 0, 0.15), rgba(0, 0, 0, 0));
+    color: var(--alert-yellow);
+    border-bottom-color: var(--alert-yellow);
+}
+
+.panel-warning::before,
+.status-warning::before,
+.status-panel.status-warning::before {
+    content: '⚠';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 1.2em;
+    color: var(--alert-yellow);
+    opacity: 0.6;
+}
+
+/* Datamatrix (tablas) con colores de estado */
+.data-matrix-table td {
+    position: relative;
+}
+
+/* Indicadores de estado en celdas */
+td:contains("OK"), td:contains("Óptimo"), td:contains("Estable") {
+    color: var(--alert-green);
+}
+
+td:contains("WARN"), td:contains("Fluctuación"), td:contains("Alerta") {
+    color: var(--alert-yellow);
+}
+
+td:contains("ERROR"), td:contains("Crítico"), td:contains("Fallo") {
+    color: var(--alert-red);
+}
+
+/* --- Media Queries --- */
+@media (max-width: 768px) {
+    .layout--float-left,
+    .layout--float-right {
+        float: none;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    /* Ajustar tamaños para móvil */
+    :root {
+        --font-base-size: 14px;
+    }
+}
+
+/* --- Animaciones --- */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 0; }
+}
+
+/* --- ESTILOS PARA BOTONES --- */
+button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-family: var(--font-body);
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: var(--aegis-bg-metal-dark);
+    border: 1px solid var(--cyber-blue-dark);
+    border-radius: var(--radius-small);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--outset-shadow-ui);
+}
+
+button:hover {
+    background-color: var(--aegis-bg-metal-light);
+    border-color: var(--cyber-blue-primary);
+    color: #ffffff;
+    box-shadow: var(--glow-active-box);
+}
+
+button:active {
+    background-color: var(--cyber-blue-dark);
+    color: #ffffff;
+    box-shadow: var(--inset-shadow-soft);
+    transform: translateY(1px);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--aegis-bg-graphite);
+    border-color: var(--aegis-border-subtle);
+    color: var(--aegis-text-disabled);
+}
+
+/* Estilos específicos para botones de acción */
+button[title="Load Master Demo"] {
+    background-color: var(--aegis-bg-metal-dark);
+    border-color: var(--cyber-blue-dark);
+}
+
+button[title="Load Aetherium Codex Demo"] {
+    background-color: var(--aegis-bg-metal-dark);
+    border-color: var(--cyber-blue-dark);
+}
+
+button[title="Load Infinity Command Demo"] {
+    background-color: var(--aegis-bg-metal-dark);
+    border-color: var(--cyber-blue-dark);
+}
+
+button[title="Save File"] {
+    background-color: var(--aegis-bg-metal-dark);
+    border-color: var(--cyber-blue-dark);
+}
+
+button[title="Export as PDF"] {
+    background-color: var(--aegis-bg-metal-dark);
+    border-color: var(--cyber-blue-dark);
+}
+
+/* Estilos para iconos dentro de botones */
+button svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+/* --- ESTILOS PARA BOTONES BLANCOS --- */
+button.white-button {
+    color: #ffffff !important;
+    background-color: var(--aegis-bg-metal-dark) !important;
+    border: 1px solid var(--cyber-blue-dark) !important;
+    padding: 5px 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    font-weight: bold !important;
+    min-width: 32px !important;
+}
+
+button.white-button:hover {
+    background-color: var(--aegis-bg-metal-light) !important;
+    border-color: var(--cyber-blue-primary) !important;
+    color: #ffffff !important;
+    box-shadow: var(--glow-active-box) !important;
+}
+
+button.white-button:active {
+    background-color: var(--cyber-blue-dark) !important;
+    transform: translateY(1px) !important;
+}
+
+/* --- ESTILOS PARA TABLAS --- */
+.data-matrix-container {
+    margin: 1.5rem 0;
+    padding: 0;
+    border: 1px solid var(--cyber-blue-dark);
+    background-color: rgba(10, 20, 30, 0.7);
+    border-radius: var(--radius-small);
+    overflow: hidden;
+}
+
+.data-matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: transparent;
+}
+
+.data-matrix-table th {
+    background-color: var(--aegis-bg-metal-dark);
+    color: var(--cyber-blue-bright);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--cyber-blue-dark);
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9em;
+}
+
+.data-matrix-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(50, 80, 120, 0.3);
+    color: var(--text-primary);
+}
+
+.data-matrix-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-matrix-table tr:nth-child(even) {
+    background-color: rgba(30, 40, 60, 0.4);
+}
+
+.data-matrix-table tr:hover {
+    background-color: rgba(40, 60, 80, 0.6);
+}
+
+/* Estados específicos para celdas */
+.data-matrix-table td.status-ok {
+    color: var(--status-ok);
+    font-weight: bold;
+}
+
+.data-matrix-table td.status-warn {
+    color: var(--status-warn);
+    font-weight: bold;
+}
+
+.data-matrix-table td.status-error {
+    color: var(--status-error);
+    font-weight: bold;
+}
+
+.data-matrix-table td.status-neutral {
+    color: var(--status-neutral);
+}
+
+/* --- ESTILOS PARA PANELES --- */
+.panel-header {
+    padding: 8px 12px;
+    background-color: var(--aegis-bg-metal-dark);
+    color: var(--cyber-blue-bright);
+    font-family: var(--font-heading);
+    border-bottom: 1px solid var(--cyber-blue-dark);
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.panel-content {
+    padding: 12px;
+    color: var(--text-primary);
+}
+
+/* Estilos para tipos de paneles */
+.panel-info-box {
+    border-color: var(--cyber-blue-medium);
+}
+
+.panel-warning {
+    border-color: var(--status-warn);
+}
+.panel-warning .panel-header {
+    background-color: rgba(200, 150, 0, 0.2);
+    color: var(--status-warn);
+}
+
+.panel-error {
+    border-color: var(--status-error);
+}
+.panel-error .panel-header {
+    background-color: rgba(200, 50, 50, 0.2);
+    color: var(--status-error);
+}
+
+.panel-objectives {
+    border-color: var(--status-ok);
+}
+.panel-objectives .panel-header {
+    background-color: rgba(50, 200, 100, 0.2);
+    color: var(--status-ok);
+}
+
+/* --- FIN Aegis Tactical Interface con Marquesinas --- */ 
