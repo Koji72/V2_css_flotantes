@@ -9,7 +9,7 @@ import {
   Layers, Square, PanelTopClose, PanelLeft,
   ChevronDown, ChevronUp, Book,
   CornerDownRight, Moon, Sun, Sparkles,
-  LayoutGrid
+  LayoutGrid, Columns
 } from 'lucide-react';
 
 interface ToolbarProps {
@@ -97,6 +97,37 @@ const EnhancedToolbar: React.FC<ToolbarProps> = ({
       icon: <Square size={16} />,
       template: `:::panel{title="Título del Panel" style="cut-corners"}
 Contenido...
+:::`
+    },
+    {
+      name: 'Panel Dos Columnas RPG',
+      icon: <Layout size={16} />,
+      template: `:::panel{title="Grimorio Arcano" layout="two-columns" style="glass"}
+## Conjuros Elementales
+
+Este antiguo compendio detalla los principios fundamentales de la magia elemental, desarrollados por el Archimago Thaelon durante la Era de las Estrellas.
+
+### Combustión Ígnea
+
+El conjuro más básico del fuego requiere un conocimiento profundo de la naturaleza combustible de la materia. Para iniciar la llama, el lanzador debe visualizar el calor primordial del núcleo del mundo, canalizando esa energía a través de sus manos para manifestar una llama controlada.
+
+> "El fuego es el más temperamental de los elementos, siempre hambriento, siempre buscando crecer. La disciplina del mago es lo único que se interpone entre una llama controlada y un infierno desatado."
+> — Extracto del "Codex Flamae"
+
+Los componentes materiales incluyen azufre pulverizado, una astilla de madera de roble y una gota de aceite de lámpara. La duración del efecto depende directamente de la potencia arcana del lanzador y las condiciones ambientales.
+
+### Corrientes Acuáticas
+
+La manipulación del agua requiere una mentalidad flexible y adaptable. El conjuro básico de control acuático permite al lanzador dirigir pequeñas cantidades de agua, desde una simple gota hasta aproximadamente un galón.
+
+Para los hechiceros más avanzados, la capacidad puede extenderse hasta controlar cuerpos enteros de agua, aunque tal hazaña requiere años de estudio y práctica.
+
+* **Nivel de Maestría 1:** Control de gotas y pequeños flujos
+* **Nivel de Maestría 3:** Purificación y alteración de estados (hielo/vapor)
+* **Nivel de Maestría 5:** Control de corrientes y mareas menores
+* **Nivel de Maestría 7:** Dominio completo sobre lagos y ríos pequeños
+
+Las escuelas de Aguamancia de la Costa Azul son reconocidas como las más prestigiosas para el estudio de este elemento.
 :::`
     },
     {
@@ -317,6 +348,95 @@ Recomendación: Desplegar sondas de reconocimiento.
         <div className="w-4 h-px bg-white"></div>
       </button>
 
+      {/* Botón de división en dos columnas */}
+      <button 
+        className="p-2 hover:bg-indigo-600 bg-indigo-700 rounded flex items-center gap-1 border border-indigo-500 text-white" 
+        onClick={() => onApplyStyle(`:::panel{layout="two-columns" title="Título Opcional"}
+## Contenido en Dos Columnas
+
+Este panel organiza automáticamente el contenido en dos columnas al estilo de los libros RPG. Es perfecto para:
+
+- Presentar información en formato de manual
+- Crear fichas de referencia
+- Mejorar la legibilidad de textos largos
+
+### Primera Sección
+
+El contenido fluye de arriba a abajo y luego continúa en la siguiente columna, similar a un periódico o libro. Los encabezados y otros elementos estructurales se mantienen en una sola columna para mejor legibilidad.
+
+### Segunda Sección
+
+Puedes añadir todo tipo de contenido markdown incluyendo **negritas**, *cursivas*, [enlaces](http://ejemplo.com), imágenes, listas y mucho más.
+
+> Las citas y bloques también se adaptan al formato de columnas.
+
+La primera letra del primer párrafo tiene un estilo capital para darle un aspecto más profesional, similar a los libros clásicos y manuales de rol.
+:::`)} 
+        title="Insertar división de dos columnas (estilo libro)"
+      >
+        <Columns size={16} />
+        <span className="text-sm">Dos Columnas</span>
+      </button>
+      
+      {/* Botón de división en dos columnas simple */}
+      <button 
+        className="p-2 hover:bg-gray-600 bg-gray-700 rounded flex items-center gap-1 border border-gray-500 ml-1" 
+        onClick={() => onApplyStyle(`:::panel{layout="two-columns" style="glass" title=""}
+### Columna Izquierda
+
+Aquí va el contenido de la primera columna. Este texto fluirá de arriba a abajo antes de continuar en la siguiente columna.
+
+Puedes incluir listas:
+- Elemento 1
+- Elemento 2
+- Elemento 3
+
+### Columna Derecha
+
+Y aquí va el contenido de la segunda columna. Esta disposición es ideal para crear presentaciones tipo manual o libro.
+
+También puedes incluir tablas o cualquier otro elemento markdown válido.
+:::`)} 
+        title="Insertar división de dos columnas simple"
+      >
+        <Columns size={16} />
+        <span className="text-sm">Columnas Simple</span>
+      </button>
+
+      {/* Botón de columnas separadas */}
+      <button 
+        className="p-2 hover:bg-green-600 bg-green-700 rounded flex items-center gap-1 border border-green-500 ml-1 text-white" 
+        onClick={() => onApplyStyle(`:::panel{layout="split-columns" style="glass" title="Panel de Dos Columnas"}
+<div class="column column-left">
+### Columna Izquierda
+
+Aquí va el contenido de la columna izquierda:
+
+- Este contenido permanece en la izquierda
+- No fluye hacia la columna derecha
+- Cada columna es independiente
+
+Puedes agregar todo tipo de contenido markdown aquí.
+</div>
+
+<div class="column column-right">
+### Columna Derecha
+
+Aquí va el contenido de la columna derecha:
+
+1. Este contenido permanece en la derecha
+2. No es continuación de la columna izquierda
+3. Ambas columnas son completamente independientes
+
+Ideal para comparaciones o información paralela.
+</div>
+:::`)} 
+        title="Insertar panel con columnas izquierda y derecha independientes"
+      >
+        <Layout size={16} />
+        <span className="text-sm">Columnas Separadas</span>
+      </button>
+
       <div className="h-6 w-px bg-gray-700 mx-1"></div>
 
       {/* Bloques personalizados - Estilo de paneles */}
@@ -385,10 +505,10 @@ Recomendación: Desplegar sondas de reconocimiento.
           className="p-2 rounded flex items-center gap-1"
           onClick={() => onLoadDemo('panel-showcase-v2.6.md')}
           disabled={isLoading}
-          title="Ver demostración de estilos de paneles V2.6"
+          title="Ver demostración de paneles v2.6"
         >
-          <LayoutGrid size={16} />
-          Showcase V2.6
+          <Layers size={16} />
+          <span>Showcase V2.6</span>
         </button>
         
         <button
@@ -398,7 +518,27 @@ Recomendación: Desplegar sondas de reconocimiento.
           title="Ver demostración de elementos flotantes"
         >
           <PanelLeft size={16} />
-          Demo Flotantes
+          <span>Demo Flotantes</span>
+        </button>
+
+        <button
+          className="p-2 rounded flex items-center gap-1"
+          onClick={() => onLoadDemo('rpg-columns-demo.md')}
+          disabled={isLoading}
+          title="Ver demostración de paneles estilo RPG con dos columnas"
+        >
+          <Columns size={16} />
+          <span>Demo RPG</span>
+        </button>
+
+        <button
+          className="p-2 rounded flex items-center gap-1"
+          onClick={() => onLoadDemo('split-columns-demo.md')}
+          disabled={isLoading}
+          title="Ver demostración de paneles con columnas separadas"
+        >
+          <Layout size={16} />
+          <span>Demo Columnas Sep.</span>
         </button>
       </div>
 

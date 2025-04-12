@@ -11,23 +11,23 @@
   --float-primary-border: rgba(64, 109, 187, 0.8);
   --float-primary-accent: rgba(103, 152, 226, 0.9);
   
-  /* Efectos de brillo */
-  --float-glow-color: rgba(0, 140, 255, 0.6);
-  --float-hover-glow: rgba(40, 180, 255, 0.4);
+  /* Efectos de brillo más intensos */
+  --float-glow-color: rgba(0, 160, 255, 0.7);
+  --float-hover-glow: rgba(60, 190, 255, 0.5);
   
   /* Efectos de cristal */
-  --float-glass-bg: rgba(20, 30, 50, 0.7);
-  --float-glass-border: rgba(93, 130, 191, 0.4);
+  --float-glass-bg: rgba(20, 30, 50, 0.75);
+  --float-glass-border: rgba(93, 130, 191, 0.5);
   
-  /* Sombras */
-  --float-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  --float-shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.3);
+  /* Sombras más pronunciadas */
+  --float-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+  --float-shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.35);
   
   /* Velocidades de animación */
-  --float-animation-speed: 6s;
-  --pulse-animation-speed: 2s;
-  --scan-animation-speed: 3s;
-  --rotate-animation-speed: 4s;
+  --float-animation-speed: 5s;
+  --pulse-animation-speed: 1.8s;
+  --scan-animation-speed: 2.5s;
+  --rotate-animation-speed: 3.5s;
 }
 
 /* ==== LAYOUTS FLOTANTES ==== */
@@ -37,10 +37,10 @@
 .layout--floating-right,
 .layout--centered {
   position: relative;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem; /* Más espacio inferior */
   z-index: 10;
   box-shadow: var(--float-shadow);
-  transition: all 0.3s ease-in-out, transform 0.2s ease-out;
+  transition: all 0.4s ease-in-out, transform 0.3s ease-out;
 }
 
 /* Aumentar sombra y elevar panel al hacer hover */
@@ -48,25 +48,25 @@
 .layout--floating-right:hover,
 .layout--centered:hover {
   box-shadow: var(--float-shadow-hover);
-  transform: translateY(-3px);
+  transform: translateY(-5px) scale(1.01); /* Más elevación */
 }
 
 /* Posicionamiento flotante izquierdo */
 .layout--floating-left {
   float: left;
-  margin-right: 2rem;
+  margin-right: 2.5rem; /* Más espacio */
   margin-left: 0;
   clear: left;
-  max-width: 40%;
+  max-width: 45%; /* Ligeramente más ancho */
 }
 
 /* Posicionamiento flotante derecho */
 .layout--floating-right {
   float: right;
-  margin-left: 2rem;
+  margin-left: 2.5rem; /* Más espacio */
   margin-right: 0;
   clear: right;
-  max-width: 40%;
+  max-width: 45%; /* Ligeramente más ancho */
 }
 
 /* Posicionamiento centrado */
@@ -75,7 +75,7 @@
   margin-left: auto;
   margin-right: auto;
   clear: both;
-  max-width: 80%;
+  max-width: 85%; /* Un poco más ancho */
   text-align: center;
 }
 
@@ -84,19 +84,20 @@
 /* Tech Corners flotante */
 .panel-style--tech-corners.layout--floating-left,
 .panel-style--tech-corners.layout--floating-right {
-  border: 1px solid var(--neon-border-color, rgba(0, 255, 255, 0.5));
+  /* Podríamos añadir una sombra externa adicional aquí si quisiéramos */
+  /* box-shadow: var(--neon-blue-glow), var(--float-shadow); */
 }
 
 /* Hologramas flotantes */
 .panel-style--hologram.layout--floating-left,
 .panel-style--hologram.layout--floating-right {
-  background-color: rgba(0, 20, 40, 0.7);
+  backdrop-filter: blur(7px); /* Ajustar blur si es necesario */
 }
 
 /* Neo Frame flotante */
 .panel-style--neo-frame.layout--floating-left,
 .panel-style--neo-frame.layout--floating-right {
-  box-shadow: 0 0 20px rgba(0, 200, 255, 0.4);
+  /* El efecto de marco ya es bastante impactante, puede que no necesite más */
 }
 
 /* Circuit Node flotante */
@@ -154,10 +155,12 @@
 
 @keyframes panel-pulse {
   0%, 100% {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--float-shadow); /* Usar sombra base */
+    transform: scale(1);
   }
   50% {
-    box-shadow: 0 4px 20px var(--float-glow-color);
+    box-shadow: var(--float-shadow-hover), 0 0 15px var(--float-glow-color); /* Sombra hover + glow */
+    transform: scale(1.02);
   }
 }
 
@@ -170,14 +173,14 @@
 .animation--scan::before {
   content: '';
   position: absolute;
-  top: -100%;
-  left: -100%;
-  width: 300%;
-  height: 300%;
+  top: -110%; /* Empezar más arriba */
+  left: -110%;
+  width: 320%;
+  height: 320%;
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(0, 200, 255, 0.08) 50%,
+    rgba(0, 200, 255, 0.1) 50%,
     transparent 100%
   );
   animation: scan-effect var(--scan-animation-speed) linear infinite;
@@ -185,10 +188,10 @@
 
 @keyframes scan-effect {
   0% {
-    transform: rotate(45deg) translateY(-100%);
+    transform: rotate(45deg) translateY(-110%);
   }
   100% {
-    transform: rotate(45deg) translateY(100%);
+    transform: rotate(45deg) translateY(110%);
   }
 }
 
@@ -199,31 +202,33 @@
 
 @keyframes panel-glow {
   0% {
-    box-shadow: 0 0 5px rgba(0, 140, 255, 0.3);
+    box-shadow: var(--float-shadow), 0 0 8px rgba(0, 160, 255, 0.4);
   }
   100% {
-    box-shadow: 0 0 15px var(--float-glow-color);
+    box-shadow: var(--float-shadow-hover), 0 0 20px var(--float-glow-color);
   }
 }
 
-/* Animación de rotación */
-.animation--rotate .panel-header::before {
+/* Animación de rotación (ajustada para flotantes) */
+.animation--rotate .panel-content-wrapper::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  animation: rotate-effect var(--rotate-animation-speed) linear infinite;
+  background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.05) 50%, transparent 60%);
+  animation: rotate-effect-float var(--rotate-animation-speed) linear infinite;
+  pointer-events: none;
+  z-index: 5; /* Encima del contenido */
 }
 
-@keyframes rotate-effect {
+@keyframes rotate-effect-float {
   0% {
-    transform: translateX(-100%);
+    transform: translateX(-100%) rotate(-45deg);
   }
   100% {
-    transform: translateX(100%);
+    transform: translateX(100%) rotate(-45deg);
   }
 }
 
@@ -231,21 +236,46 @@
 
 /* Asegurar que el texto fluya correctamente alrededor de los paneles */
 p, ul, ol, h1, h2, h3, h4, h5, h6 {
-  overflow: auto;
+  overflow: visible; /* Cambiado a visible para mejor flujo */
+  /* Asegurar que el texto no se pegue al panel */
+  hyphens: auto;
+}
+
+/* Ajustar márgenes para que el texto no se pegue demasiado */
+.layout--floating-left + *,
+.layout--floating-right + * {
+  margin-top: 0.5rem; /* Pequeño margen superior para el texto que sigue */
 }
 
 /* Asegurar que el texto dentro de los paneles flotantes tenga margen adecuado */
 .layout--floating-left .panel-content,
 .layout--floating-right .panel-content,
 .layout--centered .panel-content {
-  padding: 0.75rem;
+  padding: 1rem; /* Más padding interno */
 }
 
 /* Contenedores con altura máxima y scroll interno para paneles muy largos */
 .layout--floating-left .panel-content,
 .layout--floating-right .panel-content {
-  max-height: 80vh;
+  max-height: 75vh; /* Ligeramente menos alto */
   overflow-y: auto;
+  /* Estilizar barra de scroll si se desea */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 150, 255, 0.5) rgba(10, 20, 40, 0.8);
+}
+
+.layout--floating-left .panel-content::-webkit-scrollbar,
+.layout--floating-right .panel-content::-webkit-scrollbar {
+  width: 6px;
+}
+.layout--floating-left .panel-content::-webkit-scrollbar-track,
+.layout--floating-right .panel-content::-webkit-scrollbar-track {
+  background: rgba(10, 20, 40, 0.8);
+}
+.layout--floating-left .panel-content::-webkit-scrollbar-thumb,
+.layout--floating-right .panel-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 150, 255, 0.5);
+  border-radius: 3px;
 }
 
 /* Clearfix para limpiar flotantes */
@@ -255,6 +285,7 @@ p, ul, ol, h1, h2, h3, h4, h5, h6 {
   width: 100%;
   height: 1px;
   content: "";
+  margin: 1rem 0; /* Añadir algo de espacio vertical */
 }
 
 /* ==== MEDIA QUERIES PARA RESPONSIVE ==== */
@@ -264,9 +295,10 @@ p, ul, ol, h1, h2, h3, h4, h5, h6 {
   .layout--floating-right,
   .layout--centered {
     float: none;
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
+    max-width: 100%; /* Usar todo el ancho */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.5rem;
     clear: both;
   }
   
@@ -274,21 +306,24 @@ p, ul, ol, h1, h2, h3, h4, h5, h6 {
   .animation--scan,
   .animation--glow,
   .animation--rotate {
-    /* Reducir intensidad de animaciones en dispositivos móviles */
-    animation-duration: calc(var(--pulse-animation-speed) * 1.5);
+    /* Mantener animaciones */
+    animation-duration: var(--pulse-animation-speed); /* Usar velocidad normal */
   }
 }
 
-/* ==== TEMA OSCURO/CLARO ==== */
+/* ==== TEMA OSCURO/CLARO (Ajustes si son necesarios) ==== */
 
 .dark-theme {
-  --float-primary-bg: rgba(18, 28, 44, 0.95);
-  --float-primary-border: rgba(64, 109, 187, 0.8);
-  --float-glow-color: rgba(0, 140, 255, 0.6);
+  /* Se heredan las variables de :root, ajustes aquí si se necesita */
 }
 
 .light-theme {
-  --float-primary-bg: rgba(240, 245, 250, 0.8);
-  --float-primary-border: rgba(120, 160, 220, 0.5);
-  --float-glow-color: rgba(40, 120, 220, 0.4);
+  /* Definir variables específicas para el tema claro */
+  --float-primary-bg: rgba(245, 248, 252, 0.9);
+  --float-primary-border: rgba(180, 200, 230, 0.7);
+  --float-glow-color: rgba(80, 140, 230, 0.5);
+  --float-shadow: 0 4px 12px rgba(0, 80, 160, 0.15);
+  --float-shadow-hover: 0 8px 20px rgba(0, 80, 160, 0.2);
+  --float-glass-bg: rgba(255, 255, 255, 0.7);
+  --float-glass-border: rgba(200, 215, 235, 0.6);
 } 

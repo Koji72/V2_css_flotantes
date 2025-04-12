@@ -23,8 +23,8 @@ const App: React.FC = () => {
   useEffect(() => {
     // Cargar markdown de ejemplo si no hay ninguno
     if (!markdown) {
-      // Cargar directamente el demo Aegis
-      handleLoadDemo('aegis-marquesinas-demo.md');
+      // Cargar directamente el demo de paneles v2.6 para mostrar las características
+      handleLoadDemo('panel-showcase-v2.6.md');
     }
   }, [markdown]);
 
@@ -51,6 +51,7 @@ const App: React.FC = () => {
   // En lugar de updateIframeContent, usamos previewManager directamente
   const handleLoadCSS = async (templatePath: string) => {
     try {
+      console.log('[App] Cargando CSS desde:', templatePath);
       // Cargar el CSS del template principal
       const response = await fetch(templatePath);
       if (!response.ok) {
@@ -72,7 +73,23 @@ const App: React.FC = () => {
         console.warn("[App] No se pudieron cargar las mejoras de panel v2.6:", enhancementError);
       }
       
-      // Aplicar el CSS combinado
+      // Cargar los estilos para paneles flotantes
+      try {
+        const floatingResponse = await fetch('/styles/floating-panels.css');
+        if (floatingResponse.ok) {
+          const floatingCssText = await floatingResponse.text();
+          // Añadir los estilos de paneles flotantes al CSS combinado
+          combinedCss = `${combinedCss}\n\n/* Floating Panels Styles */\n${floatingCssText}`;
+          console.log("[App] Estilos de paneles flotantes combinados con el template principal");
+        }
+      } catch (floatingError) {
+        console.warn("[App] No se pudieron cargar los estilos de paneles flotantes:", floatingError);
+      }
+      
+      // Establecer el estado local de CSS (para referencia)
+      setCSS(combinedCss);
+      
+      // Aplicar el CSS combinado al previewManager
       previewManager.applyCustomCSS(combinedCss);
       console.log("[App] CSS aplicado con éxito. Longitud:", combinedCss.length);
     } catch (error) {
@@ -107,6 +124,19 @@ const App: React.FC = () => {
           }
         } catch (enhancementError) {
           console.warn("[App] No se pudieron cargar las mejoras de panel v2.6:", enhancementError);
+        }
+        
+        // Cargar también los estilos para paneles flotantes
+        try {
+          const floatingResponse = await fetch('/styles/floating-panels.css');
+          if (floatingResponse.ok) {
+            const floatingCssText = await floatingResponse.text();
+            // Agregar los estilos de paneles flotantes al CSS principal
+            setCSS(prevCss => prevCss + '\n\n/* Floating Panels Styles */\n' + floatingCssText);
+            console.log("[App] Estilos de paneles flotantes cargados correctamente");
+          }
+        } catch (floatingError) {
+          console.warn("[App] No se pudieron cargar los estilos de paneles flotantes:", floatingError);
         }
         
       } catch (error) {
@@ -158,7 +188,7 @@ const App: React.FC = () => {
   // Función para cargar el demo
   const handleLoadDemo = async (demoFile: string = 'panel-styles-demo.md') => {
     setIsLoading(true);
-    console.log(`Cargando demo: ${demoFile}`);
+    console.log(`[handleLoadDemo] Iniciando carga para: ${demoFile}`);
     try {
       // Intenta cargar desde varias rutas posibles
       const possiblePaths = [
@@ -173,16 +203,18 @@ const App: React.FC = () => {
       
       for (const path of possiblePaths) {
         try {
-          console.log(`Intentando cargar desde: ${path}`);
+          console.log(`[handleLoadDemo] Intentando cargar desde: ${path}`);
           const response = await fetch(path);
           if (response.ok) {
             demoMarkdown = await response.text();
-            console.log(`Demo cargado exitosamente desde: ${path}`);
+            console.log(`[handleLoadDemo] Demo cargado exitosamente desde: ${path}`);
             loaded = true;
             break;
+          } else {
+            console.warn(`[handleLoadDemo] Fallo al cargar desde ${path}: ${response.status} ${response.statusText}`);
           }
         } catch (pathError) {
-          console.warn(`No se pudo cargar desde ${path}:`, pathError);
+          console.warn(`[handleLoadDemo] Excepción al cargar desde ${path}:`, pathError);
         }
       }
       
@@ -191,11 +223,18 @@ const App: React.FC = () => {
       }
       
       setMarkdown(demoMarkdown);
+      console.log("[handleLoadDemo] Markdown actualizado con el contenido del demo.");
+
+      // Forzar la recarga del CSS asociado al template actual DESPUÉS de cargar el demo
+      console.log("[handleLoadDemo] Forzando recarga de CSS...");
+      await handleLoadCSS(`/templates/${templateId}.css`); 
+      
     } catch (error: any) {
-      console.error("Error cargando demo:", error);
+      console.error("[handleLoadDemo] Error cargando demo:", error);
       setMarkdown(`# Error cargando demo\n\n${error.message}`); 
     } finally {
       setIsLoading(false);
+      console.log("[handleLoadDemo] Finalizado el proceso de carga.");
     }
   };
 

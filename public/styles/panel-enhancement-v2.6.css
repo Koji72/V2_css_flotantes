@@ -7,28 +7,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap');
 
 /* Importar extensiones adicionales */
-@import url('./flotantes.css');
+/* @import url('./flotantes.css'); <-- Comentado temporalmente si hay conflictos */
 
 /* Variables extendidas para efectos avanzados */
 :root {
-  /* Efectos de neón y glow */
-  --neon-blue-glow: 0 0 5px rgba(0, 195, 255, 0.4), 0 0 20px rgba(0, 195, 255, 0.2);
-  --neon-green-glow: 0 0 5px rgba(0, 255, 195, 0.4), 0 0 20px rgba(0, 255, 195, 0.2);
-  --neon-purple-glow: 0 0 5px rgba(195, 0, 255, 0.4), 0 0 20px rgba(195, 0, 255, 0.2);
+  /* Efectos de neón y glow más intensos */
+  --neon-blue-glow: 0 0 8px rgba(0, 195, 255, 0.6), 0 0 25px rgba(0, 195, 255, 0.4);
+  --neon-green-glow: 0 0 8px rgba(0, 255, 195, 0.6), 0 0 25px rgba(0, 255, 195, 0.4);
+  --neon-purple-glow: 0 0 8px rgba(195, 0, 255, 0.6), 0 0 25px rgba(195, 0, 255, 0.4);
+  --neon-red-glow: 0 0 8px rgba(255, 0, 80, 0.6), 0 0 25px rgba(255, 0, 80, 0.4);
   
   /* Fuentes alternativas high-tech */
   --font-tech: 'Orbitron', sans-serif;
   --font-tech-alt: 'Rajdhani', sans-serif;
   --font-tech-display: 'Syncopate', sans-serif;
   
-  /* Gradientes para tech-corners */
-  --tech-gradient-blue: linear-gradient(135deg, rgba(0, 150, 255, 0.7), rgba(0, 80, 180, 0.2));
-  --tech-gradient-dark: linear-gradient(135deg, rgba(10, 20, 40, 0.9), rgba(5, 10, 20, 0.7));
+  /* Gradientes más vibrantes */
+  --tech-gradient-blue: linear-gradient(135deg, rgba(0, 180, 255, 0.85), rgba(0, 60, 160, 0.4));
+  --tech-gradient-dark: linear-gradient(135deg, rgba(5, 15, 35, 0.95), rgba(0, 5, 15, 0.8));
+  --hologram-gradient: linear-gradient(135deg, rgba(0, 30, 60, 0.85), rgba(0, 10, 40, 0.85));
+  --neo-frame-gradient: linear-gradient(160deg, rgba(20, 30, 50, 0.9), rgba(10, 15, 30, 0.9));
+  
+  /* Colores de alerta */
+  --alert-bg-color: rgba(150, 0, 0, 0.85);
+  --alert-border-color: rgba(255, 60, 60, 0.9);
+  --alert-glow: 0 0 15px rgba(255, 0, 0, 0.5), 0 0 30px rgba(255, 0, 0, 0.3);
   
   /* Animaciones */
-  --animation-speed-slow: 3s;
-  --animation-speed-medium: 1.5s;
-  --animation-speed-fast: 0.5s;
+  --animation-speed-slow: 4s;
+  --animation-speed-medium: 2s;
+  --animation-speed-fast: 0.8s;
 }
 
 /* =================================== */
@@ -36,33 +44,39 @@
 /* =================================== */
 
 .mixed-panel {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  border-radius: 4px; /* Suavizar esquinas */
 }
 
 .mixed-panel:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px) scale(1.01); /* Efecto de elevación más pronunciado */
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2); /* Sombra más definida */
 }
 
 /* Panel headers modernizados */
 .mixed-panel .panel-header {
   position: relative;
   overflow: hidden;
-  font-family: var(--font-tech-alt);
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
+  font-family: var(--font-tech-display);
+  letter-spacing: 1.5px;
+  font-weight: 700; /* Más énfasis */
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(100, 180, 255, 0.3);
+  text-transform: uppercase;
+  transition: all 0.4s ease;
 }
 
 /* Efecto de línea animada bajo el header */
 .mixed-panel .panel-header::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -1px; /* Pegado al borde */
   left: 0;
   width: 0;
-  height: 2px;
-  background: linear-gradient(to right, transparent, var(--cyber-blue-primary), transparent);
-  transition: width 0.5s ease;
+  height: 3px;
+  background: linear-gradient(to right, transparent, var(--cyber-blue-primary, #0af), var(--cyber-secondary, #0ff), transparent);
+  box-shadow: 0 0 8px var(--cyber-blue-primary, #0af);
+  transition: width 0.6s ease-in-out;
 }
 
 .mixed-panel:hover .panel-header::after {
@@ -75,30 +89,31 @@
 
 .panel-style--tech-corners {
   background: var(--tech-gradient-dark);
-  border: 1px solid rgba(0, 170, 255, 0.5);
-  box-shadow: var(--neon-blue-glow), inset 0 0 30px rgba(0, 30, 60, 0.3);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 200, 255, 0.6); /* Borde más visible */
+  box-shadow: var(--neon-blue-glow), inset 0 0 40px rgba(0, 40, 80, 0.4);
+  transition: all 0.4s ease;
 }
 
 .panel-style--tech-corners:hover {
-  box-shadow: var(--neon-blue-glow), inset 0 0 40px rgba(0, 60, 100, 0.4);
-  border-color: rgba(0, 195, 255, 0.7);
+  box-shadow: var(--neon-blue-glow), 0 0 15px rgba(0, 220, 255, 0.3), inset 0 0 50px rgba(0, 70, 120, 0.5);
+  border-color: rgba(0, 220, 255, 0.8);
 }
 
 /* Esquinas tecnológicas SVG mejoradas */
 .panel-style--tech-corners::before,
 .panel-style--tech-corners::after {
-  width: 25px;
-  height: 25px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='25' viewBox='0 0 25 25'%3E%3Cpath d='M1,1 L10,1 M1,1 L1,10' stroke='%2300aaff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='5' cy='5' r='1.5' fill='%2300aaff'/%3E%3C/svg%3E");
+  width: 30px; /* Más grandes */
+  height: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath d='M2,2 L12,2 M2,2 L2,12' stroke='%2300ccff' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='6' cy='6' r='2' fill='%2300ccff'/%3E%3C/svg%3E");
   background-size: contain;
-  transition: all 0.3s ease;
-  filter: drop-shadow(0 0 3px rgba(0, 170, 255, 0.7));
+  transition: all 0.4s ease;
+  filter: drop-shadow(0 0 5px rgba(0, 190, 255, 0.8));
 }
 
 .panel-style--tech-corners:hover::before,
 .panel-style--tech-corners:hover::after {
-  filter: drop-shadow(0 0 5px rgba(0, 195, 255, 0.9));
+  filter: drop-shadow(0 0 8px rgba(0, 220, 255, 1));
+  transform: scale(1.1); /* Ligeramente más grande al hover */
 }
 
 /* Girar esquina inferior derecha */
@@ -107,61 +122,64 @@
 }
 
 /* Header con efecto de brillo */
-.panel-style--tech-corners > .panel-header {
+.panel-style--tech-corners > .panel-header-container > .panel-header {
   font-family: var(--font-tech);
-  background: linear-gradient(90deg, rgba(0, 40, 80, 0.2), rgba(0, 60, 100, 0.4), rgba(0, 40, 80, 0.2));
-  padding: 10px 15px;
-  margin: -15px -15px 15px -15px;
-  border-bottom: 1px solid rgba(0, 170, 255, 0.4);
+  background: linear-gradient(90deg, rgba(0, 50, 100, 0.3), rgba(0, 80, 130, 0.5), rgba(0, 50, 100, 0.3));
+  padding: 12px 20px; /* Más padding */
+  margin: 0; /* Quitar margen negativo */
+  border-bottom: 1px solid rgba(0, 190, 255, 0.5);
   position: relative;
   overflow: hidden;
 }
 
 /* Efecto de escaneo en el header */
-.panel-style--tech-corners > .panel-header::before {
+.panel-style--tech-corners > .panel-header-container > .panel-header::before {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
-  width: 50%;
+  width: 70%; /* Más ancho */
   height: 100%;
-  background: linear-gradient(to right, transparent, rgba(0, 195, 255, 0.2), transparent);
-  animation: scan-line 3s ease-in-out infinite;
+  background: linear-gradient(to right, transparent, rgba(0, 220, 255, 0.25), transparent);
+  animation: scan-line var(--animation-speed-slow) ease-in-out infinite;
   pointer-events: none;
 }
 
 @keyframes scan-line {
   0% { left: -100%; }
-  50% { left: 100%; }
-  100% { left: 100%; }
+  50% { left: 130%; } /* Ajustado para cubrir */
+  100% { left: 130%; }
 }
 
 /* Mejoras en tablas dentro de tech-corners */
 .panel-style--tech-corners table {
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: 3px;
+  border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 30, 60, 0.3);
+  box-shadow: 0 0 15px rgba(0, 40, 80, 0.4);
 }
 
 .panel-style--tech-corners th {
-  background: linear-gradient(to bottom, rgba(0, 80, 120, 0.7), rgba(0, 50, 80, 0.7));
-  padding: 10px 15px;
+  background: linear-gradient(to bottom, rgba(0, 100, 150, 0.8), rgba(0, 60, 100, 0.8));
+  padding: 12px 18px;
   font-family: var(--font-tech-alt);
-  font-weight: 600;
+  font-weight: 700;
   border: none;
-  border-bottom: 1px solid rgba(0, 170, 255, 0.5);
+  border-bottom: 2px solid rgba(0, 200, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .panel-style--tech-corners td {
-  padding: 8px 15px;
-  border-color: rgba(0, 100, 170, 0.2);
-  transition: background-color 0.2s ease;
+  padding: 10px 18px;
+  border-color: rgba(0, 120, 190, 0.3);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .panel-style--tech-corners tr:hover td {
-  background-color: rgba(0, 120, 200, 0.15);
+  background-color: rgba(0, 140, 220, 0.2);
+  color: #fff; /* Texto más brillante al hover */
 }
 
 /* =================================== */
@@ -169,12 +187,18 @@
 /* =================================== */
 
 .panel-style--hologram {
-  background: linear-gradient(135deg, rgba(0, 20, 40, 0.8), rgba(0, 10, 30, 0.8));
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(0, 195, 255, 0.3);
-  box-shadow: 0 0 15px rgba(0, 100, 200, 0.2), inset 0 0 20px rgba(0, 100, 200, 0.1);
+  background: var(--hologram-gradient);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 220, 255, 0.4); /* Borde más claro */
+  box-shadow: 0 0 20px rgba(0, 120, 220, 0.3), inset 0 0 30px rgba(0, 120, 220, 0.15);
   position: relative;
   overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.panel-style--hologram:hover {
+  border-color: rgba(0, 240, 255, 0.6);
+  box-shadow: 0 0 25px rgba(0, 150, 255, 0.4), inset 0 0 40px rgba(0, 150, 255, 0.2);
 }
 
 /* Efecto de línea de escaneo holográfico */
@@ -184,21 +208,22 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(to right, transparent, rgba(0, 195, 255, 0.8), transparent);
-  animation: hologram-scan 3s linear infinite;
+  height: 3px; /* Más gruesa */
+  background: linear-gradient(to right, transparent, rgba(0, 220, 255, 0.9), transparent);
+  box-shadow: 0 0 8px rgba(0, 220, 255, 0.5);
+  animation: hologram-scan var(--animation-speed-medium) linear infinite;
   z-index: 5;
   pointer-events: none;
 }
 
 @keyframes hologram-scan {
-  0% { top: 0; opacity: 0; }
-  5% { opacity: 1; }
-  95% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+  0% { top: -5%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 105%; opacity: 0; }
 }
 
-/* Líneas de ruido horizontal */
+/* Líneas de ruido horizontal más sutiles */
 .panel-style--hologram::after {
   content: '';
   position: absolute;
@@ -209,23 +234,26 @@
   background-image: repeating-linear-gradient(
     0deg,
     transparent,
-    transparent 2px,
-    rgba(0, 195, 255, 0.03) 2px,
-    rgba(0, 195, 255, 0.03) 4px
+    transparent 3px,
+    rgba(0, 220, 255, 0.02) 3px,
+    rgba(0, 220, 255, 0.02) 5px
   );
+  opacity: 0.7;
   pointer-events: none;
   z-index: 2;
 }
 
-.panel-style--hologram > .panel-header {
-  font-family: var(--font-tech);
-  color: rgba(0, 225, 255, 0.9);
-  text-shadow: 0 0 5px rgba(0, 195, 255, 0.7);
-  letter-spacing: 1px;
+.panel-style--hologram > .panel-header-container > .panel-header {
+  font-family: var(--font-tech-display);
+  font-weight: 700;
+  color: rgba(0, 230, 255, 1);
+  text-shadow: 0 0 8px rgba(0, 220, 255, 0.8);
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(0, 195, 255, 0.3);
-  padding-bottom: 8px;
-  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 220, 255, 0.4);
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+  background: none; /* Sin fondo extra */
 }
 
 /* =================================== */
@@ -233,159 +261,387 @@
 /* =================================== */
 
 .panel-style--neo-frame {
-  background-color: rgba(15, 20, 35, 0.9);
+  background-color: var(--neo-frame-gradient);
   border: none;
-  border-radius: 2px;
+  border-radius: 3px;
   position: relative;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+  overflow: visible; /* Permitir que el borde sobresalga */
 }
 
-/* Marco de neón */
+/* Marco de neón con múltiples capas */
 .panel-style--neo-frame::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  border-radius: 4px;
+  background: linear-gradient(160deg, rgba(0, 180, 255, 0.5), rgba(100, 0, 255, 0.5));
+  z-index: -1;
+  filter: blur(5px);
+  opacity: 0.8;
+  transition: opacity 0.4s ease;
+}
+
+.panel-style--neo-frame::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 3px;
   border: 2px solid transparent;
-  border-image: linear-gradient(45deg, 
-    rgba(0, 180, 255, 0.8), 
-    rgba(0, 255, 180, 0.8), 
-    rgba(180, 0, 255, 0.8), 
-    rgba(0, 180, 255, 0.8)
-  ) 1;
-  box-shadow: 0 0 10px rgba(0, 180, 255, 0.5), inset 0 0 10px rgba(0, 180, 255, 0.3);
-  animation: neo-border-flow 8s linear infinite;
-  z-index: 1;
+  border-image: linear-gradient(160deg, rgba(0, 220, 255, 0.8), rgba(150, 50, 255, 0.8)) 1;
+  animation: neo-border-flow var(--animation-speed-slow) linear infinite;
   pointer-events: none;
 }
 
 @keyframes neo-border-flow {
-  0% {
-    border-image-source: linear-gradient(45deg, 
-      rgba(0, 180, 255, 0.8), 
-      rgba(0, 255, 180, 0.8), 
-      rgba(180, 0, 255, 0.8), 
-      rgba(0, 180, 255, 0.8)
-    );
-  }
-  50% {
-    border-image-source: linear-gradient(45deg, 
-      rgba(0, 180, 255, 0.8), 
-      rgba(180, 0, 255, 0.8), 
-      rgba(0, 255, 180, 0.8), 
-      rgba(0, 180, 255, 0.8)
-    );
-  }
-  100% {
-    border-image-source: linear-gradient(45deg, 
-      rgba(0, 180, 255, 0.8), 
-      rgba(0, 255, 180, 0.8), 
-      rgba(180, 0, 255, 0.8), 
-      rgba(0, 180, 255, 0.8)
-    );
-  }
+  0% { border-image-source: linear-gradient(160deg, rgba(0, 220, 255, 0.8), rgba(150, 50, 255, 0.8)); }
+  25% { border-image-source: linear-gradient(160deg, rgba(150, 50, 255, 0.8), rgba(0, 220, 255, 0.8)); }
+  50% { border-image-source: linear-gradient(160deg, rgba(0, 220, 255, 0.8), rgba(150, 50, 255, 0.8)); }
+  75% { border-image-source: linear-gradient(160deg, rgba(150, 50, 255, 0.8), rgba(0, 220, 255, 0.8)); }
+  100% { border-image-source: linear-gradient(160deg, rgba(0, 220, 255, 0.8), rgba(150, 50, 255, 0.8)); }
 }
 
-.panel-style--neo-frame > .panel-header {
-  background: rgba(15, 20, 35, 0.9);
+.panel-style--neo-frame:hover::before {
+  opacity: 1;
+  filter: blur(8px);
+}
+
+.panel-style--neo-frame > .panel-header-container > .panel-header {
+  font-family: var(--font-tech-alt);
+  font-weight: 600;
+  color: #e0e8ff;
+  background: rgba(10, 15, 30, 0.5);
+  padding: 10px 18px;
+  border-bottom: 1px solid rgba(100, 150, 255, 0.3);
+  letter-spacing: 1px;
+  margin: 0; /* Quitar margen negativo */
+}
+
+/* =================================== */
+/* Ajustes para Panel de Alerta        */
+/* =================================== */
+.panel-style--alert {
+  background-color: var(--alert-bg-color);
+  border: 2px solid var(--alert-border-color);
+  box-shadow: var(--alert-glow), inset 0 0 30px rgba(80, 0, 0, 0.5);
+  color: #fff;
+  animation: pulse-alert var(--animation-speed-medium) infinite alternate;
+}
+
+.panel-style--alert > .panel-header-container > .panel-header {
+  background: rgba(100, 0, 0, 0.7);
+  border-bottom-color: var(--alert-border-color);
+  color: #ffdddd;
   font-family: var(--font-tech-display);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  padding: 15px;
-  margin: 0 0 15px 0;
-  color: white;
-  text-shadow: 0 0 5px rgba(0, 180, 255, 0.8);
-  border-bottom: 1px solid rgba(0, 180, 255, 0.3);
+  font-weight: 700;
+  text-shadow: 0 0 5px rgba(255, 100, 100, 0.7);
+}
+
+@keyframes pulse-alert {
+  0% { box-shadow: var(--alert-glow), inset 0 0 30px rgba(80, 0, 0, 0.5); }
+  100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.7), 0 0 40px rgba(255, 0, 0, 0.4), inset 0 0 40px rgba(100, 0, 0, 0.6); }
 }
 
 /* =================================== */
-/* Mejoras para disposición responsiva */
+/* Responsive y ajustes finales        */
 /* =================================== */
-
 @media (max-width: 768px) {
-  .layout--float-left,
-  .layout--float-right {
-    float: none;
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
+  .layout--floating-left,
+  .layout--floating-right,
+  .layout--centered {
+    max-width: 95%; /* Más ancho en móviles */
+  }
+
+  .mixed-panel .panel-header {
+    font-size: 0.9rem;
+    padding: 10px 15px;
   }
   
-  .layout--center {
-    width: 100%;
-  }
-  
-  .panel-style--tech-corners > .panel-header,
-  .panel-style--hologram > .panel-header,
-  .panel-style--neo-frame > .panel-header {
-    font-size: 1.1em;
+  .panel-style--tech-corners th,
+  .panel-style--tech-corners td {
+     padding: 8px 12px;
   }
 }
 
-/* =================================== */
-/* Animaciones y transiciones generales */
-/* =================================== */
+/* Animaciones predefinidas (pulse, rotate, etc.) con velocidades actualizadas */
+.animate-pulse {
+  animation: soft-pulse var(--animation-speed-medium) infinite alternate;
+}
 
-/* Animación de pulso suave */
 @keyframes soft-pulse {
-  0% { opacity: 0.8; }
-  50% { opacity: 1; }
-  100% { opacity: 0.8; }
+  0% { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.01); }
 }
 
-/* Animación de rotación */
+.animate-rotate {
+  animation: slow-rotate var(--animation-speed-slow) linear infinite;
+}
+
 @keyframes slow-rotate {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* Clases para aplicar animaciones */
-.animate-pulse {
-  animation: soft-pulse 3s ease-in-out infinite;
+/* Estilos para otros tipos de paneles (cut-corners, corner-brackets, glass, custom-corner) */
+/* Se pueden añadir mejoras similares aquí si se desea */
+
+.panel-style--cut-corners {
+  /* Estilos existentes, se pueden mejorar con gradientes/sombras */
 }
 
-.animate-rotate {
-  animation: slow-rotate 10s linear infinite;
+.panel-style--corner-brackets {
+  /* Estilos existentes, se pueden mejorar con gradientes/sombras */
 }
 
-/* Añadir esquinas personalizadas con SVG */
+.panel-style--glass {
+  /* Estilos existentes, se pueden mejorar con gradientes/sombras */
+}
+
 .panel-style--custom-corner {
+  /* Estilos existentes, se pueden mejorar con gradientes/sombras */
+}
+
+/* Layout Styles */
+.layout--floating-left {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 15px;
+  max-width: 350px;
+  width: calc(40% - 20px);
+}
+
+.layout--floating-right {
+  float: right;
+  margin-left: 20px;
+  margin-bottom: 15px;
+  max-width: 350px;
+  width: calc(40% - 20px);
+}
+
+.layout--centered {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80%;
+  width: 600px;
+}
+
+/* Nuevo layout para columnas separadas */
+.layout--split-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 1.5rem auto;
+  max-width: 900px;
+  width: 100%;
+}
+
+.layout--split-columns .panel-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.layout--split-columns .column {
+  padding: 0.5rem;
+  break-inside: avoid;
+}
+
+.layout--split-columns .column h3 {
+  margin-top: 0;
+  border-bottom: 1px solid rgba(150, 150, 150, 0.3);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.layout--split-columns .column-left {
+  grid-column: 1;
+  border-right: 1px solid rgba(150, 150, 150, 0.2);
+  padding-right: 1.5rem;
+}
+
+.layout--split-columns .column-right {
+  grid-column: 2;
+  padding-left: 1.5rem;
+}
+
+/* Responsive: columna única en móviles */
+@media (max-width: 768px) {
+  .layout--split-columns .panel-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .layout--split-columns .column-left {
+    grid-column: 1;
+    border-right: none;
+    border-bottom: 1px solid rgba(150, 150, 150, 0.2);
+    padding-right: 0;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .layout--split-columns .column-right {
+    grid-column: 1;
+    padding-left: 0;
+  }
+}
+
+/* Nueva disposición: Dos columnas estilo RPG */
+.layout--two-columns {
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 900px;
+}
+
+.layout--two-columns .panel-content {
+  column-count: 2;
+  column-gap: 2.5rem;
+  column-rule: 1px solid rgba(var(--accent-color, 150, 150, 150), 0.3);
+  text-align: justify;
+}
+
+/* Aseguramos que ciertos elementos no se dividan entre columnas */
+.layout--two-columns .panel-content h1,
+.layout--two-columns .panel-content h2,
+.layout--two-columns .panel-content h3,
+.layout--two-columns .panel-content h4,
+.layout--two-columns .panel-content table,
+.layout--two-columns .panel-content pre,
+.layout--two-columns .panel-content blockquote {
+  column-span: all;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Estilos específicos para elementos dentro de columnas */
+.layout--two-columns .panel-content p {
+  margin-bottom: 1rem;
+  text-indent: 1rem;
+  break-inside: avoid;
+}
+
+.layout--two-columns .panel-content ul,
+.layout--two-columns .panel-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+  break-inside: avoid;
+}
+
+/* Estilo tipográfico para columnas al estilo RPG */
+.layout--two-columns {
+  font-family: var(--serif-font, serif);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Letra capital para el primer párrafo */
+.layout--two-columns .panel-content p:first-of-type:first-letter {
+  font-size: 3.5rem;
+  float: left;
+  line-height: 0.8;
+  margin-right: 0.5rem;
+  font-family: var(--display-font, serif);
+  color: var(--accent-color, #822000);
+}
+
+/* Responsive: columna única en móviles */
+@media (max-width: 768px) {
+  .layout--two-columns .panel-content {
+    column-count: 1;
+    column-gap: 0;
+    column-rule: none;
+  }
+  
+  .layout--two-columns {
+    width: 95%;
+  }
+}
+
+/* ==================================
+   ESTILOS PARA PANELES RPG DE DOS COLUMNAS
+   ================================== */
+
+.rpg-panel {
+  border: 1px solid #8e794e;
+  background-color: #f9f7e8;
+  padding: 0;
+  margin-bottom: 1.5rem;
   position: relative;
-  padding: var(--spacing-unit) calc(var(--spacing-unit) * 2);
-  background-color: rgba(13, 25, 40, 0.8);
-  border: 1px solid rgba(0, 170, 255, 0.4);
-  border-radius: 3px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-serif);
 }
 
-.panel-style--custom-corner::before,
-.panel-style--custom-corner::after {
-  content: '';
-  position: absolute;
-  width: 32px;
-  height: 32px;
-  background-image: url('../images/corner.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0.8;
-  transition: all 0.3s ease;
+.rpg-panel .panel-header {
+  background-color: #e1d5b7;
+  color: #4a3214;
+  border-bottom: 1px solid #8e794e;
+  padding: 8px 12px;
+  font-weight: bold;
+  font-family: var(--font-fantasy);
+  text-align: center;
 }
 
-.panel-style--custom-corner::before {
-  top: -8px;
-  left: -8px;
+.rpg-panel .panel-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
 }
 
-.panel-style--custom-corner::after {
-  bottom: -8px;
-  right: -8px;
-  transform: rotate(180deg);
+.rpg-panel .panel-content > * {
+  margin: 0;
 }
 
-.panel-style--custom-corner:hover::before,
-.panel-style--custom-corner:hover::after {
-  opacity: 1;
-  filter: drop-shadow(0 0 3px rgba(0, 170, 255, 0.7));
+/* Variante: Estilo pergamino */
+.rpg-panel.parchment {
+  background-color: #f8f0d7;
+  border-color: #c7a96c;
+  background-image: url('data:image/png;base64,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');
+}
+
+.rpg-panel.parchment .panel-header {
+  background-color: #e0c18c;
+  color: #5c3e11;
+  font-family: var(--font-fantasy);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 1.2em;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* Variante: Manual de combate */
+.rpg-panel.combat-manual {
+  background-color: #f0f0f0;
+  border: 2px solid #8b0000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.rpg-panel.combat-manual .panel-header {
+  background-color: #8b0000;
+  color: white;
+  font-family: var(--font-monospace);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 10px;
+}
+
+.rpg-panel.combat-manual .panel-content {
+  padding: 15px;
+  background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.02) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.02) 50%, rgba(0, 0, 0, 0.02) 75%, transparent 75%, transparent);
+  background-size: 20px 20px;
+}
+
+/* Media queries para responsive */
+@media (max-width: 768px) {
+  .rpg-panel .panel-content {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .rpg-panel .panel-content > *:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 } 

@@ -23,6 +23,15 @@ export async function parseToAst(normalizedMarkdown: string): Promise<{ ast: Roo
     const errors: ProcessingError[] = [];
     let ast: Root | null = null;
 
+    // <<< LOGS ADICIONALES PARA DIAGNÓSTICO >>>
+    console.log('[Parser] parseToAst CALLED');
+    console.log('[Parser] Input type:', typeof normalizedMarkdown);
+    console.log('[Parser] Input is string:', typeof normalizedMarkdown === 'string');
+    console.log('[Parser] Input is empty:', !normalizedMarkdown || normalizedMarkdown === '');
+    console.log('[Parser] Input first char code:', normalizedMarkdown?.charCodeAt(0));
+    console.log('[Parser] Input starts with HTML?', normalizedMarkdown?.startsWith('<!DOCTYPE') || normalizedMarkdown?.startsWith('<html'));
+    // <<< FIN LOGS ADICIONALES >>>
+
     // <<< LOG DE ENTRADA >>>
     console.log('[Parser] Input markdown length:', normalizedMarkdown?.length);
     console.log('[Parser] Input markdown first 100 chars:', normalizedMarkdown?.substring(0, 100));

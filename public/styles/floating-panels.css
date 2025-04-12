@@ -1,0 +1,485 @@
+/* =============================================
+   FLOATING PANELS CSS - V2 CSS Framework
+   Estilos para crear paneles con efecto flotante
+   ============================================= */
+
+:root {
+  /* Colores primarios */
+  --panel-float-primary: rgba(32, 56, 100, 0.95);
+  --panel-float-primary-border: rgba(64, 109, 187, 0.8);
+  --panel-float-primary-accent: rgba(103, 152, 226, 0.9);
+  
+  /* Colores secundarios */
+  --panel-float-secondary: rgba(42, 54, 80, 0.92);
+  --panel-float-secondary-border: rgba(58, 75, 111, 0.85);
+  
+  /* Colores de hover */
+  --panel-float-hover-shadow: rgba(103, 152, 226, 0.25);
+  --panel-float-active-glow: rgba(103, 152, 226, 0.6);
+  
+  /* Colores glass */
+  --panel-float-glass-bg: rgba(25, 35, 60, 0.6);
+  --panel-float-glass-border: rgba(93, 130, 191, 0.4);
+  
+  /* Sombras */
+  --panel-float-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --panel-float-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.25);
+
+  --float-primary-color: rgba(0, 150, 255, 0.1);
+  --float-secondary-color: rgba(0, 120, 215, 0.2);
+  --float-hover-color: rgba(0, 170, 255, 0.15);
+  --float-glass-color: rgba(255, 255, 255, 0.15);
+  --float-glow-color: rgba(0, 150, 255, 0.5);
+}
+
+/* Clase base para todos los paneles flotantes */
+.panel-style--float {
+  margin: 0.5rem 0 1.5rem 0;
+  border: 1px solid var(--panel-float-primary-border);
+  background-color: var(--panel-float-primary);
+  box-shadow: var(--panel-float-shadow);
+  transition: all 0.3s ease-in-out, transform 0.2s ease-out;
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  z-index: 10;
+}
+
+/* Efecto de elevación al hacer hover */
+.panel-style--float:hover {
+  box-shadow: var(--panel-float-shadow-hover);
+  transform: translateY(-3px);
+}
+
+/* Estilos para el encabezado del panel flotante */
+.panel-style--float .panel-header {
+  background-color: var(--panel-float-secondary);
+  border-bottom: 1px solid var(--panel-float-primary-border);
+  padding: 0.5rem 0.8rem;
+  font-size: 0.95rem;
+}
+
+.panel-style--float .panel-body {
+  padding: 0.8rem 1rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* ===== VARIACIONES DE PANELES FLOTANTES ===== */
+
+/* Variante 1: Panel flotante con borde brillante */
+.panel-style--float-glow {
+  border: 1px solid var(--panel-float-primary-accent);
+  box-shadow: 0 0 10px var(--panel-float-hover-shadow),
+              inset 0 0 3px var(--panel-float-hover-shadow);
+}
+
+.panel-style--float-glow:hover {
+  box-shadow: 0 0 15px var(--panel-float-active-glow),
+              inset 0 0 5px var(--panel-float-hover-shadow);
+}
+
+/* Variante 2: Panel flotante con esquinas redondeadas */
+.panel-style--float-rounded {
+  border-radius: 8px;
+}
+
+.panel-style--float-rounded .panel-header {
+  border-radius: 7px 7px 0 0;
+}
+
+/* Variante 3: Panel flotante con efecto de cristal */
+.panel-style--float-glass {
+  background-color: var(--panel-float-glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--panel-float-glass-border);
+}
+
+.panel-style--float-glass .panel-header {
+  background-color: rgba(30, 40, 65, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Variante 4: Panel flotante con esquinas cortadas */
+.panel-style--float-cut {
+  clip-path: polygon(
+    0% 10px, 10px 0%, 
+    calc(100% - 10px) 0%, 100% 10px,
+    100% calc(100% - 10px), calc(100% - 10px) 100%,
+    10px 100%, 0% calc(100% - 10px)
+  );
+}
+
+/* Variante 5: Panel flotante con borde pulsante */
+.panel-style--float-pulse {
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 var(--panel-float-active-glow);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(103, 152, 226, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(103, 152, 226, 0);
+  }
+}
+
+/* ===== LAYOUTS ESPECÍFICOS PARA PANELES FLOTANTES ===== */
+
+/* Layout flotante a la izquierda (para dispositivos grandes) */
+@media (min-width: 768px) {
+  .layout--float-left {
+    float: left;
+    margin-right: 1.5rem;
+    width: 40%;
+    clear: left;
+  }
+  
+  /* Layout flotante a la derecha (para dispositivos grandes) */
+  .layout--float-right {
+    float: right;
+    margin-left: 1.5rem;
+    width: 40%;
+    clear: right;
+  }
+}
+
+/* Para dispositivos pequeños, los paneles ocupan todo el ancho */
+@media (max-width: 767px) {
+  .layout--float-left,
+  .layout--float-right {
+    float: none;
+    margin: 1rem 0 1.5rem 0;
+    clear: both;
+  }
+}
+
+/* Layout centro flotante (para todos los tamaños) */
+.layout--float-center {
+  float: none;
+  margin: 2rem auto;
+  width: 85%;
+  max-width: 800px;
+  clear: both;
+}
+
+.layout--float-center:hover {
+  transform: translateY(-10px) scale(1.02);
+}
+
+/* Clearfix para prevenir problemas de flotación */
+.clearfix {
+  clear: both;
+  width: 100%;
+  height: 0.5rem;
+  content: "";
+  display: block;
+}
+
+/* Soporte para temas oscuros y claros */
+.dark-theme .panel-style--float {
+  --panel-float-primary: rgba(22, 32, 50, 0.95);
+  --panel-float-primary-border: rgba(54, 89, 157, 0.8);
+}
+
+.light-theme .panel-style--float {
+  --panel-float-primary: rgba(240, 245, 250, 0.8);
+  --panel-float-primary-border: rgba(64, 169, 255, 0.3);
+  color: #333;
+}
+
+.light-theme .panel-style--float .panel-body {
+  color: #333;
+  background-color: rgba(240, 245, 250, 0.5);
+}
+
+.light-theme .panel-style--float .panel-header {
+  background: linear-gradient(90deg, 
+    rgba(220, 230, 240, 0.9) 0%, 
+    rgba(180, 200, 220, 0.8) 100%);
+  color: #2a6496;
+}
+
+/* Estilos base para paneles flotantes */
+.markdown-body .panel-container[data-layout="left"],
+.markdown-body .panel-container[data-layout="right"] {
+  max-width: 50%;
+  min-width: 200px;
+  margin-bottom: 1rem;
+  float: none;
+  width: 40%;
+  position: relative;
+}
+
+/* Panel flotante a la izquierda */
+.markdown-body .panel-container[data-layout="left"] {
+  float: left;
+  margin-right: 1.5rem;
+  clear: left;
+}
+
+/* Panel flotante a la derecha */
+.markdown-body .panel-container[data-layout="right"] {
+  float: right;
+  margin-left: 1.5rem;
+  clear: right;
+}
+
+/* Control adicional de ancho para los paneles */
+.markdown-body .panel-container.w-1\/4 {
+  width: 25%;
+}
+
+.markdown-body .panel-container.w-1\/3 {
+  width: 33.33%;
+}
+
+.markdown-body .panel-container.w-1\/2 {
+  width: 50%;
+}
+
+.markdown-body .panel-container.w-2\/3 {
+  width: 66.66%;
+}
+
+.markdown-body .panel-container.w-3\/4 {
+  width: 75%;
+}
+
+/* Aseguramos que los párrafos posteriores a los paneles fluyan correctamente */
+.markdown-body p {
+  overflow: auto; /* Evita colapso de márgenes */
+}
+
+/* Centrado de texto para paneles que lo requieran */
+.markdown-body .panel-container.text-center .panel-body {
+  text-align: center;
+}
+
+/* Mejoras para imágenes dentro de paneles flotantes */
+.markdown-body .panel-container[data-layout] img {
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Espaciado adecuado para elementos de lista en paneles flotantes */
+.markdown-body .panel-container[data-layout] ul,
+.markdown-body .panel-container[data-layout] ol {
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Tablas dentro de paneles flotantes */
+.markdown-body .panel-container[data-layout] table {
+  width: 100%;
+  font-size: 0.9em;
+}
+
+/* Responsive: en pantallas pequeñas, los paneles flotantes se convierten en bloques */
+@media (max-width: 768px) {
+  .markdown-body .panel-container[data-layout="left"],
+  .markdown-body .panel-container[data-layout="right"] {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Efectos de hover mejorados para paneles flotantes */
+.markdown-body .panel-container[data-layout]:hover {
+  z-index: 10; /* Asegura que el panel flote por encima de otros elementos al hacer hover */
+  transform: translateY(-3px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Mejora el espaciado interno para paneles flotantes */
+.markdown-body .panel-container[data-layout] .panel-body {
+  padding: 1rem;
+}
+
+/* Asegura que los títulos dentro de paneles flotantes tengan tamaño apropiado */
+.markdown-body .panel-container[data-layout] h1,
+.markdown-body .panel-container[data-layout] h2,
+.markdown-body .panel-container[data-layout] h3 {
+  font-size: 1.2em;
+  margin-top: 0.5rem;
+}
+
+/* Limpia el flotado después de secciones con paneles flotantes */
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  clear: both;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 480px) {
+  .panel-style--float .panel-header {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+  }
+  
+  .panel-style--float .panel-body {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Floating Panels - Version 2.6 */
+
+/* Base floating panel styles */
+.float {
+  padding: 1.2rem;
+  margin: 0.8rem;
+  background-color: var(--float-primary-color);
+  border: 1px solid var(--float-secondary-color);
+  box-shadow: var(--float-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  max-width: 100%;
+  border-radius: 3px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover effect for all floating panels */
+.float:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--float-hover-shadow);
+  background-color: var(--float-hover-color);
+}
+
+/* Layout classes */
+.float-left {
+  float: left;
+  width: 40%;
+  margin-right: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.float-right {
+  float: right;
+  width: 40%;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.float-center {
+  float: none;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Panel header styles */
+.float .panel-header {
+  margin: -1.2rem -1.2rem 1rem -1.2rem;
+  padding: 0.8rem 1.2rem;
+  background-color: var(--float-secondary-color);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+/* Panel body styles */
+.float .panel-body {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Glow effect */
+.float-glow {
+  box-shadow: 0 0 12px var(--float-glow-color);
+  border-color: var(--float-glow-color);
+}
+
+.float-glow:hover {
+  box-shadow: 0 0 20px var(--float-glow-color);
+}
+
+/* Rounded panel */
+.float-rounded {
+  border-radius: 12px;
+}
+
+.float-rounded .panel-header {
+  border-radius: 12px 12px 0 0;
+}
+
+/* Glass panel */
+.float-glass {
+  background-color: var(--float-glass-color);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.float-glass .panel-header {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Cut corners panel */
+.float-cut {
+  clip-path: polygon(
+    0% 10px, 10px 0%, calc(100% - 10px) 0%, 100% 10px,
+    100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 10px)
+  );
+}
+
+/* Pulse animation */
+.float-pulse {
+  animation: float-pulse 2s infinite;
+}
+
+@keyframes float-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 150, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(0, 150, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 150, 255, 0);
+  }
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 768px) {
+  .float-left, .float-right {
+    width: 50%;
+  }
+  
+  .float-center {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .float-left, .float-right, .float-center {
+    float: none;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --float-primary-color: rgba(0, 120, 215, 0.15);
+    --float-secondary-color: rgba(0, 150, 255, 0.25);
+    --float-hover-color: rgba(0, 170, 255, 0.2);
+    --float-glass-color: rgba(30, 30, 30, 0.6);
+    --float-glow-color: rgba(0, 180, 255, 0.6);
+  }
+} 
