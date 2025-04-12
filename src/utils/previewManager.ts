@@ -14,9 +14,9 @@ const escapeHtmlPreview = (unsafe: string): string => {
  };
 
 interface PanelStyles {
-    style: string[];
+    styles: string[];
     layout: string;
-    class: string[];
+    classes: string[];
     animation: string;
 }
 
@@ -207,8 +207,8 @@ class PreviewManager {
     }
 
     // --- Helper parseAttributes (CON LOGS MEJORADOS) ---
-    private parseAttributes(attrString: string): PanelStyles {
-        const result: PanelStyles = { style: [], layout: '', class: [], animation: '' };
+    private parseAttributes(attrString: string): { style: string[]; layout: string; class: string[]; animation: string; } {
+        const result = { style: [], layout: '', class: [], animation: '' };
         if (!attrString || typeof attrString !== 'string') return result;
 
         this.logDebug(`    [parseAttrs DEBUG] Parsing: "${attrString}"`);
@@ -239,7 +239,7 @@ class PreviewManager {
     }
 
     // --- Helper applyAttribute (CON LOGS) ---
-    private applyAttribute(result: PanelStyles, key: string, value: string): void {
+    private applyAttribute(result: { style: string[]; layout: string; class: string[]; animation: string; }, key: string, value: string): void {
         if (!value) { this.logDebug(`      [applyAttr DEBUG] Ignored key "${key}" due to empty value.`); return; }
         const lowerKey = key.toLowerCase();
         this.logDebug(`      [applyAttr DEBUG] Applying Key: "${lowerKey}", Value: "${value}"`);
@@ -253,21 +253,9 @@ class PreviewManager {
     // --- Renderizador de UN Panel ::: a HTML (CON PARSEO DE TÍTULO CORREGIDO) ---
     private async renderSinglePanelHtml(panelType: string, headerLine: string, innerContent: string): Promise<string> {
         this.logDebug(`  [renderPanel vFINAL] START: Type=${panelType}, Header Line RAW="${headerLine}"`);
-        
-        // Verificar si el tipo del panel está en la lista de tipos conocidos
-        const knownPanelTypes = ['panel', 'info', 'warning', 'error', 'success', 'note'];
-        const baseType = knownPanelTypes.includes(panelType) ? panelType : 'panel';
-        
-        this.logDebug(`  [renderPanel] Panel type: "${panelType}", Base type: "${baseType}"`);
-        
-        let title = '';
-        let titleAttrVal = '';
+        let title = '', panelStyleClasses = '', layoutClass = '', customClasses = '', titleAttrVal = '', animationClass = '';
         let attributesString = '';
-        let animation = '';
-        let panelStyleClasses = '';
-        let layoutClass = '';
-        let customClasses = '';
-        let animationClass = '';
+        let animation = ''; // Para la animación
 
         // --- Parseo de HeaderLine (Sin cambios desde V5) ---
         try {
@@ -340,14 +328,11 @@ class PreviewManager {
             
             titleAttrVal = escapeHtmlPreview(title); // Escapar SOLO para el atributo title
 
-            // Parsear atributos y procesar estilos con la función auxiliar
             const parsedAttrs = this.parseAttributes(attributesString);
-            const processedStyles = this.processStyles(parsedAttrs);
-            
-            panelStyleClasses = processedStyles.styleClasses ? ` ${processedStyles.styleClasses}` : '';
-            layoutClass = processedStyles.layoutClass ? ` ${processedStyles.layoutClass}` : '';
-            customClasses = processedStyles.customClasses ? ` ${processedStyles.customClasses}` : '';
-            animationClass = processedStyles.animationClass ? ` ${processedStyles.animationClass}` : '';
+            panelStyleClasses = parsedAttrs.style.map(s => ` panel-style--${s}`).join('');
+            layoutClass = parsedAttrs.layout ? ` layout--${parsedAttrs.layout}` : '';
+            customClasses = parsedAttrs.class.join(' ');
+            animationClass = parsedAttrs.animation ? ` animation--${parsedAttrs.animation}` : '';
             animation = parsedAttrs.animation; // Guardar para usar en animation-overlay
 
             // Forzar clases si es necesario (respaldo)
@@ -364,16 +349,7 @@ class PreviewManager {
             panelStyleClasses = ' panel-style--error-parse'; 
         }
 
-        // Después de la línea que define los tipos conocidos
-        // Añadir clases especiales según el tipo de panel
-        let typeBoundClasses = '';
-        if (baseType === 'warning') typeBoundClasses = ' panel-warning';
-        if (baseType === 'error') typeBoundClasses = ' panel-error';
-        if (baseType === 'info') typeBoundClasses = ' panel-info';
-        if (baseType === 'success') typeBoundClasses = ' panel-success';
-        if (baseType === 'note') typeBoundClasses = ' panel-note';
-
-        const finalPanelClasses = `panel-${baseType}${panelStyleClasses}${layoutClass}${animationClass}${typeBoundClasses} ${customClasses}`.trim().replace(/\s+/g, ' ');
+        const finalPanelClasses = `panel-${panelType}${panelStyleClasses}${layoutClass}${animationClass} ${customClasses}`.trim().replace(/\s+/g, ' ');
         this.logDebug(`    [renderPanel vFINAL] Final Title Candidate: "${title}"`);
         this.logDebug(`    [renderPanel vFINAL] Final Classes Applied: "${finalPanelClasses}"`);
 
@@ -411,7 +387,7 @@ class PreviewManager {
             // headerHtml = '';
         }
 
-        const dataAttrs = `data-panel-type="${escapeHtmlPreview(baseType)}" data-interactive-container="true"`;
+        const dataAttrs = `data-panel-type="${escapeHtmlPreview(panelType)}" data-interactive-container="true"`;
         const ariaLabel = titleAttrVal ? ` aria-label="${titleAttrVal}"` : '';
         const outputHtml = `<section class="${combinedClasses}" ${dataAttrs}${ariaLabel}>
 <div class="corner-decoration top-left"></div><div class="corner-decoration top-right"></div><div class="corner-decoration bottom-left"></div><div class="corner-decoration bottom-right"></div>
@@ -423,7 +399,7 @@ ${parsedContent}
 </div>
 ${animationClass ? `<div class="animation-overlay ${animation}-effect"></div>` : ''}
 </section>\n`;
-        this.logDebug(`  [renderPanel vFINAL END] Type=${baseType}.`);
+        this.logDebug(`  [renderPanel vFINAL END] Type=${panelType}.`);
         return outputHtml;
     }
     // --- Fin Renderizador de Panel ---
@@ -641,29 +617,6 @@ ${animationClass ? `<div class="animation-overlay ${animation}-effect"></div>` :
          if (this.scrollSyncTimeout) clearTimeout(this.scrollSyncTimeout);
          this.scrollSyncTimeout = setTimeout(() => { this.lastScrollSource = null; }, 150);
       }
-
-    private processStyles(parsedAttrs: PanelStyles): { styleClasses: string, layoutClass: string, customClasses: string, animationClass: string } {
-        // Convert styles to class names
-        const styleClasses = parsedAttrs.style
-            .filter(style => typeof style === 'string' && style.trim() !== '')
-            .map(style => `panel-style--${style.trim().toLowerCase()}`)
-            .join(' ');
-        
-        // Process layout
-        const layoutClass = parsedAttrs.layout ? 
-            `layout--${parsedAttrs.layout.trim().toLowerCase()}` : '';
-        
-        // Process custom classes
-        const customClasses = parsedAttrs.class
-            .filter(cls => typeof cls === 'string' && cls.trim() !== '')
-            .join(' ');
-        
-        // Process animation
-        const animationClass = parsedAttrs.animation ? 
-            `animation--${parsedAttrs.animation.trim().toLowerCase()}` : '';
-        
-        return { styleClasses, layoutClass, customClasses, animationClass };
-    }
 
 } // Fin clase PreviewManager
 
