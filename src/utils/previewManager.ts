@@ -464,10 +464,10 @@ class PreviewManager {
 
         // --- Limpiar el contenido interno de textos como layout="..." ---
         // Esta es la parte nueva para eliminar el texto de los atributos que aparece incorrectamente
-        let cleanInnerContent = innerContent;
+        let processedContent = innerContent;
         
         // Eliminar todas las ocurrencias de layout=, style=, etc.
-        cleanInnerContent = cleanInnerContent
+        processedContent = processedContent
             .replace(/layout\s*=\s*["']floating-left["']/gi, '')
             .replace(/layout\s*=\s*["']floating-right["']/gi, '')
             .replace(/layout\s*=\s*["']centered["']/gi, '')
@@ -475,13 +475,13 @@ class PreviewManager {
             .replace(/animation\s*=\s*["'][^"']*["']/gi, '')
             .replace(/class\s*=\s*["'][^"']*["']/gi, '');
         
-        this.logDebug(`  [renderPanel DEBUG] Cleaned content (first 50 chars): "${cleanInnerContent.substring(0, 50)}..."`);
+        this.logDebug(`  [renderPanel DEBUG] Cleaned content (first 50 chars): "${processedContent.substring(0, 50)}..."`);
         
         // --- Parsear Contenido Interno (Sin Cambios) ---
         let parsedContent = ''; 
         try { 
             marked.setOptions({ gfm: true, breaks: true, pedantic: false }); 
-            parsedContent = await marked.parse(cleanInnerContent, { async: true }) as string; 
+            parsedContent = await marked.parse(processedContent, { async: true }) as string; 
         } catch (e: any) { 
             this.logError(`  [renderPanel vFINAL] Error parsing INNER CONTENT:`, e); 
             parsedContent = `<div class="error panel-content-error">...Panel Content Parse Error...</div>`; 

@@ -8,7 +8,8 @@ import {
   Heart, Scroll, Dice1, 
   Layers, Square, PanelTopClose, PanelLeft,
   ChevronDown, ChevronUp, Book,
-  CornerDownRight, Moon, Sun
+  CornerDownRight, Moon, Sun, Sparkles,
+  LayoutGrid
 } from 'lucide-react';
 
 interface ToolbarProps {
@@ -363,21 +364,41 @@ Recomendación: Desplegar sondas de reconocimiento.
           className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 bg-blue-800'}`}
           onClick={() => onLoadDemo('panel-showcase-v2.6.md')}
           disabled={isLoading}
-          title="Ver Showcase de Paneles V2.6"
+          title="Ver Showcase de Paneles V2.6 (Estilos Originales)"
         >
           <Layout size={16} />
-          <span className="text-sm">Showcase Paneles</span>
+          <span className="text-sm">Showcase Original</span>
         </button>
 
         <button 
-          className={`p-2 rounded flex items-center gap-1 ml-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700 bg-green-600'}`}
-          onClick={() => onLoadDemo('flotantes-demo-v2.6.md')}
+          className={`p-2 rounded flex items-center gap-1 ml-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-700 bg-purple-600'}`}
+          onClick={() => onLoadDemo('panel-showcase-v2.6-impact.md')}
           disabled={isLoading}
-          title="Ver demostración de elementos flotantes V2.6"
+          title="Ver Showcase de Paneles V2.6 (Estilos Impactantes)"
           style={{ fontWeight: 'bold' }}
         >
+          <Sparkles size={16} />
+          <span className="text-sm">Showcase Impacto</span>
+        </button>
+
+        <button
+          className="p-2 rounded flex items-center gap-1"
+          onClick={() => onLoadDemo('panel-showcase-v2.6.md')}
+          disabled={isLoading}
+          title="Ver demostración de estilos de paneles V2.6"
+        >
+          <LayoutGrid size={16} />
+          Showcase V2.6
+        </button>
+        
+        <button
+          className="p-2 rounded flex items-center gap-1"
+          onClick={() => onLoadDemo('flotantes-demo.md')}
+          disabled={isLoading}
+          title="Ver demostración de elementos flotantes"
+        >
           <PanelLeft size={16} />
-          <span className="text-sm">Demo Flotantes</span>
+          Demo Flotantes
         </button>
       </div>
 
