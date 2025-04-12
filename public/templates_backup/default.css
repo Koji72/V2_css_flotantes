@@ -1,0 +1,202 @@
+/* Theme: Default Theme */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Colores básicos */
+  --main-bg-color: #f8fafc;
+  --text-color: #334155;
+  --accent-color: #0ea5e9;
+  --border-color: #cbd5e1;
+  --header-color: #0284c7;
+  
+  /* Estados */
+  --status-ok: #22c55e;
+  --status-warn: #f59e0b;
+  --status-error: #ef4444;
+  --status-neutral: #64748b;
+  
+  /* Fuentes */
+  --main-font: 'Roboto', sans-serif;
+  --mono-font: 'Roboto Mono', monospace;
+}
+
+body {
+  font-family: var(--main-font);
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--main-bg-color);
+  margin: 0;
+  padding: 20px;
+}
+
+/* Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--header-color);
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 500;
+}
+
+h1 { font-size: 2.2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.3rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+/* Paneles */
+.mixed-panel {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: white;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.panel-header {
+  padding: 12px 16px;
+  background-color: #f1f5f9;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.panel-content {
+  padding: 16px;
+}
+
+/* Tabla data-matrix */
+.data-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.data-matrix th {
+  background-color: #f1f5f9;
+  color: var(--header-color);
+  font-weight: 500;
+  text-align: left;
+  padding: 10px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.data-matrix td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-matrix tr:hover {
+  background-color: #f1f5f9;
+}
+
+/* Estados */
+.status-ok { color: var(--status-ok); }
+.status-warn { color: var(--status-warn); }
+.status-error { color: var(--status-error); }
+.status-neutral { color: var(--status-neutral); }
+
+/* Nota bloques */
+.note-block {
+  background-color: #f1f5f9;
+  border-left: 4px solid var(--accent-color);
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-style: italic;
+}
+
+/* Listas */
+ul, ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+/* Código */
+code {
+  font-family: var(--mono-font);
+  background-color: #f1f5f9;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Enlaces */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Separador */
+hr {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+  margin: 20px 0;
+}
+
+/* Otros elementos */
+blockquote {
+  margin: 16px 0;
+  padding-left: 16px;
+  border-left: 4px solid var(--border-color);
+  font-style: italic;
+}
+
+/* Clases específicas */
+.log-list p {
+  margin-bottom: 8px;
+  padding-left: 10px;
+  border-left: 3px solid var(--accent-color);
+}
+
+.objective-list li {
+  list-style-type: none;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+}
+
+.objective-list li input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.redacted {
+  background-color: #000;
+  color: #000;
+  user-select: none;
+  padding: 0 2px;
+}
+
+.redacted:hover {
+  color: rgba(255, 255, 255, 0.7);
+} 

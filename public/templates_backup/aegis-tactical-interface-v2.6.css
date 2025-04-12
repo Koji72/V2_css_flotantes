@@ -202,7 +202,7 @@ tr:nth-child(odd) {
     background-color: rgba(0, 170, 255, 0.05);
 }
 
-/* --- ESTILOS PARA MEJORAS JS V2.6 --- */
+/* --- ESTILOS PARA MEJORAS JS V2.5 --- */
 .is-hovered {
     box-shadow: var(--glow-active-box);
     transition: all 0.3s ease;

@@ -27,12 +27,6 @@ const templates = [
     description: 'Interfaz táctica UNSC con paneles mejorados y hologramas'
   },
   {
-    id: 'aegis-tactical-interface-v2.5',
-    name: 'Aegis Tactical v2.5',
-    path: 'templates/aegis-tactical-interface-v2.5.css',
-    description: 'Interfaz táctica UNSC con marquesinas SVG inline'
-  },
-  {
     id: 'aetherium_codex',
     name: 'Aetherium Codex',
     path: 'templates/aetherium_codex.css',
@@ -68,10 +62,26 @@ const templates = [
     path: 'templates/master_template.css',
     description: 'Template maestro con todas las características disponibles'
   },
+  {
+    id: 'blank-template',
+    name: 'Blank Template',
+    path: 'templates/blank-template.css',
+    description: 'Template básico con estilos mínimos para paneles'
+  },
 ];
 
-export default function TemplateSelector() {
-  const { templateId, setTemplateId } = useStore();
+// Define la interfaz de props para el componente
+interface TemplateSelectorProps {
+  value?: string;
+  onChange?: (id: string) => void;
+}
+
+export default function TemplateSelector({ value, onChange }: TemplateSelectorProps = {}) {
+  const storeState = useStore();
+  
+  // Usar props si se proporcionan, de lo contrario usar el estado global
+  const templateId = value !== undefined ? value : storeState.templateId;
+  const setTemplateId = onChange || storeState.setTemplateId;
 
   const handleTemplateChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedTemplate = templates.find(t => t.id === e.target.value);

@@ -1,0 +1,126 @@
+/* ================================= */
+/* ELEMENTOS FLOTANTES v1.0          */
+/* ================================= */
+
+:root {
+  --float-shadow-color: rgba(0, 140, 255, 0.5);
+  --float-border-color: rgba(0, 170, 255, 0.4);
+  --float-background: rgba(15, 25, 40, 0.8);
+  --float-text-color: #e0f0ff;
+  --float-hover-shadow: rgba(0, 200, 255, 0.7);
+  --float-transition-speed: 0.3s;
+}
+
+/* Contenedor básico flotante */
+.flotante {
+  position: relative;
+  background-color: var(--float-background);
+  border: 1px solid var(--float-border-color);
+  border-radius: 3px;
+  color: var(--float-text-color);
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2), 0 0 5px var(--float-shadow-color);
+  transition: all var(--float-transition-speed) ease;
+}
+
+.flotante:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 8px var(--float-hover-shadow);
+  transform: translateY(-2px);
+}
+
+/* Variantes de posicionamiento */
+.flotante--izquierda {
+  float: left;
+  width: 45%;
+  margin-right: 20px;
+  margin-bottom: 15px;
+}
+
+.flotante--derecha {
+  float: right;
+  width: 45%;
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+
+.flotante--centro {
+  clear: both;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Estilos para el encabezado del flotante */
+.flotante__titulo {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--float-border-color);
+  color: white;
+  text-shadow: 0 0 3px var(--float-shadow-color);
+}
+
+/* Variantes de estilo */
+.flotante--simple {
+  background-color: rgba(25, 30, 40, 0.85);
+  border-color: rgba(180, 180, 180, 0.4);
+}
+
+.flotante--tech {
+  border-width: 1px;
+  border-image: linear-gradient(135deg, 
+    rgba(0, 170, 255, 0.8) 0%, 
+    rgba(0, 100, 200, 0.2) 50%, 
+    rgba(0, 170, 255, 0.8) 100%) 1;
+}
+
+.flotante--glass {
+  background-color: rgba(15, 25, 40, 0.6);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Variante con esquinas recortadas */
+.flotante--recortado {
+  clip-path: polygon(
+    0% 10px, 10px 0%, 
+    calc(100% - 10px) 0%, 100% 10px, 
+    100% calc(100% - 10px), calc(100% - 10px) 100%, 
+    10px 100%, 0% calc(100% - 10px)
+  );
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .flotante--izquierda,
+  .flotante--derecha {
+    float: none;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .flotante--centro {
+    width: 100%;
+  }
+}
+
+/* Animaciones */
+.flotante--pulse {
+  animation: flotante-pulse 3s ease-in-out infinite;
+}
+
+@keyframes flotante-pulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+/* Clearfix */
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+} 

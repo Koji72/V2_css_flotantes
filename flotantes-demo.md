@@ -4,7 +4,7 @@ Esta demostración muestra el potencial de los paneles flotantes para crear inte
 
 ## Panel Flotante Izquierdo con Texto Fluido
 
-:::panel{style=floating-left | title="Subsistemas Principales" | animation=pulse}
+:::panel{layout="floating-left" | title="Subsistemas Principales" | animation="pulse" | style="tech-corners"}
 ### Subsistemas Operativos
 * **Propulsión**: 87% eficiencia
 * **Escudos**: 92% integridad
@@ -22,7 +22,7 @@ La tecnología de visualización holográfica permite proyectar datos en tres di
 
 El diseño adaptativo de la interfaz permite ajustar automáticamente la densidad de información según el nivel de estrés del operador, detectado mediante sensores biométricos integrados.
 
-:::panel{style=floating-right | title="Estado de Armas" | animation=glow}
+:::panel{layout="floating-right" | title="Estado de Armas" | animation="glow" | style="neo-frame"}
 ### Armamento Disponible
 | Sistema | Estado | Potencia |
 |---------|--------|----------|
@@ -40,7 +40,7 @@ Los sistemas de comunicación cuántica aseguran que la información táctica ll
 
 Los paneles flotantes pueden combinarse con otros estilos para crear interfaces verdaderamente únicas. A continuación, algunos ejemplos:
 
-:::panel{style=floating-left tech-corners | title="Diagnóstico de Sistemas" | animation=pulse}
+:::panel{layout="floating-left" | style="tech-corners" | title="Diagnóstico de Sistemas" | animation="pulse"}
 ### Diagnóstico en Tiempo Real
 * Integridad estructural: 97%
 * Temperatura del núcleo: Nominal
@@ -54,7 +54,7 @@ La interfaz AEGIS ha sido diseñada para minimizar la curva de aprendizaje, perm
 
 Los paneles de control virtuales se pueden reorganizar según las preferencias individuales, y la configuración se guarda en perfiles personalizados que siguen al operador independientemente del terminal que utilice.
 
-:::panel{style=floating-right hologram | title="Comunicaciones Entrantes" | animation=scan}
+:::panel{layout="floating-right" | style="hologram" | title="Comunicaciones Entrantes" | animation="scan"}
 ### Transmisiones Recientes
 1. Comando Central - Actualización de objetivos
 2. Escuadrón Delta - Solicitud de apoyo
@@ -70,7 +70,7 @@ La integración con sistemas de inteligencia artificial permite filtrar automát
 
 Cuando necesitas destacar información crítica de manera centralizada, puedes utilizar un panel flotante con estilo centered:
 
-:::panel{style=centered alert | title="¡ALERTA CRÍTICA!" | animation=pulse}
+:::panel{layout="centered" | style="alert" | title="¡ALERTA CRÍTICA!" | animation="pulse"}
 ### ¡FALLO INMINENTE DEL REACTOR!
 * Evacuación inmediata requerida
 * Tiempo estimado hasta fallo: 05:32

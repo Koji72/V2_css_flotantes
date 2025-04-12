@@ -10,8 +10,6 @@ import {
   ChevronDown, ChevronUp, Book,
   CornerDownRight, Moon, Sun
 } from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 
 interface ToolbarProps {
   onApplyStyle?: (style: string) => void;
@@ -131,7 +129,7 @@ Este es un panel con efecto de cristal/vidrio.
     {
       name: 'Panel Flotante Izquierda',
       icon: <PanelLeft size={16} />,
-      template: `:::panel{title="Título del Panel" layout="float-left"}
+      template: `:::panel{title="Título del Panel" layout="floating-left"}
 Este panel flota a la izquierda del texto.
 
 - Permite que el texto fluya a su alrededor
@@ -141,7 +139,7 @@ Este panel flota a la izquierda del texto.
     {
       name: 'Panel Flotante Derecha',
       icon: <PanelLeft size={16} style={{ transform: 'scaleX(-1)' }} />,
-      template: `:::panel{title="Título del Panel" layout="float-right"}
+      template: `:::panel{title="Título del Panel" layout="floating-right"}
 Este panel flota a la derecha del texto.
 
 - Permite que el texto fluya a su alrededor
@@ -151,7 +149,7 @@ Este panel flota a la derecha del texto.
     {
       name: 'Panel Centrado',
       icon: <AlignJustify size={16} />,
-      template: `:::panel{title="Título del Panel" layout="center"}
+      template: `:::panel{title="Título del Panel" layout="centered"}
 Este es un panel centrado de ancho reducido.
 
 Perfecto para destacar información importante en el centro del documento.
@@ -174,7 +172,7 @@ Tiempo estimado para fallo catastrófico: 15:00 minutos
     {
       name: 'Panel Combinado',
       icon: <Layers size={16} />,
-      template: `:::panel{title="Título del Panel" style="glass-panel,corner-brackets" layout="float-right"}
+      template: `:::panel{title="Título del Panel" style="glass-panel,corner-brackets" layout="floating-right"}
 Este panel combina múltiples estilos y layouts.
 
 - Efecto de cristal/vidrio
@@ -420,37 +418,14 @@ Recomendación: Desplegar sondas de reconocimiento.
       </button>
 
       <button 
-        className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-700 bg-green-700'}`}
+        className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700 bg-green-600'}`}
         onClick={() => onLoadDemo('flotantes-demo.md')}
         disabled={isLoading}
         title="Ver demostración de elementos flotantes"
+        style={{ fontWeight: 'bold', border: '2px solid white' }}
       >
         <PanelLeft size={16} />
         <span>Demo Flotantes</span>
-      </button>
-
-      <button
-        className="editor-button"
-        title="Cargar panel basico"
-        onClick={() => handleLoadTemplate(1)}
-      >
-        <FontAwesomeIcon icon={faClipboard} /> Panel Básico
-      </button>
-
-      <button
-        className="editor-button"
-        title="Cargar demostración de paneles v2.6"
-        onClick={() => openFile('/panel-showcase-v2.6.md')}
-      >
-        <FontAwesomeIcon icon={faClipboard} /> Demo Paneles v2.6
-      </button>
-
-      <button
-        className="editor-button highlight-button"
-        title="Cargar demostración de paneles flotantes"
-        onClick={() => openFile('/flotantes-demo.md')}
-      >
-        <FontAwesomeIcon icon={faClipboard} /> Demo Flotantes
       </button>
     </div>
   );

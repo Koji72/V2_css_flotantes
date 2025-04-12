@@ -59,10 +59,6 @@ export class TemplateManager {
           path: 'templates/aegis-tactical-interface-v2.6.css',
         },
         {
-          id: 'aegis-tactical-interface-v2.5',
-          path: 'templates/aegis-tactical-interface-v2.5.css',
-        },
-        {
           id: 'aetherium_codex',
           path: 'templates/aetherium_codex.css',
         },

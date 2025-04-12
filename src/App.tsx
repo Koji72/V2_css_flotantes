@@ -6,9 +6,10 @@ import { useStore } from './store';
 import TemplateSelector from './components/TemplateSelector';
 import EnhancedToolbar from './components/EnhancedToolbar';
 import { processContent } from './core/processing/pipeline';
-import './App.css'; // Importar estilos CSS
+import './App.css';
 import './styles/floating-blocks.css';
-import '../public/templates/aegis-tactical-interface-v2.5.css';
+import previewManager from './utils/previewManager';
+// La importación de CSS desde public está causando errores - se carga dinámicamente
 
 const App: React.FC = () => {
   const { markdown, setMarkdown, darkMode, templateId, setDarkMode, setTemplateId } = useStore();
@@ -17,7 +18,7 @@ const App: React.FC = () => {
   const [css, setCSS] = useState('');
   const editorRef = useRef<any>(null);
   const previewRef = useRef<HTMLDivElement>(null);
-  const previewManager = useRef<any>(null);
+  const previewManagerRef = useRef<any>(null);
 
   useEffect(() => {
     // Cargar markdown de ejemplo si no hay ninguno
@@ -27,215 +28,55 @@ const App: React.FC = () => {
     }
   }, [markdown]);
 
-  // Aplicar cambios al iframe
-  const updateIframeContent = async () => {
-    if (!iframeRef.current) return;
-    console.log('\n[App] 📝 UPDATE IFRAME CONTENT');
-    console.log('[App] Raw markdown content:', {
-      length: markdown?.length || 0,
-      isEmpty: !markdown,
-      isString: typeof markdown === 'string',
-      preview: markdown?.substring(0, 100),
-      fullContent: markdown // Temporal para debug
-    });
-
-    const iframeDoc = iframeRef.current.contentDocument;
-    if (!iframeDoc) {
-        console.error('[App] ❌ Iframe document not found!');
-        return;
+  // Inicializar previewManager cuando el iframe esté listo
+  useEffect(() => {
+    if (iframeRef.current) {
+      previewManager.initialize(iframeRef.current);
     }
+    
+    return () => {
+      // Limpiar previewManager al desmontar
+      previewManager.destroy();
+    };
+  }, []);
 
+  // Actualizar el contenido cuando cambia el markdown
+  useEffect(() => {
+    if (markdown) {
+      previewManager.updateContent(markdown)
+        .catch(e => console.error("Error updating content:", e));
+    }
+  }, [markdown]);
+
+  // En lugar de updateIframeContent, usamos previewManager directamente
+  const handleLoadCSS = async (templatePath: string) => {
     try {
-      console.log('[App] 🚀 Calling processContent pipeline...');
-      // Procesar el markdown usando el NUEVO PIPELINE
-      const result = await processContent(markdown);
-      console.log('[App] processContent pipeline finished. HTML length:', result?.html?.length);
-      console.log('[App] First 100 chars of processed HTML:', result?.html?.substring(0, 100));
-
-      // Registrar errores del pipeline si los hubo
-      if (result.errors && result.errors.length > 0) {
-          console.warn('[App] Pipeline reported errors:', result.errors);
+      // Cargar el CSS del template principal
+      const response = await fetch(templatePath);
+      if (!response.ok) {
+        throw new Error(`Failed to load CSS: ${response.status} ${response.statusText}`);
       }
-
-      const htmlContent = result.html;
-      const timestamp = new Date().getTime();
-
-      // Escribir en el iframe (sin cambios aquí)
-      iframeDoc.open();
-      iframeDoc.write(`
-        <!DOCTYPE html>
-        <html lang="es" ${darkMode ? 'class="dark-mode"' : ''}>
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Markdown Preview</title>
-            <style id="template-styles" data-template="${templateId}" data-timestamp="${timestamp}">
-              ${css}
-            </style>
-            <style id="fallback-styles">
-              /* Estilos base - Se aplicarán si los estilos del template fallan */
-              body {
-                font-family: 'Arial', sans-serif;
-                line-height: 1.6;
-                padding: 20px;
-                /* Colores base condicionales (Light/Dark Mode) */
-                color: ${darkMode ? '#e0e0e0' : '#333333'}; 
-                background-color: ${darkMode ? '#1a1a1a' : '#ffffff'};
-                min-height: 100vh;
-                margin: 0;
-              }
-
-              /* Forzar colores para evitar texto invisible */
-              h1, h2, h3, h4, h5, h6 {
-                /* Usar un color ligeramente más brillante/oscuro que el texto base */
-                color: ${darkMode ? '#ffffff' : '#111111'};
-              }
-              
-              p, li, td, th {
-                 /* Heredará el color del body por defecto, no necesita forzarse usualmente */
-                 /* color: ${darkMode ? '#e0e0e0' : '#333333'}; */
-              }
-              
-              /* Estilos adicionales para los bloques flotantes */
-              .float-left, .layout--float-left {
-                float: left;
-                margin-right: 20px;
-                margin-bottom: 20px;
-                width: 45%;
-                clear: left;
-                background-color: rgba(40, 40, 50, 0.7);
-                border: 1px solid #444;
-              }
-              
-              .float-right, .layout--float-right {
-                float: right;
-                margin-left: 20px;
-                margin-bottom: 20px;
-                width: 45%;
-                clear: right;
-                background-color: rgba(40, 40, 50, 0.7);
-                border: 1px solid #444;
-              }
-
-              /* Estilos para los nuevos tipos de panel */
-              .panel-style--cut-corners {
-                clip-path: polygon(
-                  15px 0%, 
-                  calc(100% - 15px) 0%, 
-                  100% 15px, 
-                  100% calc(100% - 15px), 
-                  calc(100% - 15px) 100%, 
-                  15px 100%, 
-                  0% calc(100% - 15px), 
-                  0% 15px
-                );
-              }
-
-              .panel-style--corner-brackets {
-                position: relative;
-                border: none;
-                padding: 1rem;
-                background-color: rgba(30, 30, 40, 0.85);
-                border: 1px solid #666;
-              }
-
-              .panel-style--corner-brackets::before,
-              .panel-style--corner-brackets::after {
-                content: '';
-                position: absolute;
-                width: 20px;
-                height: 20px;
-                border-style: solid;
-                border-color: #888;
-              }
-
-              .panel-style--corner-brackets::before {
-                top: 5px;
-                left: 5px;
-                border-width: 2px 0 0 2px;
-              }
-
-              .panel-style--corner-brackets::after {
-                top: 5px;
-                right: 5px;
-                border-width: 2px 2px 0 0;
-              }
-
-              .panel-style--glass-panel {
-                background-color: rgba(20, 20, 30, 0.6);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(100, 100, 150, 0.4);
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-              }
-
-              .layout--center {
-                margin-left: auto;
-                margin-right: auto;
-                width: 75%;
-                clear: both;
-                display: block;
-              }
-
-              .layout--narrow {
-                width: 33%;
-                margin-left: auto;
-                margin-right: auto;
-                clear: both;
-                display: block;
-              }
-
-              .layout--full-width {
-                width: 100%;
-                clear: both;
-                margin-bottom: 1.5rem;
-              }
-
-              /* Responsive design para los layouts */
-              @media (max-width: 768px) {
-                .float-left, .float-right,
-                .layout--float-left, .layout--float-right,
-                .layout--center, .layout--narrow {
-                  float: none;
-                  width: 100%;
-                  margin-left: 0;
-                  margin-right: 0;
-                }
-              }
-            </style>
-          </head>
-          <body class="template-${templateId}">
-            <div class="markdown-content">
-              ${htmlContent}
-            </div>
-            <script>
-              console.log('[IFrame] Iframe loaded with template: ${templateId}');
-              document.addEventListener('DOMContentLoaded', function() {
-                const styles = document.getElementById('template-styles');
-                if (styles) {
-                  console.log('[IFrame] Template CSS applied:', styles.innerHTML.length, 'chars');
-                } else {
-                  console.error('[IFrame] Template styles element not found!');
-                }
-              });
-            </script>
-          </body>
-        </html>
-      `);
-      iframeDoc.close();
-      console.log('[App] Iframe content updated successfully.');
-
-    } catch (error: any) {
-      console.error("[App] CRITICAL Error during updateIframeContent (after pipeline call?):", error);
-      // Manejo de errores crítico
-      if (iframeDoc) {
-        try {
-            iframeDoc.open();
-            iframeDoc.write(`<h2>Error updating preview</h2><pre>${error.message}</pre>`);
-            iframeDoc.close();
-        } catch (displayError) {
-            console.error("[App] Failed to display error in iframe:", displayError);
+      const cssText = await response.text();
+      
+      // Cargar los estilos mejorados para paneles v2.6
+      let combinedCss = cssText;
+      try {
+        const enhancementResponse = await fetch('/styles/panel-enhancement-v2.6.css');
+        if (enhancementResponse.ok) {
+          const enhancementCssText = await enhancementResponse.text();
+          // Combinar el CSS principal con los estilos mejorados de paneles
+          combinedCss = `${cssText}\n\n/* Panel Enhancements v2.6 */\n${enhancementCssText}`;
+          console.log("[App] Estilos de paneles v2.6 combinados con el template principal");
         }
+      } catch (enhancementError) {
+        console.warn("[App] No se pudieron cargar las mejoras de panel v2.6:", enhancementError);
       }
+      
+      // Aplicar el CSS combinado
+      previewManager.applyCustomCSS(combinedCss);
+      console.log("[App] CSS aplicado con éxito. Longitud:", combinedCss.length);
+    } catch (error) {
+      console.error(`Error loading CSS from ${templatePath}:`, error);
     }
   };
 
@@ -285,7 +126,7 @@ const App: React.FC = () => {
     console.log(`- CSS length: ${css.length} caracteres`);
     console.log(`- Template actual: ${templateId}`);
     console.log(`- Modo oscuro: ${darkMode ? 'activado' : 'desactivado'}`);
-    updateIframeContent();
+    handleLoadCSS(`/templates/${templateId}.css`);
   }, [markdown, css, darkMode]);
 
   // Manejar carga de archivos
@@ -319,13 +160,37 @@ const App: React.FC = () => {
     setIsLoading(true);
     console.log(`Cargando demo: ${demoFile}`);
     try {
-      const response = await fetch(`./demos/${demoFile}`);
-      if (!response.ok) {
-        throw new Error(`Demo file not found: ${demoFile}`);
+      // Intenta cargar desde varias rutas posibles
+      const possiblePaths = [
+        `./${demoFile}`,
+        `./demos/${demoFile}`,
+        `./public/${demoFile}`,
+        `/${demoFile}`
+      ];
+      
+      let demoMarkdown = '';
+      let loaded = false;
+      
+      for (const path of possiblePaths) {
+        try {
+          console.log(`Intentando cargar desde: ${path}`);
+          const response = await fetch(path);
+          if (response.ok) {
+            demoMarkdown = await response.text();
+            console.log(`Demo cargado exitosamente desde: ${path}`);
+            loaded = true;
+            break;
+          }
+        } catch (pathError) {
+          console.warn(`No se pudo cargar desde ${path}:`, pathError);
+        }
       }
-      const demoMarkdown = await response.text();
+      
+      if (!loaded) {
+        throw new Error(`Demo file not found: ${demoFile} en ninguna ubicación conocida`);
+      }
+      
       setMarkdown(demoMarkdown);
-      console.log(`Demo ${demoFile} cargado exitosamente`);
     } catch (error: any) {
       console.error("Error cargando demo:", error);
       setMarkdown(`# Error cargando demo\n\n${error.message}`); 
@@ -438,6 +303,13 @@ const App: React.FC = () => {
             onClick={() => insertMarkdown(`:::panel{title="Panel de Prueba"}\nEste es un panel de prueba\n:::`)}
           >
             TEST PANEL
+          </button>
+          {/* Botón para cargar el showcase de paneles */}
+          <button 
+            className="test-btn bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs ml-2"
+            onClick={() => handleLoadDemo('panel-showcase-v2.6.md')}
+          >
+            SHOWCASE V2.6
           </button>
         </div>
         <div className="editor-wrapper">
