@@ -419,13 +419,13 @@ Recomendación: Desplegar sondas de reconocimiento.
 
       <button 
         className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700 bg-green-600'}`}
-        onClick={() => onLoadDemo('flotantes-demo.md')}
+        onClick={() => onLoadDemo('flotantes-demo-v2.6.md')}
         disabled={isLoading}
-        title="Ver demostración de elementos flotantes"
+        title="Ver demostración de elementos flotantes V2.6"
         style={{ fontWeight: 'bold', border: '2px solid white' }}
       >
         <PanelLeft size={16} />
-        <span>Demo Flotantes</span>
+        <span>Demo Flotantes V2.6</span>
       </button>
     </div>
   );

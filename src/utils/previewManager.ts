@@ -68,16 +68,29 @@ class PreviewManager {
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
                     <base target="_blank">
+                    <title>Preview</title>
+                    <link rel="stylesheet" href="/styles/floating-elements-v2.6.css">
                     <style id="base-styles">
                         body { 
                             margin: 0; 
                             padding: 15px; 
                             font-family: sans-serif;
                             line-height: 1.6;
+                            color: #333;
+                            background-color: #fff;
                         }
                         #content {
                             min-height: 100%;
+                        }
+                        .error {
+                            color: #e74c3c;
+                            border: 1px solid #e74c3c;
+                            padding: 10px;
+                            margin: 10px 0;
+                            border-radius: 4px;
+                            background-color: #fcecea;
                         }
                     </style>
                     <style id="custom-theme-style"></style>
@@ -88,7 +101,25 @@ class PreviewManager {
             </html>
         `;
 
-        iframe.srcdoc = baseHtml;
+        // Asegurar que configuramos el iframe correctamente
+        try {
+            // Usar srcdoc para cargar el HTML
+            iframe.srcdoc = baseHtml;
+        } catch (srcdocError) {
+            // Fallback en caso de que srcdoc no esté soportado
+            this.logError('Error setting srcdoc, falling back to contentDocument:', srcdocError);
+            try {
+                if (iframe.contentDocument) {
+                    iframe.contentDocument.open();
+                    iframe.contentDocument.write(baseHtml);
+                    iframe.contentDocument.close();
+                } else {
+                    this.logError('No contentDocument available, initialization will likely fail');
+                }
+            } catch (fallbackError) {
+                this.logError('All initialization methods failed:', fallbackError);
+            }
+        }
         
         iframe.onload = () => {
             if (!this.iframe?.contentWindow?.document) { 
@@ -207,17 +238,38 @@ class PreviewManager {
     }
 
     // --- Helper parseAttributes (CON LOGS MEJORADOS) ---
-    private parseAttributes(attrString: string): { style: string[]; layout: string; class: string[]; animation: string; } {
-        const result = { style: [], layout: '', class: [], animation: '' };
+    private parseAttributes(attrString: string): PanelStyles {
+        const result: PanelStyles = { styles: [], layout: '', classes: [], animation: '' };
         if (!attrString || typeof attrString !== 'string') return result;
 
         this.logDebug(`    [parseAttrs DEBUG] Parsing: "${attrString}"`);
+
+        // Verificar primero si hay un estilo directo (style=xxx sin estar en una sección)
+        const directStyleMatch = attrString.match(/\bstyle\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s\|]+))/);
+        if (directStyleMatch) {
+            const styleValue = directStyleMatch[1] || directStyleMatch[2] || directStyleMatch[3];
+            if (styleValue) {
+                // Separar por comas si hay múltiples estilos
+                result.styles = styleValue.split(',').map(s => s.trim().toLowerCase()).filter(s => s);
+                this.logDebug(`      [parseAttrs DEBUG] Found direct style: ${result.styles.join(', ')}`);
+            }
+        }
 
         const attributeSections = attrString.split('|');
         for (const section of attributeSections) {
             const trimmedSection = section.trim();
             if (!trimmedSection) continue;
             this.logDebug(`      [parseAttrs DEBUG] Processing Section: "${trimmedSection}"`);
+
+            // Verificar si esta sección es solo un estilo (sin key=value)
+            if (!trimmedSection.includes('=') && !trimmedSection.includes(' ')) {
+                // Asumimos que es un valor de estilo directo
+                if (!result.styles.includes(trimmedSection.toLowerCase())) {
+                    result.styles.push(trimmedSection.toLowerCase());
+                    this.logDebug(`      [parseAttrs DEBUG] Added direct style value: "${trimmedSection}"`);
+                }
+                continue;
+            }
 
             const pairRegex = /(\w+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s\|]+))/g;
             let foundInRegex = false;
@@ -229,25 +281,53 @@ class PreviewManager {
                 this.logDebug(`        [parseAttrs DEBUG] Regex Match: key='${key}', value='${value}'`);
                 this.applyAttribute(result, key, value);
             }
-             // Log si la regex no encontró nada en una sección no vacía
-             if (!foundInRegex && trimmedSection) {
-                 this.logWarn(`      [parseAttrs DEBUG] No key=value pairs found via regex in section: "${trimmedSection}"`);
-             }
+            
+            // Si no encontramos pares key=value, podría ser un valor de estilo simple
+            if (!foundInRegex && trimmedSection) {
+                // Verificar si hay un valor de estilo sin key=
+                if (!trimmedSection.includes('=')) {
+                    if (!result.styles.includes(trimmedSection.toLowerCase())) {
+                        result.styles.push(trimmedSection.toLowerCase());
+                        this.logDebug(`      [parseAttrs DEBUG] Added implied style value: "${trimmedSection}"`);
+                    }
+                } else {
+                    this.logWarn(`      [parseAttrs DEBUG] No key=value pairs found via regex in section: "${trimmedSection}"`);
+                }
+            }
         }
         this.logDebug(`    [parseAttrs DEBUG] Final Parsed Result:`, result);
         return result;
     }
 
     // --- Helper applyAttribute (CON LOGS) ---
-    private applyAttribute(result: { style: string[]; layout: string; class: string[]; animation: string; }, key: string, value: string): void {
+    private applyAttribute(result: PanelStyles, key: string, value: string): void {
         if (!value) { this.logDebug(`      [applyAttr DEBUG] Ignored key "${key}" due to empty value.`); return; }
         const lowerKey = key.toLowerCase();
         this.logDebug(`      [applyAttr DEBUG] Applying Key: "${lowerKey}", Value: "${value}"`);
-        if (lowerKey === 'style' || lowerKey === 's') { result.style = value.split(',').map(s => s.trim().toLowerCase()).filter(s => s); }
-        else if (lowerKey === 'layout' || lowerKey === 'l') { result.layout = value.trim().toLowerCase(); }
-        else if (lowerKey === 'class' || lowerKey === 'c') { const newClasses = value.split(/\s+/).map(c => c.trim()).filter(c => c && !result.class.includes(c)); result.class.push(...newClasses); }
-        else if (lowerKey === 'animation' || lowerKey === 'a') { result.animation = value.trim().toLowerCase(); }
-        else { this.logWarn(`      [applyAttr DEBUG] Unknown attribute key: "${lowerKey}"`); }
+        
+        if (lowerKey === 'style' || lowerKey === 's') { 
+            // Dividir por comas si hay múltiples estilos
+            const styles = value.split(',').map(s => s.trim().toLowerCase()).filter(s => s);
+            for (const style of styles) {
+                if (!result.styles.includes(style)) {
+                    result.styles.push(style);
+                    this.logDebug(`      [applyAttr DEBUG] Added style: "${style}"`);
+                }
+            }
+        }
+        else if (lowerKey === 'layout' || lowerKey === 'l') { 
+            result.layout = value.trim().toLowerCase(); 
+        }
+        else if (lowerKey === 'class' || lowerKey === 'c') { 
+            const newClasses = value.split(/\s+/).map(c => c.trim()).filter(c => c && !result.classes.includes(c)); 
+            result.classes.push(...newClasses); 
+        }
+        else if (lowerKey === 'animation' || lowerKey === 'a') { 
+            result.animation = value.trim().toLowerCase(); 
+        }
+        else { 
+            this.logWarn(`      [applyAttr DEBUG] Unknown attribute key: "${lowerKey}"`); 
+        }
     }
 
     // --- Renderizador de UN Panel ::: a HTML (CON PARSEO DE TÍTULO CORREGIDO) ---
@@ -329,18 +409,47 @@ class PreviewManager {
             titleAttrVal = escapeHtmlPreview(title); // Escapar SOLO para el atributo title
 
             const parsedAttrs = this.parseAttributes(attributesString);
-            panelStyleClasses = parsedAttrs.style.map(s => ` panel-style--${s}`).join('');
+            panelStyleClasses = parsedAttrs.styles.map(s => ` panel-style--${s}`).join('');
             layoutClass = parsedAttrs.layout ? ` layout--${parsedAttrs.layout}` : '';
-            customClasses = parsedAttrs.class.join(' ');
+            customClasses = parsedAttrs.classes.join(' ');
             animationClass = parsedAttrs.animation ? ` animation--${parsedAttrs.animation}` : '';
             animation = parsedAttrs.animation; // Guardar para usar en animation-overlay
 
-            // Forzar clases si es necesario (respaldo)
-            if (!panelStyleClasses && attributesString.toLowerCase().includes('style=tech-corners')) {
-                panelStyleClasses = ' panel-style--tech-corners';
-            }
-            if (!panelStyleClasses && attributesString.toLowerCase().includes('style=circuit-nodes')) {
-                panelStyleClasses = ' panel-style--circuit-nodes';
+            // Log detallado de los estilos procesados
+            this.logDebug(`  [renderPanel DEBUG] Estilos procesados:
+              - styles: ${JSON.stringify(parsedAttrs.styles)}
+              - panelStyleClasses: "${panelStyleClasses}"
+              - layoutClass: "${layoutClass}"
+              - customClasses: "${customClasses}"
+              - animationClass: "${animationClass}"
+            `);
+
+            // Fallback para estilos comunes si no se detectaron correctamente
+            if (!panelStyleClasses) {
+                // Verificar estilo tech-corners
+                if (attributesString.toLowerCase().includes('tech-corners') || 
+                    attributesString.toLowerCase().includes('style=tech')) {
+                    panelStyleClasses = ' panel-style--tech-corners';
+                    this.logDebug(`  [renderPanel DEBUG] Aplicado fallback para tech-corners: "${panelStyleClasses}"`);
+                }
+                // Verificar circuit-nodes
+                else if (attributesString.toLowerCase().includes('circuit-nodes') ||
+                        attributesString.toLowerCase().includes('style=circuit')) {
+                    panelStyleClasses = ' panel-style--circuit-nodes';
+                    this.logDebug(`  [renderPanel DEBUG] Aplicado fallback para circuit-nodes: "${panelStyleClasses}"`);
+                }
+                // Verificar hologram
+                else if (attributesString.toLowerCase().includes('hologram') ||
+                        attributesString.toLowerCase().includes('style=holo')) {
+                    panelStyleClasses = ' panel-style--hologram';
+                    this.logDebug(`  [renderPanel DEBUG] Aplicado fallback para hologram: "${panelStyleClasses}"`);
+                }
+                // Verificar neo-frame
+                else if (attributesString.toLowerCase().includes('neo-frame') ||
+                        attributesString.toLowerCase().includes('style=neo')) {
+                    panelStyleClasses = ' panel-style--neo-frame';
+                    this.logDebug(`  [renderPanel DEBUG] Aplicado fallback para neo-frame: "${panelStyleClasses}"`);
+                }
             }
 
         } catch (e) { 
@@ -455,7 +564,55 @@ ${animationClass ? `<div class="animation-overlay ${animation}-effect"></div>` :
 
             // PASO 4: Actualizar iframe
             this.logDebug('[updateContent] Updating iframe #content.innerHTML...');
-            contentDiv.innerHTML = finalHtml;
+            
+            // Forma segura de actualizar el contenido del iframe para asegurar renderizado correcto
+            try {
+                // Aseguramos que el documento tiene un tipo de contenido adecuado
+                if (doc.contentType !== 'text/html') {
+                    this.logWarn('[updateContent] contentType no es text/html, corrigiendo...');
+                }
+                
+                // Actualizamos el contenido de manera que asegure que se renderiza como HTML
+                contentDiv.innerHTML = finalHtml;
+                
+                this.logDebug('[updateContent] Iframe content updated via innerHTML.');
+            } catch (updateError) {
+                // Si hay algún error, intentamos un enfoque alternativo
+                this.logError('[updateContent] Error with innerHTML update, trying alternate method:', updateError);
+                
+                try {
+                    // Método alternativo: escribir en el documento
+                    doc.open();
+                    doc.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <style id="base-styles">
+                                body { margin: 0; padding: 15px; font-family: sans-serif; line-height: 1.6; }
+                                #content { min-height: 100%; }
+                            </style>
+                            <style id="custom-theme-style">${this.currentCSSText || ''}</style>
+                        </head>
+                        <body>
+                            <div id="content">${finalHtml}</div>
+                        </body>
+                        </html>
+                    `);
+                    doc.close();
+                    this.logDebug('[updateContent] Iframe content updated via document.write.');
+                } catch (writeError) {
+                    this.logError('[updateContent] Both update methods failed:', writeError);
+                    // Si todo falla, mostramos un mensaje de error simple
+                    try {
+                        contentDiv.innerHTML = '<div class="error">Error fatal actualizando el iframe.</div>';
+                    } catch (finalError) {
+                        console.error('[CRITICAL] Cannot update iframe by any method:', finalError);
+                    }
+                }
+            }
+            
             this.logDebug('[updateContent] Iframe content updated.');
 
             // PASO 5: Aplicar mejoras JS

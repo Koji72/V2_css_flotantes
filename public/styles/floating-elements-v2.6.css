@@ -1,0 +1,294 @@
+/**
+ * Floating Elements V2.6 CSS
+ * ==========================
+ * Estilos avanzados para elementos flotantes con diversos efectos visuales
+ * y compatibilidad completa con los diferentes tipos de paneles.
+ */
+
+:root {
+  /* Colores primarios */
+  --float-primary-bg: rgba(18, 28, 44, 0.95);
+  --float-primary-border: rgba(64, 109, 187, 0.8);
+  --float-primary-accent: rgba(103, 152, 226, 0.9);
+  
+  /* Efectos de brillo */
+  --float-glow-color: rgba(0, 140, 255, 0.6);
+  --float-hover-glow: rgba(40, 180, 255, 0.4);
+  
+  /* Efectos de cristal */
+  --float-glass-bg: rgba(20, 30, 50, 0.7);
+  --float-glass-border: rgba(93, 130, 191, 0.4);
+  
+  /* Sombras */
+  --float-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --float-shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.3);
+  
+  /* Velocidades de animación */
+  --float-animation-speed: 6s;
+  --pulse-animation-speed: 2s;
+  --scan-animation-speed: 3s;
+  --rotate-animation-speed: 4s;
+}
+
+/* ==== LAYOUTS FLOTANTES ==== */
+
+/* Base para todos los layouts flotantes */
+.layout--floating-left,
+.layout--floating-right,
+.layout--centered {
+  position: relative;
+  margin-bottom: 1.5rem;
+  z-index: 10;
+  box-shadow: var(--float-shadow);
+  transition: all 0.3s ease-in-out, transform 0.2s ease-out;
+}
+
+/* Aumentar sombra y elevar panel al hacer hover */
+.layout--floating-left:hover,
+.layout--floating-right:hover,
+.layout--centered:hover {
+  box-shadow: var(--float-shadow-hover);
+  transform: translateY(-3px);
+}
+
+/* Posicionamiento flotante izquierdo */
+.layout--floating-left {
+  float: left;
+  margin-right: 2rem;
+  margin-left: 0;
+  clear: left;
+  max-width: 40%;
+}
+
+/* Posicionamiento flotante derecho */
+.layout--floating-right {
+  float: right;
+  margin-left: 2rem;
+  margin-right: 0;
+  clear: right;
+  max-width: 40%;
+}
+
+/* Posicionamiento centrado */
+.layout--centered {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+  clear: both;
+  max-width: 80%;
+  text-align: center;
+}
+
+/* ==== COMPATIBILIDAD CON ESTILOS DE PANEL ==== */
+
+/* Tech Corners flotante */
+.panel-style--tech-corners.layout--floating-left,
+.panel-style--tech-corners.layout--floating-right {
+  border: 1px solid var(--neon-border-color, rgba(0, 255, 255, 0.5));
+}
+
+/* Hologramas flotantes */
+.panel-style--hologram.layout--floating-left,
+.panel-style--hologram.layout--floating-right {
+  background-color: rgba(0, 20, 40, 0.7);
+}
+
+/* Neo Frame flotante */
+.panel-style--neo-frame.layout--floating-left,
+.panel-style--neo-frame.layout--floating-right {
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.4);
+}
+
+/* Circuit Node flotante */
+.panel-style--circuit-node.layout--floating-left,
+.panel-style--circuit-node.layout--floating-right {
+  border-width: 1px;
+}
+
+/* Cut Corners flotante */
+.panel-style--cut-corners.layout--floating-left,
+.panel-style--cut-corners.layout--floating-right {
+  clip-path: polygon(
+    0% 10px, 10px 0%, 
+    calc(100% - 10px) 0%, 100% 10px,
+    100% calc(100% - 10px), calc(100% - 10px) 100%,
+    10px 100%, 0% calc(100% - 10px)
+  );
+}
+
+/* Corner Brackets flotante */
+.panel-style--corner-brackets.layout--floating-left,
+.panel-style--corner-brackets.layout--floating-right {
+  padding: 5px;
+}
+
+/* Glass flotante */
+.panel-style--glass.layout--floating-left,
+.panel-style--glass.layout--floating-right {
+  background-color: var(--float-glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--float-glass-border);
+}
+
+/* Custom Corner flotante */
+.panel-style--custom-corner.layout--floating-left,
+.panel-style--custom-corner.layout--floating-right {
+  border-radius: 0;
+}
+
+/* Alert flotante */
+.panel-style--alert.layout--floating-left,
+.panel-style--alert.layout--floating-right,
+.panel-style--alert.layout--centered {
+  box-shadow: 0 0 25px rgba(255, 60, 60, 0.6);
+  border-color: rgba(255, 100, 100, 0.8);
+}
+
+/* ==== ANIMACIONES ==== */
+
+/* Animación de pulso */
+.animation--pulse {
+  animation: panel-pulse var(--pulse-animation-speed) infinite ease-in-out;
+}
+
+@keyframes panel-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 20px var(--float-glow-color);
+  }
+}
+
+/* Animación de escaneo */
+.animation--scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.animation--scan::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 200, 255, 0.08) 50%,
+    transparent 100%
+  );
+  animation: scan-effect var(--scan-animation-speed) linear infinite;
+}
+
+@keyframes scan-effect {
+  0% {
+    transform: rotate(45deg) translateY(-100%);
+  }
+  100% {
+    transform: rotate(45deg) translateY(100%);
+  }
+}
+
+/* Animación de brillo */
+.animation--glow {
+  animation: panel-glow var(--pulse-animation-speed) infinite alternate;
+}
+
+@keyframes panel-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(0, 140, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 15px var(--float-glow-color);
+  }
+}
+
+/* Animación de rotación */
+.animation--rotate .panel-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: rotate-effect var(--rotate-animation-speed) linear infinite;
+}
+
+@keyframes rotate-effect {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ==== MEJORAS PARA TEXTO FLUIDO ==== */
+
+/* Asegurar que el texto fluya correctamente alrededor de los paneles */
+p, ul, ol, h1, h2, h3, h4, h5, h6 {
+  overflow: auto;
+}
+
+/* Asegurar que el texto dentro de los paneles flotantes tenga margen adecuado */
+.layout--floating-left .panel-content,
+.layout--floating-right .panel-content,
+.layout--centered .panel-content {
+  padding: 0.75rem;
+}
+
+/* Contenedores con altura máxima y scroll interno para paneles muy largos */
+.layout--floating-left .panel-content,
+.layout--floating-right .panel-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Clearfix para limpiar flotantes */
+.clearfix {
+  clear: both;
+  display: block;
+  width: 100%;
+  height: 1px;
+  content: "";
+}
+
+/* ==== MEDIA QUERIES PARA RESPONSIVE ==== */
+
+@media (max-width: 768px) {
+  .layout--floating-left,
+  .layout--floating-right,
+  .layout--centered {
+    float: none;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    clear: both;
+  }
+  
+  .animation--pulse,
+  .animation--scan,
+  .animation--glow,
+  .animation--rotate {
+    /* Reducir intensidad de animaciones en dispositivos móviles */
+    animation-duration: calc(var(--pulse-animation-speed) * 1.5);
+  }
+}
+
+/* ==== TEMA OSCURO/CLARO ==== */
+
+.dark-theme {
+  --float-primary-bg: rgba(18, 28, 44, 0.95);
+  --float-primary-border: rgba(64, 109, 187, 0.8);
+  --float-glow-color: rgba(0, 140, 255, 0.6);
+}
+
+.light-theme {
+  --float-primary-bg: rgba(240, 245, 250, 0.8);
+  --float-primary-border: rgba(120, 160, 220, 0.5);
+  --float-glow-color: rgba(40, 120, 220, 0.4);
+} 
