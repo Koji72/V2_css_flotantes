@@ -1,0 +1,248 @@
+/**
+ * Template CSS Base para SagaWeaver
+ * Estilo narrativo por defecto
+ */
+
+:root {
+  /* Colores principales */
+  --primary-color: #4a5568;
+  --secondary-color: #718096;
+  --accent-color: #5a67d8;
+  --background-color: #f7fafc;
+  --text-color: #2d3748;
+  --border-color: #e2e8f0;
+  
+  /* Fuentes */
+  --main-font: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --display-font: 'Merriweather', Georgia, serif;
+  --mono-font: 'Fira Mono', monospace;
+  
+  /* Espaciados */
+  --spacing-unit: 0.25rem;
+  
+  /* Efectos y transiciones */
+  --transition-speed: 0.3s;
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos base */
+body {
+  font-family: var(--main-font);
+  color: var(--text-color);
+  background-color: var(--background-color);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--display-font);
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+  color: var(--primary-color);
+}
+
+h1 {
+  font-size: 2rem;
+  margin-top: 0;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid var(--border-color);
+}
+
+p {
+  margin-bottom: 1.5rem;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color var(--transition-speed) ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: var(--mono-font);
+  background-color: #edf2f7;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+blockquote {
+  border-left: 4px solid var(--border-color);
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 1em;
+  color: var(--secondary-color);
+  font-style: italic;
+}
+
+/* Estilos para contenedores de pasajes */
+.passage {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto 3rem auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-speed);
+}
+
+.passage::first-letter {
+  font-size: 3em;
+  font-weight: bold;
+  float: left;
+  line-height: 1;
+  margin-right: 0.2em;
+  color: var(--accent-color);
+}
+
+/* Estilo para las elecciones */
+.choice {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #edf2f7;
+  color: var(--text-color);
+  font-family: var(--main-font);
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.choice:hover {
+  background-color: #e2e8f0;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.choice:active {
+  transform: translateY(0);
+}
+
+.choice:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+.choice[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: #e2e8f0;
+}
+
+.choice::after {
+  content: "→";
+  position: absolute;
+  right: 1.5rem;
+  opacity: 0;
+  transition: transform var(--transition-speed), opacity var(--transition-speed);
+}
+
+.choice:not([disabled]):hover::after {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+/* Variantes de choice */
+.choice.investigate {
+  border-left: 4px solid #4299e1;
+}
+
+.choice.danger {
+  border-left: 4px solid #f56565;
+}
+
+.choice.success {
+  border-left: 4px solid #48bb78;
+}
+
+/* Animación de choice denegada */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.choice-denied {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Paneles de estado */
+.status-panel {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.status-panel h3 {
+  margin-top: 0;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Inventario */
+ul.inventory {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul.inventory li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+ul.inventory li:last-child {
+  border-bottom: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .passage {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .choice {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Transiciones entre pasajes */
+.passage-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.passage-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 500ms, transform 500ms;
+}
+
+.passage-exit {
+  opacity: 1;
+}
+
+.passage-exit-active {
+  opacity: 0;
+  transition: opacity 500ms;
+} 
