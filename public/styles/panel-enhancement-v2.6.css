@@ -382,23 +382,109 @@
   to { transform: rotate(360deg); }
 }
 
-/* Estilos para otros tipos de paneles (cut-corners, corner-brackets, glass, custom-corner) */
-/* Se pueden añadir mejoras similares aquí si se desea */
+/* =================================== */
+/* Estilo: panel-style--cut-corners - Esquinas Cortadas */
+/* =================================== */
 
 .panel-style--cut-corners {
-  /* Estilos existentes, se pueden mejorar con gradientes/sombras */
+  background-color: rgba(20, 30, 50, 0.8);
+  border: 1px solid rgba(0, 170, 255, 0.5);
+  position: relative;
+  padding: 15px;
+  clip-path: polygon(
+    0% 10px, 
+    10px 0%, 
+    calc(100% - 10px) 0%, 
+    100% 10px, 
+    100% calc(100% - 10px), 
+    calc(100% - 10px) 100%, 
+    10px 100%, 
+    0% calc(100% - 10px)
+  );
 }
+
+.panel-style--cut-corners::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 170, 255, 0.2), transparent 40%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.panel-style--cut-corners > .panel-header-container > .panel-header {
+  color: var(--cyber-blue-bright, #00ccff);
+  border-bottom: 1px solid rgba(0, 170, 255, 0.4);
+  position: relative;
+  z-index: 1;
+}
+
+/* =================================== */
+/* Estilo: panel-style--corner-brackets - Soportes de Esquina */
+/* =================================== */
 
 .panel-style--corner-brackets {
-  /* Estilos existentes, se pueden mejorar con gradientes/sombras */
+  background-color: rgba(20, 30, 40, 0.7);
+  border: none;
+  padding: 15px;
+  position: relative;
 }
+
+.panel-style--corner-brackets::before,
+.panel-style--corner-brackets::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--cyber-blue-primary, #00aaff);
+  border-style: solid;
+  border-width: 0;
+}
+
+.panel-style--corner-brackets::before {
+  top: 0;
+  left: 0;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.panel-style--corner-brackets::after {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+/* =================================== */
+/* Estilo: panel-style--glass - Panel Cristal */
+/* =================================== */
 
 .panel-style--glass {
-  /* Estilos existentes, se pueden mejorar con gradientes/sombras */
+  background-color: rgba(30, 40, 60, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 15px;
 }
 
-.panel-style--custom-corner {
-  /* Estilos existentes, se pueden mejorar con gradientes/sombras */
+.panel-style--glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+.panel-style--glass > .panel-header-container > .panel-header {
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
 }
 
 /* Layout Styles */
@@ -479,6 +565,7 @@
   z-index: 1;
 }
 
+/* Estilo de columnas */
 .layout--split-columns .column {
   padding: 0.5rem;
   break-inside: avoid;
@@ -487,8 +574,10 @@
   overflow-wrap: break-word; /* Asegura que el texto largo se rompa */
   word-wrap: break-word;
   position: relative; /* Para el posicionamiento */
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
 }
 
+/* Estilos para los encabezados de columna */
 .layout--split-columns .column h3 {
   margin-top: 0;
   border-bottom: 1px solid rgba(150, 150, 150, 0.3);
@@ -526,17 +615,23 @@
   margin-left: 0; /* Evita sangrías adicionales */
 }
 
+/* Columna izquierda */
 .layout--split-columns .column-left {
   grid-column: 1;
   padding-right: 2rem;
   box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
   border-right: none; /* Quitamos el borde, ahora usamos un separador absoluto */
+  justify-self: start; /* Alinea al inicio de la celda */
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
 }
 
+/* Columna derecha */
 .layout--split-columns .column-right {
   grid-column: 2;
   padding-left: 2rem;
   box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  justify-self: start; /* Alinea al inicio de la celda */
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
 }
 
 /* Arreglo para el editor de texto */
