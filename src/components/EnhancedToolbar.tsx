@@ -222,6 +222,9 @@ Este panel combina múltiples estilos y layouts.
 | Popa   | 1.19 GHz   | 95%      | Fluctuación leve |
 | Babor  | 1.20 GHz   | 100%     | Óptimo |
 | Estribor | 1.22 GHz | 97%      | Estable |
+
+**Sistema de escudos operando a capacidad nominal.**
+Estado general: *VERDE*
 :::`
     },
     {

@@ -66,6 +66,7 @@ const App: React.FC = () => {
         if (enhancementResponse.ok) {
           const enhancementCssText = await enhancementResponse.text();
           // Combinar el CSS principal con los estilos mejorados de paneles
+          // Asegurarse de que el CSS de template tenga prioridad en las fuentes 
           combinedCss = `${cssText}\n\n/* Panel Enhancements v2.6 */\n${enhancementCssText}`;
           console.log("[App] Estilos de paneles v2.6 combinados con el template principal");
         }
@@ -86,12 +87,24 @@ const App: React.FC = () => {
         console.warn("[App] No se pudieron cargar los estilos de paneles flotantes:", floatingError);
       }
       
+      // Añadir reglas específicas para la herencia de fuentes en los paneles
+      const fontInheritanceRules = `
+      /* Custom rules to ensure proper font inheritance */
+      .mixed-panel {
+        font-family: inherit;
+      }
+      .mixed-panel .panel-header {
+        font-family: var(--display-font, inherit);
+      }
+      `;
+      
       // Establecer el estado local de CSS (para referencia)
-      setCSS(combinedCss);
+      const finalCss = `${combinedCss}\n\n/* Font inheritance fixes */\n${fontInheritanceRules}`;
+      setCSS(finalCss);
       
       // Aplicar el CSS combinado al previewManager
-      previewManager.applyCustomCSS(combinedCss);
-      console.log("[App] CSS aplicado con éxito. Longitud:", combinedCss.length);
+      previewManager.applyCustomCSS(finalCss);
+      console.log("[App] CSS aplicado con éxito. Longitud:", finalCss.length);
     } catch (error) {
       console.error(`Error loading CSS from ${templatePath}:`, error);
     }

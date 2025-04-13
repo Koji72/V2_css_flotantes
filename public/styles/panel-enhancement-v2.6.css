@@ -18,9 +18,9 @@
   --neon-red-glow: 0 0 8px rgba(255, 0, 80, 0.6), 0 0 25px rgba(255, 0, 80, 0.4);
   
   /* Fuentes alternativas high-tech */
-  --font-tech: 'Orbitron', sans-serif;
-  --font-tech-alt: 'Rajdhani', sans-serif;
-  --font-tech-display: 'Syncopate', sans-serif;
+  --font-tech: 'Orbitron', var(--display-font, sans-serif);
+  --font-tech-alt: 'Rajdhani', var(--main-font, sans-serif);
+  --font-tech-display: 'Syncopate', var(--display-font, sans-serif);
   
   /* Gradientes más vibrantes */
   --tech-gradient-blue: linear-gradient(135deg, rgba(0, 180, 255, 0.85), rgba(0, 60, 160, 0.4));
@@ -46,6 +46,8 @@
 .mixed-panel {
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   border-radius: 4px; /* Suavizar esquinas */
+  /* Heredar la fuente de la plantilla actual */
+  font-family: inherit;
 }
 
 .mixed-panel:hover {
@@ -57,7 +59,8 @@
 .mixed-panel .panel-header {
   position: relative;
   overflow: hidden;
-  font-family: var(--font-tech-display);
+  /* Usar la fuente del template o la variable como fallback */
+  font-family: var(--display-font, var(--font-tech-display));
   letter-spacing: 1.5px;
   font-weight: 700; /* Más énfasis */
   padding: 12px 18px;
@@ -123,7 +126,8 @@
 
 /* Header con efecto de brillo */
 .panel-style--tech-corners > .panel-header-container > .panel-header {
-  font-family: var(--font-tech);
+  /* Usar la fuente del template como base, con fallback a la fuente tech */
+  font-family: var(--display-font, var(--font-tech));
   background: linear-gradient(90deg, rgba(0, 50, 100, 0.3), rgba(0, 80, 130, 0.5), rgba(0, 50, 100, 0.3));
   padding: 12px 20px; /* Más padding */
   margin: 0; /* Quitar margen negativo */
@@ -244,7 +248,7 @@
 }
 
 .panel-style--hologram > .panel-header-container > .panel-header {
-  font-family: var(--font-tech-display);
+  font-family: var(--display-font, var(--font-tech-display));
   font-weight: 700;
   color: rgba(0, 230, 255, 1);
   text-shadow: 0 0 8px rgba(0, 220, 255, 0.8);
@@ -307,7 +311,7 @@
 }
 
 .panel-style--neo-frame > .panel-header-container > .panel-header {
-  font-family: var(--font-tech-alt);
+  font-family: var(--display-font, var(--font-tech-alt));
   font-weight: 600;
   color: #e0e8ff;
   background: rgba(10, 15, 30, 0.5);
@@ -332,7 +336,7 @@
   background: rgba(100, 0, 0, 0.7);
   border-bottom-color: var(--alert-border-color);
   color: #ffdddd;
-  font-family: var(--font-tech-display);
+  font-family: var(--display-font, var(--font-tech-display));
   font-weight: 700;
   text-shadow: 0 0 5px rgba(255, 100, 100, 0.7);
 }
@@ -416,7 +420,7 @@
 }
 
 .panel-style--cut-corners > .panel-header-container > .panel-header {
-  color: var(--cyber-blue-bright, #00ccff);
+  font-family: var(--display-font, var(--font-tech-alt));
   border-bottom: 1px solid rgba(0, 170, 255, 0.4);
   position: relative;
   z-index: 1;
@@ -482,6 +486,7 @@
 }
 
 .panel-style--glass > .panel-header-container > .panel-header {
+  font-family: var(--display-font, var(--font-tech-display));
   color: rgba(255, 255, 255, 0.9);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
@@ -597,7 +602,7 @@
   line-height: 0.8;
   margin-right: 0.25rem;
   margin-top: 0.1rem;
-  font-family: var(--font-serif, serif);
+  font-family: var(--serif-font, serif);
   color: rgba(80, 100, 140, 0.9);
 }
 
