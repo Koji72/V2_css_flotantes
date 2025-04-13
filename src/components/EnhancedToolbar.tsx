@@ -9,7 +9,7 @@ import {
   Layers, Square, PanelTopClose, PanelLeft,
   ChevronDown, ChevronUp, Book,
   CornerDownRight, Moon, Sun, Sparkles,
-  LayoutGrid, Columns
+  LayoutGrid, Columns, SplitSquareVertical
 } from 'lucide-react';
 
 interface ToolbarProps {
@@ -410,31 +410,85 @@ También puedes incluir tablas o cualquier otro elemento markdown válido.
 <div class="column column-left">
 ### Columna Izquierda
 
-Aquí va el contenido de la columna izquierda:
+Aquí va el contenido de la columna izquierda. Este contenido permanece completamente en la columna izquierda:
 
-- Este contenido permanece en la izquierda
 - No fluye hacia la columna derecha
-- Cada columna es independiente
+- Es independiente de la otra columna
+- Ideal para comparaciones directas
 
-Puedes agregar todo tipo de contenido markdown aquí.
+Puedes agregar cualquier tipo de contenido markdown aquí, como listas, tablas, citas e incluso código. Las columnas tienen su propio espacio y se formatean de manera independiente.
 </div>
 
 <div class="column column-right">
 ### Columna Derecha
 
-Aquí va el contenido de la columna derecha:
+Aquí va el contenido de la columna derecha. Este contenido permanece completamente en la columna derecha:
 
-1. Este contenido permanece en la derecha
-2. No es continuación de la columna izquierda
+1. Es independiente de la columna izquierda
+2. No es continuación del contenido de la izquierda
 3. Ambas columnas son completamente independientes
 
-Ideal para comparaciones o información paralela.
+Este diseño es perfecto para presentar información paralela o elementos que deben compararse directamente.
 </div>
 :::`)} 
         title="Insertar panel con columnas izquierda y derecha independientes"
       >
         <Layout size={16} />
         <span className="text-sm">Columnas Separadas</span>
+      </button>
+
+      {/* Botón de comparativa */}
+      <button 
+        className="p-2 hover:bg-purple-600 bg-purple-700 rounded flex items-center gap-1 border border-purple-500 ml-1 text-white" 
+        onClick={() => onApplyStyle(`:::panel{layout="split-columns" style="tech-corners" title="Comparativa"}
+<div class="column column-left">
+### Opción A
+
+**Descripción:**
+Breve descripción de la primera opción o elemento que se está comparando.
+
+**Características principales:**
+- Característica 1
+- Característica 2
+- Característica 3
+- Característica 4
+
+**Ventajas:**
+- Ventaja 1
+- Ventaja 2
+- Ventaja 3
+
+**Desventajas:**
+- Desventaja 1
+- Desventaja 2
+</div>
+
+<div class="column column-right">
+### Opción B
+
+**Descripción:**
+Breve descripción de la segunda opción o elemento que se está comparando.
+
+**Características principales:**
+- Característica 1
+- Característica 2
+- Característica 3
+- Característica 4
+
+**Ventajas:**
+- Ventaja 1
+- Ventaja 2
+- Ventaja 3
+
+**Desventajas:**
+- Desventaja 1
+- Desventaja 2
+</div>
+:::`)} 
+        title="Insertar plantilla de comparativa"
+      >
+        <SplitSquareVertical size={16} />
+        <span className="text-sm">Comparativa</span>
       </button>
 
       <div className="h-6 w-px bg-gray-700 mx-1"></div>
@@ -539,6 +593,16 @@ Ideal para comparaciones o información paralela.
         >
           <Layout size={16} />
           <span>Demo Columnas Sep.</span>
+        </button>
+
+        <button
+          className="p-2 rounded flex items-center gap-1"
+          onClick={() => onLoadDemo('comparativas-demo.md')}
+          disabled={isLoading}
+          title="Ver ejemplos de comparativas con columnas separadas"
+        >
+          <SplitSquareVertical size={16} />
+          <span>Demo Comparativas</span>
         </button>
       </div>
 
