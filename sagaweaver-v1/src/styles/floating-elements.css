@@ -1,185 +1,637 @@
-/* Estilos base para elementos flotantes */
+/* ========================================================================= */
+/* VARIABLES GLOBALES DE ESTILO                                           */
+/* ========================================================================= */
+:root {
+  --floating-border-width: 1px;
+  --floating-default-header-bg-opacity: 0.25;
+  --floating-default-content-bg-opacity: 0.1;
+  --floating-default-border-color: rgba(180, 180, 180, 0.5);
+  --floating-hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  --floating-hover-transform: translateY(-2px);
+  --floating-base-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  /* Variables para nuevos estilos */
+  --fantasy-primary: #a0522d; /* Marrón sienna */
+  --fantasy-secondary: #daa520; /* Goldenrod */
+  --fantasy-bg: #f5f5dc; /* Beige */
+  --fantasy-text: #5c4033; /* Marrón oscuro */
+  --fantasy-border: var(--fantasy-primary);
+  --fantasy-header-opacity: 0.1;
+  --fantasy-content-opacity: 0.05;
+
+  --scroll-primary: #8b4513; /* Marrón Saddle */
+  --scroll-secondary: #deb887; /* Burlywood */
+  --scroll-bg: #fdf5e6; /* Old Lace */
+  --scroll-text: #6b4f41; /* Marrón */
+  --scroll-border: var(--scroll-primary);
+  --scroll-header-opacity: 0.2;
+  --scroll-content-opacity: 0.1;
+
+  --metal-primary: #708090; /* Slate Gray */
+  --metal-secondary: #d3d3d3; /* Light Gray */
+  --metal-bg: #e6e8ea; /* Plata claro */
+  --metal-text: #343a40; /* Gris oscuro */
+  --metal-border: var(--metal-primary);
+  --metal-header-opacity: 0.3;
+  --metal-content-opacity: 0.15;
+}
+
+/* ========================================================================= */
+/* ESTILOS BASE PARA ELEMENTOS FLOTANTES                                    */
+/* ========================================================================= */
 .floating-element {
-  --border-width: 1px;
-  --header-bg-opacity: 0.3;
-  --content-bg-opacity: 0.1;
-  border: var(--border-width) solid;
+  border: var(--floating-border-width) solid;
   transition: all 0.3s ease;
   position: relative;
   max-width: 100%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--floating-base-shadow);
+  border-radius: 8px; /* Añadido para consistencia */
+  overflow: hidden; /* Añadido para consistencia */
+  margin-bottom: 1rem; /* Añadido para consistencia */
 }
 
 .floating-element:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  transform: translateY(-2px);
+  box-shadow: var(--floating-hover-shadow);
+  transform: var(--floating-hover-transform);
 }
 
+/* Estilo de la cabecera */
 .floating-element-header {
-  border-bottom-width: var(--border-width);
-  background-color: rgba(0, 0, 0, var(--header-bg-opacity));
+  border-bottom-width: var(--floating-border-width);
+  padding: 0.5rem 0.75rem; /* Ajustado padding */
+  font-size: 0.9em; /* Ajustado tamaño */
   font-weight: 600;
   letter-spacing: 0.5px;
 }
 
+/* Estilo del contenido */
 .floating-element-content {
-  background-color: rgba(0, 0, 0, var(--content-bg-opacity));
+  padding: 0.75rem; /* Ajustado padding */
   font-size: 0.95em;
   line-height: 1.5;
 }
 
-/* Estilos específicos para cada tipo */
+/* ========================================================================= */
+/* ESTILOS ESPECÍFICOS POR TIPO (FLOTANTES)                                 */
+/* ========================================================================= */
+
+/* Estilo Default */
+.floating-default {
+  border-color: var(--floating-default-border-color);
+}
+.floating-default .floating-element-header {
+  background-color: rgba(0, 0, 0, var(--floating-default-header-bg-opacity));
+}
+.floating-default .floating-element-content {
+  background-color: rgba(0, 0, 0, var(--floating-default-content-bg-opacity));
+}
+
+/* Estilo Tech */
 .floating-tech {
-  --header-bg-opacity: 0.4;
-  border-image: linear-gradient(to right, #00a3ff, #00f0ff) 1;
-  background: radial-gradient(circle at bottom right, rgba(0, 240, 255, 0.1), transparent 70%);
+  --tech-primary: #00f0ff;
+  --tech-secondary: #00a3ff;
+  --tech-bg: rgba(0, 20, 40, 0.85);
+  --tech-text: #e0f2f7;
+  --tech-border-image: linear-gradient(to right, var(--tech-secondary), var(--tech-primary)) 1;
+  --tech-header-opacity: 0.4;
+  
+  border-image: var(--tech-border-image);
+  background: var(--tech-bg);
+  color: var(--tech-text);
+}
+.floating-tech .floating-element-header {
+  background-color: rgba(0, 180, 255, var(--tech-header-opacity));
+  border-bottom-color: rgba(0, 180, 255, 0.3);
 }
 
+/* Estilo Hologram */
 .floating-hologram {
-  --header-bg-opacity: 0.3;
-  border-color: rgba(64, 156, 255, 0.6);
-  background: linear-gradient(180deg, 
-    rgba(64, 156, 255, 0.2) 0%, 
-    rgba(32, 90, 175, 0.1) 100%
-  );
+  --hologram-primary: rgba(64, 156, 255, 0.6);
+  --hologram-bg-start: rgba(64, 156, 255, 0.2);
+  --hologram-bg-end: rgba(32, 90, 175, 0.1);
+  --hologram-text: #cce4ff;
+  --hologram-header-opacity: 0.3;
+  
+  border-color: var(--hologram-primary);
+  background: linear-gradient(180deg, var(--hologram-bg-start) 0%, var(--hologram-bg-end) 100%);
   backdrop-filter: blur(4px);
+  color: var(--hologram-text);
+}
+.floating-hologram .floating-element-header {
+  background-color: rgba(64, 156, 255, var(--hologram-header-opacity));
+  border-bottom-color: rgba(64, 156, 255, 0.3);
 }
 
+/* Estilo Neo */
 .floating-neo {
-  --header-bg-opacity: 0.5;
-  border-image: linear-gradient(to right, #9c00ff, #ff00e6) 1;
-  box-shadow: 
-    0 0 10px rgba(156, 0, 255, 0.3),
-    inset 0 0 8px rgba(255, 0, 230, 0.2);
+  --neo-primary: #ff00e6;
+  --neo-secondary: #9c00ff;
+  --neo-bg: rgba(50, 0, 80, 0.75);
+  --neo-text: #f5e6ff;
+  --neo-border-image: linear-gradient(to right, var(--neo-secondary), var(--neo-primary)) 1;
+  --neo-shadow: 0 0 10px rgba(156, 0, 255, 0.3), inset 0 0 8px rgba(255, 0, 230, 0.2);
+  --neo-header-opacity: 0.5;
+  
+  border-image: var(--neo-border-image);
+  box-shadow: var(--neo-shadow);
+  background: var(--neo-bg);
+  color: var(--neo-text);
+}
+.floating-neo .floating-element-header {
+  background-color: rgba(156, 0, 255, var(--neo-header-opacity));
+  border-bottom-color: rgba(255, 0, 230, 0.3);
 }
 
+/* Estilo Circuit */
 .floating-circuit {
-  --header-bg-opacity: 0.4;
-  border-color: rgba(0, 255, 170, 0.7);
+  --circuit-primary: rgba(0, 255, 170, 0.7);
+  --circuit-bg: rgba(10, 40, 30, 0.8);
+  --circuit-text: #e0fff5;
+  --circuit-dot-color: rgba(0, 255, 170, 0.1);
+  --circuit-dot-color-secondary: rgba(0, 255, 170, 0.15);
+  --circuit-header-opacity: 0.4;
+  
+  border-color: var(--circuit-primary);
+  background-color: var(--circuit-bg);
   background-image: 
-    radial-gradient(rgba(0, 255, 170, 0.1) 2px, transparent 2px),
-    radial-gradient(rgba(0, 255, 170, 0.15) 1px, transparent 1px);
+    radial-gradient(var(--circuit-dot-color) 2px, transparent 2px),
+    radial-gradient(var(--circuit-dot-color-secondary) 1px, transparent 1px);
   background-size: 20px 20px, 10px 10px;
   background-position: 0 0, 10px 10px;
+  color: var(--circuit-text);
+}
+.floating-circuit .floating-element-header {
+  background-color: rgba(0, 255, 170, var(--circuit-header-opacity));
+  border-bottom-color: rgba(0, 255, 170, 0.3);
 }
 
+/* Estilo Glass */
 .floating-glass {
-  --border-width: 1px;
-  --header-bg-opacity: 0.1;
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --glass-header-opacity: 0.1;
+  
+  border-color: var(--glass-border);
+  background: var(--glass-bg);
   backdrop-filter: blur(10px);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.1),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: var(--glass-shadow);
+  /* Text color inherited or set globally */
+}
+.floating-glass .floating-element-header {
+  background-color: rgba(255, 255, 255, var(--glass-header-opacity));
+  border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
-.floating-default {
-  --header-bg-opacity: 0.25;
-  border-color: rgba(180, 180, 180, 0.5);
+/* --- NUEVOS ESTILOS --- */
+
+/* Estilo Fantasy */
+.floating-fantasy {
+  border-color: var(--fantasy-border);
+  background-color: var(--fantasy-bg);
+  color: var(--fantasy-text);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  font-family: 'Merriweather', serif;
+}
+.floating-fantasy .floating-element-header {
+  background-color: rgba(160, 82, 45, var(--fantasy-header-opacity)); /* Sienna con opacidad */
+  border-bottom-color: rgba(160, 82, 45, 0.3);
+  color: var(--fantasy-primary);
+}
+.floating-fantasy .floating-element-content {
+  background-color: rgba(218, 165, 32, var(--fantasy-content-opacity)); /* Goldenrod con opacidad */
 }
 
-/* Animaciones */
+/* Estilo Scroll */
+.floating-scroll {
+  border-color: var(--scroll-border);
+  background-color: var(--scroll-bg);
+  color: var(--scroll-text);
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+  border-radius: 0; /* Sin bordes redondeados */
+  border-left-width: 5px;
+  border-right-width: 5px;
+  border-top: 1px solid var(--scroll-border);
+  border-bottom: 1px solid var(--scroll-border);
+  font-family: 'Noto Serif', serif;
+}
+.floating-scroll .floating-element-header {
+  background-color: rgba(139, 69, 19, var(--scroll-header-opacity)); /* SaddleBrown con opacidad */
+  border-bottom: none;
+  text-align: center;
+  padding: 0.3rem 0.75rem;
+}
+.floating-scroll .floating-element-content {
+  background-color: rgba(222, 184, 135, var(--scroll-content-opacity)); /* Burlywood con opacidad */
+}
+
+/* Estilo Metal */
+.floating-metal {
+  border-color: var(--metal-border);
+  background: linear-gradient(to bottom, #f8f9fa, var(--metal-bg));
+  color: var(--metal-text);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 1px 3px rgba(0,0,0,0.2);
+  border-radius: 4px;
+}
+.floating-metal .floating-element-header {
+  background: linear-gradient(to bottom, #e9ecef, #ced4da);
+  border-bottom-color: var(--metal-secondary);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+  color: var(--metal-primary);
+  font-weight: bold;
+}
+.floating-metal .floating-element-content {
+  background-color: rgba(211, 211, 211, var(--metal-content-opacity)); /* LightGray con opacidad */
+}
+
+/* Estilo Tech Corners (Adaptado de v2.6) */
+.floating-tech-corners {
+  --tech-corner-border: rgba(0, 200, 255, 0.6);
+  --tech-corner-border-hover: rgba(0, 220, 255, 0.8);
+  --tech-corner-shadow: var(--neon-blue-glow, 0 0 8px rgba(0, 195, 255, 0.6), 0 0 25px rgba(0, 195, 255, 0.4)); /* Usa variable v2.6 o fallback */
+  --tech-corner-shadow-inset: inset 0 0 40px rgba(0, 40, 80, 0.4);
+  --tech-corner-shadow-hover: 0 0 15px rgba(0, 220, 255, 0.3);
+  --tech-corner-shadow-inset-hover: inset 0 0 50px rgba(0, 70, 120, 0.5);
+  --tech-corner-svg-color: #00ccff;
+  --tech-corner-svg-filter: drop-shadow(0 0 5px rgba(0, 190, 255, 0.8));
+  --tech-corner-svg-filter-hover: drop-shadow(0 0 8px rgba(0, 220, 255, 1));
+  --tech-corner-header-bg: linear-gradient(90deg, rgba(0, 50, 100, 0.3), rgba(0, 80, 130, 0.5), rgba(0, 50, 100, 0.3));
+  --tech-corner-header-border: rgba(0, 190, 255, 0.5);
+
+  background: var(--tech-gradient-dark, rgba(5, 15, 35, 0.9)); /* Usa variable v2.6 o fallback */
+  border: 1px solid var(--tech-corner-border);
+  box-shadow: var(--tech-corner-shadow), var(--tech-corner-shadow-inset);
+  transition: all 0.4s ease;
+  position: relative; /* Necesario para pseudo-elementos */
+  padding: 15px; /* Añadir padding base */
+}
+
+.floating-tech-corners:hover {
+  box-shadow: var(--tech-corner-shadow), var(--tech-corner-shadow-hover), var(--tech-corner-shadow-inset-hover);
+  border-color: var(--tech-corner-border-hover);
+}
+
+/* Esquinas SVG */
+.floating-tech-corners::before,
+.floating-tech-corners::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath d='M2,2 L12,2 M2,2 L2,12' stroke='%2300ccff' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='6' cy='6' r='2' fill='%2300ccff'/%3E%3C/svg%3E");
+  background-size: contain;
+  transition: all 0.4s ease;
+  filter: var(--tech-corner-svg-filter);
+  z-index: 1; /* Asegurar que esté encima */
+}
+
+.floating-tech-corners::before { top: -1px; left: -1px; } /* Ajustar posición */
+.floating-tech-corners::after { bottom: -1px; right: -1px; transform: rotate(180deg); } /* Ajustar posición */
+
+.floating-tech-corners:hover::before,
+.floating-tech-corners:hover::after {
+  filter: var(--tech-corner-svg-filter-hover);
+  transform: scale(1.1);
+}
+.floating-tech-corners:hover::after { transform: rotate(180deg) scale(1.1); } /* Mantener rotación */
+
+.floating-tech-corners .floating-element-header {
+  font-family: var(--font-tech, 'Orbitron', sans-serif);
+  background: var(--tech-corner-header-bg);
+  border-bottom-color: var(--tech-corner-header-border);
+  color: var(--tech-text, #e0f2f7);
+  margin: -15px -15px 15px -15px; /* Ajustar para padding base */
+  padding: 12px 20px;
+  position: relative;
+  z-index: 0;
+}
+
+/* Estilo Cut Corners (Adaptado de v2.6) */
+.floating-cut-corners {
+  --cut-corner-bg: rgba(20, 30, 50, 0.8);
+  --cut-corner-border: rgba(0, 170, 255, 0.5);
+  --cut-corner-clip-size: 10px;
+  --cut-corner-gradient: linear-gradient(135deg, rgba(0, 170, 255, 0.2), transparent 40%);
+  --cut-corner-header-border: rgba(0, 170, 255, 0.4);
+
+  background-color: var(--cut-corner-bg);
+  border: 1px solid var(--cut-corner-border);
+  position: relative;
+  padding: 15px;
+  clip-path: polygon(
+    0% var(--cut-corner-clip-size), 
+    var(--cut-corner-clip-size) 0%, 
+    calc(100% - var(--cut-corner-clip-size)) 0%, 
+    100% var(--cut-corner-clip-size), 
+    100% calc(100% - var(--cut-corner-clip-size)), 
+    calc(100% - var(--cut-corner-clip-size)) 100%, 
+    var(--cut-corner-clip-size) 100%, 
+    0% calc(100% - var(--cut-corner-clip-size))
+  );
+  color: var(--tech-text, #e0f2f7); /* Reutilizar color tech */
+}
+
+/* Gradiente interno */
+.floating-cut-corners::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--cut-corner-gradient);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.floating-cut-corners .floating-element-header {
+  font-family: var(--font-tech-alt, 'Rajdhani', sans-serif);
+  border-bottom: 1px solid var(--cut-corner-header-border);
+  position: relative;
+  z-index: 1;
+  background: none; /* Header no necesita fondo extra */
+  color: inherit;
+  margin: -15px -15px 15px -15px; /* Ajustar para padding base */
+  padding: 10px 15px; /* Padding original */
+}
+
+/* Estilo Corner Brackets (Adaptado de v2.6) */
+.floating-corner-brackets {
+  --bracket-bg: rgba(20, 30, 40, 0.7);
+  --bracket-color: var(--cyber-blue-primary, #00aaff); /* Usa variable v2.6 o fallback */
+  --bracket-size: 20px;
+  --bracket-thickness: 2px;
+
+  background-color: var(--bracket-bg);
+  border: none;
+  padding: 15px;
+  position: relative;
+  color: var(--tech-text, #e0f2f7); /* Reutilizar color tech */
+}
+
+.floating-corner-brackets::before,
+.floating-corner-brackets::after {
+  content: '';
+  position: absolute;
+  width: var(--bracket-size);
+  height: var(--bracket-size);
+  border-color: var(--bracket-color);
+  border-style: solid;
+  border-width: 0;
+  transition: all 0.3s ease;
+}
+
+.floating-corner-brackets::before {
+  top: 0;
+  left: 0;
+  border-top-width: var(--bracket-thickness);
+  border-left-width: var(--bracket-thickness);
+}
+
+.floating-corner-brackets::after {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: var(--bracket-thickness);
+  border-right-width: var(--bracket-thickness);
+}
+
+.floating-corner-brackets:hover::before { transform: translate(-3px, -3px); }
+.floating-corner-brackets:hover::after { transform: translate(3px, 3px); }
+
+.floating-corner-brackets .floating-element-header {
+  background: none;
+  border-bottom: 1px dashed var(--bracket-color);
+  color: inherit;
+  padding-bottom: 5px; /* Menos padding inferior */
+  margin-bottom: 10px; /* Menos margen */
+}
+
+/* ========================================================================= */
+/* ANIMACIONES                                                               */
+/* ========================================================================= */
+
+/* Keyframes */
 @keyframes soft-pulse {
   0%, 100% { opacity: 0.95; }
   50% { opacity: 1; transform: scale(1.008); }
 }
-
 @keyframes slow-rotate {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
 @keyframes fade-in-out {
   0%, 100% { opacity: 0.8; }
   50% { opacity: 1; }
 }
 
+/* Clases de animación */
 .animate-pulse {
   animation: soft-pulse 3s infinite;
 }
-
 .animate-rotate::before {
   content: '';
   position: absolute;
-  top: -5px;
-  left: -5px;
-  right: -5px;
-  bottom: -5px;
+  top: -5px; left: -5px; right: -5px; bottom: -5px;
   border: 1px dashed rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   animation: slow-rotate 20s linear infinite;
   pointer-events: none;
+  z-index: -1; /* Para que no interfiera con el contenido */
 }
-
 .animate-fade {
   animation: fade-in-out 4s infinite;
+}
+
+/* ========================================================================= */
+/* POSICIONAMIENTO Y RESPONSIVIDAD (FLOTANTES)                              */
+/* ========================================================================= */
+
+/* Clases de posicionamiento */
+.float-left { float: left; margin-right: 1.5rem; } /* Aumentado margen */
+.float-right { float: right; margin-left: 1.5rem; } /* Aumentado margen */
+.float-center { float: none; margin-left: auto; margin-right: auto; display: block; }
+
+/* Limpiar floats después de elementos flotantes */
+.clear-float::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 /* Media queries para dispositivos móviles */
 @media (max-width: 768px) {
   .float-left, .float-right {
     float: none;
-    width: 100% !important;
+    width: 100% !important; /* Asegurar ancho completo */
     max-width: 100% !important;
     margin-left: 0;
     margin-right: 0;
   }
 }
 
-/* Estilos para columnas divididas */
+/* ========================================================================= */
+/* ESTILOS PARA COLUMNAS DIVIDIDAS (Basado en V2.6 layout--two-columns)     */
+/* ========================================================================= */
+
+/* Contenedor principal - Mantiene estilos visuales */
 .split-columns-container {
   overflow: hidden;
   width: 100%;
-  margin-bottom: 2rem;
+  margin: 2rem auto; /* Margen superior/inferior como en V2 */
+  max-width: 900px; /* Ancho máximo como en V2 */
+  border-radius: 8px;
+  border: var(--floating-border-width) solid transparent; 
 }
 
+/* Contenido interno - APLICAMOS COLUMNAS AQUÍ */
 .split-columns-content {
-  /* Estilos base para las columnas */
-  column-fill: auto;
+  /* column-count y column-gap se aplican inline desde el componente */
+  /* column-rule se aplica en los estilos específicos de abajo */
+  column-fill: balance; 
   line-height: 1.6;
+  padding: 1rem;
+  text-align: left; /* Usamos left por defecto, justify puede dar problemas */
 }
 
-/* Prevenir saltos de columna en elementos importantes */
-.split-columns-content h1, 
-.split-columns-content h2, 
+/* --- MANEJO DE SALTOS DE COLUMNA (Basado en V2.6) --- */
+
+/* Elementos que deben ocupar todo el ancho y no dividirse */
+.split-columns-content h1,
+.split-columns-content h2,
 .split-columns-content h3,
-.split-columns-content table {
+.split-columns-content h4,
+.split-columns-content table,
+.split-columns-content pre,
+.split-columns-content blockquote {
+  /* column-span: all; */ /* Comentado - a menudo causa más problemas de los que resuelve si el contenido no es extenso. break-inside es más fiable */
+  break-before: column; /* Fuerza a empezar en una nueva columna */
+  margin-top: 1rem; /* Espacio antes de estos bloques grandes */
+  margin-bottom: 1rem;
+}
+
+/* Elementos que deben evitar romperse internamente */
+.split-columns-content p,
+.split-columns-content ul,
+.split-columns-content ol,
+.split-columns-content li {
   break-inside: avoid;
-  column-break-inside: avoid;
   page-break-inside: avoid;
+  margin-top: 0; /* Reset básico */
+  margin-bottom: 1em;
 }
 
-/* Estilos específicos para distintos temas de columnas */
+/* Reset específico para asegurar que los márgenes de prose no interfieran */
+.prose .split-columns-content > * {
+   margin-top: 0;
+   margin-bottom: 1em;
+}
+.prose .split-columns-content > h1,
+.prose .split-columns-content > h2,
+.prose .split-columns-content > h3,
+.prose .split-columns-content > h4,
+.prose .split-columns-content > table,
+.prose .split-columns-content > pre,
+.prose .split-columns-content > blockquote {
+   margin-top: 1rem;
+   margin-bottom: 1rem;
+}
+
+/* --- ESTILOS VISUALES POR TIPO (COLUMNAS) --- */
+
+/* Estilo Parchment */
 .split-columns-parchment {
-  background-image: url('/assets/textures/parchment.jpg');
-  background-blend-mode: overlay;
+  --parchment-border: #cdaa7d;
+  --parchment-bg: #f5e8c8;
+  --parchment-text: #5a4a42;
+  border-color: var(--parchment-border);
+  background-color: var(--parchment-bg);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: var(--parchment-text);
 }
-
 .split-columns-parchment .split-columns-content {
   font-family: 'Libre Baskerville', serif;
+  column-rule: 1px solid rgba(160, 130, 90, 0.3); 
 }
 
+/* Estilo Modern */
+.split-columns-modern {
+  --modern-border: #e2e8f0;
+  --modern-bg: #f8fafc;
+  --modern-text: #334155;
+  border-color: var(--modern-border);
+  background-color: var(--modern-bg);
+  color: var(--modern-text);
+}
+.split-columns-modern .split-columns-content {
+   column-rule: 1px solid var(--modern-border);
+}
+
+/* Estilo Tech */
 .split-columns-tech {
+  --tech-col-border: rgba(0, 180, 255, 0.4);
+  --tech-col-bg-start: rgba(0, 20, 40, 0.9);
+  --tech-col-bg-end: rgba(0, 30, 60, 0.85);
+  --tech-col-text: #e0f2f7;
+  --tech-col-grid: rgba(0, 180, 255, 0.1);
+  border-color: var(--tech-col-border);
   background-image: 
-    linear-gradient(to right, rgba(0, 20, 40, 0.9), rgba(0, 30, 60, 0.85)),
+    linear-gradient(to right, var(--tech-col-bg-start), var(--tech-col-bg-end)),
     repeating-linear-gradient(
       to bottom,
       transparent 0px,
       transparent 2px,
-      rgba(0, 180, 255, 0.1) 2px,
-      rgba(0, 180, 255, 0.1) 4px
+      var(--tech-col-grid) 2px,
+      var(--tech-col-grid) 4px
     );
+  color: var(--tech-col-text);
 }
-
 .split-columns-tech .split-columns-content {
   font-family: 'Space Mono', monospace;
+  column-rule: 1px solid rgba(0, 180, 255, 0.2);
 }
 
-/* Responsive para columnas */
+/* Estilo Default */
+.split-columns-default {
+  --default-col-border: #d1d5db;
+  --default-col-bg: #ffffff;
+  --default-col-text: #1f2937;
+  border-color: var(--default-col-border);
+  background-color: var(--default-col-bg);
+  color: var(--default-col-text);
+}
+.split-columns-default .split-columns-content {
+   column-rule: 1px solid var(--default-col-border);
+}
+
+/* Estilo Fantasy Columns */
+.split-columns-fantasy {
+  border-color: var(--fantasy-border);
+  background-color: rgba(245, 245, 220, 0.8);
+  color: var(--fantasy-text);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.split-columns-fantasy .split-columns-content {
+  font-family: 'Merriweather', serif;
+  column-rule: 1px dashed var(--fantasy-secondary);
+}
+
+/* --- RESPONSIVE PARA COLUMNAS (Basado en V2.6) --- */
 @media (max-width: 768px) {
+  .split-columns-container {
+     width: 95%; /* Reducir ancho en móvil */
+  }
   .split-columns-content {
     column-count: 1 !important;
+    column-gap: 0 !important;
+    column-rule: none !important; 
+    padding: 0.75rem;
+    text-align: left; 
+  }
+  /* Anular forzado de nueva columna en móvil */
+  .split-columns-content h1,
+  .split-columns-content h2,
+  .split-columns-content h3,
+  .split-columns-content h4,
+  .split-columns-content table,
+  .split-columns-content pre,
+  .split-columns-content blockquote {
+    break-before: auto; 
   }
 } 
