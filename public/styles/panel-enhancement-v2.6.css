@@ -433,6 +433,24 @@
   margin: 1.5rem auto;
   max-width: 900px;
   width: 100%;
+  position: relative; /* Para el separador absoluto */
+}
+
+/* Añadir separador central vertical */
+.layout--split-columns::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(150, 150, 150, 0.5) 10%, 
+    rgba(150, 150, 150, 0.5) 90%, 
+    transparent 100%);
+  transform: translateX(-50%);
+  z-index: 1;
 }
 
 .layout--split-columns .panel-content {
@@ -441,6 +459,24 @@
   gap: 2rem;
   padding: 1rem 1.5rem;
   min-height: 100px; /* Altura mínima para evitar colapso */
+  position: relative; /* Para el separador */
+}
+
+/* Separador dentro del panel-content */
+.layout--split-columns .panel-content::after {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(150, 150, 150, 0.5) 10%, 
+    rgba(150, 150, 150, 0.5) 90%, 
+    transparent 100%);
+  transform: translateX(-50%);
+  z-index: 1;
 }
 
 .layout--split-columns .column {
@@ -450,6 +486,7 @@
   min-width: 0; /* Evita desbordamiento en Safari/Firefox */
   overflow-wrap: break-word; /* Asegura que el texto largo se rompa */
   word-wrap: break-word;
+  position: relative; /* Para el posicionamiento */
 }
 
 .layout--split-columns .column h3 {
@@ -491,14 +528,14 @@
 
 .layout--split-columns .column-left {
   grid-column: 1;
-  border-right: 1px solid rgba(150, 150, 150, 0.2);
-  padding-right: 1.5rem;
+  padding-right: 2rem;
   box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  border-right: none; /* Quitamos el borde, ahora usamos un separador absoluto */
 }
 
 .layout--split-columns .column-right {
   grid-column: 2;
-  padding-left: 1.5rem;
+  padding-left: 2rem;
   box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
 }
 
@@ -560,6 +597,47 @@
   margin-bottom: 0.5rem;
 }
 
+/* Personalización del separador por estilo de panel */
+.panel-style--glass.layout--split-columns::after,
+.panel-style--glass.layout--split-columns .panel-content::after {
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(200, 200, 255, 0.3) 10%, 
+    rgba(200, 200, 255, 0.3) 90%, 
+    transparent 100%);
+  box-shadow: 0 0 8px rgba(100, 150, 255, 0.3);
+}
+
+.panel-style--tech-corners.layout--split-columns::after,
+.panel-style--tech-corners.layout--split-columns .panel-content::after {
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(0, 180, 255, 0.4) 10%, 
+    rgba(0, 180, 255, 0.4) 90%, 
+    transparent 100%);
+  box-shadow: 0 0 8px rgba(0, 150, 255, 0.5);
+}
+
+.panel-style--hologram.layout--split-columns::after,
+.panel-style--hologram.layout--split-columns .panel-content::after {
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(0, 220, 255, 0.3) 10%, 
+    rgba(0, 220, 255, 0.3) 90%, 
+    transparent 100%);
+  box-shadow: 0 0 12px rgba(0, 180, 255, 0.4);
+  width: 1px;
+}
+
+.panel-style--neo-frame.layout--split-columns::after,
+.panel-style--neo-frame.layout--split-columns .panel-content::after {
+  background: linear-gradient(to bottom, 
+    rgba(100, 50, 255, 0.3) 0%, 
+    rgba(0, 180, 255, 0.4) 50%, 
+    rgba(100, 50, 255, 0.3) 100%);
+  box-shadow: 0 0 10px rgba(50, 100, 255, 0.4);
+}
+
 /* Ajustes por estilo de panel */
 .panel-style--glass.layout--split-columns .column h3 {
   color: rgba(240, 240, 240, 0.9);
@@ -601,16 +679,21 @@
   
   .layout--split-columns .column-left {
     grid-column: 1;
-    border-right: none;
-    border-bottom: 1px solid rgba(150, 150, 150, 0.2);
     padding-right: 0;
     padding-bottom: 1.5rem;
     margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(150, 150, 150, 0.3);
   }
   
   .layout--split-columns .column-right {
     grid-column: 1;
     padding-left: 0;
+  }
+  
+  /* Ocultar separador vertical en móvil */
+  .layout--split-columns::after,
+  .layout--split-columns .panel-content::after {
+    display: none;
   }
 }
 
