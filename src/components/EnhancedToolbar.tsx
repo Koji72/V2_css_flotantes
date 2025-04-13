@@ -351,53 +351,55 @@ Recomendación: Desplegar sondas de reconocimiento.
       {/* Botón de división en dos columnas */}
       <button 
         className="p-2 hover:bg-indigo-600 bg-indigo-700 rounded flex items-center gap-1 border border-indigo-500 text-white" 
-        onClick={() => onApplyStyle(`:::panel{layout="two-columns" title="Título Opcional"}
-## Contenido en Dos Columnas
+        onClick={() => onApplyStyle(`:::panel{layout="two-columns" title="Documento en Dos Columnas"}
+## Contenido Tipo Libro
 
-Este panel organiza automáticamente el contenido en dos columnas al estilo de los libros RPG. Es perfecto para:
+Este formato organiza el texto en dos columnas al estilo de libros y manuales. Es ideal para documentos extensos como:
 
-- Presentar información en formato de manual
-- Crear fichas de referencia
-- Mejorar la legibilidad de textos largos
+- Manuales de referencia
+- Documentación técnica
+- Libros digitales
+- Contenido educativo
 
-### Primera Sección
+### Distribución Automática
 
-El contenido fluye de arriba a abajo y luego continúa en la siguiente columna, similar a un periódico o libro. Los encabezados y otros elementos estructurales se mantienen en una sola columna para mejor legibilidad.
+El contenido fluye naturalmente desde la columna izquierda hacia la derecha, como en un libro tradicional. Los encabezados importantes y elementos como tablas ocupan automáticamente el ancho completo.
 
-### Segunda Sección
+### Diseño Profesional
 
-Puedes añadir todo tipo de contenido markdown incluyendo **negritas**, *cursivas*, [enlaces](http://ejemplo.com), imágenes, listas y mucho más.
+La primera letra del primer párrafo se muestra con estilo capital, similar a los libros impresos. Las columnas tienen un espaciado óptimo para facilitar la lectura y mejorar la presentación visual.
 
-> Las citas y bloques también se adaptan al formato de columnas.
+> Los bloques de cita y otros elementos especiales se integran perfectamente en el flujo de columnas.
 
-La primera letra del primer párrafo tiene un estilo capital para darle un aspecto más profesional, similar a los libros clásicos y manuales de rol.
+Esta disposición mejora significativamente la experiencia de lectura en pantallas anchas, aprovechando el espacio horizontal disponible.
 :::`)} 
-        title="Insertar división de dos columnas (estilo libro)"
+        title="Insertar panel con dos columnas tipo libro (contenido fluido entre columnas)"
       >
         <Columns size={16} />
-        <span className="text-sm">Dos Columnas</span>
+        <span className="text-sm">Dos Columnas (Libro)</span>
       </button>
       
       {/* Botón de división en dos columnas simple */}
       <button 
         className="p-2 hover:bg-gray-600 bg-gray-700 rounded flex items-center gap-1 border border-gray-500 ml-1" 
-        onClick={() => onApplyStyle(`:::panel{layout="two-columns" style="glass" title=""}
-### Columna Izquierda
+        onClick={() => onApplyStyle(`:::panel{layout="two-columns" style="glass" title="Dos Columnas Fluidas"}
+### Ejemplo de Contenido
 
-Aquí va el contenido de la primera columna. Este texto fluirá de arriba a abajo antes de continuar en la siguiente columna.
+Este panel organiza el contenido automáticamente en dos columnas al estilo libro, donde el texto fluye de la columna izquierda a la derecha. Es ideal para:
 
-Puedes incluir listas:
-- Elemento 1
-- Elemento 2
-- Elemento 3
+- Textos largos y bien estructurados
+- Documentos tipo manual o libro
+- Mejorar la legibilidad en pantallas anchas
 
-### Columna Derecha
+> Las columnas se adaptan automáticamente en dispositivos móviles convirtiéndose en una sola columna.
 
-Y aquí va el contenido de la segunda columna. Esta disposición es ideal para crear presentaciones tipo manual o libro.
+### Segunda Sección
 
-También puedes incluir tablas o cualquier otro elemento markdown válido.
+Los encabezados y otros elementos estructurales importantes como tablas e imágenes se mantienen en una sola columna para mejor legibilidad.
+
+La primera letra del texto tiene un estilo capital para darle un aspecto más profesional.
 :::`)} 
-        title="Insertar división de dos columnas simple"
+        title="Insertar panel con dos columnas fluidas (estilo libro)"
       >
         <Columns size={16} />
         <span className="text-sm">Columnas Simple</span>
@@ -406,31 +408,31 @@ También puedes incluir tablas o cualquier otro elemento markdown válido.
       {/* Botón de columnas separadas */}
       <button 
         className="p-2 hover:bg-green-600 bg-green-700 rounded flex items-center gap-1 border border-green-500 ml-1 text-white" 
-        onClick={() => onApplyStyle(`:::panel{layout="split-columns" style="glass" title="Panel de Dos Columnas"}
+        onClick={() => onApplyStyle(`:::panel{layout="split-columns" style="glass" title="Columnas Independientes"}
 <div class="column column-left">
 
 ### Columna Izquierda
 
-Aquí va el contenido de la columna izquierda. Este contenido permanece completamente en la columna izquierda:
+Este contenido permanece en la columna izquierda:
 
 - No fluye hacia la columna derecha
-- Es independiente de la otra columna
+- Es totalmente independiente
 - Ideal para comparaciones directas
 
-Puedes agregar cualquier tipo de contenido markdown aquí, como listas, tablas, citas e incluso código.
+Puedes usar cualquier elemento markdown: listas, tablas, código, citas, etc.
 </div>
 
 <div class="column column-right">
 
 ### Columna Derecha
 
-Aquí va el contenido de la columna derecha. Este contenido permanece completamente en la columna derecha:
+Este contenido permanece en la columna derecha:
 
-1. Es independiente de la columna izquierda
-2. No es continuación del contenido de la izquierda
-3. Ambas columnas son completamente independientes
+1. Es independiente de la izquierda
+2. No es continuación del otro contenido
+3. Perfecto para información paralela
 
-Este diseño es perfecto para presentar información paralela.
+Ideal para presentar datos que deben verse lado a lado.
 </div>
 :::`)} 
         title="Insertar panel con columnas izquierda y derecha independientes"
@@ -448,19 +450,19 @@ Este diseño es perfecto para presentar información paralela.
 ### Opción A
 
 **Descripción:**
-Breve descripción de la primera opción o elemento que se está comparando.
+Breve descripción de la primera opción.
 
-**Características principales:**
-- Característica 1
-- Característica 2
-- Característica 3
+**Características:**
+- Característica principal 1
+- Característica principal 2
+- Característica principal 3
 
 **Ventajas:**
-- Ventaja 1
-- Ventaja 2
+- Principal ventaja 1
+- Principal ventaja 2
 
-**Desventajas:**
-- Desventaja 1
+**Limitaciones:**
+- Limitación 1
 </div>
 
 <div class="column column-right">
@@ -468,22 +470,22 @@ Breve descripción de la primera opción o elemento que se está comparando.
 ### Opción B
 
 **Descripción:**
-Breve descripción de la segunda opción o elemento que se está comparando.
+Breve descripción de la segunda opción.
 
-**Características principales:**
-- Característica 1
-- Característica 2
-- Característica 3
+**Características:**
+- Característica principal 1 
+- Característica principal 2
+- Característica principal 3
 
 **Ventajas:**
-- Ventaja 1
-- Ventaja 2
+- Principal ventaja 1
+- Principal ventaja 2
 
-**Desventajas:**
-- Desventaja 1
+**Limitaciones:**
+- Limitación 1
 </div>
 :::`)} 
-        title="Insertar plantilla de comparativa"
+        title="Insertar plantilla de comparativa con columnas independientes"
       >
         <SplitSquareVertical size={16} />
         <span className="text-sm">Comparativa</span>
@@ -532,18 +534,9 @@ Breve descripción de la segunda opción o elemento que se está comparando.
       </button>
 
       <div className="flex items-center border-l border-gray-700 ml-2 pl-2">
+        {/* Botón Showcase Impacto - Mantenerlo como destacado */}
         <button 
-          className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 bg-blue-800'}`}
-          onClick={() => onLoadDemo('panel-showcase-v2.6.md')}
-          disabled={isLoading}
-          title="Ver Showcase de Paneles V2.6 (Estilos Originales)"
-        >
-          <Layout size={16} />
-          <span className="text-sm">Showcase Original</span>
-        </button>
-
-        <button 
-          className={`p-2 rounded flex items-center gap-1 ml-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-700 bg-purple-600'}`}
+          className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-700 bg-purple-600'}`}
           onClick={() => onLoadDemo('panel-showcase-v2.6-impact.md')}
           disabled={isLoading}
           title="Ver Showcase de Paneles V2.6 (Estilos Impactantes)"
@@ -553,8 +546,9 @@ Breve descripción de la segunda opción o elemento que se está comparando.
           <span className="text-sm">Showcase Impacto</span>
         </button>
 
+        {/* Botón Showcase V2.6 */}
         <button
-          className="p-2 rounded flex items-center gap-1"
+          className="p-2 rounded flex items-center gap-1 ml-2"
           onClick={() => onLoadDemo('panel-showcase-v2.6.md')}
           disabled={isLoading}
           title="Ver demostración de paneles v2.6"
@@ -563,47 +557,52 @@ Breve descripción de la segunda opción o elemento que se está comparando.
           <span>Showcase V2.6</span>
         </button>
         
-        <button
-          className="p-2 rounded flex items-center gap-1"
-          onClick={() => onLoadDemo('flotantes-demo.md')}
-          disabled={isLoading}
-          title="Ver demostración de elementos flotantes"
-        >
-          <PanelLeft size={16} />
-          <span>Demo Flotantes</span>
-        </button>
+        {/* ---- Grupo de demos específicos ---- */}
+        {/* Demos de layouts y comparativas */}
+        <div className="flex items-center ml-2 pl-2 border-l border-gray-700">
+          <button
+            className="p-2 rounded flex items-center gap-1"
+            onClick={() => onLoadDemo('flotantes-demo.md')}
+            disabled={isLoading}
+            title="Ver demostración de elementos flotantes"
+          >
+            <PanelLeft size={16} />
+            <span>Demo Flotantes</span>
+          </button>
 
-        <button
-          className="p-2 rounded flex items-center gap-1"
-          onClick={() => onLoadDemo('rpg-columns-demo.md')}
-          disabled={isLoading}
-          title="Ver demostración de paneles estilo RPG con dos columnas"
-        >
-          <Columns size={16} />
-          <span>Demo RPG</span>
-        </button>
+          <button
+            className="p-2 rounded flex items-center gap-1 ml-1"
+            onClick={() => onLoadDemo('rpg-columns-demo.md')}
+            disabled={isLoading}
+            title="Ver demostración de paneles estilo RPG con dos columnas"
+          >
+            <Columns size={16} />
+            <span>Demo RPG</span>
+          </button>
 
-        <button
-          className="p-2 rounded flex items-center gap-1"
-          onClick={() => onLoadDemo('split-columns-demo.md')}
-          disabled={isLoading}
-          title="Ver demostración de paneles con columnas separadas"
-        >
-          <Layout size={16} />
-          <span>Demo Columnas Sep.</span>
-        </button>
+          <button
+            className="p-2 rounded flex items-center gap-1 ml-1"
+            onClick={() => onLoadDemo('split-columns-demo.md')}
+            disabled={isLoading}
+            title="Ver demostración de paneles con columnas separadas"
+          >
+            <Layout size={16} />
+            <span>Demo Columnas</span>
+          </button>
 
-        <button
-          className="p-2 rounded flex items-center gap-1"
-          onClick={() => onLoadDemo('comparativas-demo.md')}
-          disabled={isLoading}
-          title="Ver ejemplos de comparativas con columnas separadas"
-        >
-          <SplitSquareVertical size={16} />
-          <span>Demo Comparativas</span>
-        </button>
+          <button
+            className="p-2 rounded flex items-center gap-1 ml-1"
+            onClick={() => onLoadDemo('comparativas-demo.md')}
+            disabled={isLoading}
+            title="Ver ejemplos de comparativas con columnas separadas"
+          >
+            <SplitSquareVertical size={16} />
+            <span>Comparativas</span>
+          </button>
+        </div>
       </div>
 
+      {/* Único botón para modo oscuro/claro */}
       <button 
         className={`p-2 rounded ml-2 ${darkMode ? 'bg-yellow-600 hover:bg-yellow-500' : 'bg-indigo-800 hover:bg-indigo-700'}`}
         onClick={onDarkModeToggle}
