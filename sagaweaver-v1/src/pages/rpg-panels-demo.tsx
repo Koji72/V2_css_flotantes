@@ -1,8 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
 import { EnhancedTable } from '../components/EnhancedTable';
-import '../styles/enhanced-table.css';
-import '../styles/rpg-columns.css';
 
 // Sample data for character stats
 const characterStats = [
@@ -120,12 +118,6 @@ export default function RPGPanelsDemo() {
         <meta name="description" content="A demonstration of RPG-style panels with integrated tables" />
         <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet" />
       </Head>
-
-      <style jsx global>{`
-        :root {
-          --font-serif: 'EB Garamond', serif;
-        }
-      `}</style>
 
       <header className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">RPG Panels with Enhanced Tables</h1>

@@ -7,6 +7,8 @@ import '../styles/cache-metrics.css';
 import '../styles/panel-validation.css';
 import '../styles/panel-documentation.css';
 import '../styles/notification-system.css';
+import '../styles/enhanced-table.css';
+import '../styles/rpg-columns.css';
 import { NotificationProvider } from '../components/NotificationSystem';
 
 // Logging helper simple para el cliente

@@ -199,3 +199,21 @@ Los paneles con columnas separadas son ideales para presentar comparaciones lado
 - Tablas de especificaciones técnicas
 
 La estructura visual clara mejora la comprensión y facilita la toma de decisiones basada en información bien presentada. 
+
+Para lanzar el proyecto SagaWeaver v1:
+
+1. Abre una terminal en el directorio raíz del proyecto (`sagaweaver-v1`)
+2. Instala las dependencias:
+   ```
+   npm install
+   ```
+3. Inicia el servidor de desarrollo:
+   ```
+   npm run dev
+   ```
+4. Abre tu navegador y visita:
+   ```
+   http://localhost:3000/floating-elements-demo
+   ```
+
+El servidor de desarrollo se ejecutará en el puerto 3000 por defecto y mostrará la página de demostración de elementos flotantes y columnas. 

@@ -2,4 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global CSS Variables */
+:root {
+  --font-serif: 'EB Garamond', Georgia, serif;
+}
+
 /* Otros estilos globales pueden añadirse aquí */ 
