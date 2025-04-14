@@ -6,6 +6,8 @@ import '../styles/floating-elements.css';
 import '../styles/cache-metrics.css';
 import '../styles/panel-validation.css';
 import '../styles/panel-documentation.css';
+import '../styles/notification-system.css';
+import { NotificationProvider } from '../components/NotificationSystem';
 
 // Logging helper simple para el cliente
 const log = (level: 'info' | 'warn' | 'error', message: string, data?: any) => {
@@ -21,7 +23,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   // Ya no necesitamos el hook useLucideIcons
   log('info', 'MyApp component rendered.');
   
-  return <Component {...pageProps} />;
+  return (
+    <NotificationProvider>
+      <Component {...pageProps} />
+    </NotificationProvider>
+  );
 }
 
 export default MyApp; 
