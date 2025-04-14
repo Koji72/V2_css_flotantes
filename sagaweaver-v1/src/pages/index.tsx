@@ -1,133 +1,195 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { ChevronRight, Grid, Layers, Table2, BookOpen } from 'lucide-react';
+import NavigationBar from '../components/NavigationBar';
+import FloatingElement from '../components/FloatingElement';
 
-const HomePage = () => {
-  const features = [
-    {
-      title: 'Elementos Flotantes',
-      description: 'Componentes que flotan a la izquierda, derecha o centro con múltiples estilos visuales y animaciones.',
-      path: '/floating-elements-demo',
-      icon: <Layers size={24} />,
-      color: 'bg-gradient-to-r from-blue-500 to-cyan-500'
-    },
-    {
-      title: 'Paneles RPG',
-      description: 'Paneles de estilo RPG con diseño de dos columnas, perfectos para hojas de personaje y documentación de juegos.',
-      path: '/rpg-tables-demo',
-      icon: <Grid size={24} />,
-      color: 'bg-gradient-to-r from-amber-500 to-orange-500'
-    },
-    {
-      title: 'Tablas Mejoradas',
-      description: 'Sistema de tablas con múltiples estilos visuales, efectos interactivos y opciones de personalización.',
-      path: '/enhanced-tables-demo',
-      icon: <Table2 size={24} />,
-      color: 'bg-gradient-to-r from-purple-500 to-pink-500'
-    },
-    {
-      title: 'Documentación',
-      description: 'Guías detalladas sobre cómo usar e integrar todos los componentes en tus proyectos.',
-      path: '/documentation',
-      icon: <BookOpen size={24} />,
-      color: 'bg-gradient-to-r from-emerald-500 to-teal-500'
-    }
-  ];
-
+const Home = () => {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="bg-gray-900 text-white min-h-screen">
       <Head>
-        <title>SagaWeaver - Sistema Avanzado de Layouts</title>
-        <meta name="description" content="Sistema avanzado para la gestión de layouts en documentos markdown" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>SagaWeaver - Sistema Avanzado para Juegos de Rol</title>
+        <meta name="description" content="SagaWeaver es un sistema para crear y presentar contenido para juegos de rol con una interfaz moderna y atractiva." />
       </Head>
 
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">SagaWeaver v1</h1>
-        </div>
-      </header>
-
-      <main>
-        <div className="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
-          {/* Hero Section */}
-          <div className="px-4 py-16 text-center">
-            <h2 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-              Sistema Avanzado de <span className="text-indigo-600">Layouts Dinámicos</span>
-            </h2>
-            <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-500">
-              Crea documentos visualmente impactantes con nuestros componentes de diseño avanzado.
-              Elementos flotantes, columnas, paneles RPG y más.
+      <NavigationBar />
+      
+      <div className="container mx-auto p-6">
+        <div className="flex flex-col md:flex-row gap-8 mb-12 items-center">
+          <div className="md:w-1/2">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-cyan-400">
+              SagaWeaver
+            </h1>
+            <p className="text-xl mb-6 text-gray-300">
+              El sistema definitivo para crear y presentar contenido para tus juegos de rol con estilo y funcionalidad.
             </p>
-            <div className="mt-10 flex justify-center">
-              <Link href="/floating-elements-demo" className="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                Ver demostración
+            <div className="flex gap-4">
+              <Link 
+                href="/style-selector" 
+                className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+              >
+                Probar Editor
               </Link>
-              <Link href="/documentation" className="ml-4 px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 border-indigo-600">
-                Documentación
+              <Link 
+                href="/template-gallery" 
+                className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+              >
+                Ver Plantillas
               </Link>
             </div>
           </div>
-
-          {/* Features */}
-          <div className="mt-10 px-4">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Componentes Disponibles</h3>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
-              {features.map((feature, index) => (
-                <Link 
-                  key={index} 
-                  href={feature.path}
-                  className="block group"
+          <div className="md:w-1/2">
+            <div className="relative">
+              <div className="absolute -top-6 -left-6 w-64 h-64 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+              <div className="absolute -bottom-6 -right-6 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+              <div className="absolute inset-0 w-64 h-64 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+              <div className="relative bg-gray-800 border border-gray-700 p-6 rounded-lg shadow-lg">
+                <FloatingElement 
+                  position="right" 
+                  style="tech-corners" 
+                  title="Panel de Tecnología" 
+                  width="55%" 
+                  icon="Shield"
+                  animation="glow"
                 >
-                  <div className="h-full flex flex-col rounded-lg shadow-lg overflow-hidden bg-white hover:shadow-xl transition-shadow duration-300">
-                    <div className={`${feature.color} h-3`}></div>
-                    <div className="flex-1 p-6 flex flex-col justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 mr-3 text-indigo-600">
-                            {feature.icon}
-                          </div>
-                          <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
-                        </div>
-                        <p className="mt-3 text-base text-gray-500">{feature.description}</p>
-                      </div>
-                      <div className="mt-4 flex items-center text-indigo-600 group-hover:text-indigo-800">
-                        <span className="font-medium">Explorar</span>
-                        <ChevronRight className="ml-1 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  Panel con efectos visuales avanzados y animaciones para tus descripciones de tecnología futurista.
+                </FloatingElement>
+                <FloatingElement 
+                  position="left" 
+                  style="scroll" 
+                  title="Pergamino Antiguo" 
+                  width="45%"
+                  icon="Scroll"
+                  animation="none"
+                >
+                  Estilo clásico para presentar textos antiguos, profecías y manuscritos mágicos.
+                </FloatingElement>
+              </div>
             </div>
           </div>
-
-          {/* CTA Section */}
-          <div className="mt-20 px-4 py-16 sm:px-6 sm:py-24 lg:px-8 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-white">
-              Comienza a mejorar tus documentos hoy mismo
-            </h2>
-            <p className="mt-4 max-w-xl mx-auto text-lg text-indigo-100">
-              SagaWeaver transforma la forma en que creas y presentas tus contenidos, combinando
-              la simplicidad del markdown con la potencia del diseño avanzado.
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow-lg">
+            <div className="text-cyan-400 mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold mb-2">Editor Interactivo</h2>
+            <p className="text-gray-300 mb-4">
+              Un selector visual que te permite configurar y previsualizar tus elementos con facilidad antes de usarlos.
             </p>
-            <Link href="https://github.com/usuario/sagaweaver" className="mt-8 inline-flex items-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50">
-              Ver en GitHub
+            <Link href="/style-selector" className="text-cyan-400 hover:text-cyan-300 inline-flex items-center">
+              Probar Editor
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+          
+          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow-lg">
+            <div className="text-cyan-400 mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold mb-2">Plantillas Predefinidas</h2>
+            <p className="text-gray-300 mb-4">
+              Colección de plantillas listas para usar en diferentes contextos: personajes, ubicaciones, objetos y más.
+            </p>
+            <Link href="/template-gallery" className="text-cyan-400 hover:text-cyan-300 inline-flex items-center">
+              Explorar Plantillas
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+          
+          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow-lg">
+            <div className="text-cyan-400 mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold mb-2">Biblioteca de Iconos</h2>
+            <p className="text-gray-300 mb-4">
+              Una amplia selección de iconos temáticos para enriquecer tus descripciones y paneles informativos.
+            </p>
+            <Link href="/icon-library" className="text-cyan-400 hover:text-cyan-300 inline-flex items-center">
+              Ver Iconos
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </Link>
           </div>
         </div>
-      </main>
-
-      <footer className="bg-white">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} SagaWeaver. Todos los derechos reservados.
+        
+        <div className="bg-gray-800 p-8 rounded-lg border border-gray-700 shadow-lg mb-12">
+          <h2 className="text-2xl font-bold mb-6 text-center">Funcionalidades Disponibles</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { feature: 'Elementos Flotantes', href: '/floating-elements-demo' },
+              { feature: 'Elementos Avanzados', href: '/advanced-elements-demo' },
+              { feature: 'Tablas RPG', href: '/rpg-tables-demo' },
+              { feature: 'Componentes UI', href: '/components-demo' },
+              { feature: 'Sistema de Animaciones', href: '/style-selector' },
+              { feature: 'Markdown Mejorado', href: '/floating-elements-demo' },
+              { feature: 'Tema Personalizable', href: '/theme-creator' },
+              { feature: 'Biblioteca de Iconos', href: '/icon-library' }
+            ].map((item, index) => (
+              <Link
+                href={item.href}
+                key={index}
+                className="bg-gray-700 hover:bg-gray-600 p-4 rounded-lg text-center transition-colors"
+              >
+                {item.feature}
+              </Link>
+            ))}
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-r from-cyan-900 to-indigo-900 p-8 rounded-lg shadow-lg text-center">
+          <h2 className="text-2xl font-bold mb-4">¿Listo para empezar?</h2>
+          <p className="mb-6 max-w-2xl mx-auto">
+            SagaWeaver es completamente gratuito y de código abierto. Utilízalo en tus juegos de rol y sesiones narrativas para crear experiencias únicas y memorables.
           </p>
+          <div className="flex justify-center gap-4 flex-wrap">
+            <Link 
+              href="/style-selector" 
+              className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            >
+              Construir Panel
+            </Link>
+            <Link 
+              href="/template-gallery" 
+              className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            >
+              Explorar Plantillas
+            </Link>
+            <Link 
+              href="https://github.com/Koji72/V2_css_flotantes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center"
+            >
+              <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+              </svg>
+              GitHub
+            </Link>
+          </div>
+        </div>
+      </div>
+      
+      <footer className="bg-gray-800 text-gray-400 py-8 mt-12">
+        <div className="container mx-auto px-6 text-center">
+          <p>SagaWeaver v1.0 - Sistema Avanzado para Juegos de Rol</p>
+          <p className="mt-2">Creado con ❤️ para la comunidad de jugadores de rol</p>
         </div>
       </footer>
     </div>
   );
 };
 
-export default HomePage; 
+export default Home; 
