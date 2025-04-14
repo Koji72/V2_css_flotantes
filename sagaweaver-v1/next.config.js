@@ -14,6 +14,11 @@ const nextConfig = {
         destination: '/floating-elements-demo',
         permanent: false,
       },
+      {
+        source: '/advanced',
+        destination: '/advanced-elements-demo',
+        permanent: false,
+      },
     ];
   },
 };

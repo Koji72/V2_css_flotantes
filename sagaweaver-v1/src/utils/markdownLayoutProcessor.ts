@@ -10,6 +10,7 @@ interface FloatingElementAttributes {
   width?: string;
   animation?: FloatingElementAnimation;
   class?: string;
+  icon?: string; // Tipo string aquí, la validación la hace el componente
 }
 
 interface ColumnAttributes {
@@ -62,7 +63,6 @@ const processFloatingElements = (markdown: string): string => {
     log('info', `Processing float block #${currentMatch}`, { positionArg, attributesStr });
     
     try {
-      // Extraer atributos
       const attributes = parseAttributes(attributesStr || '') as FloatingElementAttributes;
       const position = (positionArg as FloatingElementPosition) || attributes.position || 'left';
       const style = attributes.style || 'default';
@@ -72,19 +72,17 @@ const processFloatingElements = (markdown: string): string => {
       
       log('info', `Float block #${currentMatch} attributes:`, { position, style, animation, width, customClass });
       
-      // Construir clases CSS
       const styleClass = `floating-${style}`;
       const positionClass = `float-${position}`;
       const animationClass = animation !== 'none' ? `animate-${animation}` : '';
             
+      // Generamos solo el título, sin icono
       const titleHtml = attributes.title 
-        ? `<div class="floating-element-header">${marked.parseInline(attributes.title.trim(), { async: false })}</div>` 
+        ? `<div class="floating-element-header"><span>${marked.parseInline(attributes.title.trim(), { async: false })}</span></div>` 
         : '';
       
-      // Procesar el contenido con marked
       const processedContent = marked.parse(content.trim(), { async: false });
       
-      // Crear el HTML del elemento flotante
       const elementClasses = `floating-element ${positionClass} ${styleClass} ${animationClass} ${customClass}`.trim().replace(/\s+/g, ' ');
       log('info', `Float block #${currentMatch} generated classes: ${elementClasses}`);
       
@@ -99,7 +97,6 @@ const processFloatingElements = (markdown: string): string => {
       return html;
     } catch (error) {
       log('error', `Error processing float block #${currentMatch}`, { match, error });
-      // Devuelve el bloque original sin procesar en caso de error
       return match; 
     }
   });
@@ -194,7 +191,7 @@ const parseAttributes = (attributesStr: string): Record<string, string> => {
         // Añadir nuevos estilos al array de flags/estilos conocidos
         const knownFlags = [
           'left', 'right', 'center',
-          'pulse', 'rotate', 'fade', 'none',
+          'pulse', 'rotate', 'fade', 'none', 'glow', 'shake', // Añadir nuevas animaciones a flags conocidos
           'tech', 'hologram', 'neo', 'circuit', 'glass', 'fantasy', 'scroll', 'metal', 
           'tech-corners', 'cut-corners', 'corner-brackets', // Nuevos v2.6
           'parchment', 'modern', 'default' // Estilos de columna también

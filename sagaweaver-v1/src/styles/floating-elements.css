@@ -421,6 +421,18 @@
   50% { opacity: 1; }
 }
 
+/* Nuevos Keyframes */
+@keyframes subtle-glow {
+  0%, 100% { box-shadow: var(--floating-base-shadow); }
+  50% { box-shadow: var(--floating-base-shadow), 0 0 15px rgba(255, 255, 255, 0.2); }
+}
+
+@keyframes slight-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
 /* Clases de animación */
 .animate-pulse {
   animation: soft-pulse 3s infinite;
@@ -433,10 +445,18 @@
   border-radius: 50%;
   animation: slow-rotate 20s linear infinite;
   pointer-events: none;
-  z-index: -1; /* Para que no interfiera con el contenido */
+  z-index: -1; 
 }
 .animate-fade {
   animation: fade-in-out 4s infinite;
+}
+
+/* Nuevas Clases de Animación */
+.animate-glow {
+  animation: subtle-glow 2.5s infinite alternate;
+}
+.animate-shake {
+  animation: slight-shake 0.5s ease-in-out 3; /* 3 repeticiones */
 }
 
 /* ========================================================================= */
