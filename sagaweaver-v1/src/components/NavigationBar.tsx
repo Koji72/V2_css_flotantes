@@ -14,6 +14,9 @@ const NavigationBar: React.FC = () => {
   const links: NavigationLink[] = [
     { path: '/floating-elements-demo', label: 'Elementos Flotantes' },
     { path: '/advanced-elements-demo', label: 'Elementos Avanzados' },
+    { path: '/style-selector', label: 'Selector de Estilos' },
+    { path: '/template-gallery', label: 'Plantillas' },
+    { path: '/rpg-tables-demo', label: 'Tablas RPG' },
     { path: '/components-demo', label: 'Componentes' },
     { path: '/panel-analytics', label: 'Análisis' },
     { path: '/panel-editor', label: 'Editor' },
