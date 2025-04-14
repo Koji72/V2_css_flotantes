@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import FloatingElement from '../components/FloatingElement';
+import FloatingElement, { IconName } from '../components/FloatingElement';
 import SplitColumns, { ColumnBreak } from '../components/SplitColumns';
 import { MarkdownRenderer } from '../components/MarkdownRenderer';
-import { icons } from 'lucide-react'; // Importamos iconos para la lista
 import { CacheMetrics } from '../components/CacheMetrics';
 import { PanelValidationWarnings } from '../components/PanelValidationWarnings';
 import { PanelDocumentation } from '../components/PanelDocumentation';
 import NavigationBar from '../components/NavigationBar';
 import Head from 'next/head';
+import Icon from '../components/IconsInline';
 
-// Lista de nombres de iconos disponibles
-const iconNames = Object.keys(icons) as (keyof typeof icons)[];
+// Lista de iconos disponibles en el componente FloatingElement
+const availableIcons: IconName[] = ['Shield', 'Settings', 'Info'];
 
 // Contenido de ejemplo para la demo con nuevos estilos v2.6
 const markdownContent = `
@@ -198,6 +198,11 @@ const FloatingElementsDemo = () => {
     };
   }, []);
 
+  useEffect(() => {
+    console.log('Iconos disponibles:', availableIcons.length);
+    console.log('Iconos disponibles:', availableIcons.join(', '));
+  }, []);
+
   return (
     <div className="bg-gray-900 text-white min-h-screen">
       <Head>
@@ -223,14 +228,18 @@ const FloatingElementsDemo = () => {
           {/* Sección adicional para demostrar iconos directamente con el componente */}
           <h2 className="text-2xl font-semibold mt-10 mb-4">Demostración de Iconos (JSX)</h2>
           <div className="prose max-w-none">
+             <p className="text-sm mb-4 p-2 bg-yellow-100 rounded">
+                Iconos disponibles para usar: {availableIcons.join(', ')}
+             </p>
+             
              <FloatingElement 
                 position="left" 
                 style="metal" 
                 title="Panel con Icono" 
                 width="45%" 
-                icon="ShieldCheck" // Nombre del icono Lucide
+                icon="Shield"
              >
-                <p>Este panel usa la prop <code>icon</code> para mostrar un icono <code className="text-xs">ShieldCheck</code> de Lucide React en la cabecera.</p>
+                <p>Este panel usa la prop <code>icon</code> para mostrar un icono <code className="text-xs">Shield</code> en la cabecera.</p>
              </FloatingElement>
              
              <p>Texto que fluye alrededor del panel con icono. Los iconos añaden un elemento visual extra a los paneles.</p>
@@ -241,7 +250,7 @@ const FloatingElementsDemo = () => {
                 title="Otro Icono" 
                 width="45%" 
                 icon="Settings" 
-                iconProps={{ size: 20, className: 'text-blue-500' }} // Props personalizadas
+                iconProps={{ size: 20, className: 'text-blue-500' }}
              >
                 <p>Aquí usamos el icono <code className="text-xs">Settings</code> y personalizamos su tamaño y color usando <code>iconProps</code>.</p>
              </FloatingElement>
@@ -263,6 +272,20 @@ const FloatingElementsDemo = () => {
              
              <div style={{ clear: 'both' }}></div>
              
+             {/* Mostrar los iconos disponibles */}
+             <div className="mt-8 border p-4 rounded-lg bg-white shadow-md">
+                <h3 className="text-lg font-bold mb-4">Galería de Iconos disponibles</h3>
+                <div className="grid grid-cols-3 gap-4">
+                  {availableIcons.map(iconName => (
+                    <div key={iconName} className="text-center">
+                      <div className="flex justify-center mb-2">
+                        <Icon name={iconName} size={24} />
+                      </div>
+                      <p className="text-xs">{iconName}</p>
+                    </div>
+                  ))}
+                </div>
+             </div>
           </div>
         </div>
       </div>

@@ -18,7 +18,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@types/react-color": "^3.0.13",
     "chart.js": "^4.4.8",
-    "lucide-react": "^0.279.0",
+    "lucide-react": "^0.488.0",
     "marked": "^9.0.3",
     "marked-gfm-heading-id": "^3.1.0",
     "next": "13.5.2",

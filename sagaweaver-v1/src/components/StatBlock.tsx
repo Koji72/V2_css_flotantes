@@ -1,5 +1,5 @@
 import React from 'react';
-import { icons, LucideIcon, LucideProps } from 'lucide-react';
+import { LucideProps } from 'lucide-react';
 
 // Tipos para las estadísticas
 export interface Stat {
@@ -28,7 +28,7 @@ export interface StatBlockProps {
   mainStats?: Stat[];
   secondaryStats?: Stat[];
   abilities?: Ability[];
-  icon?: LucideIcon;
+  icon?: React.ElementType;
   iconProps?: Omit<LucideProps, 'ref'>;
   className?: string;
   color?: string;
@@ -43,15 +43,12 @@ const StatBlock: React.FC<StatBlockProps> = ({
   mainStats = [],
   secondaryStats = [],
   abilities = [],
-  icon,
+  icon: Icon,
   iconProps = { size: 24 },
   className = '',
   color,
   backgroundImage
 }) => {
-  // Usar el icono directamente ya que recibimos el componente LucideIcon
-  const IconComponent = icon || null;
-  
   // Determinar estilo basado en el tipo
   const typeStyles = {
     creature: {
@@ -125,8 +122,8 @@ const StatBlock: React.FC<StatBlockProps> = ({
       {/* Encabezado */}
       <div className={`${style.headerClass} px-4 py-3 flex items-center justify-between border-b-2 ${style.borderClass}`}>
         <div className="flex items-center gap-2">
-          {IconComponent && 
-            <IconComponent 
+          {Icon && 
+            <Icon 
               {...iconProps} 
               className={`inline-block ${iconProps?.className || ''}`} 
               color={style.accentColor}

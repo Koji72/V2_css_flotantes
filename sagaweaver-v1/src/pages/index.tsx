@@ -15,7 +15,7 @@ const HomePage = () => {
     {
       title: 'Paneles RPG',
       description: 'Paneles de estilo RPG con diseño de dos columnas, perfectos para hojas de personaje y documentación de juegos.',
-      path: '/rpg-panels-demo',
+      path: '/rpg-tables-demo',
       icon: <Grid size={24} />,
       color: 'bg-gradient-to-r from-amber-500 to-orange-500'
     },

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import EnhancedTable, { TableColumn } from '../components/EnhancedTable';
+import { EnhancedTable, type TableColumn, type TableRow } from '../components/EnhancedTable';
 import StatBlock from '../components/StatBlock';
 import { Shield, Wand2, Map, Skull } from 'lucide-react';
 import NavigationBar from '../components/NavigationBar';
@@ -10,20 +10,20 @@ export default function AdvancedElementsDemo() {
 
   // Datos para las tablas de ejemplo
   const tableColumns: TableColumn[] = [
-    { key: 'name', header: 'Nombre', width: '25%', highlight: true },
+    { key: 'name', header: 'Nombre', width: '25%' },
     { key: 'type', header: 'Tipo', width: '15%' },
     { key: 'power', header: 'Poder', width: '15%', align: 'center' },
     { key: 'rarity', header: 'Rareza', width: '15%', align: 'center' },
     { key: 'description', header: 'Descripción', width: '30%' },
   ];
 
-  const tableData = [
-    { id: 1, name: 'Espada de Fuego', type: 'Arma', power: 85, rarity: 'Raro', description: 'Una espada envuelta en llamas eternas', highlight: true },
+  const tableData: TableRow[] = [
+    { id: 1, name: 'Espada de Fuego', type: 'Arma', power: 85, rarity: 'Raro', description: 'Una espada envuelta en llamas eternas', highlighted: true },
     { id: 2, name: 'Amuleto de Protección', type: 'Accesorio', power: 60, rarity: 'Común', description: 'Reduce el daño recibido en un 15%' },
     { id: 3, name: 'Grimorio Arcano', type: 'Tomo', power: 95, rarity: 'Épico', description: 'Contiene hechizos de gran poder ancestral' },
     { id: 4, name: 'Poción de Invisibilidad', type: 'Consumible', power: 70, rarity: 'Poco común', description: 'Vuelve invisible al usuario durante 3 minutos' },
     { id: 5, name: 'Botas de Velocidad', type: 'Armadura', power: 65, rarity: 'Poco común', description: 'Aumenta la velocidad de movimiento en un 30%' },
-    { id: 6, name: 'Corona del Rey Caído', type: 'Accesorio', power: 100, rarity: 'Legendario', description: 'Otorga autoridad sobre los no-muertos', highlight: true },
+    { id: 6, name: 'Corona del Rey Caído', type: 'Accesorio', power: 100, rarity: 'Legendario', description: 'Otorga autoridad sobre los no-muertos', highlighted: true },
   ];
 
   // Datos para los stat blocks
@@ -166,10 +166,13 @@ export default function AdvancedElementsDemo() {
                     columns={tableColumns} 
                     data={tableData}
                     style="cyber"
-                    title="Inventario Tecnológico"
-                    caption="Artefactos del futuro con propiedades especiales"
+                    className="mb-2"
                     glowing={true}
+                    hover={true}
+                    ariaLabel="Inventario Tecnológico"
                   />
+                  <div className="text-center text-cyan-300 font-bold mt-2">Inventario Tecnológico</div>
+                  <div className="text-center text-gray-400 text-sm italic">Artefactos del futuro con propiedades especiales</div>
                 </div>
                 
                 <div className="relative">
@@ -177,10 +180,13 @@ export default function AdvancedElementsDemo() {
                     columns={tableColumns} 
                     data={tableData}
                     style="arcane"
-                    title="Grimorio Arcano"
-                    caption="Objetos mágicos de poder ancestral"
+                    className="mb-2"
                     glowing={true}
+                    hover={true}
+                    ariaLabel="Grimorio Arcano"
                   />
+                  <div className="text-center text-purple-300 font-bold mt-2">Grimorio Arcano</div>
+                  <div className="text-center text-gray-400 text-sm italic">Objetos mágicos de poder ancestral</div>
                 </div>
               </div>
             </section>
@@ -194,9 +200,11 @@ export default function AdvancedElementsDemo() {
                     columns={tableColumns} 
                     data={tableData.slice(0, 4)}
                     style="ancient"
-                    title="Pergaminos Antiguos"
                     compact={true}
+                    className="mb-2"
+                    ariaLabel="Pergaminos Antiguos"
                   />
+                  <div className="text-center text-amber-300 font-bold mt-2">Pergaminos Antiguos</div>
                 </div>
                 
                 <div className="relative">
@@ -204,9 +212,11 @@ export default function AdvancedElementsDemo() {
                     columns={tableColumns} 
                     data={tableData.slice(0, 4)}
                     style="shadowy"
-                    title="Artefactos Sombríos"
                     compact={true}
+                    className="mb-2"
+                    ariaLabel="Artefactos Sombríos"
                   />
+                  <div className="text-center text-red-300 font-bold mt-2">Artefactos Sombríos</div>
                 </div>
               </div>
             </section>
@@ -220,12 +230,13 @@ export default function AdvancedElementsDemo() {
                     columns={tableColumns.slice(0, 3)} 
                     data={tableData.filter(item => parseInt(item.power.toString()) > 70)}
                     style="modern"
-                    title="Objetos de Alto Poder"
                     zebra={false}
                     bordered={true}
-                    highlightRows={true}
                     compact={true}
+                    className="mb-2"
+                    ariaLabel="Objetos de Alto Poder"
                   />
+                  <div className="text-center text-blue-300 font-bold mt-2">Objetos de Alto Poder</div>
                 </div>
                 
                 <div className="relative">
@@ -233,12 +244,14 @@ export default function AdvancedElementsDemo() {
                     columns={tableColumns.filter(col => col.key !== 'power' && col.key !== 'description')} 
                     data={tableData}
                     style="cyber"
-                    title="Referencia Rápida"
                     bordered={false}
                     compact={true}
-                    highlightRows={true}
+                    hover={true}
                     glowing={true}
+                    className="mb-2"
+                    ariaLabel="Referencia Rápida"
                   />
+                  <div className="text-center text-cyan-300 font-bold mt-2">Referencia Rápida</div>
                 </div>
               </div>
             </section>

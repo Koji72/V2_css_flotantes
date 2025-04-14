@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { icons, LucideProps } from 'lucide-react'; // Importamos iconos
+import Icon, { IconName } from './IconsInline';
 
 // Definimos los tipos para los estilos posibles
 export type FloatingElementStyle = 
@@ -23,13 +23,8 @@ export type FloatingElementAnimation =
   | 'shake' // Nuevo
   | 'none';
 
-// Definimos un tipo para los nombres de iconos válidos de lucide-react
-// Usamos keyof typeof icons para obtener una unión de todos los nombres de iconos
-type IconName = keyof typeof icons;
-
-// Permitimos pasar className, size, strokeWidth, etc., pero no 'ref' 
-// y tampoco 'color' explícitamente (se puede manejar con className)
-type AllowedIconProps = Omit<LucideProps, 'ref' | 'color'>;
+// Reexportar IconName para facilitar uso
+export type { IconName } from './IconsInline';
 
 interface FloatingElementProps {
   children: ReactNode;
@@ -39,8 +34,12 @@ interface FloatingElementProps {
   width?: string;
   animation?: FloatingElementAnimation;
   className?: string;
-  icon?: IconName; // Nueva prop para el nombre del icono
-  iconProps?: AllowedIconProps; // Usamos el tipo corregido
+  icon?: IconName;
+  iconProps?: {
+    size?: number;
+    className?: string;
+    [key: string]: any;
+  };
 }
 
 const FloatingElement: React.FC<FloatingElementProps> = ({
@@ -52,10 +51,10 @@ const FloatingElement: React.FC<FloatingElementProps> = ({
   animation = 'none',
   className = '',
   icon,
-  iconProps = { size: 16, strokeWidth: 2 }, // Valores por defecto ok
+  iconProps = { size: 16 },
 }) => {
   console.log(`[FloatingElement] Rendering with style: ${style}, position: ${position}, icon: ${icon}`);
-
+  
   // Clase base para todos los elementos flotantes
   const baseClasses = 'floating-element mb-4'; // Simplificado, estilos visuales van por estilo
   
@@ -90,9 +89,6 @@ const FloatingElement: React.FC<FloatingElementProps> = ({
 
   console.log(`[FloatingElement] Generated classes: ${elementClasses}`);
   
-  // Renderizar el icono si se proporciona un nombre válido
-  const IconComponent = icon && icons[icon] ? icons[icon] : null;
-  
   return (
     // Añadimos clear-float al contenedor si no es centrado
     <div 
@@ -103,17 +99,27 @@ const FloatingElement: React.FC<FloatingElementProps> = ({
       }}
     >
       {title && (
-        <div className="floating-element-header flex items-center gap-2"> {/* Usamos flex para alinear icono y título */} 
-          {IconComponent && 
-            <IconComponent {...iconProps} className={`inline-block ${iconProps?.className || ''}`} />
-          }
-          <span>{title}</span> {/* Envolvemos título en span */} 
+        <div className="floating-element-header flex items-center gap-2"> 
+          {icon && (
+            <Icon 
+              name={icon} 
+              size={iconProps?.size || 16} 
+              className={`inline-block ${iconProps?.className || ''}`}
+              {...iconProps}
+            />
+          )}
+          <span>{title}</span>
         </div>
       )}
       {/* Si no hay título pero sí icono, mostramos el icono solo */} 
-      {!title && IconComponent && (
+      {!title && icon && (
          <div className="floating-element-header flex items-center gap-2">
-            <IconComponent {...iconProps} className={`inline-block ${iconProps?.className || ''}`} />
+            <Icon 
+              name={icon} 
+              size={iconProps?.size || 16} 
+              className={`inline-block ${iconProps?.className || ''}`}
+              {...iconProps}
+            />
          </div>
       )}
       <div className="floating-element-content">
