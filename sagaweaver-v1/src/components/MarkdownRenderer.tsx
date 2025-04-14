@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { processLayoutElements } from '../utils/markdownLayoutProcessor';
 
 interface MarkdownRendererProps {
@@ -14,6 +14,14 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   onPanelRender,
   components
 }) => {
+  // Estado para controlar si estamos en el cliente
+  const [isClient, setIsClient] = useState(false);
+  
+  // Establecer isClient a true después del montaje del componente
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Procesar el markdown para convertir las directivas en HTML
   const processedHtml = useMemo(() => {
     console.log('[MarkdownRenderer] Processing markdown into HTML');
@@ -79,10 +87,16 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     return customElements;
   }, [processedHtml, components]);
 
+  // Solo renderizar componentes del cliente cuando estamos en el cliente
+  if (!isClient && components) {
+    // Durante el renderizado en el servidor, mostrar solo el HTML sin componentes dinámicos
+    return <div className={className} dangerouslySetInnerHTML={{ __html: processedHtml }} />;
+  }
+
   return (
     <div className={className}>
       {/* Renderizar el HTML procesado con los componentes intercalados */}
-      {components && customComponentsElements.length > 0 ? (
+      {isClient && components && customComponentsElements.length > 0 ? (
         <>
           {/* Dividir el HTML y renderizar los componentes en las posiciones correctas */}
           {customComponentsElements.reduce((result: React.ReactNode[], element, i) => {
@@ -130,7 +144,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       )}
       
       {/* Renderizar validaciones si se proporciona onPanelRender */}
-      {onPanelRender && validationPanels.length > 0 && (
+      {isClient && onPanelRender && validationPanels.length > 0 && (
         <div className="panel-validation-container">
           {validationPanels.map((panelHtml, index) => (
             <React.Fragment key={index}>
