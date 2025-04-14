@@ -2,8 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { EnhancedTable, TableColumn, TableRow, TableStyle } from '../components/EnhancedTable';
 import { MarkdownRenderer } from '../components/MarkdownRenderer';
-import '../styles/rpg-columns.css';
-import '../styles/enhanced-table.css';
+// Los estilos globales ya están importados en _app.tsx
 
 const tableData = {
   heroes: {
