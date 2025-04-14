@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import NavigationBar from '../components/NavigationBar';
 import { EnhancedTable, TableColumn, TableRow, TableStyle } from '../components/EnhancedTable';
 import { MarkdownRenderer } from '../components/MarkdownRenderer';
 // Los estilos globales ya están importados en _app.tsx
@@ -149,8 +150,12 @@ El costo de identificación es aproximadamente 100 monedas de oro por objeto, de
 
 export default function RPGTablesDemo() {
   const renderTableComponent = (type: string) => {
+    console.log(`[RPGTablesDemo] Rendering table for type: ${type}`);
     const tableInfo = tableData[type as keyof typeof tableData];
-    if (!tableInfo) return null;
+    if (!tableInfo) {
+      console.warn(`[RPGTablesDemo] No table data found for type: ${type}`);
+      return null;
+    }
     
     const tableStyle = type === 'monsters' ? 'cyber' : 
                        type === 'treasures' ? 'ancient' : 'rpg';
@@ -168,21 +173,15 @@ export default function RPGTablesDemo() {
     );
   };
 
-  // Definimos el renderizador de paneles personalizado
-  const handlePanelRender = (panelHtml: string) => {
-    // Buscar marcadores especiales en el HTML del panel
-    if (panelHtml.includes('table-heroes')) {
-      return renderTableComponent('heroes');
-    } else if (panelHtml.includes('table-monsters')) {
-      return renderTableComponent('monsters');
-    } else if (panelHtml.includes('table-treasures')) {
-      return renderTableComponent('treasures');
-    }
-    return null;
+  // Definimos el componente personalizado para renderizar las tablas
+  const customComponents = {
+    'table-heroes': () => renderTableComponent('heroes'),
+    'table-monsters': () => renderTableComponent('monsters'),
+    'table-treasures': () => renderTableComponent('treasures')
   };
 
   return (
-    <>
+    <div className="bg-gray-900 text-white min-h-screen">
       <Head>
         <title>Demo de Tablas RPG | SagaWeaver</title>
         <meta name="description" content="Demostración de integración de tablas mejoradas en paneles RPG" />
@@ -191,12 +190,14 @@ export default function RPGTablesDemo() {
         <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&display=swap" rel="stylesheet" />
       </Head>
       
+      <NavigationBar />
+      
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         <MarkdownRenderer 
           markdown={markdownContent} 
-          onPanelRender={handlePanelRender}
+          components={customComponents}
         />
       </main>
-    </>
+    </div>
   );
 } 
