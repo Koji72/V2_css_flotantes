@@ -1,26 +1,24 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./index.html"
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-        'inf-primary': '#00FFFF',
-        'inf-accent1': '#00CED1',
-        'inf-tertiary': '#808080',
-        'inf-secondary': '#000000',
-        'inf-accent2': '#FFA500',
+        'border-color': 'var(--border-color)',
       },
-      fontFamily: {
-        'main': ['Roboto', 'sans-serif'],
-        'title': ['Roboto', 'sans-serif'],
+      backgroundColor: {
+        'primary': 'var(--bg-primary)',
+        'secondary': 'var(--bg-secondary)',
+        'tertiary': 'var(--bg-tertiary)',
+      },
+      textColor: {
+        'primary': 'var(--text-primary)',
+        'secondary': 'var(--text-secondary)',
       },
     },
   },
   plugins: [],
-  corePlugins: {
-    // preflight: false, // Comentado o eliminado para habilitar preflight
-  }
 } 

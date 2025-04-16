@@ -1,42 +1,60 @@
 /* Estilos para el layout principal de la aplicación */
-.App {
+.app-container, 
+.flex.flex-col.h-screen {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 100vh;
   width: 100%;
   overflow: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
-/* Contenedor del editor */
-.editor-container {
+/* Contenedor principal del contenido */
+.main-content,
+.flex.flex-1.overflow-hidden {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Sección del editor */
+.editor-section,
+.flex.flex-col.w-1\/2 {
   display: flex;
   flex-direction: column;
   width: 50%;
   height: 100%;
   border-right: 1px solid var(--border-color);
-}
-
-/* Contenedor de la barra de herramientas */
-.toolbar-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px;
   background-color: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-}
-
-/* Contenedor del editor de código */
-.editor-wrapper {
-  flex: 1;
   overflow: hidden;
 }
 
+/* Selector de plantillas */
+.flex-shrink-0.border-b {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-color);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Contenedor del editor */
+.editor-wrapper,
+.flex-1.overflow-auto {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  min-height: 200px; /* Asegurar altura mínima */
+}
+
 /* Contenedor de la vista previa */
-.preview-container {
+.preview-container,
+.w-1\/2.overflow-hidden {
   width: 50%;
   height: 100%;
   background-color: var(--bg-secondary);
+  overflow: hidden;
 }
 
 /* Iframe de la vista previa */
@@ -49,17 +67,21 @@
 
 /* Estilos para layout responsivo */
 @media (max-width: 768px) {
-  .App {
+  .main-content,
+  .flex.flex-1.overflow-hidden {
     flex-direction: column;
   }
 
-  .editor-container,
-  .preview-container {
+  .editor-section,
+  .preview-container,
+  .flex.flex-col.w-1\/2,
+  .w-1\/2.overflow-hidden {
     width: 100%;
     height: 50%;
   }
 
-  .editor-container {
+  .editor-section,
+  .flex.flex-col.w-1\/2 {
     border-right: none;
     border-bottom: 1px solid var(--border-color);
   }

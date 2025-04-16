@@ -424,6 +424,18 @@ class PreviewManager {
               - animationClass: "${animationClass}"
             `);
 
+            // Revisión específica para paneles flotantes
+            if (attributesString.toLowerCase().includes('layout=float-left') || 
+                attributesString.toLowerCase().includes('layout=floating-left')) {
+                layoutClass = ' layout--floating-left'; // Forzar clase correcta
+                this.logDebug(`  [renderPanel DEBUG] Forzando layout flotante izquierdo: "${layoutClass}"`);
+            }
+            else if (attributesString.toLowerCase().includes('layout=float-right') || 
+                    attributesString.toLowerCase().includes('layout=floating-right')) {
+                layoutClass = ' layout--floating-right'; // Forzar clase correcta
+                this.logDebug(`  [renderPanel DEBUG] Forzando layout flotante derecho: "${layoutClass}"`);
+            }
+
             // Fallback para estilos comunes si no se detectaron correctamente
             if (!panelStyleClasses) {
                 // Verificar estilo tech-corners
@@ -450,6 +462,24 @@ class PreviewManager {
                     panelStyleClasses = ' panel-style--neo-frame';
                     this.logDebug(`  [renderPanel DEBUG] Aplicado fallback para neo-frame: "${panelStyleClasses}"`);
                 }
+                // Verificar glass-panel
+                else if (attributesString.toLowerCase().includes('glass-panel') ||
+                        attributesString.toLowerCase().includes('style=glass')) {
+                    panelStyleClasses = ' panel-style--glass';
+                    this.logDebug(`  [renderPanel DEBUG] Aplicado fallback para glass-panel: "${panelStyleClasses}"`);
+                }
+                // Verificar corner-brackets
+                else if (attributesString.toLowerCase().includes('corner-brackets') ||
+                        attributesString.toLowerCase().includes('style=corner')) {
+                    panelStyleClasses = ' panel-style--brackets';
+                    this.logDebug(`  [renderPanel DEBUG] Aplicado fallback para corner-brackets: "${panelStyleClasses}"`);
+                }
+                // Verificar cut-corners
+                else if (attributesString.toLowerCase().includes('cut-corners') ||
+                        attributesString.toLowerCase().includes('style=cut')) {
+                    panelStyleClasses = ' panel-style--cut-corners';
+                    this.logDebug(`  [renderPanel DEBUG] Aplicado fallback para cut-corners: "${panelStyleClasses}"`);
+                }
             }
 
         } catch (e) { 
@@ -471,6 +501,8 @@ class PreviewManager {
             .replace(/layout\s*=\s*["']floating-left["']/gi, '')
             .replace(/layout\s*=\s*["']floating-right["']/gi, '')
             .replace(/layout\s*=\s*["']centered["']/gi, '')
+            .replace(/layout\s*=\s*["']float-left["']/gi, '')
+            .replace(/layout\s*=\s*["']float-right["']/gi, '')
             .replace(/style\s*=\s*["'][^"']*["']/gi, '')
             .replace(/animation\s*=\s*["'][^"']*["']/gi, '')
             .replace(/class\s*=\s*["'][^"']*["']/gi, '');

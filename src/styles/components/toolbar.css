@@ -1,0 +1,44 @@
+/* Estilos base para la barra de herramientas */
+.toolbar {
+  @apply flex items-center gap-2 p-2 bg-gray-800 border-b border-gray-700;
+}
+
+/* Estilos base para botones */
+.toolbar button {
+  @apply flex items-center justify-center 
+         px-2 py-1 min-w-[30px] min-h-[30px]
+         text-white bg-gray-700 border border-gray-600
+         rounded-md transition-all duration-200
+         hover:bg-gray-600 hover:border-blue-400
+         active:bg-gray-800 active:translate-y-0.5;
+}
+
+/* Estilos para iconos */
+.toolbar button svg {
+  @apply text-blue-400 stroke-2;
+}
+
+/* Estilos para texto en botones */
+.toolbar button span.text-sm {
+  @apply text-white font-semibold;
+}
+
+/* Estilos para menús desplegables */
+.toolbar .relative button {
+  @apply flex items-center justify-center
+         bg-gray-700 text-white px-2 py-1;
+}
+
+.toolbar .absolute {
+  @apply z-50 shadow-lg;
+}
+
+/* Estilos para botones especiales */
+.toolbar button[title^="Insertar"] {
+  @apply border-blue-400/30;
+}
+
+/* Estilos para separadores */
+.toolbar .separator {
+  @apply h-6 w-px bg-gray-600;
+} 

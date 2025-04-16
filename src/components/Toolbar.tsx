@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { 
   Bold, Italic, List, ListOrdered, 
   Quote, Code, Table, Image, 
@@ -6,24 +6,46 @@ import {
   AlignJustify, Heading1, Heading2,
   User, Map, Compass, Sword,
   Heart, Scroll, Dice1, 
-  Layers, Square, PanelTopClose, PanelLeft
+  Layers, Square, PanelTopClose, PanelLeft,
+  Upload, Sun, Moon, Strikethrough
 } from 'lucide-react';
 
 interface ToolbarProps {
+  onFileLoad: (file: File) => void;
+  onLoadDemo: () => void;
+  onDarkModeToggle: () => void;
+  darkMode: boolean;
+  isLoading: boolean;
   onApplyStyle: (style: string) => void;
   onInsertBlock: (block: string) => void;
-  onLoadMarkdown: () => void;
-  onLoadDemo: () => void;
-  isLoading: boolean;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
+  onFileLoad,
+  onLoadDemo,
+  onDarkModeToggle,
+  darkMode,
+  isLoading,
   onApplyStyle,
   onInsertBlock,
-  onLoadMarkdown,
-  onLoadDemo,
-  isLoading
 }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      onFileLoad(file);
+    }
+  };
+
+  const handleStyleClick = (style: string) => {
+    onApplyStyle(style);
+  };
+
+  const handleBlockClick = (block: string) => {
+    onInsertBlock(block);
+  };
+
   // Templates para bloques comunes
   const quoteTemplate = '> Cita de texto';
   const codeBlockTemplate = '```\n// Código aquí\n```';
@@ -107,140 +129,73 @@ Este panel combina múltiples estilos y layouts.
   ];
 
   return (
-    <div className="toolbar p-2 bg-gray-800 border-b border-gray-700 flex flex-wrap items-center gap-2">
-      {/* Controles de formato de texto */}
-      <button className="button-format" onClick={() => onApplyStyle('**Texto en negrita**')}>
-        <Bold size={16} />
-      </button>
-      <button className="button-format" onClick={() => onApplyStyle('*Texto en cursiva*')}>
-        <Italic size={16} />
-      </button>
-      <button className="button-format" onClick={() => onApplyStyle('# Encabezado')}>
-        <Heading1 size={16} />
-      </button>
-      <button className="button-format" onClick={() => onApplyStyle('## Subencabezado')}>
-        <Heading2 size={16} />
-      </button>
-
-      <div className="h-6 w-px bg-gray-700 mx-1"></div>
-
-      {/* Controles de listas */}
-      <button className="button-format" onClick={() => onApplyStyle('- Elemento de lista\n- Otro elemento')}>
-        <List size={16} />
-      </button>
-      <button className="button-format" onClick={() => onApplyStyle('1. Primer elemento\n2. Segundo elemento')}>
-        <ListOrdered size={16} />
-      </button>
-
-      <div className="h-6 w-px bg-gray-700 mx-1"></div>
-
-      {/* Controles de bloques */}
-      <button className="button-format" onClick={() => onApplyStyle(quoteTemplate)}>
-        <Quote size={16} />
-      </button>
-      <button className="button-format" onClick={() => onApplyStyle(codeBlockTemplate)}>
-        <Code size={16} />
-      </button>
-      <button className="button-format" onClick={() => onApplyStyle(tableTemplate)}>
-        <Table size={16} />
-      </button>
-      <button className="button-format" onClick={() => onApplyStyle(imageTemplate)}>
-        <Image size={16} />
-      </button>
-
-      <div className="h-6 w-px bg-gray-700 mx-1"></div>
-
-      {/* Bloques personalizados - Estilo de paneles */}
-      <div className="relative group">
-        <button className="button-format flex items-center gap-1">
-          <Layers size={16} />
-          <span className="text-sm">Paneles</span>
+    <div className={`toolbar ${darkMode ? 'dark-mode' : ''}`}>
+      <div className="toolbar-section">
+        <button
+          className="toolbar-button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isLoading}
+        >
+          <Upload className="icon" />
+          Cargar Markdown
         </button>
-        <div className="absolute left-0 top-full mt-1 bg-gray-800 border border-gray-700 rounded shadow-lg z-10 hidden group-hover:block w-64">
-          {panelStylesTemplates.map((template, index) => (
-            <button 
-              key={index}
-              className="block w-full text-left p-2 hover:bg-gray-700 text-white flex items-center gap-2"
-              onClick={() => onInsertBlock(template.template)}
-            >
-              {template.icon}
-              <span className="text-sm">{template.name}</span>
-            </button>
-          ))}
-        </div>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept=".md,.markdown"
+          style={{ display: 'none' }}
+        />
+        <button className="toolbar-button" onClick={onLoadDemo} disabled={isLoading}>
+          <FileText className="icon" />
+          Cargar Demo
+        </button>
       </div>
 
-      <div className="h-6 w-px bg-gray-700 mx-1"></div>
+      <div className="toolbar-section">
+        <button className="toolbar-button" onClick={() => handleStyleClick('**texto**')}>
+          <Bold className="icon" />
+          Negrita
+        </button>
+        <button className="toolbar-button" onClick={() => handleStyleClick('*texto*')}>
+          <Italic className="icon" />
+          Cursiva
+        </button>
+        <button className="toolbar-button" onClick={() => handleStyleClick('~~texto~~')}>
+          <Strikethrough className="icon" />
+          Tachado
+        </button>
+        <button className="toolbar-button" onClick={() => handleStyleClick('`texto`')}>
+          <Code className="icon" />
+          Código
+        </button>
+      </div>
 
-      {/* Insertar bloques temáticos */}
-      <button 
-        className="button-format flex items-center gap-1" 
-        onClick={() => onInsertBlock(`:::statblock Personaje
-**Nombre:** Anya Petrova
-**Clase:** Exploradora
-**Nivel:** 7
-**HP:** 45/60
-**Estadísticas:**
-- Fuerza: 14
-- Destreza: 18
-- Constitución: 12
-- Inteligencia: 14
-- Sabiduría: 16
-- Carisma: 10
-:::`)}>
-        <User size={16} />
-        <span className="text-sm">Personaje</span>
-      </button>
+      <div className="toolbar-section">
+        <button className="toolbar-button" onClick={() => handleBlockClick('# Título 1')}>
+          <Heading1 className="icon" />
+          Título 1
+        </button>
+        <button className="toolbar-button" onClick={() => handleBlockClick('## Título 2')}>
+          <Heading2 className="icon" />
+          Título 2
+        </button>
+        <button className="toolbar-button" onClick={() => handleBlockClick('> Cita')}>
+          <Quote className="icon" />
+          Cita
+        </button>
+        <button className="toolbar-button" onClick={() => handleBlockClick('- Elemento')}>
+          <List className="icon" />
+          Lista
+        </button>
+      </div>
 
-      <button 
-        className="button-format flex items-center gap-1" 
-        onClick={() => onInsertBlock(`:::panel Mapa | style=glass-panel
-![Mapa de la región](https://via.placeholder.com/500x300)
-
-**Lugares de interés:**
-1. Ciudad principal
-2. Bosque encantado
-3. Montañas de hielo
-:::`)}>
-        <Map size={16} />
-        <span className="text-sm">Mapa</span>
-      </button>
-
-      <button 
-        className="button-format flex items-center gap-1" 
-        onClick={() => onInsertBlock(`:::datamatrix EXPLORACIÓN | style=corner-brackets
-| Dirección | Terreno | Peligro |
-|-----------|---------|---------|
-| Norte     | Montaña | Alto    |
-| Sur       | Bosque  | Medio   |
-| Este      | Llanura | Bajo    |
-| Oeste     | Río     | Medio   |
-:::`)}>
-        <Compass size={16} />
-        <span className="text-sm">Exploración</span>
-      </button>
-
-      <div className="flex-grow"></div>
-
-      {/* Controles de carga */}
-      <button 
-        className="button-action" 
-        onClick={onLoadMarkdown}
-        title="Load Markdown File"
-      >
-        <FileText size={16} />
-        <span className="text-sm">Cargar MD</span>
-      </button>
-
-      <button 
-        className="button-action" 
-        onClick={onLoadDemo}
-        disabled={isLoading}
-        title="Load Demo"
-      >
-        {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Layout size={16} />}
-        <span className="text-sm">Cargar Demo</span>
-      </button>
+      <div className="toolbar-section">
+        <button className="toolbar-button" onClick={onDarkModeToggle}>
+          {darkMode ? <Sun className="icon" /> : <Moon className="icon" />}
+          {darkMode ? 'Modo Claro' : 'Modo Oscuro'}
+        </button>
+      </div>
     </div>
   );
 };

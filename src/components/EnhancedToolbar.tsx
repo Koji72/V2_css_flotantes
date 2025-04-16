@@ -275,344 +275,64 @@ Recomendación: Desplegar sondas de reconocimiento.
   ];
 
   return (
-    <div className="toolbar p-2 bg-gray-800 border-b border-gray-700 flex flex-wrap items-center gap-2">
-      {/* Botón para modo oscuro/claro */}
-      <button 
-        className="p-2 hover:bg-gray-700 rounded"
-        onClick={onDarkModeToggle}
-        title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-      >
-        {darkMode ? <Sun size={16} /> : <Moon size={16} />}
-      </button>
-
-      <div className="h-6 w-px bg-gray-700 mx-1"></div>
-
-      {/* File operations */}
-      <button
-        className="p-2 hover:bg-gray-700 rounded flex items-center gap-1"
-        onClick={() => {
-          const input = document.createElement('input');
-          input.type = 'file';
-          input.accept = '.md';
-          input.onchange = (e) => onFileLoad(e as any);
-          input.click();
-        }}
-        title="Cargar archivo Markdown"
-      >
-        <FileText size={16} />
-      </button>
-
-      <div className="h-6 w-px bg-gray-700 mx-1"></div>
-
-      {/* Controles de formato de texto */}
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle('**Texto en negrita**')}>
-        <Bold size={16} />
-      </button>
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle('*Texto en cursiva*')}>
-        <Italic size={16} />
-      </button>
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle('# Encabezado')}>
-        <Heading1 size={16} />
-      </button>
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle('## Subencabezado')}>
-        <Heading2 size={16} />
-      </button>
-
-      <div className="h-6 w-px bg-gray-700 mx-1"></div>
-
-      {/* Controles de listas */}
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle('- Elemento de lista\n- Otro elemento')}>
-        <List size={16} />
-      </button>
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle('1. Primer elemento\n2. Segundo elemento')}>
-        <ListOrdered size={16} />
-      </button>
-
-      <div className="h-6 w-px bg-gray-700 mx-1"></div>
-
-      {/* Controles de bloques */}
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle(quoteTemplate)}>
-        <Quote size={16} />
-      </button>
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle(codeBlockTemplate)}>
-        <Code size={16} />
-      </button>
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle(tableTemplate)}>
-        <Table size={16} />
-      </button>
-      <button className="p-2 hover:bg-gray-700 rounded flex items-center gap-1 border border-gray-600" onClick={() => onApplyStyle(enhancedTableTemplate)} title="Insertar tabla con estilos avanzados">
-        <Table size={16} />
-        <span className="text-sm">Tabla Avanzada</span>
-      </button>
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle(imageTemplate)}>
-        <Image size={16} />
-      </button>
-      <button className="p-2 hover:bg-gray-700 rounded" onClick={() => onApplyStyle(horizontalRuleTemplate)}>
-        <div className="w-4 h-px bg-white"></div>
-      </button>
-
-      {/* Botón de división en dos columnas */}
-      <button 
-        className="p-2 hover:bg-indigo-600 bg-indigo-700 rounded flex items-center gap-1 border border-indigo-500 text-white" 
-        onClick={() => onApplyStyle(`:::panel{layout="two-columns" title="Documento en Dos Columnas"}
-## Contenido Tipo Libro
-
-Este formato organiza el texto en dos columnas al estilo de libros y manuales. Es ideal para documentos extensos como:
-
-- Manuales de referencia
-- Documentación técnica
-- Libros digitales
-- Contenido educativo
-
-### Distribución Automática
-
-El contenido fluye naturalmente desde la columna izquierda hacia la derecha, como en un libro tradicional. Los encabezados importantes y elementos como tablas ocupan automáticamente el ancho completo.
-
-### Diseño Profesional
-
-La primera letra del primer párrafo se muestra con estilo capital, similar a los libros impresos. Las columnas tienen un espaciado óptimo para facilitar la lectura y mejorar la presentación visual.
-
-> Los bloques de cita y otros elementos especiales se integran perfectamente en el flujo de columnas.
-
-Esta disposición mejora significativamente la experiencia de lectura en pantallas anchas, aprovechando el espacio horizontal disponible.
-:::`)} 
-        title="Insertar panel con dos columnas tipo libro (contenido fluido entre columnas)"
-      >
-        <Columns size={16} />
-        <span className="text-sm">Dos Columnas (Libro)</span>
-      </button>
-      
-      {/* Botón de división en dos columnas simple */}
-      <button 
-        className="p-2 hover:bg-gray-600 bg-gray-700 rounded flex items-center gap-1 border border-gray-500 ml-1" 
-        onClick={() => onApplyStyle(`:::panel{layout="two-columns" style="glass" title="Dos Columnas Fluidas"}
-### Ejemplo de Contenido
-
-Este panel organiza el contenido automáticamente en dos columnas al estilo libro, donde el texto fluye de la columna izquierda a la derecha. Es ideal para:
-
-- Textos largos y bien estructurados
-- Documentos tipo manual o libro
-- Mejorar la legibilidad en pantallas anchas
-
-> Las columnas se adaptan automáticamente en dispositivos móviles convirtiéndose en una sola columna.
-
-### Segunda Sección
-
-Los encabezados y otros elementos estructurales importantes como tablas e imágenes se mantienen en una sola columna para mejor legibilidad.
-
-La primera letra del texto tiene un estilo capital para darle un aspecto más profesional.
-:::`)} 
-        title="Insertar panel con dos columnas fluidas (estilo libro)"
-      >
-        <Columns size={16} />
-        <span className="text-sm">Columnas Simple</span>
-      </button>
-
-      {/* Botón de columnas separadas */}
-      <button 
-        className="p-2 hover:bg-green-600 bg-green-700 rounded flex items-center gap-1 border border-green-500 ml-1 text-white" 
-        onClick={() => onApplyStyle(`:::panel{layout="split-columns" style="glass" title="Columnas Independientes"}
-<div class="column column-left">
-
-### Columna Izquierda
-
-Este contenido permanece en la columna izquierda:
-
-- No fluye hacia la columna derecha
-- Es totalmente independiente
-- Ideal para comparaciones directas
-
-Puedes usar cualquier elemento markdown: listas, tablas, código, citas, etc.
-</div>
-
-<div class="column column-right">
-
-### Columna Derecha
-
-Este contenido permanece en la columna derecha:
-
-1. Es independiente de la izquierda
-2. No es continuación del otro contenido
-3. Perfecto para información paralela
-
-Ideal para presentar datos que deben verse lado a lado.
-</div>
-:::`)} 
-        title="Insertar panel con columnas izquierda y derecha independientes"
-      >
-        <Layout size={16} />
-        <span className="text-sm">Columnas Separadas</span>
-      </button>
-
-      {/* Botón de comparativa */}
-      <button 
-        className="p-2 hover:bg-purple-600 bg-purple-700 rounded flex items-center gap-1 border border-purple-500 ml-1 text-white" 
-        onClick={() => onApplyStyle(`:::panel{layout="split-columns" style="tech-corners" title="Comparativa"}
-<div class="column column-left">
-
-### Opción A
-
-**Descripción:**
-Breve descripción de la primera opción.
-
-**Características:**
-- Característica principal 1
-- Característica principal 2
-- Característica principal 3
-
-**Ventajas:**
-- Principal ventaja 1
-- Principal ventaja 2
-
-**Limitaciones:**
-- Limitación 1
-</div>
-
-<div class="column column-right">
-
-### Opción B
-
-**Descripción:**
-Breve descripción de la segunda opción.
-
-**Características:**
-- Característica principal 1 
-- Característica principal 2
-- Característica principal 3
-
-**Ventajas:**
-- Principal ventaja 1
-- Principal ventaja 2
-
-**Limitaciones:**
-- Limitación 1
-</div>
-:::`)} 
-        title="Insertar plantilla de comparativa con columnas independientes"
-      >
-        <SplitSquareVertical size={16} />
-        <span className="text-sm">Comparativa</span>
-      </button>
-
-      <div className="h-6 w-px bg-gray-700 mx-1"></div>
-
-      {/* Bloques personalizados - Estilo de paneles */}
-      <div className="relative">
-        <button 
-          className={`p-2 rounded flex items-center gap-1 ${panelMenuOpen ? 'bg-gray-700' : 'hover:bg-gray-700'} border border-gray-600`}
-          onClick={() => setPanelMenuOpen(!panelMenuOpen)}
-        >
-          <Layers size={16} />
-          <span className="text-sm">Paneles</span>
-          {panelMenuOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+    <div className="toolbar" style={{ display: 'flex', gap: '8px', padding: '8px', backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
+      <div className="markdown-buttons" style={{ display: 'flex', gap: '4px' }}>
+        <button onClick={() => onApplyStyle('**texto**')} title="Negrita" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <Bold size={16} />
         </button>
-        {panelMenuOpen && (
-          <div className="absolute left-0 top-full mt-1 bg-gray-800 border border-gray-700 rounded shadow-lg z-10 w-64">
-            {panelStylesTemplates.map((template, index) => (
-              <button 
-                key={index}
-                className="block w-full text-left p-2 hover:bg-gray-700 flex items-center gap-2"
-                onClick={() => {
-                  onInsertBlock(template.template);
-                  setPanelMenuOpen(false);
-                }}
-              >
-                {template.icon}
-                <span className="text-sm">{template.name}</span>
-              </button>
-            ))}
-          </div>
-        )}
+        <button onClick={() => onApplyStyle('*texto*')} title="Cursiva" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <Italic size={16} />
+        </button>
+        <button onClick={() => onInsertBlock(quoteTemplate)} title="Cita" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <Quote size={16} />
+        </button>
+        <button onClick={() => onInsertBlock(codeBlockTemplate)} title="Bloque de código" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <Code size={16} />
+        </button>
+        <button onClick={() => onInsertBlock(tableTemplate)} title="Tabla" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <Table size={16} />
+        </button>
+        <button onClick={() => onInsertBlock(imageTemplate)} title="Imagen" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <Image size={16} />
+        </button>
+        <button onClick={() => onInsertBlock(horizontalRuleTemplate)} title="Línea horizontal" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <AlignJustify size={16} />
+        </button>
+        <button onClick={() => onApplyStyle('# ')} title="Título 1" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <Heading1 size={16} />
+        </button>
+        <button onClick={() => onApplyStyle('## ')} title="Título 2" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <Heading2 size={16} />
+        </button>
+        <button onClick={() => onApplyStyle('- ')} title="Lista desordenada" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <List size={16} />
+        </button>
+        <button onClick={() => onApplyStyle('1. ')} title="Lista ordenada" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <ListOrdered size={16} />
+        </button>
       </div>
 
-      <div className="flex-grow"></div>
-
-      {/* Controles de carga */}
-      <button 
-        className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 flex items-center gap-2" 
-        onClick={onLoadMarkdown}
-      >
-        <FileText size={16} />
-        <span className="text-sm">Cargar MD</span>
-      </button>
-
-      <div className="flex items-center border-l border-gray-700 ml-2 pl-2">
-        {/* Botón Showcase Impacto - Mantenerlo como destacado */}
-        <button 
-          className={`p-2 rounded flex items-center gap-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-700 bg-purple-600'}`}
-          onClick={() => onLoadDemo('panel-showcase-v2.6-impact.md')}
-          disabled={isLoading}
-          title="Ver Showcase de Paneles V2.6 (Estilos Impactantes)"
-          style={{ fontWeight: 'bold' }}
-        >
-          <Sparkles size={16} />
-          <span className="text-sm">Showcase Impacto</span>
+      <div className="file-buttons" style={{ display: 'flex', gap: '4px', marginLeft: 'auto' }}>
+        <input
+          type="file"
+          id="file-upload"
+          accept=".md,.markdown"
+          onChange={onFileLoad}
+          style={{ display: 'none' }}
+        />
+        <button onClick={() => document.getElementById('file-upload')?.click()} title="Cargar archivo" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <FileText size={16} />
         </button>
-
-        {/* Botón Showcase V2.6 */}
-        <button
-          className="p-2 rounded flex items-center gap-1 ml-2"
-          onClick={() => onLoadDemo('panel-showcase-v2.6.md')}
-          disabled={isLoading}
-          title="Ver demostración de paneles v2.6"
-        >
-          <Layers size={16} />
-          <span>Showcase V2.6</span>
+        <button onClick={() => onLoadDemo()} title="Cargar demo" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <Book size={16} />
         </button>
-        
-        {/* ---- Grupo de demos específicos ---- */}
-        {/* Demos de layouts y comparativas */}
-        <div className="flex items-center ml-2 pl-2 border-l border-gray-700">
-          <button
-            className="p-2 rounded flex items-center gap-1"
-            onClick={() => onLoadDemo('flotantes-demo.md')}
-            disabled={isLoading}
-            title="Ver demostración de elementos flotantes"
-          >
-            <PanelLeft size={16} />
-            <span>Demo Flotantes</span>
-          </button>
-
-          <button
-            className="p-2 rounded flex items-center gap-1 ml-1"
-            onClick={() => onLoadDemo('rpg-columns-demo.md')}
-            disabled={isLoading}
-            title="Ver demostración de paneles estilo RPG con dos columnas"
-          >
-            <Columns size={16} />
-            <span>Demo RPG</span>
-          </button>
-
-          <button
-            className="p-2 rounded flex items-center gap-1 ml-1"
-            onClick={() => onLoadDemo('split-columns-demo.md')}
-            disabled={isLoading}
-            title="Ver demostración de paneles con columnas separadas"
-          >
-            <Layout size={16} />
-            <span>Demo Columnas</span>
-          </button>
-
-          <button
-            className="p-2 rounded flex items-center gap-1 ml-1"
-            onClick={() => onLoadDemo('comparativas-demo.md')}
-            disabled={isLoading}
-            title="Ver ejemplos de comparativas con columnas separadas"
-          >
-            <SplitSquareVertical size={16} />
-            <span>Comparativas</span>
-          </button>
-        </div>
       </div>
 
-      {/* Único botón para modo oscuro/claro */}
-      <button 
-        className={`p-2 rounded ml-2 ${darkMode ? 'bg-yellow-600 hover:bg-yellow-500' : 'bg-indigo-800 hover:bg-indigo-700'}`}
-        onClick={onDarkModeToggle}
-        title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-      >
-        {darkMode ? <Sun size={16} /> : <Moon size={16} />}
-      </button>
+      <div className="theme-toggle">
+        <button onClick={onDarkModeToggle} title={darkMode ? "Modo claro" : "Modo oscuro"} style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          {darkMode ? <Sun size={16} /> : <Moon size={16} />}
+        </button>
+      </div>
     </div>
   );
 };

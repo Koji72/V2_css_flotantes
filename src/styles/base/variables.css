@@ -1,0 +1,148 @@
+/* Variables de color */
+:root {
+  /* Colores base */
+  --color-primary: #00FFFF;
+  --color-secondary: #000000;
+  --color-tertiary: #808080;
+  --color-accent1: #00CED1;
+  --color-accent2: #FFA500;
+  --color-glow: #00FFFF;
+
+  /* Colores de fondo */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --bg-highlight: #f1f3f5;
+
+  /* Colores de texto */
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-muted: #6c757d;
+
+  /* Colores de acento */
+  --accent-color: #2563eb;
+  --accent-hover: #1e40af;
+  --accent-light: #93c5fd;
+
+  /* Colores de borde */
+  --border-color: #dee2e6;
+  --border-light: #e9ecef;
+  --border-dark: #adb5bd;
+
+  /* Colores de código */
+  --code-bg: #f1f5f9;
+  --code-text: #334155;
+
+  /* Colores de panel */
+  --panel-bg: #f8fafc;
+  --panel-header: #f1f5f9;
+  --panel-border: #e2e8f0;
+
+  /* Colores de estado */
+  --error-color: 239, 68, 68; /* RGB format for rgba() */
+  --success-color: 34, 197, 94; /* RGB format for rgba() */
+  --info-color: 59, 130, 246; /* RGB format for rgba() */
+  --warning-color: 234, 179, 8; /* RGB format for rgba() */
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Variables para modo oscuro */
+.dark-mode {
+  /* Colores de fondo */
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #252525;
+  --bg-highlight: #2d2d2d;
+
+  /* Colores de texto */
+  --text-primary: #e9ecef;
+  --text-secondary: #adb5bd;
+  --text-muted: #6c757d;
+
+  /* Colores de acento */
+  --accent-color: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-light: #1e40af;
+
+  /* Colores de borde */
+  --border-color: #2d3748;
+  --border-light: #374151;
+  --border-dark: #4b5563;
+
+  /* Colores de código */
+  --code-bg: #1e293b;
+  --code-text: #e2e8f0;
+
+  /* Colores de panel */
+  --panel-bg: #1a1a1a;
+  --panel-header: #252525;
+  --panel-border: #2d3748;
+
+  /* Colores de estado */
+  --error-color: 248, 113, 113; /* RGB format for rgba() */
+  --success-color: 74, 222, 128; /* RGB format for rgba() */
+  --info-color: 96, 165, 250; /* RGB format for rgba() */
+  --warning-color: 250, 204, 21; /* RGB format for rgba() */
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+}
+
+/* Variables de espaciado */
+:root {
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+}
+
+/* Variables de tipografía */
+:root {
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+}
+
+/* Variables de animación */
+:root {
+  --transition-fast: 150ms;
+  --transition-normal: 300ms;
+  --transition-slow: 500ms;
+  
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-linear: linear;
+}
+
+/* Variables de bordes */
+:root {
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+} 
