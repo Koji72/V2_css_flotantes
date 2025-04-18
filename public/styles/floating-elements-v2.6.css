@@ -33,9 +33,9 @@
 /* ==== LAYOUTS FLOTANTES ==== */
 
 /* Base para todos los layouts flotantes */
-.layout--floating-left,
-.layout--floating-right,
-.layout--centered {
+html body #content .layout--floating-left,
+html body #content .layout--floating-right,
+html body #content .layout--centered {
   position: relative;
   margin-bottom: 2rem; /* Más espacio inferior */
   z-index: 10;
@@ -44,15 +44,15 @@
 }
 
 /* Aumentar sombra y elevar panel al hacer hover */
-.layout--floating-left:hover,
-.layout--floating-right:hover,
-.layout--centered:hover {
+html body #content .layout--floating-left:hover,
+html body #content .layout--floating-right:hover,
+html body #content .layout--centered:hover {
   box-shadow: var(--float-shadow-hover);
   transform: translateY(-5px) scale(1.01); /* Más elevación */
 }
 
 /* Posicionamiento flotante izquierdo */
-.layout--floating-left {
+html body #content .layout--floating-left {
   float: left;
   margin-right: 2.5rem; /* Más espacio */
   margin-left: 0;
@@ -61,7 +61,7 @@
 }
 
 /* Posicionamiento flotante derecho */
-.layout--floating-right {
+html body #content .layout--floating-right {
   float: right;
   margin-left: 2.5rem; /* Más espacio */
   margin-right: 0;
@@ -70,7 +70,7 @@
 }
 
 /* Posicionamiento centrado */
-.layout--centered {
+html body #content .layout--centered {
   float: none;
   margin-left: auto;
   margin-right: auto;
@@ -79,36 +79,63 @@
   text-align: center;
 }
 
+/* ==== NUEVO: LAYOUT DOS COLUMNAS ==== */
+html body #content .layout--two-columns .panel-content-wrapper {
+  display: flex;
+  flex-wrap: wrap; /* Permitir que el contenido se ajuste si es necesario */
+  gap: 1.5rem; /* Espacio entre columnas */
+}
+
+/* Ajuste para que el contenido dentro de las pseudo-columnas ocupe espacio */
+html body #content .layout--two-columns .panel-content > * {
+  flex: 1 1 45%; /* Permitir que los elementos crezcan y se reduzcan, base del 45% */
+  min-width: 250px; /* Ancho mínimo para evitar columnas demasiado estrechas */
+}
+
+/* Ajustes específicos para mejorar el flujo en dos columnas */
+html body #content .layout--two-columns .panel-content h1,
+html body #content .layout--two-columns .panel-content h2,
+html body #content .layout--two-columns .panel-content h3 {
+  flex-basis: 100%; /* Los títulos ocupan todo el ancho */
+}
+
+html body #content .layout--two-columns .panel-content p,
+html body #content .layout--two-columns .panel-content ul,
+html body #content .layout--two-columns .panel-content ol,
+html body #content .layout--two-columns .panel-content blockquote {
+  /* El flex: 1 1 45% se aplica aquí por defecto */
+}
+
 /* ==== COMPATIBILIDAD CON ESTILOS DE PANEL ==== */
 
 /* Tech Corners flotante */
-.panel-style--tech-corners.layout--floating-left,
-.panel-style--tech-corners.layout--floating-right {
+html body #content .panel-style--tech-corners.layout--floating-left,
+html body #content .panel-style--tech-corners.layout--floating-right {
   /* Podríamos añadir una sombra externa adicional aquí si quisiéramos */
   /* box-shadow: var(--neon-blue-glow), var(--float-shadow); */
 }
 
 /* Hologramas flotantes */
-.panel-style--hologram.layout--floating-left,
-.panel-style--hologram.layout--floating-right {
+html body #content .panel-style--hologram.layout--floating-left,
+html body #content .panel-style--hologram.layout--floating-right {
   backdrop-filter: blur(7px); /* Ajustar blur si es necesario */
 }
 
 /* Neo Frame flotante */
-.panel-style--neo-frame.layout--floating-left,
-.panel-style--neo-frame.layout--floating-right {
+html body #content .panel-style--neo-frame.layout--floating-left,
+html body #content .panel-style--neo-frame.layout--floating-right {
   /* El efecto de marco ya es bastante impactante, puede que no necesite más */
 }
 
 /* Circuit Node flotante */
-.panel-style--circuit-node.layout--floating-left,
-.panel-style--circuit-node.layout--floating-right {
+html body #content .panel-style--circuit-node.layout--floating-left,
+html body #content .panel-style--circuit-node.layout--floating-right {
   border-width: 1px;
 }
 
 /* Cut Corners flotante */
-.panel-style--cut-corners.layout--floating-left,
-.panel-style--cut-corners.layout--floating-right {
+html body #content .panel-style--cut-corners.layout--floating-left,
+html body #content .panel-style--cut-corners.layout--floating-right {
   clip-path: polygon(
     0% 10px, 10px 0%, 
     calc(100% - 10px) 0%, 100% 10px,
@@ -118,14 +145,14 @@
 }
 
 /* Corner Brackets flotante */
-.panel-style--corner-brackets.layout--floating-left,
-.panel-style--corner-brackets.layout--floating-right {
+html body #content .panel-style--corner-brackets.layout--floating-left,
+html body #content .panel-style--corner-brackets.layout--floating-right {
   padding: 5px;
 }
 
 /* Glass flotante */
-.panel-style--glass.layout--floating-left,
-.panel-style--glass.layout--floating-right {
+html body #content .panel-style--glass.layout--floating-left,
+html body #content .panel-style--glass.layout--floating-right {
   background-color: var(--float-glass-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -133,15 +160,15 @@
 }
 
 /* Custom Corner flotante */
-.panel-style--custom-corner.layout--floating-left,
-.panel-style--custom-corner.layout--floating-right {
+html body #content .panel-style--custom-corner.layout--floating-left,
+html body #content .panel-style--custom-corner.layout--floating-right {
   border-radius: 0;
 }
 
 /* Alert flotante */
-.panel-style--alert.layout--floating-left,
-.panel-style--alert.layout--floating-right,
-.panel-style--alert.layout--centered {
+html body #content .panel-style--alert.layout--floating-left,
+html body #content .panel-style--alert.layout--floating-right,
+html body #content .panel-style--alert.layout--centered {
   box-shadow: 0 0 25px rgba(255, 60, 60, 0.6);
   border-color: rgba(255, 100, 100, 0.8);
 }
@@ -149,7 +176,7 @@
 /* ==== ANIMACIONES ==== */
 
 /* Animación de pulso */
-.animation--pulse {
+html body #content .animation--pulse {
   animation: panel-pulse var(--pulse-animation-speed) infinite ease-in-out;
 }
 
@@ -165,12 +192,12 @@
 }
 
 /* Animación de escaneo */
-.animation--scan {
+html body #content .animation--scan {
   position: relative;
   overflow: hidden;
 }
 
-.animation--scan::before {
+html body #content .animation--scan::before {
   content: '';
   position: absolute;
   top: -110%; /* Empezar más arriba */
@@ -196,7 +223,7 @@
 }
 
 /* Animación de brillo */
-.animation--glow {
+html body #content .animation--glow {
   animation: panel-glow var(--pulse-animation-speed) infinite alternate;
 }
 
@@ -210,7 +237,7 @@
 }
 
 /* Animación de rotación (ajustada para flotantes) */
-.animation--rotate .panel-content-wrapper::before {
+html body #content .animation--rotate .panel-content-wrapper::before {
   content: '';
   position: absolute;
   top: 0;
@@ -235,28 +262,28 @@
 /* ==== MEJORAS PARA TEXTO FLUIDO ==== */
 
 /* Asegurar que el texto fluya correctamente alrededor de los paneles */
-p, ul, ol, h1, h2, h3, h4, h5, h6 {
+html body #content p, html body #content ul, html body #content ol, html body #content h1, html body #content h2, html body #content h3, html body #content h4, html body #content h5, html body #content h6 {
   overflow: visible; /* Cambiado a visible para mejor flujo */
   /* Asegurar que el texto no se pegue al panel */
   hyphens: auto;
 }
 
 /* Ajustar márgenes para que el texto no se pegue demasiado */
-.layout--floating-left + *,
-.layout--floating-right + * {
+html body #content .layout--floating-left + *,
+html body #content .layout--floating-right + * {
   margin-top: 0.5rem; /* Pequeño margen superior para el texto que sigue */
 }
 
 /* Asegurar que el texto dentro de los paneles flotantes tenga margen adecuado */
-.layout--floating-left .panel-content,
-.layout--floating-right .panel-content,
-.layout--centered .panel-content {
+html body #content .layout--floating-left .panel-content,
+html body #content .layout--floating-right .panel-content,
+html body #content .layout--centered .panel-content {
   padding: 1rem; /* Más padding interno */
 }
 
 /* Contenedores con altura máxima y scroll interno para paneles muy largos */
-.layout--floating-left .panel-content,
-.layout--floating-right .panel-content {
+html body #content .layout--floating-left .panel-content,
+html body #content .layout--floating-right .panel-content {
   max-height: 75vh; /* Ligeramente menos alto */
   overflow-y: auto;
   /* Estilizar barra de scroll si se desea */
@@ -264,22 +291,22 @@ p, ul, ol, h1, h2, h3, h4, h5, h6 {
   scrollbar-color: rgba(0, 150, 255, 0.5) rgba(10, 20, 40, 0.8);
 }
 
-.layout--floating-left .panel-content::-webkit-scrollbar,
-.layout--floating-right .panel-content::-webkit-scrollbar {
+html body #content .layout--floating-left .panel-content::-webkit-scrollbar,
+html body #content .layout--floating-right .panel-content::-webkit-scrollbar {
   width: 6px;
 }
-.layout--floating-left .panel-content::-webkit-scrollbar-track,
-.layout--floating-right .panel-content::-webkit-scrollbar-track {
+html body #content .layout--floating-left .panel-content::-webkit-scrollbar-track,
+html body #content .layout--floating-right .panel-content::-webkit-scrollbar-track {
   background: rgba(10, 20, 40, 0.8);
 }
-.layout--floating-left .panel-content::-webkit-scrollbar-thumb,
-.layout--floating-right .panel-content::-webkit-scrollbar-thumb {
+html body #content .layout--floating-left .panel-content::-webkit-scrollbar-thumb,
+html body #content .layout--floating-right .panel-content::-webkit-scrollbar-thumb {
   background-color: rgba(0, 150, 255, 0.5);
   border-radius: 3px;
 }
 
 /* Clearfix para limpiar flotantes */
-.clearfix {
+html body #content .clearfix {
   clear: both;
   display: block;
   width: 100%;
@@ -291,9 +318,9 @@ p, ul, ol, h1, h2, h3, h4, h5, h6 {
 /* ==== MEDIA QUERIES PARA RESPONSIVE ==== */
 
 @media (max-width: 768px) {
-  .layout--floating-left,
-  .layout--floating-right,
-  .layout--centered {
+  html body #content .layout--floating-left,
+  html body #content .layout--floating-right,
+  html body #content .layout--centered {
     float: none;
     max-width: 100%; /* Usar todo el ancho */
     margin-left: auto;
@@ -302,10 +329,10 @@ p, ul, ol, h1, h2, h3, h4, h5, h6 {
     clear: both;
   }
   
-  .animation--pulse,
-  .animation--scan,
-  .animation--glow,
-  .animation--rotate {
+  html body #content .animation--pulse,
+  html body #content .animation--scan,
+  html body #content .animation--glow,
+  html body #content .animation--rotate {
     /* Mantener animaciones */
     animation-duration: var(--pulse-animation-speed); /* Usar velocidad normal */
   }

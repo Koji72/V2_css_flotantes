@@ -1,0 +1,223 @@
+/* Panel Base Styles */
+.floating-block.panel {
+  position: relative;
+  margin: var(--spacing-md) 0;
+  padding: var(--spacing-md);
+  background-color: var(--panel-bg, var(--bg-secondary));
+  border: 1px solid var(--panel-border, var(--border-color));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--panel-shadow, var(--shadow-sm));
+  transition: all var(--transition-normal) var(--ease-in-out);
+  overflow: hidden;
+}
+
+/* Panel Header */
+.panel-header {
+  margin: calc(-1 * var(--spacing-md));
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--panel-header-bg, var(--bg-tertiary));
+  border-bottom: 1px solid var(--panel-header-border, var(--border-color));
+  color: var(--panel-header-text, var(--text-primary));
+}
+
+.panel-header h1,
+.panel-header h2,
+.panel-header h3,
+.panel-header h4,
+.panel-header h5,
+.panel-header h6 {
+  margin: 0;
+  color: var(--theme-text-primary);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+/* Panel Content */
+.panel-content {
+  color: var(--panel-content-text, var(--text-secondary));
+  line-height: var(--line-height-relaxed);
+}
+
+/* Panel Footer */
+.panel-footer {
+  margin: calc(-1 * var(--spacing-md));
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--panel-footer-bg, var(--bg-tertiary));
+  border-top: 1px solid var(--panel-footer-border, var(--border-color));
+}
+
+/* Panel Dark Mode */
+[data-theme="dark"] .panel {
+  --panel-bg: var(--bg-secondary-dark);
+  --panel-border: var(--border-color-dark);
+  --panel-header-bg: var(--bg-tertiary-dark);
+  --panel-header-border: var(--border-color-dark);
+  --panel-content-text: var(--text-secondary-dark);
+  background-color: var(--panel-bg);
+  border-color: var(--panel-border);
+}
+
+/* Panel Styles */
+.panel.glass, 
+[data-theme="dark"] .panel.glass {
+  --panel-glass-bg-actual: var(--panel-glass-bg, rgba(var(--bg-rgb), 0.8));
+  --panel-glass-border-actual: var(--panel-glass-border, rgba(var(--border-rgb), 0.2));
+  
+  --panel-glass-bg-actual: var(--panel-glass-bg-dark, var(--panel-glass-bg-actual));
+  --panel-glass-border-actual: var(--panel-glass-border-dark, var(--panel-glass-border-actual));
+
+  background-color: var(--panel-glass-bg-actual);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--panel-glass-border-actual);
+  box-shadow: var(--panel-shadow, var(--shadow-sm));
+}
+
+.panel.floating {
+  box-shadow: var(--panel-floating-shadow, var(--shadow-lg));
+}
+
+.panel.hoverable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--panel-hover-shadow, var(--shadow-md));
+}
+
+/* Panel Sizes */
+.panel.small {
+  padding: var(--spacing-sm);
+}
+
+.panel.large {
+  padding: var(--spacing-lg);
+}
+
+/* Panel Positions */
+.panel.float-left {
+  float: left;
+  margin-right: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.panel.float-right {
+  float: right;
+  margin-left: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Panel with Cut Corners */
+.panel.cut-corner, 
+[data-theme="dark"] .panel.cut-corner {
+  --cut-size: var(--cut-size-md, 10px);
+  position: relative;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--cut-size)),
+    calc(100% - var(--cut-size)) 100%,
+    0 100%
+  );
+}
+
+.panel.cut-corner::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: var(--cut-size, 10px);
+  height: var(--cut-size, 10px);
+  background: linear-gradient(
+    135deg,
+    transparent 50%,
+    var(--panel-border) 50%
+  );
+}
+
+/* Panel Animations */
+@keyframes panel-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel.animated {
+  animation: panel-fade-in var(--transition-normal) var(--ease-out);
+}
+
+/* Panel Responsive */
+@media (max-width: 768px) {
+  .panel.float-left,
+  .panel.float-right {
+    float: none;
+    margin: var(--spacing-md) 0;
+  }
+  
+  .panel.responsive {
+    width: 100% !important;
+  }
+}
+
+/* Panel with Custom Border */
+.panel.border-accent {
+  border-left: 4px solid var(--accent-color);
+}
+
+.panel.border-primary {
+  border-left: 4px solid var(--primary-color);
+}
+
+.panel.border-success {
+  border-left: 4px solid var(--success-color);
+}
+
+.panel.border-warning {
+  border-left: 4px solid var(--warning-color);
+}
+
+.panel.border-danger {
+  border-left: 4px solid var(--danger-color);
+}
+
+/* Panel with Shadow Variants */
+.panel.shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.panel.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.panel.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Panel with Rounded Corners */
+.panel.rounded-sm {
+  border-radius: var(--radius-sm);
+}
+
+.panel.rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+.panel.rounded-xl {
+  border-radius: var(--radius-xl);
+}
+
+/* Panel with Background Patterns */
+.panel.pattern-grid {
+  background-image: 
+    linear-gradient(var(--panel-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--panel-border) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.panel.pattern-dots {
+  background-image: radial-gradient(var(--panel-border) 1px, transparent 1px);
+  background-size: 10px 10px;
+} 

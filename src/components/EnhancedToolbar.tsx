@@ -33,7 +33,6 @@ const EnhancedToolbar: React.FC<ToolbarProps> = ({
   onDarkModeToggle,
   onFileLoad
 }) => {
-  // Estado para controlar el menú desplegable
   const [panelMenuOpen, setPanelMenuOpen] = useState(false);
 
   // Templates para bloques comunes
@@ -102,7 +101,7 @@ Contenido...
     {
       name: 'Panel Dos Columnas RPG',
       icon: <Layout size={16} />,
-      template: `:::panel{title="Grimorio Arcano" layout="two-columns" style="glass"}
+      template: `:::panel{title="Grimorio Arcano" layout="two-columns" style="glass-panel"}
 ## Conjuros Elementales
 
 Este antiguo compendio detalla los principios fundamentales de la magia elemental, desarrollados por el Archimago Thaelon durante la Era de las Estrellas.
@@ -275,7 +274,7 @@ Recomendación: Desplegar sondas de reconocimiento.
   ];
 
   return (
-    <div className="toolbar" style={{ display: 'flex', gap: '8px', padding: '8px', backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
+    <div className="toolbar" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '8px', backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
       <div className="markdown-buttons" style={{ display: 'flex', gap: '4px' }}>
         <button onClick={() => onApplyStyle('**texto**')} title="Negrita" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
           <Bold size={16} />
@@ -312,6 +311,78 @@ Recomendación: Desplegar sondas de reconocimiento.
         </button>
       </div>
 
+      <div className="relative" style={{ position: 'relative' }}>
+        <button
+          onClick={() => setPanelMenuOpen(!panelMenuOpen)}
+          title="Insertar Panel/Estilo"
+          style={{ padding: '4px 8px', display: 'flex', alignItems: 'center', gap: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', cursor: 'pointer' }}
+        >
+          <LayoutGrid size={16} />
+          <span className="text-sm" style={{ fontSize: '0.875rem' }}>Paneles</span>
+          {panelMenuOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </button>
+        {panelMenuOpen && (
+          <div
+            className="absolute mt-1 w-64 rounded-md shadow-lg bg-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none"
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              zIndex: 50,
+              maxHeight: '300px',
+              overflowY: 'auto',
+              backgroundColor: 'var(--bg-dropdown, var(--bg-secondary))',
+              border: '1px solid var(--border-color)',
+              borderRadius: '4px',
+              marginTop: '4px',
+              padding: '4px 0'
+            }}
+          >
+            <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+              {panelStylesTemplates.map((panel, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    onInsertBlock(panel.template);
+                    setPanelMenuOpen(false); // Close menu after selection
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-white"
+                  role="menuitem"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    width: '100%',
+                    border: 'none',
+                    background: 'none',
+                    textAlign: 'left',
+                    padding: '8px 12px',
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {panel.icon}
+                  <span>{panel.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="separator" style={{ width: '1px', backgroundColor: 'var(--border-color)', alignSelf: 'stretch', margin: '0 4px' }}></div>
+
+      <div className="rpg-templates" style={{ display: 'flex', gap: '4px' }}>
+         <button onClick={() => onInsertBlock(characterStatBlock)} title="Insertar Bloque Estadísticas Personaje" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+           <User size={16} />
+         </button>
+         <button onClick={() => onInsertBlock(mapPanel)} title="Insertar Panel Mapa" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+           <Map size={16} />
+         </button>
+          <button onClick={() => onInsertBlock(explorationMatrix)} title="Insertar Matriz Exploración" style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+           <Compass size={16} />
+         </button>
+      </div>
+
       <div className="file-buttons" style={{ display: 'flex', gap: '4px', marginLeft: 'auto' }}>
         <input
           type="file"
@@ -328,8 +399,25 @@ Recomendación: Desplegar sondas de reconocimiento.
         </button>
       </div>
 
-      <div className="theme-toggle">
-        <button onClick={onDarkModeToggle} title={darkMode ? "Modo claro" : "Modo oscuro"} style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+      <div style={{ display: 'flex', gap: '4px' }}>
+        <button onClick={() => onLoadDemo()} title="Cargar Demo de Paneles" style={{ padding: '4px 8px', display: 'flex', alignItems: 'center', gap: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', cursor: 'pointer' }}>
+          <FileText size={16} />
+          <span className="text-sm" style={{ fontSize: '0.875rem' }}>Demo Paneles</span>
+        </button>
+        <button onClick={() => onLoadDemo('test-esquinas-2.md')} title="Cargar Test Esquinas" style={{ padding: '4px 8px', display: 'flex', alignItems: 'center', gap: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', cursor: 'pointer' }}>
+          <CornerDownRight size={16} />
+          <span className="text-sm" style={{ fontSize: '0.875rem' }}>Test Esquinas</span>
+        </button>
+        <button onClick={() => onLoadDemo('boton-ejemplo.md')} title="Cargar Ejemplo Botones" style={{ padding: '4px 8px', display: 'flex', alignItems: 'center', gap: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', cursor: 'pointer' }}>
+          <Sparkles size={16} />
+          <span className="text-sm" style={{ fontSize: '0.875rem' }}>Demo Botones</span>
+        </button>
+        <button
+          type="button"
+          onClick={onDarkModeToggle}
+          title={darkMode ? 'Modo Claro' : 'Modo Oscuro'}
+          style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', cursor: 'pointer' }}
+        >
           {darkMode ? <Sun size={16} /> : <Moon size={16} />}
         </button>
       </div>

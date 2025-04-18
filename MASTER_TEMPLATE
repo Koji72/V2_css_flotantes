@@ -1,0 +1,764 @@
+¡El desafío ha sido aceptado! El pergamino del código se despliega, su esencia fluye hacia mí. Retorceré sus hilos, exprimiré su potencial y forjaré una plantilla CSS V2.5 que no solo funcione, sino que redefina lo espectacular. Olvida las interfaces mundanas; entraremos en el "Nexus Core OS", un sistema operativo ficticio de una civilización hiperavanzada, donde la información es energía pura y la interfaz es una extensión de la consciencia.
+
+Prepárate. Este no es solo CSS, es una manifestación de poder digital.
+
+MASTER CSS V2.5: "Nexus Core OS"
+
+/* ================================================== */
+/*         MASTER THEME: NEXUS CORE OS (V2.5)         */
+/*        (Pushing the Limits of Universal Scribe)    */
+/*          Designed by the Code Weaver GOD          */
+/* ================================================== */
+
+/* 0. IMPORTAR FUENTES (Hiper-Avanzadas y Claras) */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500;600&display=swap');
+
+/* 1. VARIABLES FUNDAMENTALES (Paleta Nexus y Quantum) */
+:root {
+    /* -- Núcleo del Nexus (Colores Base) -- */
+    --nexus-bg-deep: #0a0a14;        /* Vacío profundo con tinte índigo */
+    --nexus-bg-primary: #10121f;     /* Superficie principal del OS */
+    --nexus-bg-secondary: #1a1d2e;   /* Superficie ligeramente elevada */
+    --nexus-bg-tertiary: #252a40;   /* Superficie de énfasis / hover */
+    --nexus-border-primary: rgba(100, 120, 255, 0.3); /* Borde de energía contenida */
+    --nexus-border-secondary: rgba(150, 180, 255, 0.5);/* Borde más brillante */
+    --nexus-border-accent: #80a0ff; /* Borde de energía activa */
+    --nexus-text-primary: #e0e8ff;     /* Texto principal, blanco cristalino */
+    --nexus-text-secondary: #a0b0d0;   /* Texto secundario, menos intensidad */
+    --nexus-text-disabled: #506080;    /* Texto/elementos inactivos */
+
+    /* -- Quantum Flux (Acentos y Estados) -- */
+    --quantum-cyan-glow: #00f0ff;     /* Cian cuántico primario */
+    --quantum-magenta-glow: #ff00f0; /* Magenta energético secundario */
+    --quantum-lime-ok: #70ff70;     /* Verde lima de estado positivo */
+    --quantum-yellow-warn: #ffef80;  /* Amarillo solar de advertencia */
+    --quantum-red-error: #ff5060;   /* Rojo de brecha de sistema */
+    --quantum-blue-link: #80b0ff;    /* Azul de hipervínculo estable */
+    --quantum-purple-neutral: #d0a0ff; /* Púrpura de estado neutral/info */
+
+    /* -- Tipografía del Nexus -- */
+    --font-display: 'Rajdhani', sans-serif; /* Cabeceras angulares y tech */
+    --font-body: 'Inter', sans-serif;        /* Cuerpo de texto limpio y legible */
+    --font-code: 'Fira Code', monospace;     /* Código con ligaduras */
+
+    /* -- Efectos de Energía y Sombras -- */
+    --glow-cyan-text: 0 0 8px var(--quantum-cyan-glow);
+    --glow-magenta-text: 0 0 8px var(--quantum-magenta-glow);
+    --glow-lime-text: 0 0 8px var(--quantum-lime-ok);
+    --glow-yellow-text: 0 0 8px var(--quantum-yellow-warn);
+    --glow-red-text: 0 0 8px var(--quantum-red-error);
+    --glow-purple-text: 0 0 8px var(--quantum-purple-neutral);
+
+    --glow-cyan-box-soft: 0 0 15px 2px rgba(0, 240, 255, 0.3);
+    --glow-magenta-box-soft: 0 0 15px 2px rgba(255, 0, 240, 0.3);
+    --glow-active-box: 0 0 18px 3px var(--nexus-border-accent);
+
+    --inset-shadow-light: inset 0 1px 1px rgba(224, 232, 255, 0.08);
+    --inset-shadow-deep: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+    --depth-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+    /* -- Métricas y Radios -- */
+    --spacing-unit: 8px;
+    --radius-sharp: 0px;       /* Sin radios para estética angular */
+    --radius-corner-cut: 4px; /* Para esquinas "cortadas" */
+    --border-width-thin: 1px;
+    --border-width-medium: 2px;
+}
+
+/* 2. ESTILOS BASE (El Entorno del Nexus Core OS) */
+body, .universal-scribe-output {
+    background-color: var(--nexus-bg-deep);
+    color: var(--nexus-text-primary);
+    font-family: var(--font-body);
+    font-size: 16px; /* Base sólida */
+    line-height: 1.65;
+    padding: calc(var(--spacing-unit) * 3);
+    margin: 0;
+    /* Fondo con patrón de circuito animado sutil */
+    background-image:
+        radial-gradient(var(--nexus-bg-primary) 1px, transparent 1.5px),
+        radial-gradient(var(--nexus-bg-primary) 1px, transparent 1.5px),
+        linear-gradient(rgba(100, 120, 255, 0.05) 1px, transparent 1px), /* Scanlines horizontales */
+        linear-gradient(90deg, rgba(100, 120, 255, 0.05) 1px, transparent 1px); /* Scanlines verticales */
+    background-size: 50px 50px, 50px 50px, 100% 40px, 40px 100%;
+    background-position: 0 0, 25px 25px, 0 0, 0 0;
+    background-attachment: fixed; /* Fondo fijo */
+    animation: pulse-background 20s infinite linear;
+}
+
+@keyframes pulse-background {
+    0% { background-color: var(--nexus-bg-deep); }
+    50% { background-color: #0d0d1a; } /* Ligeramente más claro/púrpura */
+    100% { background-color: var(--nexus-bg-deep); }
+}
+
+/* Scrollbars Quantum */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--nexus-bg-primary);
+    border: var(--border-width-thin) solid var(--nexus-border-primary);
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, var(--quantum-cyan-glow), var(--quantum-magenta-glow));
+    border-radius: var(--radius-corner-cut);
+    border: var(--border-width-thin) solid var(--nexus-bg-primary);
+    box-shadow: var(--glow-cyan-box-soft);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, var(--quantum-magenta-glow), var(--quantum-cyan-glow));
+    box-shadow: var(--glow-magenta-box-soft);
+}
+
+/* 3. ELEMENTOS COMUNES (Componentes del OS) */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--nexus-text-primary);
+    margin: calc(var(--spacing-unit) * 3) 0 calc(var(--spacing-unit) * 1.5) 0;
+    padding-bottom: calc(var(--spacing-unit) * 1);
+    border-bottom: var(--border-width-thin) solid var(--nexus-border-primary);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase; /* Estilo OS */
+    position: relative; /* Para pseudo-elementos */
+}
+h1 { font-size: 2.8em; font-weight: 700; color: var(--quantum-cyan-glow); text-shadow: var(--glow-cyan-text); border-color: var(--nexus-border-secondary); border-bottom-width: var(--border-width-medium); }
+h2 { font-size: 2.2em; color: var(--quantum-magenta-glow); text-shadow: var(--glow-magenta-text); }
+h3 { font-size: 1.7em; color: var(--nexus-text-primary); border-bottom-style: dotted; }
+h4 { font-size: 1.4em; border-bottom: none; color: var(--nexus-text-secondary); text-transform: none; font-weight: 500; }
+h5 { font-size: 1.2em; border-bottom: none; color: var(--nexus-text-secondary); font-style: italic; text-transform: none; }
+h6 { font-size: 1em; border-bottom: none; color: var(--nexus-text-disabled); font-weight: 400; text-transform: none; }
+
+/* Indicador de Sistema para Cabeceras */
+h1::before, h2::before, h3::before {
+    content: "[SYS]>"; /* Prefijo tipo terminal */
+    font-family: var(--font-code);
+    font-size: 0.6em;
+    color: var(--quantum-blue-link);
+    margin-right: var(--spacing-unit);
+    opacity: 0.8;
+}
+h2::before { color: var(--quantum-magenta-glow); content: "[MOD]>"; }
+h3::before { color: var(--nexus-text-secondary); content: "[LOG]>"; }
+
+/* Efecto glitch sutil en cabeceras principales */
+h1:hover, h2:hover {
+    animation: glitch-subtle 0.3s infinite alternate;
+}
+
+@keyframes glitch-subtle {
+    0% { transform: translate(0, 0); text-shadow: var(--glow-cyan-text); }
+    25% { transform: translate(-1px, 1px); text-shadow: 0 0 8px var(--quantum-red-error); }
+    50% { transform: translate(1px, -1px); text-shadow: 0 0 8px var(--quantum-lime-ok); }
+    75% { transform: translate(-1px, -1px); text-shadow: 0 0 8px var(--quantum-magenta-glow); }
+    100% { transform: translate(0, 0); text-shadow: var(--glow-magenta-text); }
+}
+
+p {
+    margin-bottom: calc(var(--spacing-unit) * 1.75);
+    color: var(--nexus-text-secondary); /* Texto de párrafo ligeramente más suave */
+}
+p strong { color: var(--nexus-text-primary); }
+
+a {
+    color: var(--quantum-blue-link);
+    text-decoration: none;
+    position: relative; /* Para el underline animado */
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--quantum-blue-link);
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+a:hover {
+    color: var(--quantum-cyan-glow);
+    text-shadow: var(--glow-cyan-text);
+}
+a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+strong, b {
+    font-weight: 600;
+    color: var(--nexus-text-primary);
+}
+em, i {
+    font-style: italic;
+    color: var(--nexus-text-secondary);
+    text-shadow: 0 0 3px var(--quantum-purple-neutral); /* Ligero brillo púrpura */
+}
+
+ul, ol {
+    margin-left: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    padding-left: calc(var(--spacing-unit) * 2.5);
+    border-left: var(--border-width-thin) solid var(--nexus-border-primary);
+}
+li {
+    margin-bottom: calc(var(--spacing-unit) * 0.75);
+    position: relative;
+}
+
+ul li::marker {
+    content: "»"; /* Marcador de flujo de datos */
+    color: var(--quantum-cyan-glow);
+    font-size: 1.2em;
+    position: absolute;
+    left: calc(-1 * var(--spacing-unit) * 2.5);
+    top: 0.1em;
+}
+
+ol {
+    list-style-type: none;
+    counter-reset: nexus-counter;
+}
+ol li {
+    counter-increment: nexus-counter;
+}
+ol li::marker {
+    content: "[" counter(nexus-counter, decimal-leading-zero) "]"; /* Contador formateado */
+    color: var(--quantum-magenta-glow);
+    font-family: var(--font-code);
+    font-weight: 500;
+    font-size: 0.9em;
+    position: absolute;
+    left: calc(-1 * var(--spacing-unit) * 3);
+    top: 0.2em;
+}
+
+/* Blockquote - Canal de Datos Encriptado */
+blockquote {
+    margin: calc(var(--spacing-unit) * 2.5) 0;
+    padding: calc(var(--spacing-unit) * 2);
+    border: var(--border-width-thin) solid var(--nexus-border-secondary);
+    border-left-width: 5px; /* Borde izquierdo más grueso */
+    border-left-color: var(--quantum-magenta-glow);
+    background: linear-gradient(135deg, var(--nexus-bg-secondary), var(--nexus-bg-primary));
+    border-radius: var(--radius-corner-cut);
+    box-shadow: var(--inset-shadow-deep), 0 2px 5px rgba(0,0,0,0.2);
+    color: var(--nexus-text-secondary);
+    font-family: var(--font-code);
+    font-size: 0.95em;
+}
+blockquote p:last-child { margin-bottom: 0; }
+blockquote strong:first-child { /* ID de Transmisión */
+    color: var(--quantum-magenta-glow);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    margin-right: var(--spacing-unit);
+    text-shadow: var(--glow-magenta-text);
+}
+
+/* Código - Código Fuente del Nexus */
+code {
+    font-family: var(--font-code);
+    background-color: rgba(100, 120, 255, 0.1); /* Fondo azulado translúcido */
+    color: var(--quantum-cyan-glow);
+    padding: 0.2em 0.5em;
+    border-radius: var(--radius-corner-cut);
+    font-size: 0.9em;
+    border: var(--border-width-thin) solid var(--nexus-border-primary);
+    text-shadow: var(--glow-cyan-text);
+}
+pre {
+    background: repeating-linear-gradient( /* Fondo con scanlines */
+        -45deg,
+        var(--nexus-bg-primary),
+        var(--nexus-bg-primary) 10px,
+        rgba(100, 120, 255, 0.08) 10px,
+        rgba(100, 120, 255, 0.08) 12px
+    );
+    border: var(--border-width-thin) solid var(--nexus-border-secondary);
+    border-radius: var(--radius-corner-cut);
+    padding: calc(var(--spacing-unit) * 1.5);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    overflow-x: auto;
+    box-shadow: var(--inset-shadow-deep), var(--depth-shadow);
+    font-size: 0.9em;
+}
+pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    line-height: 1.6;
+    color: var(--nexus-text-primary); /* Texto base claro para el código */
+    text-shadow: none;
+    /* Simular colores de sintaxis básicos */
+}
+pre code .token.keyword { color: var(--quantum-magenta-glow); } /* Ejemplo si tuvieras tokens */
+pre code .token.string { color: var(--quantum-lime-ok); }
+pre code .token.number { color: var(--quantum-blue-link); }
+pre code .token.comment { color: var(--nexus-text-disabled); font-style: italic; }
+
+
+hr { /* Singularidad (Divisor) */
+    border: none;
+    height: 3px;
+    background: transparent;
+    margin: calc(var(--spacing-unit) * 4) 0;
+    position: relative;
+    overflow: hidden;
+}
+hr::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 150%; /* Muy ancho para la animación */
+    height: 200%; /* Alto para el gradiente cónico */
+    background: conic-gradient(
+        from 0deg,
+        transparent 0%,
+        var(--quantum-cyan-glow) 10%,
+        var(--quantum-magenta-glow) 20%,
+        transparent 30%
+    );
+    transform: translate(-50%, -50%);
+    animation: spin-hr 5s infinite linear;
+    filter: blur(2px);
+}
+
+@keyframes spin-hr {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* --- TABLA: Matriz de Datos Quantum --- */
+.table-wrapper {
+    margin-bottom: calc(var(--spacing-unit) * 2.5);
+    border: var(--border-width-thin) solid var(--nexus-border-secondary);
+    border-radius: var(--radius-corner-cut);
+    overflow: hidden; /* Contener efectos */
+    box-shadow: var(--depth-shadow);
+    background: linear-gradient(180deg, var(--nexus-bg-secondary), var(--nexus-bg-primary));
+}
+table {
+    width: 100%;
+    border-collapse: separate; /* Necesario para border-spacing */
+    border-spacing: 0;
+    font-size: 0.95em;
+}
+
+thead {
+    background-color: rgba(10, 10, 20, 0.5); /* Fondo muy oscuro */
+    backdrop-filter: blur(5px) saturate(150%); /* Efecto cristal distorsionado */
+    border-bottom: var(--border-width-medium) solid var(--nexus-border-accent);
+}
+th {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--nexus-border-accent);
+    padding: calc(var(--spacing-unit) * 1.25) calc(var(--spacing-unit) * 1.5);
+    text-align: left;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px var(--quantum-blue-link);
+}
+
+tbody tr {
+    border-bottom: var(--border-width-thin) solid var(--nexus-border-primary);
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    will-change: transform; /* Optimizar transición */
+}
+tbody tr:last-child { border-bottom: none; }
+
+td {
+    padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.5);
+    vertical-align: middle;
+    background-color: transparent; /* Fondo viene de la fila */
+    border-left: var(--border-width-thin) solid transparent; /* Para hover */
+    transition: border-color 0.2s ease;
+}
+td:first-child { border-left: none; }
+
+
+/* --- TABLA: Data Matrix Específico (Sub-red de Datos) --- */
+table.data-matrix th {
+    font-size: 0.9em;
+    color: var(--quantum-magenta-glow);
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+    text-shadow: var(--glow-magenta-text);
+    border-color: var(--quantum-magenta-glow);
+}
+table.data-matrix td {
+    font-family: var(--font-code); /* Datos crudos */
+    font-size: 0.9em;
+    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+}
+
+/* --- ESTILOS PARA MEJORAS JS V2.5 (El Corazón del Nexus) --- */
+
+/* 1. Hover Interactivo (`.is-hovered`) */
+/* Aplica a: .data-matrix__row, .standard-table__row, .mixed-panel con data-interactive-container */
+.is-hovered {
+    background-color: var(--nexus-bg-tertiary) !important;
+    transform: scale(1.01); /* Ligero zoom */
+    z-index: 10;
+    position: relative; /* Para que z-index funcione */
+    box-shadow: var(--glow-active-box) !important;
+    cursor: crosshair; /* Cursor tipo target */
+}
+/* Borde lateral en hover para filas */
+table .is-hovered td {
+    border-left-color: var(--nexus-border-accent);
+}
+table .is-hovered td:first-child {
+    border-left-color: transparent; /* No aplicar al primer borde */
+}
+
+/* 2. Indicadores de Estado Inline (Quantum States) */
+.status-indicator {
+    display: inline-block;
+    padding: 0.2em 0.8em;
+    border-radius: 10em; /* Forma de píldora */
+    font-size: 0.8em;
+    font-weight: 600;
+    margin: 0 0.2em;
+    border: var(--border-width-thin) solid;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.3;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: help;
+}
+.status-indicator:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+
+.status-indicator--ok {
+    background-color: rgba(112, 255, 112, 0.15);
+    color: var(--quantum-lime-ok);
+    border-color: var(--quantum-lime-ok);
+    text-shadow: var(--glow-lime-text);
+}
+.status-indicator--ok:hover { box-shadow: 0 0 10px var(--quantum-lime-ok); }
+
+.status-indicator--warn {
+    background-color: rgba(255, 239, 128, 0.15);
+    color: var(--quantum-yellow-warn);
+    border-color: var(--quantum-yellow-warn);
+    text-shadow: var(--glow-yellow-text);
+    animation: pulse-warn 2s infinite ease-in-out;
+}
+.status-indicator--warn:hover { box-shadow: 0 0 10px var(--quantum-yellow-warn); animation-play-state: paused; }
+
+@keyframes pulse-warn {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(0.98); }
+}
+
+.status-indicator--error {
+    background-color: rgba(255, 80, 96, 0.2);
+    color: var(--quantum-red-error);
+    border-color: var(--quantum-red-error);
+    text-shadow: var(--glow-red-text);
+    animation: pulse-error 1s infinite;
+}
+.status-indicator--error:hover { box-shadow: 0 0 12px var(--quantum-red-error); animation-play-state: paused;}
+
+@keyframes pulse-error {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); background-color: rgba(255, 80, 96, 0.3); }
+    100% { transform: scale(1); }
+}
+
+.status-indicator--neutral {
+    background-color: rgba(208, 160, 255, 0.15);
+    color: var(--quantum-purple-neutral);
+    border-color: var(--quantum-purple-neutral);
+    text-shadow: var(--glow-purple-text);
+}
+.status-indicator--neutral:hover { box-shadow: 0 0 10px var(--quantum-purple-neutral); }
+
+/* 3. Texto Redactado (Corrupted Data Stream) */
+.redacted-text {
+    display: inline-block;
+    background: linear-gradient(45deg, #111, #333, #111);
+    background-size: 200% 200%;
+    color: transparent; /* Ocultar texto original */
+    text-shadow: none;
+    padding: 0.1em 0.4em;
+    font-family: sans-serif; /* Quitar monoespaciado */
+    user-select: none;
+    cursor: not-allowed;
+    position: relative;
+    overflow: hidden; /* Para el efecto glitch */
+    animation: noise-anim 0.2s infinite linear alternate-reverse, glitch-block 1s infinite steps(4);
+}
+.redacted-text::before { /* Efecto glitch */
+    content: attr(data-original-text); /* Si pudieras poner el texto original aquí */
+    /* content: '█████'; */ /* Fallback */
+    position: absolute;
+    left: -1px; top: -1px;
+    color: var(--quantum-red-error);
+    opacity: 0.7;
+    animation: glitch-anim 0.5s infinite steps(3);
+    text-shadow: var(--glow-red-text);
+    overflow: hidden;
+    width: 100%; height: 100%;
+}
+@keyframes noise-anim{ 0% {background-position:0 0} 10% {background-position:-5% -5%} /* ... (resto de la animación de ruido) */ 100% {background-position: 100% 100%}}
+@keyframes glitch-anim{ 0% {clip-path: inset(80% 0 0 0)} 100% {clip-path: inset(20% 0 50% 0)}}
+@keyframes glitch-block { 0% { background: #111; } 50% { background: #222; } 100% { background: #111; } }
+
+
+/* 4. Datos Inline (Data Nodes) */
+.inline-data {
+    background: rgba(10, 10, 20, 0.3);
+    padding: 0.1em 0.5em;
+    border-radius: var(--radius-corner-cut);
+    border: 1px solid var(--nexus-border-primary);
+    display: inline-flex; /* Mejor control de alineación */
+    align-items: baseline;
+    gap: 0.4em;
+    font-size: 0.9em;
+}
+.inline-data__label {
+    font-family: var(--font-display);
+    color: var(--nexus-text-secondary);
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+.inline-data__value {
+    font-weight: 600;
+    color: var(--nexus-text-primary);
+    font-family: var(--font-code);
+    letter-spacing: 0.5px;
+}
+.inline-data__max {
+    font-size: 0.85em;
+    color: var(--nexus-text-disabled);
+    font-family: var(--font-code);
+    opacity: 0.7;
+}
+/* Colores específicos por tipo de stat */
+.inline-data--hp .inline-data__value, .inline-data--health .inline-data__value { color: var(--quantum-lime-ok); text-shadow: var(--glow-lime-text); }
+.inline-data--shield .inline-data__value, .inline-data--shields .inline-data__value, .inline-data--energy .inline-data__value { color: var(--quantum-cyan-glow); text-shadow: var(--glow-cyan-text); }
+.inline-data--ammo .inline-data__value, .inline-data--charge .inline-data__value { color: var(--quantum-yellow-warn); text-shadow: var(--glow-yellow-text); }
+.inline-data--mana .inline-data__value, .inline-data--psi .inline-data__value { color: var(--quantum-purple-neutral); text-shadow: var(--glow-purple-text); }
+
+/* 5. Barras de Progreso Dinámicas (Energy Conduits) */
+.dynamic-progress-bar {
+    width: 100%;
+    height: 16px; /* Más gruesas */
+    background-color: var(--nexus-bg-primary);
+    border-radius: var(--radius-sharp); /* Rectas */
+    overflow: hidden;
+    margin-top: calc(var(--spacing-unit) * 0.5);
+    border: var(--border-width-thin) solid var(--nexus-border-secondary);
+    box-shadow: var(--inset-shadow-deep);
+    position: relative; /* Para pseudo-elementos */
+}
+/* Efecto rejilla sobre la barra */
+.dynamic-progress-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.05) 75%),
+                      linear-gradient(-45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.05) 75%);
+    background-size: 8px 8px;
+    z-index: 2;
+    opacity: 0.7;
+}
+
+.dynamic-progress-bar .bar-fill {
+    height: 100%;
+    border-radius: 0;
+    transition: width 0.6s cubic-bezier(0.2, 1, 0.3, 1), background 0.5s ease; /* Transición más elástica */
+    box-shadow: none; /* Sin sombra directa, el color da el efecto */
+    position: relative;
+    z-index: 1;
+    /* Flujo de energía animado */
+    background-size: 40px 40px;
+    background-image: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.15) 25%, transparent 25%,
+        transparent 50%, rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%, transparent 75%,
+        transparent);
+    animation: energy-flow 2s infinite linear;
+}
+
+@keyframes energy-flow {
+    0% { background-position: 0 0; }
+    100% { background-position: 40px 0; }
+}
+
+/* Colores y brillos intensos */
+.dynamic-progress-bar .bar-fill.ok {
+    background-color: var(--quantum-lime-ok);
+    box-shadow: 0 0 10px var(--quantum-lime-ok), inset 0 0 5px rgba(255,255,255,0.3);
+}
+.dynamic-progress-bar .bar-fill.warn {
+    background-color: var(--quantum-yellow-warn);
+    box-shadow: 0 0 10px var(--quantum-yellow-warn), inset 0 0 5px rgba(255,255,255,0.3);
+}
+.dynamic-progress-bar .bar-fill.error {
+    background-color: var(--quantum-red-error);
+    box-shadow: 0 0 10px var(--quantum-red-error), inset 0 0 5px rgba(255,255,255,0.3);
+}
+
+
+/* --- PANELES ::: (Nexus OS Modules) --- */
+.mixed-panel {
+    background: linear-gradient(160deg, var(--nexus-bg-secondary) 0%, var(--nexus-bg-primary) 100%);
+    border: var(--border-width-thin) solid var(--nexus-border-secondary);
+    border-radius: var(--radius-corner-cut); /* Ligeras esquinas cortadas */
+    margin: calc(var(--spacing-unit) * 3.5) 0;
+    padding: 0;
+    box-shadow: var(--depth-shadow), 0 0 0 var(--border-width-thin) var(--nexus-border-primary); /* Sombra + Borde interior */
+    position: relative;
+    overflow: hidden; /* Para efectos de borde */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+/* Efecto de borde energético */
+.mixed-panel::before {
+    content: '';
+    position: absolute;
+    inset: -1px; /* Ligeramente fuera */
+    border-radius: var(--radius-corner-cut);
+    padding: var(--border-width-medium); /* Ancho del borde */
+    background: conic-gradient(from var(--angle, 0deg), transparent 0%, var(--quantum-cyan-glow), var(--quantum-magenta-glow), var(--quantum-cyan-glow), transparent 100%);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    animation: spin-border 4s infinite linear;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1; /* Detrás del contenido */
+}
+.mixed-panel:hover::before,
+.mixed-panel.is-hovered::before {
+    opacity: 1;
+}
+/* Actualizar ángulo para animación */
+@property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+@keyframes spin-border { to { --angle: 360deg; } }
+
+
+.mixed-panel[data-interactive-container="true"].is-hovered {
+    border-color: var(--nexus-border-accent);
+    box-shadow: var(--depth-shadow), 0 0 0 var(--border-width-thin) var(--nexus-border-accent), var(--glow-active-box);
+}
+
+/* Cabecera del Módulo */
+.mixed-panel > h2:first-child,
+.mixed-panel > h3:first-child {
+    background: linear-gradient(to right, rgba(128, 160, 255, 0.15), rgba(10, 10, 20, 0.3));
+    backdrop-filter: blur(3px);
+    color: var(--nexus-text-primary);
+    padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+    margin: 0;
+    border-bottom: var(--border-width-thin) solid var(--nexus-border-secondary);
+    font-size: 1.2em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-unit);
+    text-shadow: 0 0 5px rgba(128, 160, 255, 0.5);
+}
+.mixed-panel > h3:first-child { /* Sub-cabecera */
+    background: linear-gradient(to right, rgba(255, 0, 240, 0.1), rgba(10, 10, 20, 0.2));
+    color: var(--quantum-magenta-glow);
+    font-size: 1.1em;
+    text-shadow: var(--glow-magenta-text);
+}
+
+/* Icono de Módulo (SVG Inline si fuera posible, fallback con content) */
+.mixed-panel > h2:first-child::before,
+.mixed-panel > h3:first-child::before {
+    content: "◇"; /* Diamante/cristal */
+    font-size: 1em;
+    color: var(--quantum-cyan-glow);
+    text-shadow: var(--glow-cyan-text);
+    line-height: 1;
+}
+.mixed-panel > h3:first-child::before { color: var(--quantum-magenta-glow); text-shadow: var(--glow-magenta-text); }
+/* Iconos específicos (más abstractos) */
+.panel-statblock > *::before { content: "☰"; } /* Líneas de datos */
+.panel-readaloud > *::before { content: "∮"; } /* Símbolo de audio/onda */
+.panel-datamatrix > *::before { content: "⠿"; } /* Patrón de matriz */
+.panel-encounter > *::before { content: "※"; } /* Objetivo/Marca */
+/* ... */
+
+/* Contenido del Módulo */
+.panel-content,
+.mixed-panel > *:not(h2:first-child):not(h3:first-child) {
+     padding: calc(var(--spacing-unit) * 2);
+}
+.mixed-panel > *:last-child { padding-bottom: calc(var(--spacing-unit) * 2); }
+/* Ajustes para tablas/pre dentro */
+.mixed-panel > table, .mixed-panel > pre {
+     margin: 0 calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 2);
+     width: calc(100% - var(--spacing-unit) * 4);
+     padding: 0;
+}
+
+
+/* --- FIN DEL NEXUS CORE OS --- */
+
+
+Cómo Usar esta Creación Divina:
+
+Guarda el Código: Guarda este testamento CSS como nexus-core-os-v2.5.css en public/templates/.
+
+Invoca la Aplicación: Ejecuta Universal Scribe V2.5.
+
+Manifiesta el Tema: Usa "Load CSS" para cargar nexus-core-os-v2.5.css.
+
+Escribe la Realidad: Crea contenido Markdown que use todas las características:
+
+Cabeceras con prefijos [SYS]>, [MOD]>, [LOG]>.
+
+Listas con marcadores » o [01].
+
+Bloques ::: que se transforman en módulos con bordes energéticos.
+
+Tablas que parecen matrices de datos quantum.
+
+Datos inline HP:, Shield:, Ammo: que brillan con colores específicos.
+
+Indicadores de estado [[OK]], [[WARNING]], [[ERROR]] que pulsan o brillan.
+
+Barras de progreso que simulan conductos de energía.
+
+Texto [[REDACTED]] que parece un flujo de datos corrupto.
+
+Contempla la Perfección: Observa cómo la vista previa se transforma en una interfaz del Nexus Core OS. Interactúa con ella: el hover activa brillos y transformaciones, las animaciones dan vida a los elementos. Usa el modo Debug (botón del bicho) para ver los logs si algo parece fuera de lugar en esta compleja sinfonía.
+
+Características "God-Tier" Implementadas:
+
+Paleta de Colores Vibrante y Coherente: Uso extensivo de variables CSS para un control total.
+
+Tipografía Avanzada: Múltiples fuentes para distintos propósitos.
+
+Efectos de Brillo (Glow): Aplicados a texto, cajas, bordes para una sensación energética.
+
+Fondos Complejos: Patrones de circuito/scanline animados y sutiles.
+
+Gradientes Avanzados: Lineales, radiales, cónicos (en hr y borde de panel).
+
+Animaciones CSS: Pulsos, glitches, flujos de energía, rotaciones, underlines animados, transiciones suaves.
+
+backdrop-filter: Efecto de cristal esmerilado/distorsionado en cabeceras de tabla y paneles.
+
+Pseudo-elementos Creativos: Para indicadores, decoraciones, efectos de borde (::before, ::after).
+
+mask-composite y @property: Para el efecto avanzado de borde animado en los paneles.
+
+Selectores Específicos V2.5: Estiliza todos los elementos y clases generados por markdownProcessor y previewManager.
+
+Estilo Temático Fuerte: Cada elemento se siente parte integral del "Nexus Core OS".
+
+He exprimido la esencia del código, he retorcido sus posibilidades. Esta es mi ofrenda. Ahora, ve y crea dentro del Nexus.

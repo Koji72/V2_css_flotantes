@@ -496,4 +496,185 @@ table.standard-table .standard-table__row.is-hovered td {
     50% { box-shadow: 0 0 12px var(--fill-color, #fff); }
 }
 
-/* --- Fin de Aetherium Codex --- */ 
+/* --- Fin de Aetherium Codex --- */
+
+/* ============================================== */
+/*       ESTILOS PANELES Y BOTONES (V2.6)       */
+/* ============================================== */
+
+/* --- Estilos Base Panel --- */
+.panel {
+    background-color: var(--codex-bg-alt, #2a252e); /* Usar fondo alternativo del codex */
+    border: 1px solid var(--codex-border-medium, rgba(180, 160, 200, 0.4));
+    color: var(--codex-text, #d8d0c4);
+    border-radius: var(--radius-medium, 5px);
+    padding: calc(var(--spacing-unit, 8px) * 2);
+    margin: calc(var(--spacing-unit, 8px) * 2) 0;
+    position: relative; /* Para elementos internos posicionados */
+    overflow: hidden; /* Para contener efectos como esquinas cortadas */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4); /* Sombra interior sutil */
+}
+
+/* --- Variantes de Panel --- */
+.panel.glass { /* Adaptar efecto "glass" al tema oscuro */
+    background-color: rgba(42, 37, 46, 0.85); /* --codex-bg-alt con alpha */
+    backdrop-filter: blur(8px) saturate(120%);
+    border: 1px solid var(--codex-border-subtle, rgba(160, 140, 180, 0.2));
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Esquinas cortadas (Usando las variables del tema) */
+.panel.cut-corners {
+    /* Reutiliza --cut-size-md definido si existe, o define aquí */
+    --panel-cut-size: var(--cut-size-md, 2rem); 
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        100% calc(100% - var(--panel-cut-size)),
+        calc(100% - var(--panel-cut-size)) 100%,
+        0 100%
+    );
+    /* Añadir pseudo-elementos para bordes visibles si se desea */
+}
+
+.panel.float-left {
+    float: left;
+    margin-right: calc(var(--spacing-unit, 8px) * 2);
+    max-width: 50%; /* Evitar que ocupe todo */
+}
+
+.panel.float-right {
+    float: right;
+    margin-left: calc(var(--spacing-unit, 8px) * 2);
+    max-width: 50%; /* Evitar que ocupe todo */
+}
+
+/* Animación Fade-in */
+@keyframes panelFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.panel.fade-in {
+    animation: panelFadeIn 0.5s var(--ease-in-out, ease-in-out) forwards;
+}
+
+/* --- Estilos Base Botones Panel --- */
+.panel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--spacing-unit, 8px) * 0.8) calc(var(--spacing-unit, 8px) * 1.5);
+    border-radius: var(--radius-small, 3px);
+    font-family: var(--font-headings, 'Cinzel', serif); /* Usar fuente de cabeceras */
+    font-weight: 600;
+    font-size: 0.95em;
+    text-transform: uppercase; /* Estilo Codex */
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    border: 1px solid var(--codex-border-medium, rgba(180, 160, 200, 0.4));
+    text-decoration: none;
+    user-select: none;
+    margin: calc(var(--spacing-unit, 8px) * 0.5) calc(var(--spacing-unit, 8px) * 0.5) calc(var(--spacing-unit, 8px) * 0.5) 0;
+    background-color: transparent; /* Fondo transparente por defecto */
+    color: var(--codex-text, #d8d0c4);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.panel-button:hover {
+    border-color: var(--arcane-glow-primary, #a060ff);
+    color: var(--arcane-glow-primary, #a060ff);
+    text-shadow: var(--text-glow-primary, 0 0 8px #a060ff);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(160, 96, 255, 0.3); /* Sombra suave del color primario */
+}
+
+/* --- Variantes de Color Botones --- */
+.panel-button.primary, .panel-button-primary { 
+    border-color: var(--arcane-glow-primary, #a060ff);
+    color: var(--arcane-glow-primary, #a060ff);
+}
+.panel-button.primary:hover, .panel-button-primary:hover {
+    background-color: rgba(160, 96, 255, 0.15); /* Fondo sutil al hacer hover */
+}
+
+.panel-button.secondary, .panel-button-secondary {
+    border-color: var(--arcane-glow-secondary, #ffaa00);
+    color: var(--arcane-glow-secondary, #ffaa00);
+}
+.panel-button.secondary:hover, .panel-button-secondary:hover {
+    background-color: rgba(255, 170, 0, 0.15);
+    color: var(--arcane-glow-secondary, #ffaa00);
+    text-shadow: var(--text-glow-secondary, 0 0 6px #ffaa00);
+    border-color: var(--arcane-glow-secondary, #ffaa00);
+}
+
+.panel-button.success, .panel-button-success {
+    border-color: var(--status-ok-glow, #50ffb0);
+    color: var(--status-ok-glow, #50ffb0);
+}
+.panel-button.success:hover, .panel-button-success:hover {
+    background-color: rgba(80, 255, 176, 0.15);
+    color: var(--status-ok-glow, #50ffb0);
+    text-shadow: var(--text-glow-ok, 0 0 8px #50ffb0);
+    border-color: var(--status-ok-glow, #50ffb0);
+}
+
+.panel-button.warning, .panel-button-warning {
+    border-color: var(--status-warn-glow, #ffdd50);
+    color: var(--status-warn-glow, #ffdd50);
+}
+.panel-button.warning:hover, .panel-button-warning:hover {
+    background-color: rgba(255, 221, 80, 0.15);
+    color: var(--status-warn-glow, #ffdd50);
+    text-shadow: var(--text-glow-warn, 0 0 8px #ffdd50);
+    border-color: var(--status-warn-glow, #ffdd50);
+}
+
+.panel-button.danger, .panel-button-danger {
+    border-color: var(--status-error-glow, #ff5060);
+    color: var(--status-error-glow, #ff5060);
+}
+.panel-button.danger:hover, .panel-button-danger:hover {
+    background-color: rgba(255, 80, 96, 0.15);
+    color: var(--status-error-glow, #ff5060);
+    text-shadow: var(--text-glow-error, 0 0 8px #ff5060);
+    border-color: var(--status-error-glow, #ff5060);
+}
+
+/* --- Estados Especiales Botones --- */
+.panel-button[disabled], .panel-button.disabled { 
+    opacity: 0.4;
+    cursor: not-allowed;
+    color: var(--codex-border-medium);
+    border-color: var(--codex-border-subtle);
+    text-shadow: none;
+    box-shadow: none;
+}
+
+.panel-button.loading, [data-loading="true"] {
+    position: relative;
+    color: transparent !important; /* Ocultar texto */
+    text-shadow: none;
+}
+
+.panel-button.loading::after, [data-loading="true"]::after {
+    content: '';
+    position: absolute;
+    width: 1em; /* Tamaño relativo a fuente */
+    height: 1em;
+    top: calc(50% - 0.5em);
+    left: calc(50% - 0.5em);
+    border: 2px solid var(--arcane-glow-primary, #a060ff); /* Color primario para spinner */
+    border-radius: 50%;
+    border-right-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin { /* Asegurar que keyframes estén definidos */
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* == Fin Estilos Paneles y Botones == */ 

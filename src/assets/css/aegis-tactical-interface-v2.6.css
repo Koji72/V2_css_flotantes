@@ -971,6 +971,92 @@ button.white-button:active {
     transform: translateY(1px) !important;
 }
 
+/* --- ESTILOS PARA BOTONES EN PANELES --- */
+.panel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    margin: 5px 0;
+    font-family: var(--font-body);
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: var(--cyber-blue-primary);
+    border: 1px solid var(--cyber-blue-dark);
+    border-radius: var(--radius-small);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--outset-shadow-ui);
+}
+
+/* Estilos según tipo de botón */
+.panel-button[data-button-style="primary"] {
+    background-color: var(--cyber-blue-primary);
+    border-color: var(--cyber-blue-dark);
+    color: white;
+}
+
+.panel-button[data-button-style="secondary"] {
+    background-color: var(--aegis-bg-metal-dark);
+    border-color: var(--aegis-border-subtle);
+    color: var(--cyber-blue-bright);
+}
+
+.panel-button[data-button-style="success"] {
+    background-color: var(--tactical-green-medium);
+    border-color: var(--tactical-green-dark);
+    color: white;
+}
+
+.panel-button[data-button-style="warning"] {
+    background-color: var(--alert-yellow);
+    border-color: rgba(255, 204, 0, 0.7);
+    color: #333;
+}
+
+.panel-button[data-button-style="danger"] {
+    background-color: var(--alert-red);
+    border-color: rgba(255, 0, 0, 0.7);
+    color: white;
+}
+
+/* Estados interactivos */
+.panel-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glow-active-box);
+    filter: brightness(1.1);
+}
+
+.panel-button:active {
+    transform: translateY(1px);
+    box-shadow: var(--inset-shadow-ui);
+    filter: brightness(0.9);
+}
+
+/* Clases de compatibilidad con versión anterior */
+.panel-button.secondary {
+    background-color: var(--aegis-bg-metal-dark);
+    border-color: var(--aegis-border-subtle);
+    color: var(--cyber-blue-bright);
+}
+
+.panel-button.warning {
+    background-color: var(--alert-yellow);
+    border-color: rgba(255, 204, 0, 0.7);
+    color: #333;
+}
+
+.panel-button.toggle {
+    background-color: var(--aegis-bg-metal-light);
+    border-color: var(--cyber-blue-dark);
+}
+
+.panel-button.download::after {
+    content: " ↓";
+    font-weight: bold;
+}
+
 /* --- ESTILOS PARA TABLAS --- */
 .data-matrix-container {
     margin: 1.5rem 0;

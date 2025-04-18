@@ -1,200 +1,222 @@
-import React, { useRef } from 'react';
-import { 
-  Bold, Italic, List, ListOrdered, 
-  Quote, Code, Table, Image, 
-  Save, Loader2, FileText, Layout,
-  AlignJustify, Heading1, Heading2,
-  User, Map, Compass, Sword,
-  Heart, Scroll, Dice1, 
-  Layers, Square, PanelTopClose, PanelLeft,
-  Upload, Sun, Moon, Strikethrough
-} from 'lucide-react';
+import React, { useState } from 'react';
+import { useStore } from '../store';
 
 interface ToolbarProps {
-  onFileLoad: (file: File) => void;
-  onLoadDemo: () => void;
-  onDarkModeToggle: () => void;
-  darkMode: boolean;
-  isLoading: boolean;
-  onApplyStyle: (style: string) => void;
-  onInsertBlock: (block: string) => void;
+  onPanelDirectionToggle: () => void;
+  onSidebarToggle: () => void;
+  panelDirection: 'horizontal' | 'vertical';
+  sidebarOpen: boolean;
+  onTogglePreview?: () => void; // Controla si la vista previa se muestra u oculta completamente
+  showPreview?: boolean;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
-  onFileLoad,
-  onLoadDemo,
-  onDarkModeToggle,
-  darkMode,
-  isLoading,
-  onApplyStyle,
-  onInsertBlock,
+  onPanelDirectionToggle,
+  onSidebarToggle,
+  panelDirection,
+  sidebarOpen,
+  onTogglePreview,
+  showPreview = true
 }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const darkMode = useStore((state) => state.darkMode);
+  const setDarkMode = useStore((state) => state.setDarkMode);
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
+  const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onFileLoad(file);
-    }
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    document.body.setAttribute('data-theme', !darkMode ? 'dark' : 'light');
   };
 
-  const handleStyleClick = (style: string) => {
-    onApplyStyle(style);
+  const toggleExportMenu = () => {
+    setExportMenuOpen(!exportMenuOpen);
+    setSettingsMenuOpen(false); // Cerrar otros menús
   };
 
-  const handleBlockClick = (block: string) => {
-    onInsertBlock(block);
+  const toggleSettingsMenu = () => {
+    setSettingsMenuOpen(!settingsMenuOpen);
+    setExportMenuOpen(false); // Cerrar otros menús
   };
 
-  // Templates para bloques comunes
-  const quoteTemplate = '> Cita de texto';
-  const codeBlockTemplate = '```\n// Código aquí\n```';
-  const tableTemplate = '| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |';
-  const imageTemplate = '![Texto alternativo](url-de-la-imagen)';
-  const horizontalRuleTemplate = '---';
+  const handleExport = (format: 'pdf' | 'html' | 'markdown') => {
+    console.log(`Exporting as ${format}`);
+    setExportMenuOpen(false);
+    // Implementación futura: lógica de exportación real
+    
+    // Notificación temporal
+    alert(`Exportación a ${format.toUpperCase()} simulada. Esta funcionalidad será implementada pronto.`);
+  };
 
-  // Nuevos templates para paneles con estilos
-  const panelStylesTemplates = [
-    {
-      name: 'Panel Esquinas Cortadas',
-      icon: <Square size={16} />,
-      template: `:::panel Título del Panel | style=cut-corners
-Este es un panel con esquinas cortadas.
-
-- Elemento 1
-- Elemento 2
-- Elemento 3
-:::`
-    },
-    {
-      name: 'Panel Soportes de Esquina',
-      icon: <PanelTopClose size={16} />,
-      template: `:::panel Título del Panel | style=corner-brackets
-Este es un panel con soportes en las esquinas.
-
-1. Paso uno
-2. Paso dos
-3. Paso tres
-:::`
-    },
-    {
-      name: 'Panel Cristal',
-      icon: <Layers size={16} />,
-      template: `:::panel Título del Panel | style=glass-panel
-Este es un panel con efecto de cristal/vidrio.
-
-> "Un efecto visual moderno y translúcido."
-:::`
-    },
-    {
-      name: 'Panel Flotante Izquierda',
-      icon: <PanelLeft size={16} />,
-      template: `:::panel Título del Panel | layout=float-left
-Este panel flota a la izquierda del texto.
-
-- Permite que el texto fluya a su alrededor
-- Ideal para notas o información complementaria
-:::`
-    },
-    {
-      name: 'Panel Flotante Derecha',
-      icon: <PanelLeft size={16} style={{ transform: 'scaleX(-1)' }} />,
-      template: `:::panel Título del Panel | layout=float-right
-Este panel flota a la derecha del texto.
-
-- Permite que el texto fluya a su alrededor
-- Ideal para notas o información complementaria
-:::`
-    },
-    {
-      name: 'Panel Centrado',
-      icon: <AlignJustify size={16} />,
-      template: `:::panel Título del Panel | layout=center
-Este es un panel centrado de ancho reducido.
-
-Perfecto para destacar información importante en el centro del documento.
-:::`
-    },
-    {
-      name: 'Panel Combinado',
-      icon: <Layers size={16} />,
-      template: `:::panel Título del Panel | style=glass-panel,corner-brackets | layout=float-right | class=custom-panel
-Este panel combina múltiples estilos y layouts.
-
-- Efecto de cristal/vidrio
-- Soportes en las esquinas
-- Flotando a la derecha
-:::`
-    }
-  ];
+  // Cierra los menús cuando se hace clic fuera de ellos
+  const handleClickOutside = () => {
+    setExportMenuOpen(false);
+    setSettingsMenuOpen(false);
+  };
 
   return (
-    <div className={`toolbar ${darkMode ? 'dark-mode' : ''}`}>
-      <div className="toolbar-section">
-        <button
-          className="toolbar-button"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isLoading}
-        >
-          <Upload className="icon" />
-          Cargar Markdown
-        </button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          accept=".md,.markdown"
-          style={{ display: 'none' }}
-        />
-        <button className="toolbar-button" onClick={onLoadDemo} disabled={isLoading}>
-          <FileText className="icon" />
-          Cargar Demo
-        </button>
-      </div>
+    <div className="toolbar bg-gray-900 border-b border-gray-700 p-2">
+      <div className="container mx-auto flex justify-between items-center">
+        {/* Sección izquierda */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onSidebarToggle}
+            className="p-2 rounded hover:bg-gray-700 text-white"
+            title={sidebarOpen ? "Cerrar plantillas" : "Ver plantillas"}
+          >
+            {sidebarOpen ? '✕' : '☰'}
+          </button>
+          
+          <span className="text-white font-semibold mx-2">Universal Scribe</span>
+          
+          <div className="border-l border-gray-700 h-6 mx-2"></div>
+          
+          {/* Botón de guardar */}
+          <button
+            className="p-2 rounded hover:bg-gray-700 text-white flex items-center"
+            title="Guardar (Ctrl+S)"
+            onClick={() => {
+              const event = new KeyboardEvent('keydown', {
+                key: 's',
+                code: 'KeyS',
+                ctrlKey: true,
+                bubbles: true
+              });
+              document.dispatchEvent(event);
+            }}
+          >
+            <span className="mr-1">💾</span>
+            <span className="text-sm">Guardar</span>
+          </button>
+          
+          {/* Menú de exportación */}
+          <div className="relative">
+            <button
+              className="p-2 rounded hover:bg-gray-700 text-white flex items-center"
+              title="Exportar documento"
+              onClick={toggleExportMenu}
+            >
+              <span className="mr-1">📤</span>
+              <span className="text-sm">Exportar</span>
+              <span className="ml-1">{exportMenuOpen ? '▲' : '▼'}</span>
+            </button>
+            
+            {exportMenuOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={handleClickOutside}></div>
+                <div className="absolute left-0 mt-1 w-48 bg-gray-800 border border-gray-700 rounded shadow-lg z-20">
+                  <button
+                    className="w-full text-left p-2 hover:bg-gray-700 text-white text-sm"
+                    onClick={() => handleExport('pdf')}
+                  >
+                    Exportar como PDF
+                  </button>
+                  <button
+                    className="w-full text-left p-2 hover:bg-gray-700 text-white text-sm"
+                    onClick={() => handleExport('html')}
+                  >
+                    Exportar como HTML
+                  </button>
+                  <button
+                    className="w-full text-left p-2 hover:bg-gray-700 text-white text-sm"
+                    onClick={() => handleExport('markdown')}
+                  >
+                    Exportar como Markdown
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+        
+        {/* Sección derecha */}
+        <div className="flex items-center gap-2">
+          {/* Menú de configuración */}
+          <div className="relative">
+            <button
+              className="p-2 rounded hover:bg-gray-700 text-white flex items-center"
+              title="Configuración"
+              onClick={toggleSettingsMenu}
+            >
+              <span className="mr-1">⚙️</span>
+              <span className="text-sm">Configuración</span>
+              <span className="ml-1">{settingsMenuOpen ? '▲' : '▼'}</span>
+            </button>
+            
+            {settingsMenuOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={handleClickOutside}></div>
+                <div className="absolute right-0 mt-1 w-64 bg-gray-800 border border-gray-700 rounded shadow-lg z-20">
+                  <div className="p-2 border-b border-gray-700">
+                    <h3 className="text-white text-sm font-semibold">Configuración</h3>
+                  </div>
+                  
+                  <div className="p-2">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-white text-sm">Tema Oscuro</span>
+                      <button
+                        onClick={toggleDarkMode}
+                        className="p-1 rounded-full"
+                      >
+                        {darkMode ? "☀️" : "🌙"}
+                      </button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-white text-sm">Dirección de Paneles</span>
+                      <button
+                        onClick={onPanelDirectionToggle}
+                        className="p-1 rounded-full"
+                        title={panelDirection === 'horizontal' ? "Cambiar a layout vertical" : "Cambiar a layout horizontal"}
+                      >
+                        {panelDirection === 'horizontal' ? '⬌' : '⬍'}
+                      </button>
+                    </div>
 
-      <div className="toolbar-section">
-        <button className="toolbar-button" onClick={() => handleStyleClick('**texto**')}>
-          <Bold className="icon" />
-          Negrita
-        </button>
-        <button className="toolbar-button" onClick={() => handleStyleClick('*texto*')}>
-          <Italic className="icon" />
-          Cursiva
-        </button>
-        <button className="toolbar-button" onClick={() => handleStyleClick('~~texto~~')}>
-          <Strikethrough className="icon" />
-          Tachado
-        </button>
-        <button className="toolbar-button" onClick={() => handleStyleClick('`texto`')}>
-          <Code className="icon" />
-          Código
-        </button>
-      </div>
-
-      <div className="toolbar-section">
-        <button className="toolbar-button" onClick={() => handleBlockClick('# Título 1')}>
-          <Heading1 className="icon" />
-          Título 1
-        </button>
-        <button className="toolbar-button" onClick={() => handleBlockClick('## Título 2')}>
-          <Heading2 className="icon" />
-          Título 2
-        </button>
-        <button className="toolbar-button" onClick={() => handleBlockClick('> Cita')}>
-          <Quote className="icon" />
-          Cita
-        </button>
-        <button className="toolbar-button" onClick={() => handleBlockClick('- Elemento')}>
-          <List className="icon" />
-          Lista
-        </button>
-      </div>
-
-      <div className="toolbar-section">
-        <button className="toolbar-button" onClick={onDarkModeToggle}>
-          {darkMode ? <Sun className="icon" /> : <Moon className="icon" />}
-          {darkMode ? 'Modo Claro' : 'Modo Oscuro'}
-        </button>
+                    {onTogglePreview && (
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-white text-sm">Vista Previa</span>
+                        <button
+                          onClick={onTogglePreview}
+                          className="p-1 rounded-full"
+                          title={showPreview ? "Ocultar vista previa" : "Mostrar vista previa"}
+                        >
+                          {showPreview ? '👁️' : '👁️‍🗨️'}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          
+          {/* Botones de acceso rápido */}
+          <button 
+            onClick={onPanelDirectionToggle}
+            className="p-2 rounded hover:bg-gray-700 text-white"
+            title={panelDirection === 'horizontal' ? "Cambiar a layout vertical" : "Cambiar a layout horizontal"}
+          >
+            {panelDirection === 'horizontal' ? '⬌' : '⬍'}
+          </button>
+          
+          {onTogglePreview && (
+            <button 
+              onClick={onTogglePreview}
+              className={`p-2 rounded hover:bg-gray-700 text-white toggle-preview-button ${!showPreview ? 'bg-gray-700' : ''}`}
+              title={showPreview ? "Ocultar vista previa" : "Mostrar vista previa"}
+            >
+              {showPreview ? '👁️' : '👁️‍🗨️'}
+            </button>
+          )}
+          
+          <button 
+            onClick={toggleDarkMode}
+            className="p-2 rounded hover:bg-gray-700 text-white"
+            title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+        </div>
       </div>
     </div>
   );

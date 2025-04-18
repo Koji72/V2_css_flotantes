@@ -1,0 +1,117 @@
+/* Utilidades de colores */
+
+/* Colores de texto */
+.text-primary {
+  color: var(--theme-text-primary);
+}
+
+.text-secondary {
+  color: var(--theme-text-secondary);
+}
+
+.text-muted {
+  color: var(--theme-text-muted);
+}
+
+.text-accent {
+  color: var(--color-primary);
+}
+
+.text-accent2 {
+  color: var(--color-accent2);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.text-info {
+  color: var(--color-info);
+}
+
+/* Colores de fondo */
+.bg-primary {
+  background-color: var(--theme-bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--theme-bg-secondary);
+}
+
+.bg-tertiary {
+  background-color: var(--theme-bg-tertiary);
+}
+
+.bg-highlight {
+  background-color: var(--theme-bg-highlight);
+}
+
+.bg-accent {
+  background-color: var(--color-primary);
+}
+
+.bg-accent2 {
+  background-color: var(--color-accent2);
+}
+
+.bg-success {
+  background-color: var(--color-success);
+}
+
+.bg-warning {
+  background-color: var(--color-warning);
+}
+
+.bg-error {
+  background-color: var(--color-error);
+}
+
+.bg-info {
+  background-color: var(--color-info);
+}
+
+/* Bordes */
+.border-primary {
+  border-color: var(--theme-border-color);
+}
+
+.border-light {
+  border-color: var(--theme-border-light);
+}
+
+.border-dark {
+  border-color: var(--theme-border-dark);
+}
+
+.border-accent {
+  border-color: var(--color-primary);
+}
+
+.border-success {
+  border-color: var(--color-success);
+}
+
+.border-warning {
+  border-color: var(--color-warning);
+}
+
+.border-error {
+  border-color: var(--color-error);
+}
+
+/* Efectos de brillo */
+.glow-accent {
+  box-shadow: 0 0 10px var(--color-glow);
+}
+
+.text-glow {
+  text-shadow: 0 0 5px var(--color-glow);
+} 

@@ -1,0 +1,430 @@
+# Plan de Arquitectura: Modularización de PreviewManager y Migración a AST
+> **SW-Architect**
+
+## 1. Análisis del Estado Actual
+
+### Problemas Identificados
+- **Tamaño excesivo**: `PreviewManager.ts` tiene 1257 líneas, dificultando su mantenimiento
+- **Acoplamiento**: Múltiples responsabilidades mezcladas en una sola clase
+- **Procesamiento frágil**: Dependencia de expresiones regulares para parsear markdown
+- **Rendimiento subóptimo**: Reprocesamiento completo ante cambios menores
+- **Limitaciones de extensibilidad**: Difícil añadir nuevos tipos de componentes
+
+### Componentes Principales Actuales
+1. **Gestión del iframe**: Inicialización, actualización, aplicación de estilos
+2. **Procesamiento de markdown**: Detección y transformación de paneles y botones
+3. **Manejo de eventos**: Interacción con botones y otros elementos interactivos
+4. **Aplicación de CSS**: Gestión de estilos y temas
+5. **Sincronización de scroll**: Entre editor y preview
+
+## 2. Diseño de Arquitectura Modular
+
+### Propuesta de Separación de Componentes
+
+```
+┌─────────────────┐     ┌───────────────┐     ┌────────────────┐
+│  PreviewManager │────▶│  ContentParser │────▶│ RendererEngine │
+└────────┬────────┘     └───────┬───────┘     └────────┬───────┘
+         │                      │                      │
+         ▼                      ▼                      ▼
+┌─────────────────┐     ┌───────────────┐     ┌────────────────┐
+│ StylesManager   │     │ ComponentsHub │     │ EventsManager  │
+└─────────────────┘     └───────────────┘     └────────────────┘
+         │                      │                      │
+         │                      ▼                      │
+         │             ┌───────────────┐               │
+         └────────────▶│ CacheManager  │◀──────────────┘
+                       └───────────────┘
+```
+
+### Nuevos Módulos y Responsabilidades
+
+1. **PreviewManager** (75 líneas)
+   - Orquestador de alto nivel
+   - Inicialización del sistema
+   - Delegación a módulos especializados
+   - Interfaz pública simplificada
+
+2. **ContentParser** (200 líneas)
+   - Migración a AST con remark/unified
+   - Detección de componentes especiales
+   - Pipeline de procesamiento de markdown
+   - Sistema de plugins extensible
+
+3. **RendererEngine** (150 líneas)
+   - Gestión del iframe
+   - Renderizado diferencial (virtual DOM)
+   - Inyección de HTML en el iframe
+   - Manejo de errores de renderizado
+
+4. **StylesManager** (120 líneas)
+   - Aplicación de CSS al iframe
+   - Gestión de temas y variables
+   - Detección de cambios de estilo
+   - Optimización de aplicación de estilos
+
+5. **ComponentsHub** (180 líneas)
+   - Registro de tipos de componentes
+   - Transformación de nodos AST a HTML
+   - Sistema de plugins para componentes
+   - Validación de atributos
+
+6. **EventsManager** (120 líneas)
+   - Gestión de eventos de botones
+   - Manejo de interacciones de usuario
+   - Delegación de eventos
+   - Limpieza de event listeners
+
+7. **CacheManager** (100 líneas)
+   - Caché selectiva LRU
+   - Invalidación inteligente
+   - Métricas de rendimiento
+   - Optimización de reprocesamiento
+
+## 3. Migración a AST Parser (unified/remark)
+
+### Arquitectura del Pipeline AST
+
+```
+         Markdown
+            │
+            ▼
+┌─────────────────────┐
+│    remarkParse      │  Parseo inicial a AST
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ remarkDirective     │  Soporte para bloques ::panel y ::button
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ customPlugins       │  Plugins propios para paneles y botones
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ remarkRehype        │  Convertir AST de markdown a HTML
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ rehypeStringify     │  Convertir AST de HTML a string
+└──────────┬──────────┘
+           │
+           ▼
+          HTML
+```
+
+### Implementación del Sistema de Plugins
+
+```typescript
+// Ejemplo de plugin para paneles
+function remarkPanelPlugin() {
+  return (tree: any) => {
+    visit(tree, (node: any) => {
+      if (
+        node.type === 'containerDirective' &&
+        ['panel', 'info', 'warning', 'error', 'success', 'note'].includes(node.name)
+      ) {
+        // Transformar nodo directiva a estructura HTML
+        const attrs = node.attributes || {};
+        
+        // Extraer todas las propiedades
+        const title = attrs.title || '';
+        const style = attrs.style || 'default';
+        const layout = attrs.layout || '';
+        
+        // Crear nodo HTML con clases apropiadas
+        node.type = 'element';
+        node.tagName = 'section';
+        node.properties = {
+          className: [
+            'mixed-panel',
+            `panel-style--${style}`,
+            layout ? `layout--${layout}` : ''
+          ].filter(Boolean),
+          'data-panel-type': node.name,
+          'data-interactive-container': 'true'
+        };
+        
+        // Añadir contenido con título si existe
+        const children = [];
+        if (title) {
+          // Añadir encabezado
+          children.push({
+            type: 'element',
+            tagName: 'div',
+            properties: { className: ['panel-header-container'] },
+            children: [/* ... */]
+          });
+        }
+        
+        // Añadir contenido
+        children.push({
+          type: 'element',
+          tagName: 'div',
+          properties: { className: ['panel-content-wrapper'] },
+          children: [
+            {
+              type: 'element',
+              tagName: 'div',
+              properties: { className: ['panel-content'] },
+              children: node.children
+            }
+          ]
+        });
+        
+        node.children = children;
+      }
+    });
+  };
+}
+```
+
+## 4. Sistema de Renderizado Diferencial
+
+### Arquitectura del Virtual DOM
+
+```typescript
+// Ejemplo de implementación del renderer diferencial
+export class DiffRenderer {
+  private lastVdom?: VNode;
+  private rootElement?: Element;
+  
+  initialize(rootElement: Element): void {
+    this.rootElement = rootElement;
+  }
+  
+  render(html: string): void {
+    if (!this.rootElement) return;
+    
+    // Convertir HTML a virtual DOM
+    const newVdom = parse(html);
+    
+    if (this.lastVdom) {
+      // Calcular diferencias entre versión anterior y nueva
+      const patches = diff(this.lastVdom, newVdom);
+      
+      // Aplicar solo los cambios necesarios al DOM real
+      this.rootElement = patch(this.rootElement, patches) as Element;
+    } else {
+      // Primera renderización - crear desde cero
+      const newElement = create(newVdom);
+      this.rootElement.replaceWith(newElement);
+      this.rootElement = newElement;
+    }
+    
+    // Guardar referencia para futura comparación
+    this.lastVdom = newVdom;
+  }
+}
+```
+
+## 5. Sistema de Caché Selectiva
+
+### Diseño del Sistema de Caché
+
+```typescript
+// Diseño de alto nivel del sistema de caché
+import LRU from 'lru-cache';
+
+interface CacheEntry {
+  html: string;
+  ast: any;
+  timestamp: number;
+}
+
+export class MarkdownCache {
+  private contentCache: LRU<string, CacheEntry>;
+  private componentCache: LRU<string, string>;
+  
+  constructor() {
+    // Caché principal para documentos completos
+    this.contentCache = new LRU<string, CacheEntry>({
+      max: 50,  // Máximo 50 documentos en caché
+      ttl: 1000 * 60 * 30, // 30 minutos TTL
+      updateAgeOnGet: true
+    });
+    
+    // Caché para componentes individuales (paneles, botones)
+    this.componentCache = new LRU<string, string>({
+      max: 500, // Hasta 500 componentes
+      ttl: 1000 * 60 * 60, // 1 hora TTL
+      updateAgeOnGet: true
+    });
+  }
+  
+  getDocument(hash: string): CacheEntry | undefined {
+    return this.contentCache.get(hash);
+  }
+  
+  setDocument(hash: string, entry: CacheEntry): void {
+    this.contentCache.set(hash, entry);
+  }
+  
+  getComponent(hash: string): string | undefined {
+    return this.componentCache.get(hash);
+  }
+  
+  setComponent(hash: string, html: string): void {
+    this.componentCache.set(hash, html);
+  }
+  
+  invalidateAll(): void {
+    this.contentCache.clear();
+    this.componentCache.clear();
+  }
+  
+  invalidateComponentsByTag(tag: string): void {
+    // Invalidar componentes por etiqueta (útil para actualizaciones de estilo)
+    // Implementación depende de metadatos adicionales
+  }
+}
+```
+
+## 6. Sistema de Plugins Extensible
+
+### Arquitectura de Plugins
+
+```typescript
+// Interfaz base para plugins de componentes
+interface ComponentPlugin {
+  name: string;
+  type: 'panel' | 'button' | 'custom';
+  process: (node: any, attrs: Record<string, any>) => any;
+  render: (processedNode: any) => string;
+}
+
+// Registro de plugins
+class PluginRegistry {
+  private plugins: Map<string, ComponentPlugin> = new Map();
+  
+  register(plugin: ComponentPlugin): void {
+    this.plugins.set(plugin.name, plugin);
+    console.log(`Plugin registrado: ${plugin.name}`);
+  }
+  
+  getPlugin(name: string): ComponentPlugin | undefined {
+    return this.plugins.get(name);
+  }
+  
+  getPluginsByType(type: string): ComponentPlugin[] {
+    return Array.from(this.plugins.values())
+      .filter(plugin => plugin.type === type);
+  }
+  
+  processNode(name: string, node: any, attrs: Record<string, any>): any {
+    const plugin = this.getPlugin(name);
+    if (!plugin) return node;
+    return plugin.process(node, attrs);
+  }
+  
+  renderNode(name: string, processedNode: any): string {
+    const plugin = this.getPlugin(name);
+    if (!plugin) return '';
+    return plugin.render(processedNode);
+  }
+}
+```
+
+## 7. Plan de Implementación
+
+### Fase 1: Preparación (2 días)
+1. Crear estructura de directorios para nuevos módulos
+2. Definir interfaces entre componentes
+3. Configurar pruebas unitarias para cada módulo
+4. Preparar entorno para pruebas de rendimiento
+
+### Fase 2: Extracción de Componentes (3 días)
+1. Extraer StylesManager del PreviewManager actual
+2. Extraer EventsManager del PreviewManager actual
+3. Crear ContentParser básico (aún con regex)
+4. Crear RendererEngine básico
+5. Implementar nuevas interfaces públicas
+
+### Fase 3: Migración a AST (3 días)
+1. Implementar pipeline AST con remark/unified
+2. Desarrollar plugins para paneles y botones
+3. Integrar con el sistema de componentes
+4. Validar resultados contra implementación actual
+
+### Fase 4: Optimización (2 días)
+1. Implementar renderizado diferencial
+2. Desarrollar sistema de caché selectiva
+3. Optimizar transformaciones AST
+4. Medir y comparar rendimiento
+
+### Fase 5: Sistema de Extensión (2 días)
+1. Implementar registro de plugins
+2. Crear API para desarrolladores externos
+3. Desarrollar plugins de ejemplo
+4. Documentar sistema de extensión
+
+## 8. Dependencias y Librerías
+
+1. **Procesamiento AST**:
+   - unified (core framework)
+   - remark-parse (markdown to AST)
+   - remark-directive (para bloques personalizados)
+   - remark-rehype (markdown AST a HTML AST)
+   - rehype-stringify (HTML AST a string)
+
+2. **Renderizado Diferencial**:
+   - virtual-dom (diff, patch, create)
+   - vdom-parser (HTML a virtual-dom)
+
+3. **Caché y Optimización**:
+   - lru-cache (para implementación de caché)
+   - hash-sum (para generar hashes de contenido)
+
+4. **Testing**:
+   - jest (framework de testing)
+   - @testing-library/dom (pruebas DOM)
+   - benchmark.js (pruebas de rendimiento)
+
+## 9. Riesgos y Mitigación
+
+| Riesgo | Impacto | Probabilidad | Mitigación |
+|--------|---------|--------------|------------|
+| Incompatibilidad con markdown existente | Alto | Media | Mantener suite de pruebas con ejemplos reales y modo de compatibilidad |
+| Curva de aprendizaje AST | Medio | Alta | Dedicar tiempo a entrenamiento y documentación interna |
+| Regresiones en funcionalidad | Alto | Media | Pruebas exhaustivas antes/después y tests de integración |
+| Bajo rendimiento de caché | Medio | Baja | Medir continuamente y ajustar estrategias de caché |
+| Complejidad excesiva de plugins | Alto | Media | Diseñar API simple y proporcionar ejemplos claros |
+
+## 10. Próximos Pasos Inmediatos
+
+1. **Crear estructura de archivos:**
+   ```
+   src/utils/preview/
+   ├── index.ts             # Punto de entrada público
+   ├── PreviewManager.ts    # Versión simplificada (orquestador)
+   ├── ContentParser.ts     # Parser de markdown
+   ├── RendererEngine.ts    # Motor de renderizado
+   ├── StylesManager.ts     # Gestor de estilos
+   ├── EventsManager.ts     # Gestor de eventos
+   ├── ComponentsHub.ts     # Hub de componentes
+   ├── CacheManager.ts      # Gestor de caché
+   └── plugins/             # Plugins por componente
+       ├── PanelPlugin.ts
+       ├── ButtonPlugin.ts
+       └── index.ts
+   ```
+
+2. **Implementar interfaces base:**
+   - Definir interfaces entre componentes
+   - Crear estructura de pruebas
+   - Establecer métricas base de rendimiento
+
+3. **Iniciar extracción de StylesManager:**
+   - Extraer toda la lógica de estilos
+   - Implementar pruebas unitarias
+   - Validar funcionalidad aislada
+
+---
+
+*Documento preparado por SW-Architect*
+*Fecha: 2023-08-18*
+*Versión: 1.0* 

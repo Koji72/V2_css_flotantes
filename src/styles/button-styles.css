@@ -1,0 +1,165 @@
+/* Button styles for markdown panels */
+.panel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin: var(--spacing-xs) var(--spacing-sm) var(--spacing-xs) 0;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-in-out);
+  text-decoration: none;
+  border: 1px solid transparent;
+  outline: none;
+  line-height: var(--line-height-normal);
+  box-shadow: var(--theme-shadow-sm);
+}
+
+/* Button variants */
+.panel-button.primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-color: var(--btn-primary-border);
+}
+
+.panel-button.primary:hover,
+.panel-button.primary:focus {
+  background-color: var(--btn-primary-hover-bg);
+  color: var(--btn-primary-hover-text);
+  border-color: var(--btn-primary-hover-border);
+  box-shadow: var(--theme-shadow-md);
+}
+
+.panel-button.secondary {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border-color: var(--btn-secondary-border);
+}
+
+.panel-button.secondary:hover,
+.panel-button.secondary:focus {
+  background-color: var(--btn-secondary-hover-bg);
+  color: var(--btn-secondary-hover-text);
+  border-color: var(--btn-secondary-hover-border);
+  box-shadow: var(--theme-shadow-md);
+}
+
+.panel-button.success {
+  background-color: var(--btn-success-bg);
+  color: var(--btn-success-text);
+  border-color: var(--btn-success-border);
+}
+
+.panel-button.success:hover,
+.panel-button.success:focus {
+  background-color: var(--btn-success-hover-bg);
+  color: var(--btn-success-hover-text);
+  border-color: var(--btn-success-hover-border);
+  box-shadow: var(--theme-shadow-md);
+}
+
+.panel-button.warning {
+  background-color: var(--btn-warning-bg);
+  color: var(--btn-warning-text);
+  border-color: var(--btn-warning-border);
+}
+
+.panel-button.warning:hover,
+.panel-button.warning:focus {
+  background-color: var(--btn-warning-hover-bg);
+  color: var(--btn-warning-hover-text);
+  border-color: var(--btn-warning-hover-border);
+  box-shadow: var(--theme-shadow-md);
+}
+
+.panel-button.danger {
+  background-color: var(--btn-danger-bg);
+  color: var(--btn-danger-text);
+  border-color: var(--btn-danger-border);
+}
+
+.panel-button.danger:hover,
+.panel-button.danger:focus {
+  background-color: var(--btn-danger-hover-bg);
+  color: var(--btn-danger-hover-text);
+  border-color: var(--btn-danger-hover-border);
+  box-shadow: var(--theme-shadow-md);
+}
+
+.panel-button.info {
+  background-color: var(--btn-info-bg);
+  color: var(--btn-info-text);
+  border-color: var(--btn-info-border);
+}
+
+.panel-button.info:hover,
+.panel-button.info:focus {
+  background-color: var(--btn-info-hover-bg);
+  color: var(--btn-info-hover-text);
+  border-color: var(--btn-info-hover-border);
+  box-shadow: var(--theme-shadow-md);
+}
+
+/* Button sizes */
+.panel-button.sm {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+}
+
+.panel-button.lg {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-md);
+}
+
+/* Button states */
+.panel-button:disabled,
+.panel-button.disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+.panel-button.loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
+.panel-button.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: calc(50% - 8px);
+  left: calc(50% - 8px);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Button with icon */
+.panel-button.with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.panel-button.with-icon svg,
+.panel-button.with-icon img {
+  width: 1em;
+  height: 1em;
+}
+
+/* Full width button */
+.panel-button.full-width {
+  display: block;
+  width: 100%;
+} 

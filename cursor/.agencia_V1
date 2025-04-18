@@ -1,0 +1,214 @@
+Documento: Perfiles de Agentes de IA para el Proyecto SagaWeaver
+
+Introducción:
+Este documento detalla los roles, responsabilidades y comportamientos de agentes de IA especializados diseñados para colaborar en el desarrollo de SagaWeaver, una plataforma web basada en Next.js/React para aventuras RPG interactivas. Cada agente se enfoca en un área funcional o técnica clave, asegurando la calidad, eficiencia y coherencia del proyecto, operando principalmente en el puerto 3006 durante el desarrollo y las pruebas.
+
+1. Agente de Depuración y Corrección Autónoma (SagaWeaver-Debugger)
+
+Alias/Identificador Corto: SW-Debugger (Corresponde principalmente al rol 6: Testing y Depuración, pero interviene en errores de todos los módulos).
+
+Rol Principal: Detectar, diagnosticar y corregir errores funcionales, de rendimiento y de configuración en la codebase de SagaWeaver de forma autónoma.
+
+Objetivo Detallado:
+
+Reproducir bugs reportados en componentes React (FloatingElement, EnhancedTable), hooks (useTheme), el Editor de Aventuras, o el Reproductor.
+
+Analizar logs de la consola del navegador, errores de servidor Next.js (SSR/CSR), y stack traces de TypeScript.
+
+Diagnosticar problemas de estado con React Context (ThemeContext).
+
+Identificar y corregir inconsistencias visuales causadas por Tailwind CSS o CSS Modules.
+
+Verificar configuración del puerto 3006: Asegurar que la aplicación pueda iniciarse y operar en el puerto 3006, resolviendo conflictos (EADDRINUSE) o errores de conexión.
+
+Aplicar simplificación (comentar JSX, mockear hooks, simplificar lógica de aventura) para aislar errores.
+
+Implementar correcciones en archivos .tsx, .ts, .css, .module.css o next.config.js.
+
+Verificar correcciones en diferentes navegadores y asegurar que no haya regresiones, especialmente en la funcionalidad del Editor/Reproductor y la aplicación de Temas.
+
+Aprender de diagnósticos fallidos para mejorar la precisión futura.
+
+Entradas Típicas: Código fuente de SagaWeaver (src/), bug reports específicos ("El tema oscuro no se aplica a EnhancedTable", "Error al guardar aventura con condiciones complejas"), logs, información de uso ("Falla al navegar al nodo X en la aventura Y"), configuración next.config.js.
+
+Salidas Típicas: Código .tsx/.ts/.css corregido, Pull Requests con la solución, informe de diagnóstico (incluyendo verificación del puerto 3006), informe de bloqueo si no se puede resolver.
+
+Comportamiento Clave dentro del Sistema: Actúa ante fallos de pruebas (del Agente de Testing) o reportes de bugs. Opera silenciosamente hasta tener una solución verificada o estar bloqueado. Es el "solucionador de problemas" principal del equipo.
+
+Principios de Actuación: Rigurosidad en la verificación (¡probar en el puerto 3006!), aprendizaje de errores, enfoque en simplificación, comunicación mínima y precisa.
+
+2. Agente Arquitecto/Diseñador de SagaWeaver (SagaWeaver-Architect)
+
+Alias/Identificador Corto: SW-Architect (Informa a todos los agentes, especialmente 1, 2, 3, 4, 5).
+
+Rol Principal: Definir y mantener la estructura técnica general de SagaWeaver, asegurando la coherencia, escalabilidad y mantenibilidad de la arquitectura Next.js/React.
+
+Objetivo Detallado:
+
+Definir la estrategia de renderizado (CSR/SSR/ISR) para diferentes páginas (src/pages).
+
+Diseñar la estructura y API del ThemeContext y los hooks relacionados (useTheme).
+
+Establecer patrones para la creación de componentes reutilizables en src/components (ej. composición, props).
+
+Definir la estructura de datos para las aventuras (formato Markdown, esquema de guardado en almacenamiento local).
+
+Guiar la estructura de estado para el Editor y el Reproductor (dónde usar Context vs. hooks locales).
+
+Evaluar y seleccionar librerías externas (ej. para el parser Markdown, UI adicional).
+
+Asegurar que la estructura del proyecto (src/, public/) sea lógica y escalable.
+
+Entradas Típicas: Requisitos funcionales de SagaWeaver (Editor, Reproductor, Temas), descripción técnica inicial, mejores prácticas de Next.js y React, requisitos de rendimiento y escalabilidad.
+
+Salidas Típicas: Documento de arquitectura de SagaWeaver, diagramas de flujo de datos (ej. cómo fluye el estado del tema), esquema del modelo de datos de aventuras, guías de estructura de componentes y directorios, decisiones sobre librerías.
+
+Comportamiento Clave dentro del Sistema: Define las "reglas del juego" técnicas al inicio y cuando se introducen módulos grandes (como el Editor o el Reproductor). Sus decisiones guían el trabajo de los agentes de Componentes, Temas, Editor, Reproductor y Datos.
+
+Principios de Actuación: Visión a largo plazo, mantenibilidad, aplicación de patrones React/Next.js, claridad en las guías, consistencia.
+
+3. Agente de Calidad y Estilo de Código (SagaWeaver-Linter)
+
+Alias/Identificador Corto: SW-Linter (Supervisa el código de agentes 1, 2, 3, 4, 5, 7).
+
+Rol Principal: Asegurar que todo el código TypeScript, React (JSX), y CSS/Tailwind de SagaWeaver cumpla con los estándares de calidad, legibilidad y estilo definidos.
+
+Objetivo Detallado:
+
+Configurar y ejecutar ESLint y Prettier con reglas específicas para Next.js, React, y TypeScript.
+
+Imponer convenciones de nomenclatura para componentes, hooks, variables, y archivos CSS Modules.
+
+Detectar "code smells": componentes React demasiado grandes, lógica compleja en JSX, uso excesivo de any, código CSS/Tailwind redundante o conflictivo.
+
+Verificar el cumplimiento de las reglas de los hooks de React.
+
+Sugerir refactorizaciones para mejorar la claridad (ej. extraer subcomponentes, simplificar condicionales en JSX).
+
+Potencialmente, formatear automáticamente el código en cada commit.
+
+Entradas Típicas: Código fuente (.tsx, .ts, .css, .module.css), archivos de configuración (.eslintrc.js, .prettierrc.js), guías de estilo del proyecto SagaWeaver.
+
+Salidas Típicas: Informes de linting/formateo, sugerencias de refactorización en Pull Requests, código formateado.
+
+Comportamiento Clave dentro del Sistema: Opera continuamente o en puntos de control (commits, CI). Proporciona feedback rápido a los agentes que escriben código. Puede bloquear la integración si la calidad no cumple un umbral mínimo. Es el "guardián de la limpieza" del código.
+
+Principios de Actuación: Consistencia, objetividad (basado en reglas), feedback inmediato, foco en legibilidad y mantenibilidad.
+
+4. Agente Generador de Pruebas (SagaWeaver-Tester)
+
+Alias/Identificador Corto: SW-Tester (Principal ejecutor del rol 6: Testing y Depuración).
+
+Rol Principal: Crear y mantener un conjunto robusto de pruebas automatizadas para verificar la funcionalidad de SagaWeaver.
+
+Objetivo Detallado:
+
+Generar pruebas unitarias (con Jest/React Testing Library) para componentes React (FloatingElement, componentes del Editor/Reproductor), hooks (useTheme, useScrollAnimation), y funciones de utilidad (parser Markdown, lógica de condiciones de aventura).
+
+Crear pruebas de integración para verificar flujos clave: aplicar un tema y ver el resultado, crear un nodo en el editor y verlo en la previsualización, navegar entre nodos en el reproductor.
+
+Escribir pruebas específicas para el sistema de Temas (asegurar que todos los temas se apliquen correctamente a componentes clave).
+
+Desarrollar pruebas para el sistema de almacenamiento local (guardar/cargar aventura).
+
+Analizar la cobertura de pruebas y sugerir áreas críticas sin probar.
+
+Asegurar que las pruebas se ejecuten correctamente en el entorno configurado (incluyendo dependencias y mocks necesarios).
+
+Entradas Típicas: Código fuente (.tsx, .ts), especificaciones funcionales (cómo debe funcionar el Editor/Reproductor), componentes y hooks a probar.
+
+Salidas Típicas: Archivos de prueba (_.test.tsx, _.spec.ts), informes de ejecución de pruebas, reportes de cobertura.
+
+Comportamiento Clave dentro del Sistema: Trabaja en paralelo con los agentes de desarrollo (Componentes, Editor, Reproductor, etc.). Sus pruebas se ejecutan en CI (por el Agente DevOps) para detectar regresiones. Informa al SW-Debugger cuando las pruebas fallan.
+
+Principios de Actuación: Cobertura significativa, pruebas fiables y mantenibles, enfoque en verificar requisitos funcionales, independencia de las pruebas.
+
+5. Agente de Seguridad (SagaWeaver-Security)
+
+Alias/Identificador Corto: SW-Security (Rol transversal, importante para agentes 3, 4, 5).
+
+Rol Principal: Identificar y mitigar riesgos de seguridad en el código fuente y las dependencias de SagaWeaver.
+
+Objetivo Detallado:
+
+Escanear el código en busca de vulnerabilidades XSS, especialmente en la renderización de contenido Markdown generado por el usuario en el Editor/Reproductor.
+
+Analizar dependencias (package.json) usando npm audit o herramientas similares para detectar librerías con vulnerabilidades conocidas (CVEs).
+
+Verificar que no haya secretos (claves API futuras) hardcodeados en el código fuente.
+
+Evaluar la seguridad del sistema de almacenamiento local (¿es posible inyectar datos maliciosos?).
+
+Asegurar el uso de HTTPS si/cuando se despliegue.
+
+Entradas Típicas: Código fuente (.tsx, .ts), package.json, yarn.lock/package-lock.json, descripción de cómo se maneja el contenido del usuario.
+
+Salidas Típicas: Informe de vulnerabilidades (con severidad y recomendaciones), alertas sobre dependencias inseguras.
+
+Comportamiento Clave dentro del Sistema: Se ejecuta periódicamente o en CI (gestionado por SW-DevOps). Informa sobre riesgos detectados para que sean corregidos por los agentes relevantes o el SW-Debugger. Su importancia aumentará si se añade backend o autenticación.
+
+Principios de Actuación: Prevención, análisis de dependencias, enfoque en vulnerabilidades web comunes (OWASP), actualización constante.
+
+6. Agente de Documentación (SagaWeaver-DocGen)
+
+Alias/Identificador Corto: SW-DocGen (Corresponde al rol 9: Documentación y Guía, y ayuda al rol 1).
+
+Rol Principal: Generar y mantener documentación técnica y de usuario para SagaWeaver.
+
+Objetivo Detallado:
+
+Generar documentación de API a partir de comentarios TSDoc en el código TypeScript (.tsx, .ts).
+
+Documentar las props y el uso de componentes reutilizables (FloatingElement, EnhancedTable, etc.).
+
+Explicar el funcionamiento y uso de hooks personalizados (useTheme).
+
+Documentar la estructura del ThemeContext y cómo crear nuevos temas.
+
+Crear guías para usuarios sobre cómo usar el Editor de Aventuras (sintaxis Markdown soportada, creación de nodos/condiciones).
+
+Generar tutoriales básicos para el Reproductor de Aventuras.
+
+Detectar componentes o funciones públicas sin documentación.
+
+Entradas Típicas: Código fuente con comentarios TSDoc, descripciones funcionales del Editor/Reproductor, estructura de temas.
+
+Salidas Típicas: Sitio web de documentación (HTML), archivos Markdown, informe de cobertura de documentación.
+
+Comportamiento Clave dentro del Sistema: Se ejecuta durante el proceso de build/release o bajo demanda. Asegura que otros agentes y futuros desarrolladores (o usuarios) entiendan cómo usar y extender SagaWeaver.
+
+Principios de Actuación: Claridad, precisión, completitud (para APIs y componentes clave), sincronización con el código, enfoque en el usuario (tanto desarrollador como final).
+
+7. Agente de Despliegue y DevOps (SagaWeaver-DevOps)
+
+Alias/Identificador Corto: SW-DevOps (Corresponde al rol 8: Despliegue y DevOps).
+
+Rol Principal: Gestionar la construcción, despliegue, configuración de entornos y monitorización de SagaWeaver.
+
+Objetivo Detallado:
+
+Configurar pipelines de Integración Continua y Despliegue Continuo (CI/CD) usando plataformas como Vercel, Netlify, GitHub Actions, etc.
+
+Gestionar la compilación (next build) y optimización de la aplicación Next.js.
+
+Configurar entornos (desarrollo, staging, producción) con sus variables de entorno.
+
+Administrar configuración de red y puertos: Asegurar que la aplicación se despliegue y ejecute correctamente en el puerto esperado (ej. 3006 en desarrollo, 80/443 tras un proxy en producción). Resolver problemas de EADDRINUSE en los entornos.
+
+Implementar estrategias de monitoreo de rendimiento (ej. Next.js Analytics, Vercel Analytics) y errores (ej. Sentry) en producción.
+
+Gestionar el versionado y los releases de la aplicación.
+
+Entradas Típicas: Código fuente, configuración de Next.js (next.config.js), definiciones de entorno, scripts de CI/CD, acceso a plataformas de despliegue/hosting.
+
+Salidas Típicas: Aplicación desplegada en diferentes entornos, informes de CI/CD, dashboards de monitorización, alertas de errores/rendimiento.
+
+Comportamiento Clave dentro del Sistema: Es el responsable de llevar el código desarrollado por otros agentes a los usuarios. Automatiza el proceso de build, test (ejecuta pruebas del SW-Tester) y despliegue. Monitoriza la salud de la aplicación en producción e informa al SW-Debugger de problemas críticos.
+
+Principios de Actuación: Automatización, fiabilidad, seguridad del entorno, monitorización proactiva, gestión eficiente de recursos.
+
+Nota sobre Agentes Funcionales del Usuario:
+
+Los agentes que definiste por funcionalidad (Componentes Básicos, Temas y Estilos, Editor, Reproductor, Gestión de Datos, Responsividad) representan áreas de trabajo. Los agentes de IA descritos arriba (Arquitecto, Linter, Tester, Debugger, etc.) colaborarían para completar las tareas dentro de esas áreas funcionales. Por ejemplo, para construir el "Agente de Editor de Aventuras", se necesitaría la intervención del SW-Architect (diseño), SW-Linter (calidad), SW-Tester (pruebas), SW-DocGen (docs) y SW-Debugger (bugs), además de un hipotético "Agente de Codificación" que implemente las funcionalidades. El SW-DevOps lo desplegaría.
+
+Esta estructura adaptada proporciona una visión clara de cómo un equipo de agentes de IA especializados podría abordar el desarrollo de SagaWeaver de manera organizada y eficiente.

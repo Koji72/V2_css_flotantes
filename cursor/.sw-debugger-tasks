@@ -1,0 +1,79 @@
+# Tareas de Debugging - SW-Debugger
+
+## Prioridad Alta
+
+### 1. Problemas con Botones en Paneles
+- **Descripción**: Los botones en paneles no están funcionando correctamente
+- **Archivos afectados**: 
+  - src/utils/previewManager.ts
+  - src/styles/floating-blocks.css
+- **Síntomas**:
+  - Los botones no responden a clicks
+  - Los estilos no se aplican correctamente
+  - Los eventos no se propagan adecuadamente
+- **Acciones requeridas**:
+  - Revisar el método processButtons en previewManager.ts
+  - Verificar los event listeners en setupDefaultListeners
+  - Comprobar la propagación de eventos personalizados
+
+### 2. Problemas con Esquinas Cortadas
+- **Descripción**: Las esquinas cortadas no se renderizan correctamente
+- **Archivos afectados**:
+  - src/styles/floating-blocks.css
+  - src/utils/previewManager.ts
+- **Síntomas**:
+  - Las esquinas no se cortan en algunos casos
+  - Inconsistencias en el renderizado
+- **Acciones requeridas**:
+  - Revisar las clases CSS para esquinas cortadas
+  - Verificar el procesamiento de atributos en parseAttributes
+  - Comprobar la aplicación de estilos en renderSinglePanelHtml
+
+## Prioridad Media
+
+### 3. Problemas de Rendimiento
+- **Descripción**: Lentitud en el procesamiento de paneles
+- **Archivos afectados**:
+  - src/utils/previewManager.ts
+- **Síntomas**:
+  - Retrasos en la actualización de contenido
+  - Alto uso de memoria
+- **Acciones requeridas**:
+  - Optimizar el método preprocessPanels
+  - Implementar caché para paneles procesados
+  - Reducir el número de operaciones DOM
+
+### 4. Problemas de Configuración
+- **Descripción**: Duplicación de configuraciones
+- **Archivos afectados**:
+  - tailwind.config.ts
+  - tailwind.config.js
+- **Acciones requeridas**:
+  - Eliminar configuraciones duplicadas
+  - Unificar la configuración en un solo archivo
+  - Actualizar las referencias en el proyecto
+
+## Prioridad Baja
+
+### 5. Mejoras de Estructura
+- **Descripción**: Mejoras en la organización del código
+- **Archivos afectados**:
+  - src/styles/
+  - src/utils/
+- **Acciones requeridas**:
+  - Revisar la modularización de componentes
+  - Mejorar la separación de responsabilidades
+  - Documentar la estructura del proyecto
+
+## Métricas de Éxito
+- Todos los botones funcionan correctamente
+- Las esquinas cortadas se renderizan consistentemente
+- El rendimiento mejora en al menos un 30%
+- No hay configuraciones duplicadas
+- La estructura del código es más mantenible
+
+## Notas Adicionales
+- Priorizar la corrección de bugs sobre las mejoras de estructura
+- Documentar todos los cambios realizados
+- Probar los cambios en diferentes navegadores
+- Mantener la compatibilidad con versiones anteriores 

@@ -1,141 +1,108 @@
+¡Entendido! Forjaremos una interfaz que se sienta arrancada directamente del puente de mando de la UNSC Infinity o de una estación orbital PanOceánica. Combinaremos la funcionalidad militar pragmática con la estética pulida y avanzada.
+
+Presentando el tema V2.5: "Aegis Tactical Interface".
+
 /* ================================================== */
-/*       THEME: Halo Infinite (V2.5)                  */
-/*   (Inspired by Halo Infinite Interface)            */
+/*       THEME: Aegis Tactical Interface (V2.5)       */
+/*   (Halo UNSC x Infinity Tech - Universal Scribe)   */
 /* ================================================== */
 
-/* 0. IMPORTAR FUENTES */
+/* 0. IMPORTAR FUENTES (Tácticas y Claras) */
 @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600&family=Exo+2:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
 
-/* 1. VARIABLES FUNDAMENTALES */
+/* 1. VARIABLES FUNDAMENTALES (Paleta Aegis) */
 :root {
     /* -- Base de Comandancia -- */
-    --infinite-bg-deep: #0a0c12;
-    --infinite-bg-grid: #12151c;
-    --infinite-bg-surface: #1a1d26;
-    --infinite-bg-elevated: #232631;
-    --infinite-glass-bg: rgba(20, 30, 45, 0.75);
-    --infinite-border-fine: rgba(100, 150, 200, 0.2);
-    --infinite-border-medium: rgba(150, 200, 255, 0.4);
-    --infinite-border-main: #4a6b9c;
-    --infinite-text-primary: #e0f0ff;
-    --infinite-text-secondary: #a0b8d0;
-    --infinite-text-disabled: #607080;
+    --aegis-bg-deep: #080a0f;         /* Negro casi absoluto, frío */
+    --aegis-bg-graphite: #1c1e24;     /* Gris grafito oscuro para superficies */
+    --aegis-bg-metal-dark: #2a2d35;   /* Metal cepillado oscuro */
+    --aegis-bg-metal-light: #383c45;  /* Metal cepillado claro */
+    --aegis-glass-bg: rgba(15, 25, 40, 0.75); /* Fondo cristal azulado oscuro translúcido */
+    --aegis-border-fine: rgba(100, 150, 200, 0.2); /* Línea fina de cuadrícula */
+    --aegis-border-medium: rgba(150, 200, 255, 0.4); /* Borde medio */
+    --aegis-border-main: #5070a0;     /* Borde principal azul acero */
+    --aegis-text-primary: #e0f0ff;    /* Texto principal blanco hielo */
+    --aegis-text-secondary: #a0b8d0;  /* Texto secundario gris azulado */
+    --aegis-text-disabled: #607080;   /* Texto inactivo */
 
-    /* -- Acentos Tácticos -- */
-    --infinite-blue-primary: #00aaff;
-    --infinite-blue-secondary: #60d0ff;
-    --infinite-blue-dark: #0077cc;
-    --infinite-green-primary: #00ff88;
-    --infinite-green-secondary: #80ffc0;
-    --infinite-green-dark: #00b060;
-    --infinite-amber-primary: #ffc800;
-    --infinite-red-primary: #ff4040;
+    /* -- Acentos Tácticos Holográficos -- */
+    --holo-green-primary: #00ff88;    /* Verde holograma militar brillante */
+    --holo-green-secondary: #80ffc0;  /* Verde más claro */
+    --holo-green-dark: #00b060;     /* Verde oscuro */
+    --cyber-blue-primary: #00aaff;   /* Azul cibernético brillante */
+    --cyber-blue-secondary: #60d0ff;  /* Azul más claro */
+    --cyber-blue-dark: #0077cc;    /* Azul oscuro */
+    --accent-amber-data: #ffc800;     /* Ámbar para datos alternativos o alerta leve */
+    --accent-red-alert: #ff4040;      /* Rojo alerta crítica */
 
-    /* -- Tipografía -- */
-    --font-display: 'Teko', sans-serif;
-    --font-body: 'Exo 2', sans-serif;
-    --font-mono: 'Share Tech Mono', monospace;
+    /* -- Tipografía Táctica -- */
+    --font-display: 'Teko', sans-serif;       /* Display condensado, técnico */
+    --font-body: 'Exo 2', sans-serif;         /* Cuerpo limpio y moderno */
+    --font-mono: 'Share Tech Mono', monospace; /* Monospace táctica */
 
-    /* -- Efectos -- */
-    --glow-blue-text: 0 0 4px var(--infinite-blue-primary);
-    --glow-blue-border: 0 0 6px 1px var(--infinite-blue-primary);
-    --glow-green-text: 0 0 4px var(--infinite-green-primary);
-    --glow-green-border: 0 0 6px 1px var(--infinite-green-primary);
-    --glow-amber-text: 0 0 4px var(--infinite-amber-primary);
-    --glow-red-text: 0 0 4px var(--infinite-red-primary);
-    --inset-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
-    --outset-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    /* -- Efectos de Interfaz -- */
+    --glow-green-text: 0 0 6px var(--holo-green-primary);
+    --glow-green-border: 0 0 8px 1px var(--holo-green-primary);
+    --glow-blue-text: 0 0 6px var(--cyber-blue-primary);
+    --glow-blue-border: 0 0 8px 1px var(--cyber-blue-primary);
+    --glow-amber-text: 0 0 6px var(--accent-amber-data);
+    --glow-red-text: 0 0 6px var(--accent-red-alert);
+    --inset-shadow-ui: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    --outset-shadow-ui: 0 2px 5px rgba(0, 0, 0, 0.3);
 
-    /* -- Métricas -- */
+    /* -- Métricas y Radios -- */
     --spacing-unit: 8px;
-    --radius-sharp: 2px;
+    --radius-sharp: 2px; /* Ligeramente suavizado */
     --radius-medium: 4px;
     --border-width-fine: 1px;
     --border-width-medium: 2px;
-    --border-width-main: 3px;
+    --border-width-main: 3px; /* Bordes principales más gruesos */
 }
 
-/* 2. ESTILOS BASE */
+/* 2. ESTILOS BASE (Cabina de Mando) */
 body, .universal-scribe-output {
-    background-color: var(--infinite-bg-deep);
-    color: var(--infinite-text-primary);
+    background-color: var(--aegis-bg-deep);
+    color: var(--aegis-text-primary);
     font-family: var(--font-body);
     font-size: 16px;
     line-height: 1.6;
     padding: calc(var(--spacing-unit) * 2.5);
     margin: 0;
+    /* Fondo con retícula sutil */
     background-image:
-        linear-gradient(rgba(0, 170, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 170, 255, 0.02) 1px, transparent 1px);
-    background-size: 30px 30px;
+        linear-gradient(rgba(0, 170, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 170, 255, 0.04) 1px, transparent 1px);
+    background-size: 30px 30px; /* Tamaño de la cuadrícula */
 }
 
-/* Scrollbars */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--infinite-bg-grid); border: 1px solid var(--infinite-border-fine); }
-::-webkit-scrollbar-thumb { background: var(--infinite-border-main); border-radius: var(--radius-sharp); border: 1px solid var(--infinite-bg-grid); }
-::-webkit-scrollbar-thumb:hover { background: var(--infinite-blue-secondary); }
+/* Scrollbars (Funcionales y Tech) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--aegis-bg-graphite); border: 1px solid var(--aegis-border-fine); }
+::-webkit-scrollbar-thumb { background: var(--aegis-border-main); border-radius: var(--radius-sharp); border: 1px solid var(--aegis-bg-graphite); }
+::-webkit-scrollbar-thumb:hover { background: var(--cyber-blue-secondary); }
 
-/* 3. ELEMENTOS COMUNES */
+/* 3. ELEMENTOS COMUNES (Displays Tácticos) */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    color: var(--infinite-text-primary);
-    margin: calc(var(--spacing-unit) * 2) 0 calc(var(--spacing-unit) * 1.5) 0;
+    color: var(--aegis-text-primary);
+    margin: calc(var(--spacing-unit) * 2.5) 0 calc(var(--spacing-unit) * 1.5) 0;
     padding-bottom: calc(var(--spacing-unit) * 0.5);
-    border-bottom: var(--border-width-fine) solid var(--infinite-border-medium);
-    font-weight: 500;
+    border-bottom: var(--border-width-fine) solid var(--aegis-border-medium);
+    font-weight: 500; /* Teko tiene pesos específicos */
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
-
-h1 { 
-    font-size: 2.5em; 
-    font-weight: 600; 
-    color: var(--infinite-blue-primary); 
-    text-shadow: var(--glow-blue-text); 
-    border-bottom-width: var(--border-width-medium); 
-    border-color: var(--infinite-blue-dark); 
-}
-
-h2 { 
-    font-size: 2em; 
-    color: var(--infinite-green-primary); 
-    text-shadow: var(--glow-green-text); 
-}
-
-h3 { 
-    font-size: 1.6em; 
-    border-bottom-style: dashed; 
-    border-color: var(--infinite-border-fine); 
-}
-
-h4 { 
-    font-size: 1.4em; 
-    border-bottom: none; 
-    color: var(--infinite-text-secondary); 
-    text-transform: none; 
-}
-
-h5 { 
-    font-size: 1.2em; 
-    border-bottom: none; 
-    color: var(--infinite-text-secondary); 
-    font-style: italic; 
-    text-transform: none; 
-}
-
-h6 { 
-    font-size: 1.1em; 
-    border-bottom: none; 
-    color: var(--infinite-text-disabled); 
-    font-weight: 400; 
-    text-transform: none; 
-}
+h1 { font-size: 2.8em; font-weight: 600; color: var(--cyber-blue-primary); text-shadow: var(--glow-blue-text); border-bottom-width: var(--border-width-medium); border-color: var(--cyber-blue-dark); }
+h2 { font-size: 2.2em; color: var(--holo-green-primary); text-shadow: var(--glow-green-text); }
+h3 { font-size: 1.8em; border-bottom-style: dashed; border-color: var(--aegis-border-fine); }
+h4 { font-size: 1.5em; border-bottom: none; color: var(--aegis-text-secondary); text-transform: none; }
+h5 { font-size: 1.3em; border-bottom: none; color: var(--aegis-text-secondary); font-style: italic; text-transform: none; }
+h6 { font-size: 1.1em; border-bottom: none; color: var(--aegis-text-disabled); font-weight: 400; text-transform: none; }
 
 /* Prefijo de Display */
 h1::before, h2::before {
     content: "► ";
-    color: var(--infinite-amber-primary);
+    color: var(--accent-amber-data);
     margin-right: var(--spacing-unit);
 }
 
@@ -144,26 +111,24 @@ p {
 }
 
 a {
-    color: var(--infinite-blue-secondary);
+    color: var(--cyber-blue-secondary);
     text-decoration: none;
-    border-bottom: 1px solid var(--infinite-blue-dark);
+    border-bottom: 1px solid var(--cyber-blue-dark);
     transition: color 0.2s ease, text-shadow 0.2s ease, border-bottom-color 0.2s ease;
 }
-
 a:hover {
-    color: var(--infinite-text-primary);
+    color: var(--aegis-text-primary);
     text-shadow: var(--glow-blue-text);
-    border-bottom-color: var(--infinite-blue-primary);
+    border-bottom-color: var(--cyber-blue-primary);
 }
 
 strong, b {
     font-weight: 600;
-    color: var(--infinite-text-primary);
+    color: var(--aegis-text-primary);
 }
-
 em, i {
     font-style: italic;
-    color: var(--infinite-text-secondary);
+    color: var(--aegis-text-secondary);
 }
 
 ul, ol {
@@ -171,14 +136,13 @@ ul, ol {
     margin-bottom: calc(var(--spacing-unit) * 1.5);
     padding-left: calc(var(--spacing-unit) * 2);
 }
-
 li {
     margin-bottom: calc(var(--spacing-unit) * 0.75);
 }
 
 ul li::marker {
     content: "// ";
-    color: var(--infinite-green-secondary);
+    color: var(--holo-green-secondary);
     font-size: 1em;
 }
 
@@ -186,90 +150,81 @@ ol {
     list-style-type: none;
     counter-reset: tactical-counter;
 }
-
 ol li {
     counter-increment: tactical-counter;
 }
-
 ol li::marker {
-    content: "0" counter(tactical-counter) ".";
-    color: var(--infinite-amber-primary);
+    content: "0" counter(tactical-counter) ":";
+    color: var(--accent-amber-data);
     font-family: var(--font-mono);
     font-weight: 500;
     font-size: 0.9em;
     margin-right: var(--spacing-unit);
 }
 
-/* Blockquote */
+/* Blockquote - Canal de Comunicaciones Seguro */
 blockquote {
     margin: calc(var(--spacing-unit) * 2) 0;
     padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
-    border-left: var(--border-width-main) solid var(--infinite-green-primary);
-    background-color: var(--infinite-glass-bg);
-    backdrop-filter: blur(4px) brightness(0.9);
+    border-left: var(--border-width-main) solid var(--holo-green-primary);
+    background-color: var(--aegis-glass-bg);
+    backdrop-filter: blur(4px) brightness(0.9); /* Efecto cristal */
     border-radius: var(--radius-medium);
-    box-shadow: var(--glow-green-border), var(--inset-shadow);
-    color: var(--infinite-text-secondary);
+    box-shadow: var(--glow-green-border), var(--inset-shadow-ui);
+    color: var(--aegis-text-secondary);
     font-size: 0.95em;
 }
-
-blockquote p:last-child { 
-    margin-bottom: 0; 
-}
-
-blockquote strong:first-child {
-    color: var(--infinite-green-secondary);
+blockquote p:last-child { margin-bottom: 0; }
+blockquote strong:first-child { /* Identificador de Canal */
+    color: var(--holo-green-secondary);
     font-family: var(--font-display);
     text-transform: uppercase;
     margin-right: var(--spacing-unit);
 }
 
-/* Código */
+/* Código - Logs de Sistema / Datos Crudos */
 code {
     font-family: var(--font-mono);
-    background-color: rgba(0, 255, 136, 0.05);
-    color: var(--infinite-amber-primary);
+    background-color: rgba(0, 255, 136, 0.05); /* Fondo verde muy tenue */
+    color: var(--accent-amber-data); /* Texto ámbar */
     padding: 0.15em 0.4em;
     border-radius: var(--radius-sharp);
     font-size: 0.95em;
-    border: 1px solid var(--infinite-border-fine);
+    border: 1px solid var(--aegis-border-fine);
 }
-
 pre {
-    background-color: var(--infinite-bg-grid);
-    border: 1px solid var(--infinite-border-medium);
+    background-color: var(--aegis-bg-graphite);
+    border: 1px solid var(--aegis-border-medium);
     border-radius: var(--radius-medium);
     padding: var(--spacing-unit);
     margin-bottom: calc(var(--spacing-unit) * 1.5);
     overflow-x: auto;
-    box-shadow: var(--inset-shadow);
+    box-shadow: var(--inset-shadow-ui);
     font-size: 0.95em;
 }
-
 pre code {
     background-color: transparent;
     padding: 0;
     border: none;
     line-height: 1.5;
-    color: var(--infinite-text-secondary);
+    color: var(--aegis-text-secondary); /* Color base para logs */
 }
 
-hr {
+hr { /* Divisor Táctico Principal */
     border: none;
     height: var(--border-width-medium);
-    background-color: var(--infinite-border-main);
-    box-shadow: 0 0 6px rgba(74, 107, 156, 0.5);
+    background-color: var(--aegis-border-main);
+    box-shadow: 0 0 8px rgba(80, 112, 160, 0.5); /* Brillo azul acero */
     margin: calc(var(--spacing-unit) * 3) 0;
 }
 
-/* --- TABLA --- */
-.table-wrapper {
+/* --- TABLA: Rejilla de Datos Operacionales --- */
+.table-wrapper { /* Si se usa wrapper */
     margin-bottom: calc(var(--spacing-unit) * 2);
-    border: 1px solid var(--infinite-border-medium);
+    border: 1px solid var(--aegis-border-medium);
     border-radius: var(--radius-medium);
     overflow: hidden;
 }
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -277,15 +232,14 @@ table {
 }
 
 thead {
-    background-color: rgba(40, 40, 40, 0.7);
+    background-color: rgba(30, 40, 60, 0.7); /* Fondo cabecera semi-transparente */
     backdrop-filter: blur(3px);
-    border-bottom: var(--border-width-medium) solid var(--infinite-blue-primary);
+    border-bottom: var(--border-width-medium) solid var(--cyber-blue-primary);
 }
-
 th {
     font-family: var(--font-display);
     font-weight: 500;
-    color: var(--infinite-blue-secondary);
+    color: var(--cyber-blue-secondary);
     padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
     text-align: left;
     letter-spacing: 0.5px;
@@ -294,138 +248,249 @@ th {
 }
 
 tbody tr {
-    background-color: var(--infinite-bg-surface);
-    transition: background-color 0.2s ease;
+    border-bottom: 1px solid var(--aegis-border-fine);
+    transition: background-color 0.15s ease;
 }
-
+tbody tr:last-child { border-bottom: none; }
+/* Hover sutil en filas */
 tbody tr:hover {
-    background-color: var(--infinite-bg-elevated);
+    background-color: rgba(42, 45, 53, 0.5); /* Fondo metal oscuro translúcido */
 }
 
 td {
-    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
-    border-bottom: 1px solid var(--infinite-border-fine);
-    color: var(--infinite-text-secondary);
+    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+    vertical-align: middle;
+    font-size: 0.95em;
 }
 
-/* --- ELEMENTOS FLOTANTES --- */
-.floating-block {
-    background-color: var(--infinite-glass-bg);
-    border: 1px solid var(--infinite-border-medium);
-    border-radius: var(--radius-medium);
-    padding: calc(var(--spacing-unit) * 2);
-    margin-bottom: calc(var(--spacing-unit) * 2);
-    backdrop-filter: blur(4px);
-    box-shadow: var(--outset-shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* --- TABLA: Data Matrix Específico (Micro-Grid) --- */
+table.data-matrix {
+    /* Estilo más compacto */
+}
+table.data-matrix th {
+    font-size: 1em;
+    color: var(--holo-green-primary);
+    border-color: var(--holo-green-dark);
+}
+table.data-matrix td {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    padding: calc(var(--spacing-unit) * 0.5) var(--spacing-unit);
 }
 
-.floating-block:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+/* --- ESTILOS PARA MEJORAS JS V2.5 (Componentes Interactivos Aegis) --- */
+
+/* 1. Hover Interactivo (`.is-hovered`) */
+.is-hovered {
+    background-color: var(--aegis-bg-metal-light) !important;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5), var(--glow-cyber-blue-border) !important;
+    cursor: pointer;
+    outline: 1px solid var(--cyber-blue-primary);
+    outline-offset: -1px;
 }
 
-/* --- ESTADOS DE TABLA --- */
-.table-state-active {
-    background-color: rgba(0, 170, 255, 0.1);
-    border-left: 3px solid var(--infinite-blue-primary);
+/* 2. Indicadores de Estado Inline (Status LEDs) */
+.status-indicator {
+    display: inline-block;
+    padding: 0.2em 0.7em;
+    border-radius: var(--radius-sharp);
+    font-size: 0.85em;
+    font-weight: 600;
+    font-family: var(--font-mono); /* Fuente mono para estados */
+    margin: 0 0.1em;
+    border: 1px solid;
+    text-transform: uppercase;
+    line-height: 1.3;
+    text-align: center;
+    min-width: 50px; /* Ancho mínimo para apariencia LED */
 }
 
-.table-state-warning {
+.status-indicator--ok {
+    background-color: rgba(0, 255, 136, 0.1);
+    color: var(--holo-green-primary);
+    border-color: var(--holo-green-dark);
+    text-shadow: var(--glow-green-text);
+}
+.status-indicator--warn {
     background-color: rgba(255, 200, 0, 0.1);
-    border-left: 3px solid var(--infinite-amber-primary);
+    color: var(--accent-amber-data);
+    border-color: #a08000; /* Ámbar oscuro */
+    text-shadow: var(--glow-amber-text);
 }
-
-.table-state-error {
+.status-indicator--error {
     background-color: rgba(255, 64, 64, 0.1);
-    border-left: 3px solid var(--infinite-red-primary);
+    color: var(--accent-red-alert);
+    border-color: #a02020; /* Rojo oscuro */
+    text-shadow: var(--glow-red-text);
+    animation: pulse-alert 1.5s infinite ease-in-out;
+}
+@keyframes pulse-alert {
+    0%, 100% { box-shadow: 0 0 5px var(--accent-red-alert); }
+    50% { box-shadow: 0 0 12px var(--accent-red-alert); }
+}
+.status-indicator--neutral {
+    background-color: rgba(80, 112, 160, 0.1);
+    color: var(--cyber-blue-secondary);
+    border-color: var(--aegis-border-main);
 }
 
-/* --- EFECTOS HOVER --- */
-.hover-effect {
-    transition: all 0.2s ease;
+/* 3. Texto Redactado (Data Corruption/Classified) */
+.redacted-text {
+    background-color: var(--aegis-text-disabled);
+    color: transparent;
+    text-shadow: none;
+    padding: 0.1em 0.4em;
+    border-radius: var(--radius-sharp);
+    user-select: none;
+    font-family: sans-serif;
+    /* Efecto estática */
+    background-image: repeating-linear-gradient(0deg, #607080, #607080 1px, #506070 1px, #506070 2px);
+    animation: static-flicker 0.1s infinite;
+}
+@keyframes static-flicker { 0% { opacity: 0.9; } 50% { opacity: 0.7; } 100% { opacity: 0.9; } }
+.redacted-text::selection { background-color: var(--aegis-text-disabled); color: transparent; }
+
+/* 4. Datos Inline (Data Readouts) */
+.inline-data {
+    border-bottom: 1px solid var(--aegis-border-fine);
+    padding: 0 0.2em 1px 0.2em;
+}
+.inline-data__label {
+    font-family: var(--font-mono);
+    color: var(--aegis-text-secondary);
+    font-size: 0.9em;
+    margin-right: 0.4em;
+    text-transform: uppercase;
+}
+.inline-data__value {
+    font-weight: 600;
+    color: var(--aegis-text-primary);
+    font-family: var(--font-mono);
+}
+.inline-data__max {
+    font-size: 0.9em;
+    color: var(--aegis-text-disabled);
+    margin-left: 0.1em;
+    font-family: var(--font-mono);
+}
+/* Colores específicos para datos clave */
+.inline-data--hp .inline-data__value, .inline-data--health .inline-data__value { color: var(--holo-green-primary); text-shadow: var(--glow-green-text); }
+.inline-data--shield .inline-data__value, .inline-data--shields .inline-data__value, .inline-data--energy .inline-data__value { color: var(--cyber-blue-primary); text-shadow: var(--glow-blue-text); }
+.inline-data--ammo .inline-data__value, .inline-data--charge .inline-data__value { color: var(--accent-amber-data); text-shadow: var(--glow-amber-text); }
+
+
+/* 5. Barras de Progreso Dinámicas (Energy/Ammo Levels) */
+.dynamic-progress-bar {
+    width: 100%;
+    height: 10px; /* Barra delgada y funcional */
+    background-color: var(--aegis-bg-graphite);
+    border-radius: var(--radius-sharp);
+    overflow: hidden;
+    margin-top: calc(var(--spacing-unit) * 0.25);
+    border: 1px solid var(--aegis-border-fine);
+    box-shadow: var(--inset-shadow-ui);
+    position: relative;
+}
+/* Indicador numérico superpuesto (opcional, requeriría JS para poner el texto) */
+/* .dynamic-progress-bar::after { content: attr(data-value) "/" attr(data-max); ... } */
+
+.dynamic-progress-bar .bar-fill {
+    height: 100%;
+    border-radius: 0;
+    transition: width 0.4s ease-out, background-color 0.4s ease;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    /* Brillo en el borde de llenado */
+}
+.dynamic-progress-bar .bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.3));
 }
 
-.hover-effect:hover {
-    transform: scale(1.02);
-    box-shadow: var(--glow-blue-border);
-}
+.dynamic-progress-bar .bar-fill.ok { background-color: var(--holo-green-primary); }
+.dynamic-progress-bar .bar-fill.warn { background-color: var(--accent-amber-data); }
+.dynamic-progress-bar .bar-fill.error { background-color: var(--accent-red-alert); }
 
-/* --- ANIMACIONES --- */
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.7; }
-    100% { opacity: 1; }
-}
 
-.pulse {
-    animation: pulse 2s infinite;
-}
-
-/* --- EFECTOS DE GRID --- */
-.grid-effect {
+/* --- PANELES ::: (Módulos de Interfaz Táctica) --- */
+.mixed-panel {
+    /* Fondo metálico cepillado */
+    background-color: var(--aegis-bg-metal-dark);
+    background-image: linear-gradient(170deg, var(--aegis-bg-metal-light) 0%, var(--aegis-bg-metal-dark) 100%);
+    border: 1px solid var(--aegis-border-main);
+    border-radius: var(--radius-medium);
+    margin: calc(var(--spacing-unit) * 3) 0;
+    padding: 0;
+    box-shadow: var(--outset-shadow-ui), var(--inset-shadow-ui);
     position: relative;
     overflow: hidden;
 }
 
-.grid-effect::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(rgba(0, 170, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 170, 255, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-    pointer-events: none;
+.mixed-panel[data-interactive-container="true"].is-hovered {
+     border-color: var(--cyber-blue-primary);
+     box-shadow: var(--outset-shadow-ui), var(--inset-shadow-ui), var(--glow-blue-border);
 }
 
-/* --- BORDES Y EFECTOS --- */
-.border-effect {
-    position: relative;
-    border: 1px solid var(--infinite-border-medium);
-    border-radius: var(--radius-medium);
+/* Cabecera del Módulo (Puede ser efecto cristal) */
+.mixed-panel > h2:first-child,
+.mixed-panel > h3:first-child {
+    background-color: var(--aegis-glass-bg);
+    backdrop-filter: blur(5px) brightness(1.1);
+    color: var(--aegis-text-primary);
+    padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.5);
+    margin: 0;
+    border-bottom: 1px solid var(--cyber-blue-dark);
+    font-size: 1.3em; /* Teko es grande, ajustar tamaño */
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-unit);
+    text-shadow: 0 0 5px var(--cyber-blue-primary);
+    /* Borde neon */
+    box-shadow: inset 0 -2px 0 0 var(--cyber-blue-primary), 0 0 8px 1px var(--cyber-blue-primary);
+}
+.mixed-panel > h3:first-child { /* Sub-cabecera */
+    background-color: rgba(0, 255, 136, 0.1); /* Tinte verde */
+    border-color: var(--holo-green-dark);
+    color: var(--holo-green-primary);
+    font-size: 1.2em;
+    text-shadow: var(--glow-green-text);
+    box-shadow: inset 0 -2px 0 0 var(--holo-green-primary), 0 0 8px 1px var(--holo-green-primary);
 }
 
-.border-effect::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border: 2px solid var(--infinite-blue-primary);
-    border-radius: var(--radius-medium);
-    opacity: 0;
-    transition: opacity 0.2s ease;
+/* Icono de Módulo */
+.mixed-panel > h2:first-child::before,
+.mixed-panel > h3:first-child::before {
+    content: "::"; /* Símbolo técnico simple */
+    font-family: var(--font-mono);
+    color: var(--cyber-blue-secondary);
+    line-height: 1;
+    font-weight: bold;
+}
+.mixed-panel > h3:first-child::before { color: var(--holo-green-secondary); }
+/* Iconos específicos si se desea, usar font icons o SVG */
+/* .panel-statblock > *::before { content: "\e900"; font-family: 'icomoon'; } */
+
+/* Contenido del Módulo */
+.panel-content,
+.mixed-panel > *:not(h2:first-child):not(h3:first-child) {
+     padding: calc(var(--spacing-unit) * 1.5);
+}
+.mixed-panel > *:last-child { padding-bottom: calc(var(--spacing-unit) * 1.5); }
+/* Ajustes para tablas/pre */
+.mixed-panel > table, .mixed-panel > pre {
+     margin: 0 calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 1.5);
+     width: calc(100% - var(--spacing-unit) * 3);
+     padding: 0;
+     border: 1px solid var(--aegis-border-fine); /* Borde fino interno */
+     border-radius: var(--radius-sharp);
 }
 
-.border-effect:hover::after {
-    opacity: 0.5;
-}
 
-/* --- MEDIA QUERIES --- */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-}
+/* --- FIN DE AEGIS TACTICAL INTERFACE --- */
 
-@media (max-width: 768px) {
-    body, .universal-scribe-output {
-        padding: var(--spacing-unit);
-    }
-    
-    h1 { font-size: 2em; }
-    h2 { font-size: 1.6em; }
-    h3 { font-size: 1.4em; }
-    
-    .floating-block {
-        padding: var(--spacing-unit);
-    }
-} 
+

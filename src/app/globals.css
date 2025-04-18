@@ -2,16 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Variables CSS para paneles y botones */
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  
+  /* Panel variables */
+  --panel-bg: #ffffff;
+  --panel-border: #e0e0e0;
+  --panel-text: #333333;
+  
+  /* Button variables */
+  --button-primary: #0070f3;
+  --button-secondary: #6c757d;
+  --button-success: #28a745;
+  --button-warning: #ffc107;
+  --button-danger: #dc3545;
+  --button-info: #17a2b8;
 }
 
 .dark {
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 0, 0, 0;
+  
+  /* Dark mode panel variables */
+  --panel-bg: #1a1a1a;
+  --panel-border: #333333;
+  --panel-text: #ffffff;
 }
 
 body {
@@ -60,4 +79,219 @@ body {
 
 .dark .prose code {
   background-color: rgb(255 255 255 / 0.1);
-} 
+}
+
+/* Estilos para paneles */
+.panel {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  color: var(--panel-text);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+/* Estilos para botones */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.button-primary {
+  background-color: var(--button-primary);
+  color: white;
+}
+
+.button-secondary {
+  background-color: var(--button-secondary);
+  color: white;
+}
+
+.button-success {
+  background-color: var(--button-success);
+  color: white;
+}
+
+.button-warning {
+  background-color: var(--button-warning);
+  color: black;
+}
+
+.button-danger {
+  background-color: var(--button-danger);
+  color: white;
+}
+
+.button-info {
+  background-color: var(--button-info);
+  color: white;
+}
+
+/* == Estilos Mejorados para Botones de Panel (Movidos desde floating-blocks.css) == */
+
+/* Estilo Base */
+.panel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    user-select: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0.25rem 0.5rem 0.25rem 0;
+}
+
+/* Estilos de color para cada tipo de botón */
+.panel-button.primary,
+.panel-button-primary {
+    background-color: var(--button-primary);
+    color: white;
+    border-color: var(--button-primary);
+}
+
+.panel-button.primary:hover,
+.panel-button-primary:hover {
+    background-color: var(--color-primary-dark, #0056b3); /* Usar variable si existe */
+    border-color: var(--color-primary-dark, #0056b3);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.panel-button.secondary,
+.panel-button-secondary {
+    background-color: var(--button-secondary);
+    color: white;
+    border-color: var(--button-secondary);
+}
+
+.panel-button.secondary:hover,
+.panel-button-secondary:hover {
+    background-color: var(--color-secondary-dark, #545b62);
+    border-color: var(--color-secondary-dark, #545b62);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.panel-button.success,
+.panel-button-success {
+    background-color: var(--button-success);
+    color: white;
+    border-color: var(--button-success);
+}
+
+.panel-button.success:hover,
+.panel-button-success:hover {
+    background-color: var(--color-success-dark, #218838); /* Usar variable si existe */
+    border-color: var(--color-success-dark, #1e7e34);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.panel-button.warning,
+.panel-button-warning {
+    background-color: var(--button-warning);
+    color: black; /* Considerar var(--color-text) */
+    border-color: var(--button-warning);
+}
+
+.panel-button.warning:hover,
+.panel-button-warning:hover {
+    background-color: var(--color-warning-dark, #e0a800);
+    border-color: var(--color-warning-dark, #d39e00);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.panel-button.danger,
+.panel-button-danger {
+    background-color: var(--button-danger);
+    color: white;
+    border-color: var(--button-danger);
+}
+
+.panel-button.danger:hover,
+.panel-button-danger:hover {
+    background-color: var(--color-danger-dark, #c82333);
+    border-color: var(--color-danger-dark, #bd2130);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.panel-button.info,
+.panel-button-info {
+    background-color: var(--button-info);
+    color: white;
+    border-color: var(--button-info);
+}
+
+.panel-button.info:hover,
+.panel-button-info:hover {
+    background-color: var(--color-info-dark, #138496);
+    border-color: var(--color-info-dark, #117a8b);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estados especiales */
+.panel-button[disabled], 
+.panel-button.disabled,
+.panel-button-primary[disabled],
+.panel-button-secondary[disabled],
+.panel-button-success[disabled],
+.panel-button-warning[disabled],
+.panel-button-danger[disabled],
+.panel-button-info[disabled] {
+    opacity: 0.65;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.panel-button.loading,
+.panel-button-primary.loading,
+.panel-button-secondary.loading,
+.panel-button-success.loading,
+.panel-button-warning.loading,
+.panel-button-danger.loading,
+.panel-button-info.loading,
+[data-loading="true"] {
+    position: relative;
+    color: transparent !important;
+}
+
+.panel-button.loading::after,
+.panel-button-primary.loading::after,
+.panel-button-secondary.loading::after,
+.panel-button-success.loading::after,
+.panel-button-warning.loading::after,
+.panel-button-danger.loading::after,
+.panel-button-info.loading::after,
+[data-loading="true"]::after {
+    content: '';
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    border-right-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+/* Animación para el spinner */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* == Fin Estilos Botones Panel == */ 

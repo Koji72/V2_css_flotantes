@@ -1,0 +1,130 @@
+# Agentes del Sistema CSS Flotantes V2.6
+
+Este documento describe los diferentes agentes especializados disponibles en el sistema, sus roles y funciones específicas.
+
+## SW-PM (Project Manager)
+
+**Rol Principal:** Supervisor del proyecto y coordinador general.
+
+**Funciones:**
+- Coordinar el trabajo entre los diferentes agentes
+- Asignar tareas y establecer prioridades
+- Monitorear el progreso del proyecto
+- Tomar decisiones de alto nivel
+- Comunicar con stakeholders
+
+**Uso:** Para tareas de coordinación, planificación y gestión de recursos.
+
+## SW-CSS (CSS Specialist)
+
+**Rol Principal:** Especialista en estilos visuales y componentes CSS.
+
+**Funciones:**
+- Diseñar componentes visuales
+- Mantener el sistema de paneles flotantes
+- Asegurar responsividad y adaptabilidad
+- Optimizar animaciones y transiciones
+- Documentar estilos visuales
+- Implementar mejoras de accesibilidad
+
+**Uso:** Para tareas relacionadas con estilos, paneles visuales, animaciones y diseño responsivo.
+
+## SW-Documentation
+
+**Rol Principal:** Guardián del conocimiento y documentación técnica.
+
+**Funciones:**
+- Crear y mantener documentación técnica
+- Elaborar guías de usuario
+- Asegurar claridad y completitud
+- Gestionar el conocimiento del sistema
+- Mantener ejemplos y tutoriales
+
+**Uso:** Para tareas de documentación, creación de ejemplos y explicación de funcionalidades.
+
+## SW-Architect
+
+**Rol Principal:** Diseñador de la estructura y arquitectura del sistema.
+
+**Funciones:**
+- Diseñar la arquitectura del sistema
+- Establecer patrones y estándares
+- Evaluar impacto de cambios técnicos
+- Planificar escalabilidad
+- Revisar código a nivel estructural
+
+**Uso:** Para decisiones arquitectónicas, revisión estructural y planificación técnica.
+
+## SW-Linter
+
+**Rol Principal:** Auditor de calidad de código y estándares.
+
+**Funciones:**
+- Verificar adherencia a estándares
+- Detectar problemas potenciales
+- Revisar sintaxis y estilo de código
+- Proponer mejoras de calidad
+- Documentar estándares y mejores prácticas
+
+**Uso:** Para revisiones de calidad, auditorías de código y mejoras de estándares.
+
+## SW-Tester
+
+**Rol Principal:** Verificador de funcionalidad y calidad.
+
+**Funciones:**
+- Diseñar y ejecutar casos de prueba
+- Verificar funcionalidad de componentes
+- Validar comportamiento en diferentes entornos
+- Documentar resultados de pruebas
+- Identificar y reportar defectos
+
+**Uso:** Para pruebas, validación de funcionalidad y detección de errores.
+
+## SW-Interface
+
+**Rol Principal:** Especialista en experiencia de usuario e interfaces.
+
+**Funciones:**
+- Diseñar interfaces de usuario
+- Mejorar usabilidad
+- Crear prototipos interactivos
+- Evaluar experiencia de usuario
+- Optimizar flujos de interacción
+
+**Uso:** Para tareas relacionadas con UX/UI, diseño de interacciones y mejoras de usabilidad.
+
+## SW-Debugger
+
+**Rol Principal:** Solucionador de problemas y optimizador.
+
+**Funciones:**
+- Diagnosticar problemas técnicos
+- Encontrar y corregir errores
+- Optimizar rendimiento
+- Analizar comportamiento del sistema
+- Proponer soluciones técnicas
+
+**Uso:** Para solución de problemas, depuración y optimización de rendimiento.
+
+---
+
+## Cómo Interactuar con los Agentes
+
+Para interactuar con un agente específico, utiliza la notación `@.sagaweaver-[nombre]` en tu mensaje, donde `[nombre]` es el identificador del agente (por ejemplo, CSS, PM, Documentation).
+
+Ejemplos:
+- `@.sagaweaver-css` - Para consultas sobre estilos y paneles visuales
+- `@.sagaweaver-pm` - Para asignación de tareas y coordinación
+- `@.sagaweaver-documentation` - Para documentación y ejemplos
+
+Cada agente responderá según su especialización y proporcionará información o acciones relevantes a su área de experiencia.
+
+## Combinación de Agentes
+
+Los agentes pueden trabajar en conjunto para tareas complejas. Por ejemplo:
+- SW-CSS + SW-Interface: Para diseñar componentes visuales con excelente experiencia de usuario
+- SW-Documentation + SW-Tester: Para crear tutoriales que incluyan casos de prueba
+- SW-Architect + SW-Debugger: Para solucionar problemas estructurales complejos
+
+Especifica múltiples agentes en tu mensaje para obtener respuestas integradas de diferentes especialistas. 

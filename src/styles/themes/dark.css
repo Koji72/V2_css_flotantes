@@ -1,0 +1,30 @@
+/* Tema Oscuro */
+[data-theme="dark"] {
+  /* Variables específicas del tema oscuro que sobreescriben las variables base */
+  --theme-bg-primary: #121212;
+  --theme-bg-secondary: #1e1e1e;
+  --theme-bg-tertiary: #252525;
+  --theme-bg-highlight: #2d2d2d;
+
+  --theme-text-primary: #e9ecef;
+  --theme-text-secondary: #adb5bd;
+  --theme-text-muted: #6c757d;
+
+  --theme-border-color: #2d3748;
+  --theme-border-light: #374151;
+  --theme-border-dark: #4b5563;
+
+  --theme-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --theme-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --theme-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  
+  /* Colores de elementos específicos para tema oscuro */
+  --scrollbar-track: #1a1a1a;
+  --scrollbar-thumb: #4a4a4a;
+  --scrollbar-thumb-hover: #5a5a5a;
+  
+  --divider-color: rgba(128, 128, 128, 0.3);
+  --divider-hover-color: var(--color-primary);
+  --divider-active-color: color-mix(in srgb, var(--color-primary) 80%, white);
+  --divider-handle-color: rgba(255, 255, 255, 0.7);
+} 

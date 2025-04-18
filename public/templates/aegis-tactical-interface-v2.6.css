@@ -317,9 +317,11 @@ tr:nth-child(odd) {
 /* =================================== */
 
 .panel-style--tech-corners {
-  background: var(--tech-gradient-dark);
-  border: 1px solid rgba(0, 170, 255, 0.5);
-  box-shadow: var(--neon-blue-glow), inset 0 0 30px rgba(0, 30, 60, 0.3);
+  border: 1px solid var(--tech-border-color);
+  background: linear-gradient(135deg, var(--tech-bg-start), var(--tech-bg-end));
+  position: relative;
+  box-shadow: 0 0 15px var(--tech-glow-color), inset 0 0 10px var(--tech-inner-glow);
+  color: var(--tech-text-color);
   transition: all 0.3s ease;
   padding: 15px;
 }

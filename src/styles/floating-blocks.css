@@ -1,63 +1,504 @@
 /* Floating Blocks Styles */
 .floating-block {
     position: relative;
-    margin: 1rem 0;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    transition: all 0.3s ease;
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    background-color: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    transition: all var(--transition-normal) var(--ease-in-out);
 }
 
 .floating-block:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
 }
 
 .floating-block .block-header {
     display: flex;
     align-items: center;
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .floating-block .block-header h3 {
     margin: 0;
-    font-size: 1.1rem;
-    color: #333;
+    font-size: var(--font-size-lg);
+    color: var(--text-primary);
 }
 
 .floating-block .block-content {
-    padding: 0.5rem 0;
+    padding: var(--spacing-sm) 0;
 }
 
 /* Specific block types */
 .floating-block.datamatrix {
-    background-color: #f8f9fa;
-    border-left: 4px solid #007bff;
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--accent-color);
 }
 
 .floating-block.panel {
-    background-color: #fff3cd;
-    border-left: 4px solid #ffc107;
+    background-color: var(--bg-highlight);
+    border-left: 4px solid var(--accent2);
 }
 
 .floating-block.table {
-    background-color: #e8f4f8;
-    border-left: 4px solid #17a2b8;
+    background-color: var(--bg-tertiary);
+    border-left: 4px solid var(--accent1);
     overflow-x: auto;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .floating-block {
-        margin: 0.5rem 0;
-        padding: 0.75rem;
+        margin: var(--spacing-sm) 0;
+        padding: var(--spacing-sm);
     }
     
     .floating-block .block-header h3 {
-        font-size: 1rem;
+        font-size: var(--font-size-md);
     }
 } 
+
+/* Variables CSS */
+/* Estas variables aquí podrían ser redundantes si ya están en variables.css */
+/* Considerar eliminarlas si no son necesarias específicamente aquí */
+:root {
+    /* Colores base */
+    --color-primary: #007bff;
+    --color-primary-dark: #0056b3;
+    --color-secondary: #6c757d;
+    --color-secondary-dark: #545b62;
+    
+    /* Estados */
+    --color-success: #28a745;
+    --color-warning: #ffc107;
+    --color-danger: #dc3545;
+    --color-info: #17a2b8;
+    
+    /* Texto */
+    --color-text: #212529;
+    --color-text-light: #ffffff;
+    --color-text-muted: #6c757d;
+    
+    /* Tamaños de corte */
+    --cut-size-sm: 1rem;
+    --cut-size-md: 2rem;
+    --cut-size-lg: 3rem;
+}
+
+/* === SECCIÓN DE BOTONES ELIMINADA === */
+/* Los estilos de .panel-button ahora se manejan exclusivamente */
+/* en src/styles/components/buttons.css */
+
+/* Grupo de botones */
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.button-group.vertical {
+    flex-direction: column;
+}
+
+/* Esquinas cortadas */
+.cut-corner {
+    position: relative;
+    overflow: hidden;
+}
+
+.cut-corner::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        100% calc(100% - var(--cut-size)),
+        calc(100% - var(--cut-size)) 100%,
+        0 100%
+    );
+}
+
+/* Tamaños de corte */
+.cut-corner-sm { --cut-size: var(--cut-size-sm); }
+.cut-corner-md { --cut-size: var(--cut-size-md); }
+.cut-corner-lg { --cut-size: var(--cut-size-lg); }
+
+/* Fallback para navegadores que no soportan clip-path */
+@supports not (clip-path: polygon(0 0)) {
+    .cut-corner::before {
+        display: none;
+    }
+    
+    .cut-corner {
+        position: relative;
+    }
+    
+    .cut-corner::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: var(--cut-size);
+        height: var(--cut-size);
+        background: linear-gradient(45deg, transparent 50%, var(--color-background) 50%); /* var(--color-background) debe existir */
+    }
+}
+
+/* Estilos de Panel */
+.panel {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal) var(--ease-in-out);
+}
+
+.panel.glass {
+    /* Estilos específicos para glass */
+    background-color: rgba(var(--bg-rgb), 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(var(--border-rgb), 0.2);
+}
+
+.panel.floating {
+    box-shadow: var(--shadow-lg);
+}
+
+.panel.hoverable:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.panel.small {
+    padding: var(--spacing-sm);
+}
+
+.panel.large {
+    padding: var(--spacing-lg);
+}
+
+.panel.float-left {
+    float: left;
+    margin-right: var(--spacing-md);
+}
+
+.panel.float-right {
+    float: right;
+    margin-left: var(--spacing-md);
+}
+
+/* Estilos específicos para paneles añadidos por components/panels.css */
+/* Estos pueden ser redundantes si ya están en components/panels.css */
+.panel.border-accent {
+    border-left: 4px solid var(--accent-color);
+}
+.panel.border-primary {
+    border-left: 4px solid var(--primary-color);
+}
+/* ... otros bordes ... */
+
+.panel.shadow-md {
+    box-shadow: var(--shadow-md);
+}
+/* ... otras sombras ... */
+
+.panel.pattern-grid {
+    background-image: 
+        linear-gradient(var(--panel-border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--panel-border) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+/* ... otros patrones ... */
+
+/* Estilo para texto dentro de paneles */
+.panel > p,
+.panel > ul,
+.panel > ol,
+.panel .panel-content > p,
+.panel .panel-content > ul,
+.panel .panel-content > ol {
+  color: var(--text-secondary);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-relaxed);
+}
+
+.panel h1, .panel h2, .panel h3, .panel h4, .panel h5, .panel h6 {
+    color: var(--text-primary);
+}
+
+/* Estilos para el tema oscuro - Pueden ser redundantes si están en components/panels.css */
+[data-theme="dark"] .panel {
+    background-color: var(--bg-secondary-dark);
+    border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .panel.glass {
+    background-color: rgba(var(--bg-rgb-dark, 31, 31, 31), 0.7);
+    border-color: rgba(var(--border-rgb-dark, 61, 61, 61), 0.3);
+}
+
+/* Utilidad para limpiar flotantes */
+.clear-both {
+    clear: both;
+}
+
+/* Accesibilidad */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Asegurar que las variables base estén definidas */
+/* Estas podrían estar mejor en variables.css */
+:root {
+    --panel-bg: var(--bg-secondary, #f9f9f9);
+    --panel-border: var(--border-color, #e1e1e1);
+    --text-primary: var(--color-text, #212529);
+    --text-secondary: var(--color-text-muted, #6c757d);
+    --radius-lg: 0.5rem;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --transition-normal: 0.2s;
+    --ease-in-out: ease-in-out;
+    --cut-size: 15px;
+    --font-size-lg: 1.25rem;
+    --font-size-md: 1rem;
+    --line-height-relaxed: 1.6;
+    --bg-highlight: #eef;
+    --accent1: #ffcc80;
+    --accent2: #80d8ff;
+}
+
+/* Estilos para el layout principal de la aplicación */
+.app-container, 
+.flex.flex-col.h-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Contenedor principal del contenido */
+.main-content,
+.flex.flex-1.overflow-hidden {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Sección del editor */
+.editor-section,
+.flex.flex-col.w-1\/2 {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 100%;
+  border-right: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  overflow: hidden;
+}
+
+/* Selector de plantillas */
+.flex-shrink-0.border-b {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-color);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Contenedor del editor */
+.editor-wrapper,
+.flex-1.overflow-auto {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  min-height: 200px; /* Asegurar altura mínima */
+}
+
+/* Contenedor de la vista previa */
+.preview-container,
+.w-1\/2.overflow-hidden {
+  width: 50%;
+  height: 100%;
+  background-color: var(--bg-secondary);
+  overflow: hidden;
+}
+
+/* Iframe de la vista previa */
+.preview-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: var(--bg-secondary);
+}
+
+/* Estilos para layout responsivo */
+@media (max-width: 768px) {
+  .main-content,
+  .flex.flex-1.overflow-hidden {
+    flex-direction: column;
+  }
+
+  .editor-section,
+  .preview-container,
+  .flex.flex-col.w-1\/2,
+  .w-1\/2.overflow-hidden {
+    width: 100%;
+    height: 50%;
+  }
+
+  .editor-section,
+  .flex.flex-col.w-1\/2 {
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+}
+
+/* Estilos para el estado de carga */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid var(--accent-color);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para los botones de markdown */
+.markdown-buttons {
+  display: flex;
+  gap: 5px;
+  margin: 5px 0;
+}
+
+.markdown-buttons button {
+  padding: 5px 10px;
+  min-width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border-radius: 4px;
+  color: #fff !important;
+  background-color: #333 !important;
+  border: 1px solid #666 !important;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.markdown-buttons button:hover {
+  background-color: #444 !important;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Asegurar que los botones funcionen incluso si los estilos del template no cargan */
+button.white-button {
+  color: #fff !important;
+  background-color: #333 !important;
+  border: 1px solid #666 !important;
+}
+
+/* Estilos para los botones de la barra de herramientas superior (eliminados, movidos a toolbar.css) */
+
+/* Estilos para el estado de carga */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid var(--accent-color);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para los botones de markdown */
+.markdown-buttons {
+  display: flex;
+  gap: 5px;
+  margin: 5px 0;
+}
+
+.markdown-buttons button {
+  padding: 5px 10px;
+  min-width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border-radius: 4px;
+  color: #fff !important;
+  background-color: #333 !important;
+  border: 1px solid #666 !important;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.markdown-buttons button:hover {
+  background-color: #444 !important;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Asegurar que los botones funcionen incluso si los estilos del template no cargan */
+button.white-button {
+  color: #fff !important;
+  background-color: #333 !important;
+  border: 1px solid #666 !important;
+}
+
+/* Estilos para los botones de la barra de herramientas superior (eliminados, movidos a toolbar.css) */ 

@@ -1,0 +1,96 @@
+/* Estilos para la barra de herramientas de Markdown */
+
+/* Contenedor de la barra */
+.markdown-toolbar {
+  background-color: var(--theme-bg-secondary);
+  border-bottom: 1px solid var(--theme-border-color);
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Botones de Markdown */
+.markdown-button {
+  background-color: var(--theme-bg-tertiary) !important;
+  color: var(--theme-text-primary) !important;
+  border: 1px solid var(--theme-border-color) !important;
+  border-radius: var(--radius-md);
+  min-width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  transition: all 0.2s;
+}
+
+.markdown-button:hover {
+  background-color: var(--theme-bg-highlight) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--theme-shadow-sm);
+}
+
+.markdown-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Divider para la barra de herramientas */
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--theme-border-color);
+  margin: 0 5px;
+}
+
+/* Grupos de botones */
+.markdown-buttons,
+.markdown-toolbar {
+  display: flex;
+  gap: 5px;
+  margin: 5px 0;
+  flex-wrap: wrap;
+}
+
+/* Indicadores visuales */
+.markdown-button.active {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+}
+
+/* Botones de formato específico */
+.markdown-button.bold {
+  font-weight: bold;
+}
+
+.markdown-button.italic {
+  font-style: italic;
+}
+
+.markdown-button.heading {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+/* Tooltip para botones */
+.markdown-button[data-tooltip] {
+  position: relative;
+}
+
+.markdown-button[data-tooltip]:hover::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--theme-bg-tertiary);
+  color: var(--theme-text-primary);
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: var(--theme-shadow-sm);
+} 

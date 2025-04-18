@@ -1,0 +1,219 @@
+# Plan de Pruebas: Sistema de Botones en Paneles Markdown
+> **SW-Tester**
+
+## 1. Alcance del Plan de Pruebas
+
+Este plan detalla las estrategias y casos de prueba necesarios para validar la implementación correcta del sistema de botones interactivos dentro de los paneles de markdown. El alcance incluye:
+
+- Sintaxis de botones en markdown
+- Renderizado HTML correcto
+- Funcionalidad de interacción
+- Manejo de eventos y acciones
+- Estilos y apariencia visual
+- Compatibilidad entre navegadores
+- Casos de borde y manejo de errores
+
+## 2. Estrategia de Pruebas
+
+### Niveles de Prueba
+
+1. **Pruebas Unitarias**: Validación aislada de funciones clave
+2. **Pruebas de Integración**: Interacción entre componentes
+3. **Pruebas End-to-End**: Validación completa del flujo de usuario
+4. **Pruebas de Regresión**: Asegurar que no se rompa funcionalidad existente
+
+### Entornos de Prueba
+
+| Entorno | Navegadores | Dispositivos | Propósito |
+|---------|-------------|--------------|-----------|
+| Local | Chrome, Firefox | Desktop | Desarrollo y pruebas rápidas |
+| CI | Chrome, Firefox, Safari, Edge | Desktop | Validación automatizada en pipeline |
+| Staging | Todos los navegadores soportados | Desktop + Mobile | Pruebas manuales pre-release |
+
+## 3. Casos de Prueba Unitarios
+
+### 3.1 Módulo de Procesamiento de Markdown
+
+| ID | Descripción | Entrada | Salida Esperada | Criterios de Éxito |
+|----|-------------|---------|-----------------|-------------------|
+| UT-01 | Detección de sintaxis de botón | `::button{action="test"}Texto::` | Objeto AST con nodo tipo botón | La regex captura correctamente los atributos y el texto |
+| UT-02 | Parseado de atributos | `action="test" style="primary"` | `{action: "test", style: "primary"}` | Los atributos se extraen correctamente como objeto |
+| UT-03 | Manejo de atributos inválidos | `action=test" style=` | Objeto con atributos válidos, ignorando inválidos | No se produce error y se extraen los atributos correctos |
+| UT-04 | Transformación a HTML | Nodo AST tipo botón | `<button class="panel-button panel-button--primary" data-action="test">Texto</button>` | Estructura HTML correcta con clases y atributos |
+| UT-05 | Manejo de botones anidados | Botón dentro de panel dentro de botón | Error o advertencia de sintaxis | Se maneja apropiadamente sin causar un bucle infinito |
+
+### 3.2 Módulo de Gestión de Eventos
+
+| ID | Descripción | Entrada | Salida Esperada | Criterios de Éxito |
+|----|-------------|---------|-----------------|-------------------|
+| UT-06 | Registro de event listeners | Documento con botones | Event listeners adjuntos | Verificar con spy que se adjunta el listener correcto |
+| UT-07 | Disparo de eventos custom | Click en botón | Evento custom disparado con datos correctos | El evento contiene action y datos adicionales |
+| UT-08 | Limpieza de event listeners | Cambio de documento | Event listeners removidos | No hay memory leaks verificados con herramientas |
+| UT-09 | Manejo de múltiples clicks | Clicks repetidos en botón | Eventos disparados correctamente | No hay comportamiento extraño con clicks rápidos |
+| UT-10 | Botones en estado deshabilitado | Click en botón disabled | No se dispara evento | Verificar que no hay efecto en botones deshabilitados |
+
+## 4. Casos de Prueba de Integración
+
+### 4.1 Integración Markdown-Renderer
+
+| ID | Descripción | Entrada | Salida Esperada | Criterios de Éxito |
+|----|-------------|---------|-----------------|-------------------|
+| IT-01 | Renderizado en panel simple | Markdown con botón en panel | Panel con botón interactivo | Estructura DOM correcta y estilos aplicados |
+| IT-02 | Múltiples botones en panel | Panel con 3+ botones | Todos los botones renderizados | Cada botón mantiene su estilo y funcionalidad |
+| IT-03 | Panel con botones anidados | Panel con contenido mixto | Estructura correcta | Jerarquía de elementos respetada |
+| IT-04 | Cambio de estilos dinámico | Cambio de tema durante uso | Botones actualizan estilo | Transición suave entre estilos |
+| IT-05 | Paneles flotantes con botones | Panel flotante con botones | Posicionamiento correcto | Los botones funcionan dentro de panel flotante |
+
+### 4.2 Integración con Sistema de Eventos
+
+| ID | Descripción | Escenario | Resultado Esperado | Criterios de Éxito |
+|----|-------------|-----------|-------------------|------------------|
+| IT-06 | Manejo de acción básica | Click en botón con acción "test" | Evento "button:test" capturado | El manejador de eventos procesa correctamente |
+| IT-07 | Botón ejecuta acción compleja | Botón que modifica contenido | Cambio aplicado correctamente | El cambio se refleja en la interfaz |
+| IT-08 | Múltiples handlers | Varios listeners para misma acción | Todos los handlers ejecutados | Orden de ejecución correcto |
+| IT-09 | Integración con sistema de comandos | Botón que ejecuta comando | Comando procesado | El comando se ejecuta con parámetros correctos |
+| IT-10 | Propagación de eventos | Evento dentro de contenedor con listener | Manejo adecuado de bubbling | El evento llega al target correcto |
+
+## 5. Casos de Prueba End-to-End
+
+| ID | Descripción | Pasos | Resultado Esperado | Criterios de Éxito |
+|----|-------------|-------|-------------------|------------------|
+| E2E-01 | Flujo completo básico | 1. Abrir documento<br>2. Click en botón<br>3. Verificar resultado | Acción ejecutada correctamente | La UI responde según lo esperado |
+| E2E-02 | Interacción con múltiples paneles | Usar botones en diferentes paneles | Cada panel responde independientemente | No hay interferencia entre paneles |
+| E2E-03 | Botones modifican estado de aplicación | Click en botón que cambia estado | Estado actualizado y persistido | El cambio perdura entre navegaciones |
+| E2E-04 | Compatibilidad en diferentes navegadores | Probar en Chrome, Firefox, Safari, Edge | Consistencia visual y funcional | Experiencia uniforme entre navegadores |
+| E2E-05 | Rendimiento con muchos botones | Documento con 50+ botones | Renderizado y respuesta ágil | No hay degradación notable del rendimiento |
+
+## 6. Pruebas de Accesibilidad
+
+| ID | Descripción | Criterio | Herramientas | Criterios de Éxito |
+|----|-------------|---------|-------------|------------------|
+| A11Y-01 | Navegación por teclado | Tab y Enter funcionan | Axe, manual | Focus visible y activación por teclado |
+| A11Y-02 | Compatibilidad con lectores de pantalla | Texto alternativo | NVDA, VoiceOver | Lectura correcta de acciones |
+| A11Y-03 | Contraste de colores | WCAG AA/AAA | Contrast Checker | Ratios de contraste adecuados |
+| A11Y-04 | Estados de los botones | Disabled, active, hover | Manual | Estados distinguibles para todo usuario |
+| A11Y-05 | Tamaño mínimo de elementos táctiles | Área clickeable mínima | Manual | Botones suficientemente grandes para mobile |
+
+## 7. Pruebas de Rendimiento
+
+| ID | Descripción | Método | Umbral | Criterios de Éxito |
+|----|-------------|--------|--------|------------------|
+| PERF-01 | Tiempo de renderizado inicial | Lighthouse, Performance API | <200ms | Renderizado rápido del contenido |
+| PERF-02 | Latencia de respuesta a eventos | Performance API | <50ms | Respuesta inmediata al click |
+| PERF-03 | Consumo de memoria | DevTools Memory Profiler | No leaks | No incremento continuo de memoria |
+| PERF-04 | Rendimiento con documentos grandes | Benchmark con 100KB+ | <1s total | Tiempos aceptables para contenido extenso |
+| PERF-05 | Impacto en tiempo de carga | Lighthouse | <10% adicional | La feature no degrada significativamente el tiempo de carga |
+
+## 8. Pruebas de Regresión
+
+| Área | Elementos a Verificar | Método | Criterios de Éxito |
+|------|----------------------|--------|------------------|
+| Paneles existentes | Apariencia y comportamiento | Visual regression | Sin cambios no intencionales |
+| Markdown estándar | Sintaxis básica | Comparación antes/después | Sin afectación a elementos no modificados |
+| Extensiones existentes | Compatibilidad | Test suite existente | Todos los tests pasan |
+| Rendimiento general | Tiempos de carga y respuesta | Benchmark comparativo | Sin degradación significativa |
+| API pública | Interfaz de usuario | Tests de integración | Sin cambios en comportamiento documentado |
+
+## 9. Procedimientos de Prueba Manual
+
+### 9.1 Prueba de validación de sintaxis
+
+1. Crear un documento markdown con diferentes variantes de la sintaxis de botones:
+   ```markdown
+   ::button{action="basic"}Botón Básico::
+   ::button{action="styled" style="primary"}Botón Estilo Primario::
+   ::button{action="complex" style="warning" disabled="true"}Botón Deshabilitado::
+   ```
+2. Verificar el renderizado correcto de cada variante
+3. Documentar cualquier discrepancia entre lo esperado y lo obtenido
+
+### 9.2 Prueba de interacción de usuario
+
+1. Preparar documento con diversos botones y acciones
+2. Ejecutar secuencia de clicks y verificar resultados:
+   - Click en botón estándar
+   - Click en botón que activa un panel
+   - Click en botón que modifica el contenido
+   - Click en secuencia rápida para validar debouncing
+3. Verificar comportamiento con diferentes dispositivos de entrada (mouse, touch, teclado)
+
+## 10. Matriz de Trazabilidad
+
+| Requisito | Casos de Prueba Asociados |
+|-----------|---------------------------|
+| REQ-01: Sintaxis de botones en markdown | UT-01, UT-02, UT-03, IT-01 |
+| REQ-02: Renderizado HTML correcto | UT-04, IT-01, IT-02, IT-03 |
+| REQ-03: Atributos de estilo | UT-04, IT-04, A11Y-03 |
+| REQ-04: Manejo de eventos | UT-06, UT-07, UT-08, IT-06, IT-07 |
+| REQ-05: Integración con sistema de aplicación | IT-08, IT-09, E2E-03 |
+| REQ-06: Accesibilidad | A11Y-01, A11Y-02, A11Y-03, A11Y-04, A11Y-05 |
+| REQ-07: Rendimiento | PERF-01, PERF-02, PERF-03, PERF-04, PERF-05 |
+| REQ-08: Compatibilidad entre navegadores | E2E-04 |
+
+## 11. Herramientas y Entorno de Pruebas
+
+### Herramientas Automatizadas
+- **Jest**: Framework principal para pruebas unitarias y de integración
+- **Testing Library**: Para pruebas basadas en DOM
+- **Playwright/Cypress**: Para pruebas end-to-end
+- **Lighthouse/WebVitals**: Métricas de rendimiento
+- **Axe**: Análisis de accesibilidad
+- **Storybook**: Pruebas de componentes aislados
+- **Percy/Applitools**: Pruebas de regresión visual
+
+### Configuración de Entorno
+- **Local**: Node.js v16+, npm/yarn, navegadores actualizados
+- **CI**: GitHub Actions con matriz de navegadores
+- **Device Lab**: Colección de dispositivos físicos para pruebas manuales
+
+## 12. Criterios de Aceptación
+
+La implementación se considerará lista para producción cuando:
+
+1. Todos los casos de prueba unitarios pasen al 100%
+2. Pruebas de integración tengan al menos 95% de éxito
+3. Pruebas end-to-end críticas (E2E-01, E2E-02, E2E-04) pasen al 100%
+4. Pruebas de accesibilidad cumplan WCAG AA
+5. Métricas de rendimiento estén dentro de los umbrales establecidos
+6. No haya regresiones visuales o funcionales significativas
+7. Compatibilidad verificada en todos los navegadores objetivo
+
+## 13. Escalabilidad del Plan de Pruebas
+
+Este plan puede extenderse para cubrir funcionalidades adicionales como:
+
+- Botones con confirmación de acción
+- Botones con estados de carga
+- Botones con iconos y elementos visuales adicionales
+- Animaciones y efectos de transición
+- Internacionalización y localización
+
+## 14. Informe y Seguimiento
+
+Cada ciclo de pruebas generará:
+
+1. Informe de ejecución con resultados detallados
+2. Lista de defectos encontrados con severidad y prioridad
+3. Métricas de cobertura de código
+4. Capturas de pantalla/grabaciones de problemas críticos
+5. Recomendaciones para mejoras
+
+## 15. Próximos Pasos Inmediatos
+
+1. **Configurar entorno de pruebas unitarias**:
+   - Implementar primeros casos UT-01 a UT-05
+   - Establecer base de pruebas automatizadas
+
+2. **Crear documentos de prueba**:
+   - Preparar markdown con diferentes variantes de botones
+   - Documentar casos de prueba manual detallados
+
+3. **Implementar integración con CI**:
+   - Configurar GitHub Actions para pruebas automatizadas
+   - Establecer reportes de cobertura y resultados
+
+---
+
+*Documento preparado por SW-Tester*
+*Fecha: 2023-08-18*
+*Versión: 1.0* 

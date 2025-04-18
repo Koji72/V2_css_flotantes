@@ -1,0 +1,172 @@
+/* Panel Button Base Styles */
+.panel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal) var(--ease-in-out);
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Button Variants */
+.panel-button.primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: 1px solid var(--btn-primary-border);
+}
+
+.panel-button.primary:hover:not(:disabled) {
+  background-color: var(--btn-primary-hover-bg);
+  color: var(--btn-primary-hover-text);
+  border-color: var(--btn-primary-hover-border);
+}
+
+.panel-button.secondary {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
+}
+
+.panel-button.secondary:hover:not(:disabled) {
+  background-color: var(--btn-secondary-hover-bg);
+  color: var(--btn-secondary-hover-text);
+  border-color: var(--btn-secondary-hover-border);
+}
+
+.panel-button.success {
+  background-color: var(--btn-success-bg);
+  color: var(--btn-success-text);
+  border: 1px solid var(--btn-success-border);
+}
+
+.panel-button.success:hover:not(:disabled) {
+  background-color: var(--btn-success-hover-bg);
+  color: var(--btn-success-hover-text);
+  border-color: var(--btn-success-hover-border);
+}
+
+.panel-button.warning {
+  background-color: var(--btn-warning-bg);
+  color: var(--btn-warning-text);
+  border: 1px solid var(--btn-warning-border);
+}
+
+.panel-button.warning:hover:not(:disabled) {
+  background-color: var(--btn-warning-hover-bg);
+  color: var(--btn-warning-hover-text);
+  border-color: var(--btn-warning-hover-border);
+}
+
+.panel-button.danger {
+  background-color: var(--btn-danger-bg);
+  color: var(--btn-danger-text);
+  border: 1px solid var(--btn-danger-border);
+}
+
+.panel-button.danger:hover:not(:disabled) {
+  background-color: var(--btn-danger-hover-bg);
+  color: var(--btn-danger-hover-text);
+  border-color: var(--btn-danger-hover-border);
+}
+
+.panel-button.info {
+  background-color: var(--btn-info-bg);
+  color: var(--btn-info-text);
+  border: 1px solid var(--btn-info-border);
+}
+
+.panel-button.info:hover:not(:disabled) {
+  background-color: var(--btn-info-hover-bg);
+  color: var(--btn-info-hover-text);
+  border-color: var(--btn-info-hover-border);
+}
+
+/* Button States */
+.panel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.panel-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.panel-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.3);
+}
+
+/* Loading State */
+.panel-button.loading {
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.panel-button.loading::after {
+  content: '';
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  top: 50%;
+  left: 50%;
+  margin: -0.5rem 0 0 -0.5rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: button-spin 0.75s linear infinite;
+}
+
+@keyframes button-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Button with Icon */
+.panel-button > svg {
+  margin-right: var(--spacing-xs);
+}
+
+/* Button Sizes */
+.panel-button.small {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+}
+
+.panel-button.large {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-lg);
+}
+
+/* Full Width Button */
+.panel-button.full-width {
+  width: 100%;
+}
+
+/* Button Group */
+.panel-button-group {
+  display: inline-flex;
+  gap: var(--spacing-xs);
+}
+
+.panel-button-group .panel-button {
+  border-radius: 0;
+}
+
+.panel-button-group .panel-button:first-child {
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
+}
+
+.panel-button-group .panel-button:last-child {
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+} 

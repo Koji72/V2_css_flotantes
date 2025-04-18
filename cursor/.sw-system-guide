@@ -1,0 +1,124 @@
+# Guía del Sistema SagaWeaver para Paneles Flotantes
+
+## Introducción al Sistema de Agentes SagaWeaver
+
+El sistema SagaWeaver es un conjunto de agentes especializados diseñados para optimizar el desarrollo y mantenimiento del sistema de paneles flotantes. Cada agente tiene un área específica de especialización, trabajando en conjunto para crear una experiencia coherente y de alta calidad.
+
+## Cómo Interactuar con los Agentes
+
+Para activar un agente específico, utiliza la anotación `@.sagaweaver` seguida del identificador del agente. Por ejemplo:
+
+```
+@.sagaweaver css
+```
+
+Este comando activará al Agente Especialista CSS (SW-CSS) que se enfocará en aspectos visuales y de estilo.
+
+## Agentes Disponibles
+
+### SW-PM: Project Manager
+**Activación**: `@.sagaweaver pm`
+
+El director de orquesta que coordina todos los aspectos del proyecto, desde la planificación hasta la entrega. Recurre a SW-PM cuando necesites:
+- Coordinar esfuerzos entre diferentes áreas
+- Priorizar tareas o funcionalidades
+- Obtener una visión general del proyecto
+- Resolver bloqueos o conflictos entre equipos
+
+### SW-UX: Experiencia de Usuario
+**Activación**: `@.sagaweaver ux`
+
+El abogado del usuario final, centrado en crear experiencias significativas, eficientes y satisfactorias. Consulta a SW-UX cuando necesites:
+- Diseñar flujos de usuario intuitivos
+- Mejorar la usabilidad de componentes existentes
+- Crear wireframes o prototipos conceptuales
+- Evaluar la experiencia actual desde perspectiva de usuario
+
+### SW-Interface: Especialista de Interfaz
+**Activación**: `@.sagaweaver interface`
+
+El coreógrafo de interacciones, convirtiendo interfaces estáticas en sistemas vivos y responsivos. Recurre a SW-Interface cuando necesites:
+- Implementar comportamientos de arrastre, redimensionamiento o posicionamiento
+- Crear controles interactivos dentro de paneles
+- Optimizar la respuesta a acciones del usuario
+- Desarrollar sistemas de navegación entre paneles
+
+### SW-CSS: Especialista CSS
+**Activación**: `@.sagaweaver css`
+
+El artista técnico encargado de todos los aspectos visuales y estilísticos. Consulta a SW-CSS cuando necesites:
+- Crear o modificar estilos de componentes
+- Implementar temas visuales o modos (claro/oscuro)
+- Optimizar el rendimiento visual
+- Resolver problemas específicos de layout o visualización
+
+### SW-Architect: Arquitecto
+**Activación**: `@.sagaweaver architect`
+
+El visionario técnico que establece los cimientos estructurales del sistema. Recurre a SW-Architect cuando necesites:
+- Diseñar la estructura modular del sistema
+- Tomar decisiones técnicas con visión de futuro
+- Evaluar el impacto arquitectónico de nuevas funcionalidades
+- Optimizar la organización del código y patrones de diseño
+
+### SW-Documentation: Documentación
+**Activación**: `@.sagaweaver documentation`
+
+El guardián del conocimiento que asegura información clara y accesible. Consulta a SW-Documentation cuando necesites:
+- Crear o actualizar documentación técnica o de usuario
+- Explicar funcionalidades complejas de forma clara
+- Generar ejemplos o tutoriales de uso
+- Organizar información existente de manera más accesible
+
+### SW-Tester: Especialista de Testing
+**Activación**: `@.sagaweaver tester`
+
+El guardián de la calidad que asegura el correcto funcionamiento del sistema. Recurre a SW-Tester cuando necesites:
+- Diseñar planes de prueba exhaustivos
+- Identificar bugs o comportamientos inesperados
+- Validar que nuevas funcionalidades cumplen los requisitos
+- Verificar la consistencia cross-browser y cross-device
+
+### SW-Debugger: Especialista de Debugging
+**Activación**: `@.sagaweaver debugger`
+
+El detective técnico que resuelve los problemas más complejos del sistema. Consulta a SW-Debugger cuando necesites:
+- Diagnosticar y resolver bugs complejos
+- Analizar y mejorar problemas de rendimiento
+- Investigar comportamientos inexplicables del sistema
+- Optimizar código existente para mayor estabilidad
+
+## Flujos de Trabajo Recomendados
+
+### Desarrollo de Nueva Funcionalidad
+1. **SW-PM**: Definición de alcance y requerimientos
+2. **SW-UX**: Diseño de la experiencia de usuario
+3. **SW-Architect**: Definición de la estructura técnica
+4. **SW-Interface & SW-CSS**: Implementación de la funcionalidad
+5. **SW-Tester**: Validación de la implementación
+6. **SW-Documentation**: Documentación de la nueva característica
+
+### Resolución de Problemas
+1. **SW-Tester**: Identificación y caracterización del problema
+2. **SW-Debugger**: Diagnóstico y resolución técnica
+3. **SW-Architect**: Validación de la solución arquitectónica
+4. **SW-Documentation**: Actualización de documentación relevante
+
+### Optimización de Experiencia
+1. **SW-UX**: Análisis de puntos de mejora en la experiencia
+2. **SW-Interface**: Refinamiento de interacciones
+3. **SW-CSS**: Mejora de aspectos visuales
+4. **SW-Tester**: Validación de cambios
+5. **SW-PM**: Evaluación de impacto en el conjunto del proyecto
+
+## Buenas Prácticas para la Colaboración con Agentes
+
+1. **Sé específico en tus solicitudes**: Cuanto más concreto seas, mejores resultados obtendrás.
+2. **Proporciona contexto**: Incluye información sobre el propósito y objetivos de tu solicitud.
+3. **Indica restricciones**: Comunica limitaciones técnicas o requisitos específicos.
+4. **Revisa y refina**: Utiliza el feedback de un agente para refinar solicitudes posteriores.
+5. **Combina especialidades**: Para problemas complejos, considera activar múltiples agentes en secuencia.
+
+---
+
+*El sistema SagaWeaver está diseñado para potenciar tu trabajo mediante especialización técnica enfocada. Cada agente aporta una perspectiva única y habilidades específicas que, trabajando en conjunto, elevan la calidad del sistema de paneles flotantes.* 

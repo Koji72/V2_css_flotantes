@@ -1,0 +1,40 @@
+# Lista de Verificación SW-PM
+
+## Verificación de archivos críticos ✅
+- ✅ `src/index.css`: Contiene todos los estilos de botones necesarios
+- ✅ `src/App.tsx`: Sin importaciones de archivos CSS inexistentes
+- ✅ `src/utils/previewManager.ts`: Procesamiento de botones correcto
+- ✅ `src/utils/buttonHandler.ts`: Manejador de eventos para botones implementado
+- ✅ `src/styles/base/variables.css`: Variables CSS definidas correctamente
+
+## Verificación de cambios ✅
+- ✅ Eliminada importación incorrecta: `import './styles/buttons.css';` en App.tsx
+- ✅ Eliminados archivos redundantes: `src/styles/buttons.css` y `src/styles/panel-buttons.css`
+- ✅ Consolidados los estilos de botones en `src/index.css`
+- ✅ Corregido el formato de paneles en `test-esquinas-2.md`
+- ✅ Creado archivo de ejemplo `test-botones.md`
+
+## Verificación PRE-LANZAMIENTO ✅
+- ✅ Verificación del formato de botones: Coincide con la implementación en previewManager.ts
+- ✅ Verificación de la sintaxis de paneles: Usa formato `:::panel:::` en lugar de `::panel::`
+- ✅ Verificación de variables CSS: Todas las variables de botones están definidas
+- ✅ Verificación de asignación de tareas: Todos los agentes tienen tareas asignadas
+- ✅ Verificación de documentación: Creados archivos de ejemplo y tareas
+
+## Verificación funcional (Post-lanzamiento) ⏳
+- [ ] Servidor de desarrollo inicia sin errores
+- [ ] Visualización correcta de paneles
+- [ ] Botones funcionales dentro de los paneles
+- [ ] Estilos especiales (tech-corners, glass) aplicados correctamente
+
+## Asignación de tareas a agentes ✅
+- `SW-CSS`: Responsable de verificar estilos y diseño visual
+- `SW-Tester`: Responsable de verificar funcionalidad de botones
+- `SW-Debugger`: Responsable de solucionar cualquier problema que surja
+- `SW-Arquitecto`: Responsable de verificar la estructura general del código
+
+## Aprobación final
+✅ TODOS LOS CHECKS PRE-LANZAMIENTO COMPLETADOS
+✅ SE APRUEBA EL INICIO DEL SERVIDOR
+
+🟢 AUTORIZADO PARA INICIAR: `npm run dev` 

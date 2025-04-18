@@ -1,0 +1,26 @@
+# Tareas para el especialista CSS (SW-CSS)
+
+## Prioridad Alta:
+1. ✅ Definir variables CSS para botones en `src/styles/base/variables.css` (completado)
+2. ✅ Consolidar estilos de botones en `src/index.css` (completado)
+3. ✅ Corregir formatos de panel en `test-esquinas-2.md` (completado)
+4. ✅ Crear archivo de ejemplo `test-botones.md` (completado)
+
+## Próximas tareas:
+1. Revisar la compatibilidad de botones con todos los estilos de panel existentes
+2. Optimizar las transiciones y efectos de estado hover/active
+3. Asegurar que los estilos de botones sean accesibles (contraste WCAG 2.1)
+4. Documentar todas las variantes y opciones de los botones
+
+## Notas importantes:
+- Los botones ahora utilizan el formato `::button{style="tipo"}Texto::` 
+- Se soportan los siguientes estilos: primary, secondary, success, warning, danger
+- Se soportan los siguientes tamaños: small (o sm), large (o lg)
+- Los botones pueden tener acciones mediante el atributo `action="nombre-accion"`
+- Los atributos de datos se pueden agregar con `data-*="valor"`
+
+## Verificación funcional:
+- Probar la respuesta a eventos de clic
+- Verificar que se disparen los eventos `panel-button-click` y `panel-button-action`
+- Comprobar el aspecto visual de los botones en paneles con estilos especiales
+- Verificar la funcionalidad responsive 

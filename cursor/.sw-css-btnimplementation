@@ -1,0 +1,231 @@
+# Implementación de Botones en Paneles Markdown por SW-CSS
+
+## 1. Descripción General
+
+La implementación de botones interactivos en paneles markdown permite a los usuarios realizar acciones directamente desde los documentos de contenido, mejorando la experiencia del usuario y haciendo que los documentos sean más funcionales.
+
+## 2. Sintaxis Markdown
+
+Se ha implementado una sintaxis clara y sencilla para definir botones en markdown:
+
+```
+::button{action="nombre-accion" style="estilo-boton"}Texto del botón::
+```
+
+Donde:
+- `action`: Identificador de la acción que realizará el botón
+- `style`: Estilo visual del botón (primary, secondary, success, danger, info)
+- `Texto del botón`: El texto que se mostrará en el botón
+
+## 3. Procesamiento en previewManager.ts
+
+Se han añadido las siguientes funcionalidades al archivo `previewManager.ts`:
+
+### 3.1 Método para parsear atributos de botones
+
+```typescript
+// Añadir método auxiliar para procesar los atributos del botón
+private parseButtonAttributes(buttonAttrsStr: string): Record<string, string> {
+    const attributes: Record<string, string> = {};
+    
+    // Match key-value pairs in the format: key="value"
+    const attrRegex = /(\w+)=["']([^"']*)["']/g;
+    let match;
+    
+    while ((match = attrRegex.exec(buttonAttrsStr)) !== null) {
+        const [, key, value] = match;
+        attributes[key] = value;
+    }
+    
+    return attributes;
+}
+```
+
+### 3.2 Generador de IDs únicos para botones
+
+```typescript
+// Generar ID único para botones
+private generateButtonId(): string {
+    return `panel-btn-${Math.random().toString(36).substring(2, 11)}`;
+}
+```
+
+### 3.3 Procesamiento de sintaxis de botones en el contenido
+
+Dentro del método `renderSinglePanelHtml`, se agregó el procesamiento de botones:
+
+```typescript
+// Procesar botones con sintaxis ::button{action="nombre-accion" style="estilo-boton"}Texto del botón::
+const buttonRegex = /::button{([^}]*)}([^:]*)::/g;
+processedContent = processedContent.replace(buttonRegex, (match, buttonAttrsStr, buttonText) => {
+    const attributes = this.parseButtonAttributes(buttonAttrsStr);
+    const buttonId = this.generateButtonId();
+    const action = attributes.action || 'default';
+    const style = attributes.style || 'primary';
+    
+    return `<button id="${buttonId}" class="panel-button panel-button-${style}" data-action="${action}">${escapeHtmlPreview(buttonText.trim())}</button>`;
+});
+```
+
+### 3.4 Gestión de eventos para botones
+
+```typescript
+private setupInteractionListeners(): void { 
+    if (!this.iframe?.contentWindow?.document) {
+        this.logWarn('Cannot setup interaction listeners: iframe not ready');
+        return;
+    }
+    
+    const doc = this.iframe.contentWindow.document;
+    
+    // Button click listeners
+    const buttons = doc.querySelectorAll('.panel-button[data-action]');
+    buttons.forEach(button => {
+        if (button instanceof HTMLElement) {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const action = button.getAttribute('data-action');
+                
+                if (action) {
+                    // Create and dispatch a custom event that can be listened to by the application
+                    const customEvent = new CustomEvent('panel-button-click', {
+                        detail: {
+                            action: action,
+                            buttonText: button.textContent || '',
+                            element: button
+                        },
+                        bubbles: true
+                    });
+                    
+                    this.iframe?.dispatchEvent(customEvent);
+                    this.logDebug(`Button clicked with action: ${action}`);
+                }
+            });
+        }
+    });
+}
+```
+
+### 3.5 Limpieza de listeners para evitar memory leaks
+
+```typescript
+private removeInteractionListeners(doc: Document): void {
+    // Remove existing event listeners to prevent memory leaks
+    const buttons = doc.querySelectorAll('.panel-button[data-action]');
+    buttons.forEach(button => {
+        if (button instanceof HTMLElement) {
+            // Clone and replace to remove all event listeners
+            const newButton = button.cloneNode(true);
+            if (button.parentNode) {
+                button.parentNode.replaceChild(newButton, button);
+            }
+        }
+    });
+}
+```
+
+## 4. Estilos CSS
+
+Se ha creado un archivo CSS específico (`src/styles/buttons.css`) con estilos para los botones:
+
+```css
+/* Estilos para botones en paneles markdown */
+.panel-button {
+  display: inline-block;
+  padding: 8px 16px;
+  margin: 6px 4px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos de botón por defecto */
+.panel-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* Estilos de botones por tipo */
+.panel-button-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.panel-button-secondary {
+  background-color: #7f8c8d;
+  color: white;
+}
+
+/* Más estilos... */
+```
+
+## 5. Integración con la Aplicación
+
+Para capturar y procesar los eventos de botón, la aplicación debe añadir un listener:
+
+```javascript
+// Ejemplo de integración en la aplicación
+document.addEventListener('panel-button-click', (event) => {
+  const { action, buttonText, element } = event.detail;
+  
+  console.log(`Botón "${buttonText}" con acción "${action}" presionado`);
+  
+  // Ejecutar lógica específica según la acción
+  switch(action) {
+    case 'saludar':
+      alert('¡Hola! Gracias por hacer clic');
+      break;
+    case 'ejecutar-codigo':
+      runCode();
+      break;
+    // ... más acciones
+  }
+});
+```
+
+## 6. Beneficios y Características
+
+- **Interactividad mejorada**: Los documentos markdown pasan de ser estáticos a interactivos.
+- **Personalización visual**: Múltiples estilos para diferentes tipos de acciones.
+- **Accesibilidad**: Los botones son completamente accesibles con teclado y lectores de pantalla.
+- **Responsivo**: Adaptación automática a dispositivos móviles.
+- **Extensible**: Fácil de extender con nuevos estilos o comportamientos.
+
+## 7. Ejemplo de Uso
+
+Se ha creado un documento de ejemplo `public/boton-ejemplo.md` que demuestra diferentes usos y combinaciones de botones en paneles markdown.
+
+## 8. Recomendaciones de Uso
+
+- Usar el estilo adecuado según el propósito del botón:
+  - `primary`: Para acciones principales.
+  - `secondary`: Para acciones secundarias.
+  - `success`: Para confirmaciones positivas.
+  - `danger`: Para acciones destructivas.
+  - `info`: Para botones informativos.
+
+- No sobrecargar un panel con demasiados botones.
+- Asignar nombres de acción descriptivos y consistentes.
+- Implementar manejadores de eventos para todas las acciones utilizadas.
+
+## 9. Próximas Mejoras
+
+- Añadir soporte para íconos en los botones.
+- Implementar botones con estados (loading, disabled).
+- Añadir transiciones y animaciones más sofisticadas.
+- Desarrollar una biblioteca de acciones predefinidas comunes.
+
+## 10. Conclusión
+
+Esta implementación de botones interactivos en paneles markdown mejora significativamente la funcionalidad y experiencia de usuario de los documentos. La solución es flexible, extensible y mantiene la simplicidad en la sintaxis markdown.
+
+---
+
+SW-CSS  
+Especialista en Componentes Visuales 

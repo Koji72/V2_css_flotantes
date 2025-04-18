@@ -27,6 +27,13 @@ La versión 2.6 introduce mejoras significativas en el procesamiento y renderiza
 
 **Solución:** Implementación de un sistema de logging extensivo y detallado en cada etapa del procesamiento.
 
+### 4. ✅ Control Impreciso de la Línea Divisoria entre Paneles
+**Problema:** La interacción con la línea divisoria entre los paneles (editor/preview) no era fluida ni precisa, causando saltos y comportamiento errático durante el redimensionamiento.
+
+**Causa:** El manejo de eventos se realizaba completamente a través del ciclo de renderizado de React, lo que introducía latencia y reducía la fluidez de la interacción. Además, faltaba optimización para dispositivos táctiles y feedback visual adecuado.
+
+**Solución:** Implementación de un sistema de redimensionamiento optimizado utilizando manipulación directa del DOM y técnicas avanzadas de renderizado para garantizar una experiencia fluida y precisa.
+
 ## Cambios Técnicos Implementados
 
 ### 1. Pre-procesador de Paneles en `markdownProcessor.ts`
@@ -172,6 +179,89 @@ export function transformAst(ast: Root): { ast: Root; errors: ProcessingError[] 
 - Facilita las pruebas rápidas de la funcionalidad de paneles
 - Proporciona feedback visual inmediato sobre el correcto funcionamiento
 
+### 6. ✅ Divisor de Paneles Optimizado (`ResizablePanels.tsx`)
+
+```typescript
+// Método para actualizar directamente los anchos sin usar estado (más rápido)
+const updatePanelSizes = useCallback((newLeftWidthPercent: number) => {
+  if (!leftPanelRef.current || !rightPanelRef.current) return;
+  
+  const leftValue = `${newLeftWidthPercent}%`;
+  const rightValue = `${100 - newLeftWidthPercent}%`;
+  
+  if (direction === 'horizontal') {
+    leftPanelRef.current.style.width = leftValue;
+    rightPanelRef.current.style.width = rightValue;
+  } else {
+    leftPanelRef.current.style.height = leftValue;
+    rightPanelRef.current.style.height = rightValue;
+  }
+}, [direction]);
+
+// Gestor de resize con optimización de rendimiento
+const resize = useCallback((e: MouseEvent) => {
+  if (!isResizing) return;
+  
+  // Para movimientos muy pequeños del ratón, aplicar cambio inmediatamente sin animación
+  if (Math.abs(e.clientX - lastMousePosRef.current.x) < 5 && 
+      Math.abs(e.clientY - lastMousePosRef.current.y) < 5) {
+    applyResize(e.clientX, e.clientY);
+    return;
+  }
+  
+  // Para movimientos mayores, usar requestAnimationFrame
+  if (requestRef.current !== null) {
+    cancelAnimationFrame(requestRef.current);
+  }
+  
+  requestRef.current = requestAnimationFrame(() => {
+    applyResize(e.clientX, e.clientY);
+  });
+}, [isResizing, applyResize]);
+```
+
+**Mejoras en CSS para el divisor:**
+```css
+/* Aumento del área táctil sin afectar la visualización */
+.divider::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 100%;
+  background: transparent;
+  cursor: inherit;
+  z-index: 1;
+}
+
+/* Indicador de arrastre */
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.7);
+  transition: opacity 0.2s;
+}
+
+/* Indicador de arrastre para divisor horizontal */
+.flex-row .divider::after {
+  width: 2px;
+  height: 30px;
+  border-radius: 1px;
+}
+```
+
+**Beneficios:**
+- Interacción fluida y precisa al redimensionar paneles
+- Manipulación directa del DOM para evitar la latencia del ciclo de renderizado de React
+- Optimización para dispositivos táctiles y móviles
+- Feedback visual mejorado durante el arrastre
+- Prevención de sobrecarga de re-renders
+
 ## Beneficios Generales
 
 1. **Mayor Robustez**
@@ -189,6 +279,7 @@ export function transformAst(ast: Root): { ast: Root; errors: ProcessingError[] 
 4. **Experiencia de Usuario Mejorada**
    - Menos errores visibles para el usuario
    - Renderizado consistente de los paneles y otros elementos
+   - ✅ Interacción fluida con el divisor de paneles en todos los dispositivos
 
 5. **Base Sólida para V3.0**
    - Las mejoras implementadas proporcionan una base estable para las características avanzadas planeadas para V3.0

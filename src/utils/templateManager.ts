@@ -2,16 +2,29 @@
  * Template Manager handles loading, storing, and applying CSS templates
  * with fallback mechanisms to ensure templates always work
  */
+import { SecureStorage } from './secureStorage';
+import { Template, templates } from '../types/templates';
+
 export class TemplateManager {
   private static instance: TemplateManager;
-  private templates: Map<string, string> = new Map();
+  private secureStorage: SecureStorage;
+  private currentTemplate: Template | null = null;
+  private templates: Map<string, Template> = new Map();
   private currentTemplateId: string = 'purple_neon_grid';
   private embeddedTemplates: { [key: string]: string } = {};
 
   // Singleton pattern
   private constructor() {
+    this.secureStorage = SecureStorage.getInstance();
     this.initEmbeddedTemplates();
-    this.loadStoredPreference();
+    this.loadStoredPreferences();
+    this.initializeTemplates();
+  }
+
+  private initializeTemplates(): void {
+    templates.forEach(template => {
+      this.templates.set(template.id, template);
+    });
   }
 
   public static getInstance(): TemplateManager {
@@ -41,69 +54,27 @@ export class TemplateManager {
    */
   public async loadTemplate(templateId: string): Promise<void> {
     try {
-      const templates = [
-        {
-          id: 'default',
-          path: 'templates/default.css',
-        },
-        {
-          id: 'purple_neon_grid',
-          path: 'templates/purple_neon_grid.css',
-        },
-        {
-          id: 'michael_noir',
-          path: 'templates/michael_noir.css',
-        },
-        {
-          id: 'aegis-tactical-interface-v2.6',
-          path: 'templates/aegis-tactical-interface-v2.6.css',
-        },
-        {
-          id: 'aetherium_codex',
-          path: 'templates/aetherium_codex.css',
-        },
-        {
-          id: 'rpg_fantasy',
-          path: 'templates/rpg_fantasy.css',
-        },
-        {
-          id: 'infinitycommand',
-          path: 'templates/infinitycommand.css',
-        },
-        {
-          id: 'grid_halo',
-          path: 'templates/grid_halo.css',
-        },
-        {
-          id: 'halo_infini',
-          path: 'templates/halo_infini.css',
-        },
-        {
-          id: 'master_template',
-          path: 'templates/master_template.css',
-        },
-      ];
-      
-      const selectedTemplate = templates.find(t => t.id === templateId);
-      if (!selectedTemplate) {
-        console.error(`Template no encontrado para el ID: ${templateId}`);
-        return;
+      const template = this.templates.get(templateId);
+      if (!template) {
+        throw new Error(`Template not found: ${templateId}`);
       }
-      
-      const cssPath = selectedTemplate.path;
-      const cssContent = await this.loadFromFiles(cssPath);
-      
-      const iframe = document.getElementById('preview') as HTMLIFrameElement;
-      if (!iframe) {
-        console.error('IFrame no encontrado');
-        return;
+
+      const response = await fetch(template.path);
+      if (!response.ok) {
+        throw new Error(`Failed to load template: ${response.statusText}`);
       }
-      
-      this.templates.set(templateId, cssContent);
-      this.applyTemplateCSS(iframe, cssContent);
-      console.log(`Template ${templateId} cargado correctamente.`);
+
+      const cssContent = await response.text();
+      template.styles = cssContent;
+      this.setCurrentTemplate(template);
+
     } catch (error) {
-      console.error('Error al cargar el template:', error);
+      console.error('Error loading template:', error);
+      // Fallback to default template
+      const defaultTemplate = this.templates.get('default');
+      if (defaultTemplate) {
+        this.setCurrentTemplate(defaultTemplate);
+      }
     }
   }
 
@@ -155,17 +126,28 @@ export class TemplateManager {
     }
   }
 
-  /**
-   * Loads stored template preference from localStorage
-   */
-  private loadStoredPreference(): void {
-    const storedTemplate = localStorage.getItem('currentTemplate');
-    if (storedTemplate) {
-      this.currentTemplateId = storedTemplate;
-      console.log(`TemplateManager: Loaded stored template preference: ${storedTemplate}`);
-    } else {
-      console.log(`TemplateManager: No stored template preference, using default`);
+  private loadStoredPreferences(): void {
+    try {
+      const storedTemplate = this.secureStorage.get('currentTemplate');
+      if (storedTemplate) {
+        this.currentTemplate = JSON.parse(storedTemplate);
+      }
+    } catch (error) {
+      console.error('Error loading stored template:', error);
     }
+  }
+
+  public setCurrentTemplate(template: Template): void {
+    this.currentTemplate = template;
+    try {
+      this.secureStorage.set('currentTemplate', JSON.stringify(template));
+    } catch (error) {
+      console.error('Error storing template:', error);
+    }
+  }
+
+  public getCurrentTemplate(): Template | null {
+    return this.currentTemplate;
   }
 
   /**
@@ -560,5 +542,50 @@ export class TemplateManager {
         }
       `
     };
+  }
+
+  public applyTemplateStyles(): void {
+    if (!this.currentTemplate) return;
+
+    const styleElement = document.createElement('style');
+    styleElement.id = 'template-styles';
+    
+    styleElement.textContent = `
+      /* Estilos base del template */
+      :root {
+        --template-bg: ${this.currentTemplate.colors.background};
+        --template-text: ${this.currentTemplate.colors.text};
+        --template-accent: ${this.currentTemplate.colors.accent};
+      }
+
+      body {
+        background-color: var(--template-bg);
+        color: var(--template-text);
+      }
+
+      /* Estilos específicos del template */
+      ${this.currentTemplate.styles}
+    `;
+
+    // Eliminar estilos anteriores si existen
+    const oldStyles = document.getElementById('template-styles');
+    if (oldStyles) {
+      oldStyles.remove();
+    }
+
+    // Agregar nuevos estilos
+    document.head.appendChild(styleElement);
+  }
+
+  public removeTemplateStyles(): void {
+    const styleElement = document.getElementById('template-styles');
+    if (styleElement) {
+      styleElement.remove();
+    }
+  }
+
+  public destroy(): void {
+    this.removeTemplateStyles();
+    this.currentTemplate = null;
   }
 } 

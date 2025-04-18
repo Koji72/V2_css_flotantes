@@ -1,0 +1,127 @@
+/* Estilos del Editor */
+
+/* Sección del editor */
+.editor-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: var(--theme-bg-primary);
+}
+
+.editor-section textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  padding: 1rem;
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
+  font-family: 'Fira Code', monospace;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+/* Editor a pantalla completa (sin vista previa) */
+.editor-fullscreen {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--theme-bg-primary);
+}
+
+.editor-fullscreen .editor-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.editor-fullscreen textarea {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
+  font-family: 'Fira Code', monospace;
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+/* Mejora para el scroll del editor */
+.editor-section textarea {
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-border-color) var(--theme-bg-tertiary);
+}
+
+.editor-section textarea::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.editor-section textarea::-webkit-scrollbar-track {
+  background: var(--theme-bg-tertiary);
+}
+
+.editor-section textarea::-webkit-scrollbar-thumb {
+  background-color: var(--theme-border-color);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--theme-bg-tertiary);
+}
+
+.editor-section textarea::-webkit-scrollbar-thumb:hover {
+  background-color: var(--theme-border-dark);
+}
+
+/* Editor Header */
+.editor-header {
+  background-color: var(--theme-bg-secondary);
+  border-bottom: 1px solid var(--theme-border-color);
+  flex-shrink: 0;
+}
+
+/* Editor container */
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+/* Asegurar que el textarea ocupa todo el espacio disponible */
+.editor-content {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+}
+
+.editor-textarea {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
+  font-family: 'Consolas', 'Monaco', 'Andale Mono', monospace;
+  font-size: var(--font-size-md);
+  resize: none;
+  border: none;
+  outline: none;
+  line-height: var(--line-height-normal);
+}
+
+/* Asegurar que el editor ocupe todo el espacio cuando la vista previa está oculta */
+.editor-wrapper {
+  width: 100%;
+  height: 100%;
+  transition: width 0.3s ease;
+} 

@@ -1,0 +1,90 @@
+# Reporte de Testing - SW-Tester
+
+## 1. Pruebas de Botones
+
+### Resultados
+1. **Renderizado Básico**
+   - ✅ Botones primarios renderizan correctamente
+   - ✅ Botones secundarios renderizan correctamente
+   - ✅ Botones de estado (success, warning, danger) funcionan
+   - ❌ Botones con estilos personalizados no aplican correctamente
+
+2. **Estados de Botón**
+   - ✅ Estado disabled funciona correctamente
+   - ❌ Estado loading no muestra el spinner
+   - ✅ Hover states funcionan en todos los navegadores
+   - ✅ Active states funcionan correctamente
+
+3. **Accesibilidad**
+   - ✅ Atributos ARIA se aplican correctamente
+   - ✅ Navegación por teclado funciona
+   - ✅ Lectores de pantalla leen correctamente
+   - ❌ Algunos botones no tienen suficiente contraste
+
+### Problemas Encontrados
+1. **Estilos Personalizados**
+   - Los estilos inline no se aplican correctamente
+   - Las clases CSS personalizadas no se respetan
+
+2. **Estado Loading**
+   - El spinner no se muestra
+   - La animación no funciona en todos los navegadores
+
+3. **Contraste**
+   - Algunos botones no cumplen con WCAG 2.1 AA
+
+## 2. Pruebas de Esquinas Cortadas
+
+### Resultados
+1. **Renderizado**
+   - ✅ Esquinas cortadas se muestran correctamente
+   - ✅ Diferentes tamaños funcionan
+   - ❌ Algunas combinaciones de esquinas no funcionan
+
+2. **Rendimiento**
+   - ✅ No hay problemas de rendimiento en Chrome
+   - ❌ Ligera degradación en Firefox
+   - ✅ Buen rendimiento en Safari
+
+### Problemas Encontrados
+1. **Compatibilidad**
+   - Problemas con clip-path en versiones antiguas de Firefox
+   - Inconsistencias en Edge
+
+2. **Combinaciones**
+   - Algunas combinaciones de esquinas no funcionan correctamente
+
+## 3. Pruebas de Rendimiento
+
+### Resultados
+1. **Tiempo de Carga**
+   - ✅ CSS se carga rápidamente
+   - ✅ No hay problemas de FPS
+   - ✅ Buen rendimiento en dispositivos móviles
+
+2. **Memoria**
+   - ✅ Uso de memoria estable
+   - ✅ No hay memory leaks
+   - ✅ Limpieza correcta de recursos
+
+### Problemas Encontrados
+1. **Optimización**
+   - Algunas animaciones podrían ser más eficientes
+   - Posible mejora en el uso de variables CSS
+
+## Recomendaciones
+1. **Prioridades**
+   - Corregir problemas de contraste en botones
+   - Implementar spinner de loading correctamente
+   - Mejorar compatibilidad de esquinas cortadas
+
+2. **Mejoras**
+   - Optimizar animaciones
+   - Mejorar soporte para estilos personalizados
+   - Añadir más pruebas de accesibilidad
+
+## Próximos Pasos
+1. Implementar correcciones prioritarias
+2. Realizar pruebas de regresión
+3. Actualizar documentación de pruebas
+4. Crear casos de prueba adicionales 

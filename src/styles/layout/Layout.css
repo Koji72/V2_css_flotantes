@@ -1,0 +1,66 @@
+/* Estilos para el layout principal de la aplicación */
+
+/* Contenedor principal */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
+}
+
+/* Contenedor principal del contenido */
+.main-content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  background-color: var(--theme-bg-primary);
+}
+
+/* Estilos para cuando el sidebar está visible */
+.with-sidebar .main-content {
+  margin-left: var(--sidebar-width);
+}
+
+/* Sidebar */
+.sidebar-left {
+  width: var(--sidebar-width);
+  height: 100%;
+  background-color: var(--theme-bg-secondary);
+  border-right: 1px solid var(--theme-border-color);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.app-footer {
+  flex-shrink: 0;
+  padding: 0.5rem;
+  background-color: var(--theme-bg-secondary);
+  border-top: 1px solid var(--theme-border-color);
+  color: var(--theme-text-secondary);
+  text-align: center;
+}
+
+/* Estilos para layout responsivo */
+@media (max-width: 768px) {
+  .main-content,
+  .flex.flex-1.overflow-hidden {
+    flex-direction: column;
+  }
+
+  .sidebar-left {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--theme-border-color);
+  }
+
+  .with-sidebar .main-content {
+    margin-left: 0;
+  }
+} 

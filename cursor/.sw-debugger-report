@@ -1,0 +1,95 @@
+# Reporte de Debugging - SW-Debugger
+
+## 1. Problemas con Botones en Paneles
+
+### Análisis
+- El método `processButtons` en `previewManager.ts` tiene problemas con el regex
+- Los event listeners no se están configurando correctamente
+- Hay problemas de memoria con los event listeners
+
+### Soluciones Propuestas
+1. Corregir el regex en `processButtons`:
+```typescript
+const buttonRegex = /::button{([^}]+)}([^:]+)::/g;
+```
+
+2. Mejorar el manejo de event listeners:
+```typescript
+setupInteractionListeners() {
+    const buttons = this.iframe.contentDocument?.querySelectorAll('.panel-button');
+    buttons?.forEach(button => {
+        const action = button.getAttribute('data-action');
+        if (action) {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.handleButtonClick(action);
+            });
+        }
+    });
+}
+```
+
+3. Implementar limpieza adecuada:
+```typescript
+removeInteractionListeners() {
+    const buttons = this.iframe.contentDocument?.querySelectorAll('.panel-button');
+    buttons?.forEach(button => {
+        const newButton = button.cloneNode(true);
+        button.parentNode?.replaceChild(newButton, button);
+    });
+}
+```
+
+## 2. Problemas con Esquinas Cortadas
+
+### Análisis
+- Las clases CSS para esquinas cortadas no se están aplicando correctamente
+- Hay problemas de especificidad en los selectores CSS
+
+### Soluciones Propuestas
+1. Revisar el método `parseAttributes` para asegurar que las clases se apliquen correctamente
+2. Ajustar la especificidad de los selectores CSS
+3. Implementar un sistema de fallback para navegadores que no soporten clip-path
+
+## 3. Problemas de Rendimiento
+
+### Análisis
+- El método `preprocessPanels` está realizando demasiadas operaciones DOM
+- Hay duplicación en el procesamiento de estilos
+
+### Soluciones Propuestas
+1. Implementar caché para paneles procesados:
+```typescript
+private panelCache: Map<string, string> = new Map();
+
+preprocessPanels(content: string): string {
+    const cacheKey = content;
+    if (this.panelCache.has(cacheKey)) {
+        return this.panelCache.get(cacheKey)!;
+    }
+    // ... procesamiento ...
+    this.panelCache.set(cacheKey, processedContent);
+    return processedContent;
+}
+```
+
+2. Optimizar operaciones DOM:
+- Usar DocumentFragment para manipulación en lote
+- Minimizar reflows y repaints
+- Implementar virtualización para paneles grandes
+
+## Recomendaciones
+1. Implementar las correcciones en el siguiente orden:
+   - Primero: Corrección de regex y event listeners
+   - Segundo: Optimización de rendimiento
+   - Tercero: Mejoras de accesibilidad
+
+2. Realizar pruebas exhaustivas después de cada cambio
+
+3. Documentar todos los cambios realizados
+
+## Próximos Pasos
+1. Implementar las correcciones propuestas
+2. Realizar pruebas de rendimiento
+3. Verificar la compatibilidad entre navegadores
+4. Documentar los cambios 

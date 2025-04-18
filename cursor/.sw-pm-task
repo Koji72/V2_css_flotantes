@@ -1,0 +1,82 @@
+De: SW-PM (Jefe de Proyecto)
+Para: SW-CSS (Especialista en Estilos CSS)
+Asunto: Revisión de ejemplos de paneles flotantes y combinaciones avanzadas
+
+Prioridad: Media
+Plazo: 3 días laborables
+
+SW-CSS,
+
+Te asigno la tarea de revisar y validar los documentos de ejemplos de paneles flotantes recientemente creados:
+
+1. public/estilos-combinados.md
+2. public/flotantes-ejemplos.md
+3. public/panel-examples.md
+
+Objetivos específicos:
+
+1. Verificar que todos los ejemplos funcionen correctamente en la aplicación
+2. Confirmar que las combinaciones de estilos, layouts y animaciones sean técnicamente válidas
+3. Validar la responsividad de los paneles flotantes en diferentes anchos de pantalla
+4. Comprobar la coherencia visual entre los diferentes estilos y combinaciones
+5. Identificar posibles mejoras o correcciones necesarias
+
+Entregables esperados:
+
+1. Informe de validación que incluya:
+   - Confirmación de ejemplos verificados y funcionales
+   - Lista de problemas detectados (si los hay)
+   - Recomendaciones de mejora o optimización
+   - Cualquier inconsistencia visual o técnica encontrada
+
+2. Correcciones menores implementadas directamente si son necesarias
+
+Contexto adicional:
+Estos documentos servirán como referencia principal para los usuarios de la aplicación CSS Flotantes V2.6, por lo que es crucial que todos los ejemplos sean precisos y funcionen según lo esperado. La aplicación está actualmente ejecutándose en el puerto 3003 para pruebas.
+
+Ten en cuenta que hemos recibido un feedback muy positivo sobre los paneles flotantes, especialmente en relación a los layouts complejos y combinaciones con animaciones. Por favor, presta especial atención a la sección de "Layouts Mixtos" y "Combinaciones Avanzadas".
+
+A disposición para cualquier aclaración necesaria.
+
+SW-PM 
+
+// TAREA: Verificación de Botones Interactivos en Paneles
+// De: SW-PM (Jefe de Proyecto)
+// Para: SW-CSS (Especialista CSS)
+// Prioridad: Alta
+// Fecha: [Fecha actual]
+
+Estimado Especialista CSS,
+
+En respuesta a la implementación reciente de botones interactivos en los paneles markdown, requiero una verificación exhaustiva de su funcionalidad y consistencia visual en los diferentes tipos de paneles que manejamos.
+
+DOCUMENTOS A REVISAR:
+1. public/botones-interactivos.md - Documento principal con ejemplos de la nueva funcionalidad
+2. public/test-buttons.md - Documento de prueba con implementación directa HTML
+3. public/boton-ejemplo.md - Ejemplos adicionales de botones en contexto
+
+OBJETIVOS:
+- Confirmar que los botones se renderizan correctamente en todos los tipos de paneles (tech-corners, hologram, neo-frame, etc.)
+- Verificar que la interactividad funciona (hover, active states)
+- Comprobar que los eventos se disparan correctamente al hacer clic
+- Validar la consistencia visual entre botones con el mismo estilo en diferentes paneles
+- Verificar la compatibilidad con ambas sintaxis (::button{...}:: y [texto]{.panel-button})
+
+CRITERIOS DE ACEPTACIÓN:
+- Los botones deben ser claramente visibles y tener suficiente contraste en todos los tipos de paneles
+- La interacción (hover, active) debe ser coherente y proporcionar feedback visual
+- Los estilos (primary, secondary, success, warning, danger) deben ser consistentes con la guía de estilo
+- Los botones flotantes deben mantener su estilo en todos los breakpoints
+
+Tras completar esta verificación, por favor proporciona un informe detallando:
+1. Estado general de la implementación
+2. Posibles inconsistencias o bugs encontrados
+3. Recomendaciones para mejoras o refinamientos
+
+El plazo para completar esta tarea es de 2 días. Esta funcionalidad es clave para la versión 2.6 del sistema CSS Flotantes que estamos preparando para lanzamiento.
+
+Quedo atento a tu informe.
+
+Saludos cordiales,
+SW-PM
+Jefe de Proyecto 

@@ -1,32 +1,49 @@
 /* Importar estilos base */
 @import './styles/base/variables.css';
 
+/* Estilos globales */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Estilos base */
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
+@layer base {
+  html, body, #root {
+    @apply h-full m-0 p-0;
+  }
 
-body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: system-ui, -apple-system, sans-serif;
+  body {
+    @apply bg-primary text-primary font-sans;
+  }
 }
 
 /* Componentes */
 @layer components {
-  .mixed-panel {
-    @apply border rounded-lg p-4 my-4;
-    border-color: var(--color-primary);
+  .panel {
+    @apply border rounded-lg p-4 my-4 bg-secondary;
   }
 
   .panel-header {
     @apply flex items-center gap-2 mb-4;
+  }
+
+  .btn {
+    @apply px-4 py-2 rounded-md transition-all duration-200 ease-in-out;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-opacity-90;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-primary border border-primary 
+           hover:bg-primary hover:bg-opacity-10;
+  }
+
+  /* Panel Styles */
+  .mixed-panel {
+    @apply border rounded-lg p-4 my-4;
+    border-color: var(--color-primary);
   }
 
   .header-icon {
@@ -38,6 +55,7 @@ body {
     color: var(--color-primary);
   }
 
+  /* Status Indicators */
   .status-ok {
     color: var(--success-color);
   }
@@ -54,6 +72,172 @@ body {
     color: var(--color-tertiary);
   }
 
+  /* Panel Button Styles */
+  .panel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    margin: 5px 0;
+    font-family: var(--font-body, system-ui, sans-serif);
+    font-size: 0.9em;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Button Variants */
+  .panel-button.primary {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    border-color: var(--btn-primary-border);
+  }
+
+  .panel-button.primary:hover {
+    background-color: var(--btn-primary-hover-bg);
+    border-color: var(--btn-primary-hover-border);
+  }
+
+  .panel-button.secondary {
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+    border-color: var(--btn-secondary-border);
+  }
+
+  .panel-button.secondary:hover {
+    background-color: var(--btn-secondary-hover-bg);
+    border-color: var(--btn-secondary-hover-border);
+  }
+
+  .panel-button.success {
+    background-color: var(--btn-success-bg);
+    color: var(--btn-success-text);
+    border-color: var(--btn-success-border);
+  }
+
+  .panel-button.success:hover {
+    background-color: var(--btn-success-hover-bg);
+    border-color: var(--btn-success-hover-border);
+  }
+
+  .panel-button.warning {
+    background-color: var(--btn-warning-bg);
+    color: var(--btn-warning-text);
+    border-color: var(--btn-warning-border);
+  }
+
+  .panel-button.warning:hover {
+    background-color: var(--btn-warning-hover-bg);
+    border-color: var(--btn-warning-hover-border);
+  }
+
+  .panel-button.danger {
+    background-color: var(--btn-danger-bg);
+    color: var(--btn-danger-text);
+    border-color: var(--btn-danger-border);
+  }
+
+  .panel-button.danger:hover {
+    background-color: var(--btn-danger-hover-bg);
+    border-color: var(--btn-danger-hover-border);
+  }
+
+  /* Button States */
+  .panel-button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .panel-button:active {
+    transform: translateY(1px);
+    filter: brightness(0.95);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .panel-button:disabled,
+  .panel-button[disabled] {
+    opacity: 0.65;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+  }
+
+  /* Loading State */
+  .panel-button[data-loading="true"] {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+  }
+
+  .panel-button[data-loading="true"]::after {
+    content: "...";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: currentColor;
+    animation: loading-dots 1s infinite;
+  }
+
+  @keyframes loading-dots {
+    0%, 20% { content: "."; }
+    40%, 60% { content: ".."; }
+    80%, 100% { content: "..."; }
+  }
+
+  /* Button Sizes */
+  .panel-button.sm {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+
+  .panel-button.lg {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+
+  /* Button Groups */
+  .button-group {
+    display: inline-flex;
+    gap: 8px;
+    margin: 8px 0;
+  }
+
+  .button-group.vertical {
+    flex-direction: column;
+  }
+
+  /* Panel Style Variants */
+  .tech-corners .panel-button {
+    border-radius: 0;
+    clip-path: polygon(
+      0.5rem 0, 
+      calc(100% - 0.5rem) 0, 
+      100% 0.5rem, 
+      100% calc(100% - 0.5rem), 
+      calc(100% - 0.5rem) 100%, 
+      0.5rem 100%, 
+      0 calc(100% - 0.5rem), 
+      0 0.5rem
+    );
+  }
+
+  .glass-panel .panel-button {
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Data Matrix */
   .data-matrix {
     @apply w-full border-collapse;
   }
@@ -75,35 +259,26 @@ body {
   }
 }
 
+/* Utilidades */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .animate-fade-out {
+    animation: fadeOut 0.3s ease-in-out;
+  }
+}
+
 /* Animaciones */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn var(--transition-normal) ease-out forwards;
-}
-
-.animate-fade-out {
-  animation: fadeOut var(--transition-normal) ease-in forwards;
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 /* Estilos para el editor */

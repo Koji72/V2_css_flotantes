@@ -1,0 +1,115 @@
+/* ===== FLOATING PANELS ===== */
+.floating-panel {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  margin-bottom: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  will-change: transform, box-shadow;
+}
+
+.floating-panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.floating-panel-header {
+  background-color: var(--bg-panel-header);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-primary);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.floating-panel-content {
+  padding: 16px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* ===== PANEL VARIANTS ===== */
+/* Glass Panel */
+.floating-panel.glass {
+  background-color: rgba(var(--bg-panel-rgb), 0.7);
+  backdrop-filter: blur(10px);
+  border-color: rgba(var(--border-primary-rgb), 0.5);
+}
+
+.floating-panel.glass .floating-panel-header {
+  background-color: rgba(var(--bg-panel-header-rgb), 0.8);
+  backdrop-filter: blur(10px);
+  border-color: rgba(var(--border-primary-rgb), 0.3);
+}
+
+.floating-panel.glass:hover {
+  background-color: rgba(var(--bg-panel-rgb), 0.8);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Cut Corner Panel */
+.floating-panel.cut-corner {
+  clip-path: polygon(
+    0 0, 
+    calc(100% - 15px) 0, 
+    100% 15px, 
+    100% 100%, 
+    0 100%
+  );
+  border-left: 3px solid var(--accent-primary);
+}
+
+.floating-panel.cut-corner .floating-panel-header {
+  clip-path: polygon(
+    0 0, 
+    calc(100% - 15px) 0, 
+    100% 15px, 
+    100% 100%, 
+    0 100%
+  );
+}
+
+/* Grid Panel */
+.floating-panel.grid {
+  background-color: var(--bg-panel);
+  background-image: 
+    linear-gradient(rgba(var(--text-secondary-rgb), 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--text-secondary-rgb), 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  border-radius: 12px;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(var(--border-primary-rgb), 0.5);
+}
+
+.floating-panel.grid .floating-panel-header {
+  background-color: var(--bg-panel-header);
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== RESPONSIVE BEHAVIOR ===== */
+@media (max-width: 640px) {
+  .floating-panel {
+    margin-bottom: 0.75rem;
+  }
+  
+  .floating-panel-header {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .floating-panel-content {
+    padding: 12px;
+    font-size: 0.9rem;
+    max-height: 300px;
+  }
+} 

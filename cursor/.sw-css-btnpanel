@@ -1,0 +1,249 @@
+De: SW-CSS (Especialista en Estilos CSS)
+Para: Equipo de desarrollo
+Asunto: Implementación de botones interactivos en paneles markdown
+
+Prioridad: Media
+Estado: Propuesta
+
+## PROPUESTA: BOTONES INTERACTIVOS EN PANELES MARKDOWN
+
+### Contexto
+Actualmente, nuestros paneles markdown ofrecen excelente capacidad para mostrar contenido estático con diferentes estilos y layouts. Sin embargo, hay una demanda creciente de elementos interactivos dentro de los paneles, específicamente botones que puedan ejecutar acciones.
+
+### Solución Propuesta
+Implementar soporte para botones interactivos dentro de los paneles markdown utilizando una sintaxis especial que sea procesada por nuestro `previewManager.ts`.
+
+### Especificación Técnica
+
+#### 1. Sintaxis Markdown
+Propongo la siguiente sintaxis para los botones:
+
+```markdown
+::button{action="nombre-accion" style="estilo-boton"}Texto del botón::
+```
+
+Donde:
+- `action`: Identificador de la acción a ejecutar (obligatorio)
+- `style`: Estilo visual del botón (opcional: "primary", "secondary", "success", "warning", "danger")
+- `Texto del botón`: El contenido visible del botón
+
+#### 2. Implementación en previewManager.ts
+
+Necesitaremos modificar el método `renderSinglePanelHtml` para detectar y procesar esta sintaxis:
+
+1. Añadir una expresión regular para detectar la sintaxis de botones:
+```typescript
+const buttonRegex = /::button\{([^}]*)\}(.*?)::/g;
+```
+
+2. Procesar los botones antes de pasar el contenido a marked:
+```typescript
+processedContent = processedContent.replace(buttonRegex, (match, attrsStr, buttonText) => {
+  const attrs = this.parseButtonAttributes(attrsStr);
+  const action = attrs.action ? `data-button-action="${escapeHtmlPreview(attrs.action)}"` : '';
+  const style = attrs.style ? `data-button-style="${escapeHtmlPreview(attrs.style)}"` : '';
+  const buttonId = `btn-${this.generateUUID()}`;
+  
+  return `<button id="${buttonId}" class="panel-button" ${action} ${style}>${escapeHtmlPreview(buttonText.trim())}</button>`;
+});
+```
+
+3. Crear un método auxiliar para procesar los atributos:
+```typescript
+private parseButtonAttributes(attrsString: string): {action?: string, style?: string} {
+  const result: {action?: string, style?: string} = {};
+  const attrRegex = /(\w+)\s*=\s*["']([^"']*)["']/g;
+  let match;
+  
+  while ((match = attrRegex.exec(attrsString)) !== null) {
+    const [_, key, value] = match;
+    if (key === 'action') result.action = value;
+    if (key === 'style') result.style = value;
+  }
+  
+  return result;
+}
+```
+
+#### 3. Integración con listeners de eventos
+
+Modificar el método `setupInteractionListeners` para manejar clics en botones:
+
+```typescript
+private setupInteractionListeners(): void {
+  if (!this.iframe?.contentWindow?.document) return;
+  const doc = this.iframe.contentWindow.document;
+  
+  // Otros listeners existentes
+  
+  // Listener para botones
+  doc.addEventListener('click', this.handleButtonClick);
+  
+  this.interactionListenersAttached = true;
+}
+
+private handleButtonClick = (event: MouseEvent): void => {
+  const target = event.target as HTMLElement;
+  if (target.tagName === 'BUTTON' && target.classList.contains('panel-button')) {
+    const action = target.getAttribute('data-button-action');
+    if (action) {
+      // Notificar a la aplicación de la acción del botón
+      this.triggerButtonAction(action, target.innerText);
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+};
+
+private triggerButtonAction(action: string, buttonText: string): void {
+  // Crear un evento personalizado que la aplicación pueda escuchar
+  const event = new CustomEvent('panel-button-action', {
+    detail: { action, buttonText }
+  });
+  window.dispatchEvent(event);
+  
+  this.logDebug(`Button action triggered: ${action}`);
+}
+```
+
+#### 4. Estilos CSS para los botones
+
+Añadir los siguientes estilos al CSS:
+
+```css
+/* Estilos base para botones de panel */
+.panel-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 8px 0;
+  border: 1px solid transparent;
+}
+
+/* Variantes de estilo */
+.panel-button[data-button-style="primary"] {
+  background-color: var(--accent-color, #3498db);
+  color: white;
+  border-color: var(--accent-color, #3498db);
+}
+
+.panel-button[data-button-style="secondary"] {
+  background-color: transparent;
+  color: var(--accent-color, #3498db);
+  border-color: var(--accent-color, #3498db);
+}
+
+.panel-button[data-button-style="success"] {
+  background-color: var(--success-color, #2ecc71);
+  color: white;
+  border-color: var(--success-color, #2ecc71);
+}
+
+.panel-button[data-button-style="warning"] {
+  background-color: var(--warning-color, #f39c12);
+  color: white;
+  border-color: var(--warning-color, #f39c12);
+}
+
+.panel-button[data-button-style="danger"] {
+  background-color: var(--danger-color, #e74c3c);
+  color: white;
+  border-color: var(--danger-color, #e74c3c);
+}
+
+/* Estados */
+.panel-button:hover {
+  filter: brightness(110%);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+}
+
+.panel-button:active {
+  transform: translateY(0);
+  filter: brightness(90%);
+  box-shadow: none;
+}
+```
+
+### Ejemplos de Uso
+
+#### Ejemplo 1: Botón básico
+```markdown
+:::panel{title="Panel con Botón" style="glass-panel"}
+## Acción requerida
+
+Por favor revisa los datos y confirma la operación.
+
+::button{action="confirm" style="primary"}Confirmar::
+::button{action="cancel" style="secondary"}Cancelar::
+:::
+```
+
+#### Ejemplo 2: Botón en panel flotante
+```markdown
+:::panel{title="Mensaje de Sistema" style="tech-corners" layout="float-right" width="40%"}
+**Actualización disponible**
+
+Nueva versión 2.7.0 lista para instalar.
+
+::button{action="update" style="success"}Actualizar ahora::
+::button{action="later" style="secondary"}Más tarde::
+:::
+```
+
+#### Ejemplo 3: Botones de alerta
+```markdown
+:::panel{title="¡ADVERTENCIA!" style="neo-frame" class="panel-warning"}
+Se van a eliminar todos los datos. Esta acción no se puede deshacer.
+
+::button{action="delete-confirm" style="danger"}Eliminar todo::
+::button{action="delete-cancel" style="secondary"}Cancelar::
+:::
+```
+
+### Manejo de Eventos en la Aplicación
+Para que la aplicación responda a las acciones de los botones, se debe añadir un listener al evento personalizado:
+
+```typescript
+// En App.tsx o componente equivalente
+React.useEffect(() => {
+  const handleButtonAction = (event: CustomEvent) => {
+    const { action, buttonText } = event.detail;
+    console.log(`Botón presionado: ${buttonText}, Acción: ${action}`);
+    
+    // Implementar lógica según la acción
+    switch (action) {
+      case 'confirm':
+        // Lógica para confirmar
+        break;
+      case 'update':
+        // Lógica para actualizar
+        break;
+      // Más casos según sea necesario
+    }
+  };
+  
+  window.addEventListener('panel-button-action', handleButtonAction as EventListener);
+  return () => {
+    window.removeEventListener('panel-button-action', handleButtonAction as EventListener);
+  };
+}, []);
+```
+
+### Consideraciones de Accesibilidad
+- Añadir atributos ARIA apropiados para los botones
+- Asegurar que los botones sean accesibles por teclado
+- Proveer feedback visual claro para estados de hover/focus/active
+
+### Próximos Pasos
+1. Revisión de la propuesta por SW-Architect
+2. Implementación de cambios en previewManager.ts
+3. Adición de estilos CSS
+4. Pruebas con diferentes paneles y acciones
+5. Documentación para usuarios
+
+Por favor, revisar esta propuesta y proporcionar feedback antes de la implementación.
+
+SW-CSS 

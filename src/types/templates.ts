@@ -1,8 +1,17 @@
+export interface TemplateColors {
+  background: string;
+  text: string;
+  accent: string;
+}
+
 export interface Template {
   id: string;
   name: string;
+  colors: TemplateColors;
+  styles: string;
+  description?: string;
+  version?: string;
   path: string;
-  description: string;
   category: string;
   tags: string[];
 }
@@ -14,7 +23,13 @@ export const templates: Template[] = [
     path: 'templates/default.css',
     description: 'Tema básico por defecto',
     category: 'basic',
-    tags: ['simple', 'default']
+    tags: ['simple', 'default'],
+    colors: {
+      background: '#ffffff',
+      text: '#000000',
+      accent: '#ff0000'
+    },
+    styles: ''
   },
   {
     id: 'purple_neon_grid',
@@ -22,7 +37,13 @@ export const templates: Template[] = [
     path: 'templates/purple_neon_grid.css',
     description: 'Tema cyberpunk con acentos neón y cuadrícula',
     category: 'cyberpunk',
-    tags: ['neon', 'grid', 'futuristic']
+    tags: ['neon', 'grid', 'futuristic'],
+    colors: {
+      background: '#000000',
+      text: '#ffffff',
+      accent: '#ff00ff'
+    },
+    styles: ''
   },
   {
     id: 'michael_noir',
@@ -30,7 +51,13 @@ export const templates: Template[] = [
     path: 'templates/michael_noir.css',
     description: 'Tema noir con estilo retro y contraste dramático',
     category: 'noir',
-    tags: ['retro', 'dark', 'dramatic']
+    tags: ['retro', 'dark', 'dramatic'],
+    colors: {
+      background: '#000000',
+      text: '#ffffff',
+      accent: '#ff0000'
+    },
+    styles: ''
   },
   {
     id: 'aegis-tactical-interface-v2.6',
@@ -38,7 +65,13 @@ export const templates: Template[] = [
     path: 'templates/aegis-tactical-interface-v2.6.css',
     description: 'Interfaz táctica UNSC con paneles mejorados y hologramas',
     category: 'tactical',
-    tags: ['military', 'holographic', 'interface']
+    tags: ['military', 'holographic', 'interface'],
+    colors: {
+      background: '#000000',
+      text: '#ffffff',
+      accent: '#ff0000'
+    },
+    styles: ''
   },
   {
     id: 'aetherium_codex',
@@ -46,7 +79,13 @@ export const templates: Template[] = [
     path: 'templates/aetherium_codex.css',
     description: 'Tema místico con elementos arcanos y pergaminos',
     category: 'fantasy',
-    tags: ['magical', 'arcane', 'scroll']
+    tags: ['magical', 'arcane', 'scroll'],
+    colors: {
+      background: '#ffffff',
+      text: '#000000',
+      accent: '#ff00ff'
+    },
+    styles: ''
   },
   {
     id: 'rpg_fantasy',
@@ -54,7 +93,13 @@ export const templates: Template[] = [
     path: 'templates/rpg_fantasy.css',
     description: 'Tema para libros de rol con estilo de pergamino y columnas',
     category: 'fantasy',
-    tags: ['rpg', 'scroll', 'columns']
+    tags: ['rpg', 'scroll', 'columns'],
+    colors: {
+      background: '#ffffff',
+      text: '#000000',
+      accent: '#ff00ff'
+    },
+    styles: ''
   },
   {
     id: 'infinitycommand',
@@ -62,7 +107,13 @@ export const templates: Template[] = [
     path: 'templates/infinitycommand.css',
     description: 'Tema oscuro inspirado en interfaces de comando futuristas',
     category: 'futuristic',
-    tags: ['dark', 'command', 'interface']
+    tags: ['dark', 'command', 'interface'],
+    colors: {
+      background: '#000000',
+      text: '#ffffff',
+      accent: '#ff00ff'
+    },
+    styles: ''
   },
   {
     id: 'grid_halo',
@@ -70,7 +121,13 @@ export const templates: Template[] = [
     path: 'templates/grid_halo.css',
     description: 'Interfaz táctica inspirada en Halo con estilo de cuadrícula energética',
     category: 'tactical',
-    tags: ['grid', 'energy', 'interface']
+    tags: ['grid', 'energy', 'interface'],
+    colors: {
+      background: '#000000',
+      text: '#ffffff',
+      accent: '#ff00ff'
+    },
+    styles: ''
   },
   {
     id: 'halo_infini',
@@ -78,7 +135,13 @@ export const templates: Template[] = [
     path: 'templates/halo_infini.css',
     description: 'Tema inspirado en la interfaz futurista de Halo Infinite',
     category: 'futuristic',
-    tags: ['futuristic', 'interface', 'gaming']
+    tags: ['futuristic', 'interface', 'gaming'],
+    colors: {
+      background: '#000000',
+      text: '#ffffff',
+      accent: '#ff00ff'
+    },
+    styles: ''
   },
   {
     id: 'master_template',
@@ -86,7 +149,13 @@ export const templates: Template[] = [
     path: 'templates/master_template.css',
     description: 'Template maestro con todas las características disponibles',
     category: 'advanced',
-    tags: ['complete', 'all-features', 'master']
+    tags: ['complete', 'all-features', 'master'],
+    colors: {
+      background: '#ffffff',
+      text: '#000000',
+      accent: '#ff00ff'
+    },
+    styles: ''
   },
   {
     id: 'blank-template',
@@ -94,6 +163,12 @@ export const templates: Template[] = [
     path: 'templates/blank-template.css',
     description: 'Template básico con estilos mínimos para paneles',
     category: 'basic',
-    tags: ['minimal', 'blank', 'simple']
+    tags: ['minimal', 'blank', 'simple'],
+    colors: {
+      background: '#ffffff',
+      text: '#000000',
+      accent: '#ff0000'
+    },
+    styles: ''
   }
 ]; 

@@ -1,0 +1,72 @@
+# Tareas de CSS - SW-CSS
+
+## Prioridad Alta
+
+### 1. Estilos de Botones en Paneles
+- **Descripción**: Mejorar los estilos de los botones en paneles
+- **Archivos afectados**: 
+  - src/styles/floating-blocks.css
+- **Acciones requeridas**:
+  - Revisar y actualizar los estilos base de botones
+  - Mejorar los estados hover y active
+  - Añadir transiciones suaves
+  - Implementar estados de loading y disabled
+  - Asegurar consistencia en diferentes navegadores
+
+### 2. Estilos de Esquinas Cortadas
+- **Descripción**: Mejorar el renderizado de esquinas cortadas
+- **Archivos afectados**:
+  - src/styles/floating-blocks.css
+- **Acciones requeridas**:
+  - Revisar y optimizar las clases CSS para esquinas cortadas
+  - Mejorar la compatibilidad con diferentes navegadores
+  - Añadir soporte para diferentes tamaños de corte
+  - Implementar transiciones suaves
+
+## Prioridad Media
+
+### 3. Optimización de Estilos
+- **Descripción**: Optimizar los estilos CSS para mejor rendimiento
+- **Archivos afectados**:
+  - src/styles/floating-blocks.css
+  - src/styles/base/variables.css
+- **Acciones requeridas**:
+  - Reducir la especificidad de selectores
+  - Optimizar el uso de variables CSS
+  - Eliminar estilos duplicados
+  - Implementar técnicas de optimización de rendimiento
+
+### 4. Mejora de Variables CSS
+- **Descripción**: Mejorar la organización de variables CSS
+- **Archivos afectados**:
+  - src/styles/base/variables.css
+- **Acciones requeridas**:
+  - Reorganizar las variables por categorías
+  - Añadir documentación para cada variable
+  - Implementar un sistema de temas más robusto
+  - Mejorar la consistencia en nombres
+
+## Prioridad Baja
+
+### 5. Documentación de Estilos
+- **Descripción**: Mejorar la documentación de estilos
+- **Archivos afectados**:
+  - src/styles/
+- **Acciones requeridas**:
+  - Crear documentación detallada de clases CSS
+  - Documentar patrones de diseño
+  - Crear ejemplos de uso
+  - Mantener la documentación actualizada
+
+## Métricas de Éxito
+- Los botones tienen una apariencia consistente y profesional
+- Las esquinas cortadas se renderizan correctamente en todos los navegadores
+- Los estilos se cargan y aplican más rápido
+- Las variables CSS están bien organizadas y documentadas
+- La documentación es clara y completa
+
+## Notas Adicionales
+- Priorizar la corrección de problemas visuales
+- Mantener la consistencia con el diseño existente
+- Probar los cambios en diferentes dispositivos y navegadores
+- Documentar todos los cambios realizados 

@@ -1,0 +1,92 @@
+/**
+ * Floating Elements Override CSS
+ * ==============================
+ * Estilos con alta especificidad para forzar la visualización correcta
+ */
+
+/* Forzar estilos básicos - especificidad aumentada */
+html body .layout--floating-left,
+html body .layout--floating-right,
+html body .layout--centered {
+  position: relative !important;
+  margin-bottom: 2rem !important;
+  z-index: 10 !important;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(64, 109, 187, 0.8) !important;
+  background-color: rgba(18, 28, 44, 0.95) !important;
+  color: white !important;
+  padding: 1rem !important;
+  transition: all 0.4s ease-in-out !important;
+}
+
+/* Posicionamiento izquierdo forzado */
+html body .layout--floating-left {
+  float: left !important;
+  margin-right: 2.5rem !important;
+  margin-left: 0 !important;
+  clear: left !important;
+  max-width: 45% !important;
+}
+
+/* Posicionamiento derecho forzado */
+html body .layout--floating-right {
+  float: right !important;
+  margin-left: 2.5rem !important;
+  margin-right: 0 !important;
+  clear: right !important;
+  max-width: 45% !important;
+}
+
+/* Posicionamiento centrado forzado */
+html body .layout--centered {
+  float: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  clear: both !important;
+  max-width: 85% !important;
+  text-align: center !important;
+}
+
+/* Forzar estilos de encabezado y contenido */
+html body .panel-header {
+  font-weight: bold !important;
+  border-bottom: 1px solid rgba(64, 109, 187, 0.8) !important;
+  margin-bottom: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+html body .panel-content {
+  padding: 0.5rem 0 !important;
+}
+
+/* Estilos de panel específicos */
+html body .panel-style--tech {
+  background: linear-gradient(135deg, rgba(18, 28, 44, 0.95), rgba(30, 45, 70, 0.95)) !important;
+  border-color: rgba(64, 109, 187, 0.8) !important;
+}
+
+html body .panel-style--fantasy {
+  background: linear-gradient(135deg, rgba(40, 20, 60, 0.95), rgba(60, 30, 80, 0.95)) !important;
+  border-color: rgba(140, 80, 200, 0.8) !important;
+}
+
+html body .panel-style--glass {
+  background-color: rgba(20, 30, 50, 0.75) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(93, 130, 191, 0.5) !important;
+}
+
+/* Animaciones */
+@keyframes panel-glow {
+  0% {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25), 0 0 8px rgba(0, 160, 255, 0.4) !important;
+  }
+  100% {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 0 20px rgba(0, 160, 255, 0.7) !important;
+  }
+}
+
+html body .animation--glow {
+  animation: panel-glow 1.8s infinite alternate !important;
+} 

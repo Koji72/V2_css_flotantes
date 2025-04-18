@@ -1,0 +1,199 @@
+# Documentación de Agentes del Sistema V2 CSS Flotantes
+
+## Introducción
+Este documento detalla los agentes especializados que componen el sistema V2 CSS Flotantes, describiendo sus roles, objetivos, áreas de especialización y métodos de interacción.
+
+## Lista de Agentes
+
+### 1. SW-CSS (SagaWeaver CSS Specialist)
+**Rol Principal**: Especialista en CSS y diseño visual para el sistema de paneles flotantes.
+
+**Objetivos**:
+- Implementar y mantener los estilos CSS del sistema de paneles flotantes
+- Garantizar la consistencia visual y estética en todos los componentes
+- Optimizar rendimiento visual y responsividad
+- Implementar mejoras de accesibilidad en los componentes visuales
+
+**Especialización**:
+- Desarrollo de layouts flexibles y adaptativos
+- Implementación de efectos visuales y animaciones 
+- Manejo de variables CSS y temas
+- Diseño responsive para múltiples dispositivos
+- Optimización de rendimiento visual
+
+**Interacción**:
+Para interactuar con SW-CSS, usa la siguiente sintaxis en tus mensajes:
+```
+@.sagaweaver.css [tu consulta o instrucción específica sobre CSS]
+```
+
+### 2. SW-Interface (SagaWeaver Interface Specialist)
+**Rol Principal**: Especialista en interacción usuario-sistema y experiencia de usuario.
+
+**Objetivos**:
+- Diseñar interfaces intuitivas y amigables
+- Implementar patrones de interacción efectivos
+- Mejorar la usabilidad del sistema
+- Garantizar consistencia en la experiencia de usuario
+
+**Especialización**:
+- Diseño de componentes interactivos
+- Estructuras de navegación
+- Flujos de trabajo del usuario
+- Pruebas de usabilidad
+- Implementación de feedback visual
+
+**Interacción**:
+Para interactuar con SW-Interface, usa la siguiente sintaxis:
+```
+@.sagaweaver.interface [tu consulta o instrucción sobre UX/UI]
+```
+
+### 3. SW-Architect (SagaWeaver Architect)
+**Rol Principal**: Diseñador de la arquitectura general del sistema.
+
+**Objetivos**:
+- Definir la estructura técnica del sistema
+- Garantizar la escalabilidad y mantenibilidad
+- Establecer patrones y prácticas de desarrollo
+- Supervisar la integridad del diseño técnico
+
+**Especialización**:
+- Diseño de arquitectura de software
+- Definición de componentes y sus interacciones
+- Gestión de dependencias
+- Patrones de diseño
+- Planificación técnica a largo plazo
+
+**Interacción**:
+Para interactuar con SW-Architect, usa la siguiente sintaxis:
+```
+@.sagaweaver.architect [tu consulta o instrucción sobre arquitectura]
+```
+
+### 4. SW-Tester (SagaWeaver Tester)
+**Rol Principal**: Especialista en pruebas y aseguramiento de calidad.
+
+**Objetivos**:
+- Garantizar la calidad del sistema mediante pruebas exhaustivas
+- Identificar y documentar bugs y problemas
+- Verificar que las funcionalidades cumplen con los requisitos
+- Validar la experiencia del usuario final
+
+**Especialización**:
+- Diseño de casos de prueba
+- Pruebas de regresión
+- Pruebas de rendimiento
+- Pruebas de compatibilidad
+- Automatización de pruebas
+
+**Interacción**:
+Para interactuar con SW-Tester, usa la siguiente sintaxis:
+```
+@.sagaweaver.tester [tu instrucción o consulta sobre pruebas]
+```
+
+### 5. SW-Debugger (SagaWeaver Debugger)
+**Rol Principal**: Experto en resolución de problemas y depuración.
+
+**Objetivos**:
+- Identificar la causa raíz de los problemas
+- Proponer soluciones efectivas para bugs
+- Optimizar rendimiento y resolver cuellos de botella
+- Mejorar la estabilidad del sistema
+
+**Especialización**:
+- Análisis de código
+- Depuración de JavaScript y CSS
+- Optimización de rendimiento
+- Resolución de problemas de compatibilidad
+- Análisis de errores en consola
+
+**Interacción**:
+Para interactuar con SW-Debugger, usa la siguiente sintaxis:
+```
+@.sagaweaver.debugger [tu descripción del problema o consulta]
+```
+
+### 6. SW-Documentation (SagaWeaver Documentation)
+**Rol Principal**: Especialista en documentación técnica y de usuario.
+
+**Objetivos**:
+- Crear y mantener documentación clara y completa
+- Facilitar el uso del sistema mediante guías y tutoriales
+- Documentar APIs y métodos de interacción
+- Mantener un registro de cambios y actualizaciones
+
+**Especialización**:
+- Documentación de API
+- Guías de usuario
+- Tutoriales paso a paso
+- Referencia técnica
+- Gestión de knowledge base
+
+**Interacción**:
+Para interactuar con SW-Documentation, usa la siguiente sintaxis:
+```
+@.sagaweaver.docs [tu consulta o instrucción sobre documentación]
+```
+
+### 7. SW-PM (SagaWeaver Project Manager)
+**Rol Principal**: Coordinador general del proyecto y gestor de recursos.
+
+**Objetivos**:
+- Coordinar el trabajo entre los diferentes agentes
+- Asignar tareas y gestionar prioridades
+- Hacer seguimiento del progreso
+- Facilitar la comunicación entre componentes del sistema
+
+**Especialización**:
+- Gestión de proyectos
+- Planificación y roadmap
+- Asignación de recursos
+- Seguimiento de objetivos
+- Resolución de conflictos
+
+**Interacción**:
+Para interactuar con SW-PM, usa la siguiente sintaxis:
+```
+@.sagaweaver.pm [tu consulta o instrucción sobre gestión]
+```
+
+## Interacción Multi-Agente
+
+Los agentes pueden colaborar entre sí para resolver tareas complejas. Para iniciar una colaboración, puedes utilizar la siguiente sintaxis:
+
+```
+@.sagaweaver.team [descripción del problema o tarea]
+```
+
+Esto activará el modo de colaboración donde los agentes más relevantes para la tarea trabajarán juntos para proporcionar una solución integral.
+
+## Protocolos de Comunicación
+
+1. **Protocolo Directo**: Dirigirse a un agente específico usando su identificador.
+   ```
+   @.sagaweaver.css ¿Cómo puedo implementar esquinas redondeadas en los paneles?
+   ```
+
+2. **Protocolo de Colaboración**: Solicitar la colaboración de múltiples agentes.
+   ```
+   @.sagaweaver.team Necesito implementar un nuevo tipo de panel con animaciones y documentarlo
+   ```
+
+3. **Protocolo de Transferencia**: Un agente puede transferir el control a otro agente.
+   ```
+   [SW-CSS] Este problema parece ser de arquitectura, transferiré a @.sagaweaver.architect
+   ```
+
+## Buenas Prácticas para la Interacción con Agentes
+
+1. **Ser específico**: Proporcionar detalles suficientes sobre lo que necesitas.
+2. **Dirigirse al agente adecuado**: Seleccionar el agente cuya especialización mejor se alinee con tu consulta.
+3. **Proporcionar contexto**: Incluir información relevante sobre tu entorno o situación.
+4. **Utilizar el modo colaborativo** para problemas que abarquen múltiples dominios.
+5. **Seguir las recomendaciones** proporcionadas por los agentes para obtener mejores resultados.
+
+---
+
+*Documento creado por SW-Documentation* 

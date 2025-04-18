@@ -1,337 +1,482 @@
-/* ============================================== */
-/*      Michael Noir Theme (V2.5)               */
-/*     (Adapted for Universal Scribe)           */
-/* ============================================== */
+¡Absolutamente! Esas imágenes son increíbles y tienen un estilo visual muy potente y distintivo. Capturan una mezcla de fantasía oscura, bio-mecánica retorcida y una estética de cómic de alto contraste. Traducir esto a un CSS V2.5 es un desafío emocionante.
 
-/* 0. IMPORTAR FUENTES */
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+El objetivo será emular:
 
-/* 1. Variables Fundamentales (Paleta Noir) */
+Alto Contraste: Negros profundos, blancos nítidos y grises texturales.
+
+Líneas Fuertes: Bordes definidos, quizás gruesos o dobles.
+
+Texturas Implícitas: Usar sombras, bordes y fondos sutiles para evocar las texturas orgánicas/rocosas/quitinosas sin usar imágenes complejas.
+
+Sensación Visceral/Primal: Colores de acento tenues o "sucios" (rojo sangre, hueso, verde ichor) en lugar de brillantes y limpios.
+
+Estilo "Entintado": Favorecer bordes sólidos y sombras duras sobre gradientes suaves o brillos etéreos.
+
+Aquí tienes una plantilla CSS V2.5 inspirada directamente en ese estilo artístico, llamémosla "Grimoire of the First Spawn":
+
+/* ================================================== */
+/*     THEME: Grimoire of the First Spawn (V2.5)      */
+/*   (Inspired by TAG25 Art - Universal Scribe V2.5)  */
+/* ================================================== */
+
+/* 0. IMPORTAR FUENTES (Antiguas, Marcadas) */
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Merriweather:ital,wght@0,400;0,700;1,400&family=VT323&display=swap');
+
+/* 1. VARIABLES FUNDAMENTALES (Paleta Primigenia) */
 :root {
-    /* Theme Name */
-    /* Theme: Michael Noir */
+    /* -- Colores Base (Piedra y Sombra) -- */
+    --spawn-bg: #181818;           /* Negro profundo, ligeramente texturizado */
+    --spawn-bg-alt: #242424;       /* Gris muy oscuro para énfasis */
+    --spawn-text-primary: #e8e8e8; /* Blanco hueso/pergamino */
+    --spawn-text-secondary: #a0a0a0; /* Gris medio para texto secundario */
+    --spawn-border-dark: #000000;   /* Borde negro sólido, como tinta */
+    --spawn-border-medium: #444444; /* Borde gris oscuro */
+    --spawn-border-light: #666666;  /* Borde gris claro */
 
-    /* Colores Base (Escala de Grises) */
-    --noir-bg-deep: #0a0a0a;           /* Negro profundo */
-    --noir-bg-panel: rgba(20, 20, 20, 0.8); /* Gris oscuro translúcido */
-    --noir-bg-panel-hover: rgba(30, 30, 30, 0.9);
-    --noir-border-dark: #2a2a2a;
-    --noir-border-medium: #404040;
-    --noir-border-light: #606060;
+    /* -- Colores de Acento (Sangre, Hueso, Icor) -- */
+    --accent-blood-red: #8a0303;    /* Rojo sangre oscuro */
+    --accent-bone-white: #c8bfa8;  /* Blanco hueso/amarillento */
+    --accent-ichor-green: #4a6e45; /* Verde oscuro, enfermizo */
+    --accent-shadow-gray: #555555; /* Gris para sombras/neutral */
 
-    /* Acentos (Rojo Sangre) */
-    --noir-accent: #8b0000;            /* Rojo oscuro */
-    --noir-accent-glow: rgba(139, 0, 0, 0.3);
-    --noir-accent-dark: #5a0000;
-    --noir-highlight: #d4af37;         /* Dorado vintage */
+    /* -- Tipografía del Grimorio -- */
+    --font-headings: 'MedievalSharp', cursive; /* Antigua, casi ilegible */
+    --font-body: 'Merriweather', serif;     /* Serif clásico, legible */
+    --font-code: 'VT323', monospace;        /* Monospace pixelada/retro */
 
-    /* Texto (Blanco Roto) */
-    --noir-text-light: #f0f0f0;
-    --noir-text-medium: #d0d0d0;
-    --noir-text-dark: #a0a0a0;
+    /* -- Efectos y Sombras (Alto Contraste) -- */
+    --shadow-hard-inset: inset 0 0 0 2px var(--spawn-border-dark), inset 0 0 10px rgba(0,0,0,0.7);
+    --shadow-hard-outset: 3px 3px 0px 0px var(--spawn-border-dark); /* Sombra sólida, sin blur */
+    --text-shadow-crisp: 1px 1px 0px var(--spawn-border-dark);
 
-    /* Estados */
-    --noir-status-ok: #4a8b00;         /* Verde oscuro */
-    --noir-status-warn: #8b5a00;       /* Ámbar oscuro */
-    --noir-status-error: #8b0000;      /* Rojo oscuro */
-    --noir-status-neutral: var(--noir-text-dark);
-
-    /* Sombras */
-    --noir-shadow-dark: rgba(0, 0, 0, 0.8);
-    --noir-panel-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-
-    /* Fuentes */
-    --font-main: 'Crimson Text', serif;
-    --font-title: 'Playfair Display', serif;
-    --font-tech: 'Special Elite', cursive;
-
-    /* Variables específicas para V2.5 */
-    --hover-effect-color: rgba(139, 0, 0, 0.2);
-    --float-width: 45%;
-    --panel-header-bg: rgba(40, 40, 40, 0.9);
-    --scroll-thumb-color: var(--noir-accent);
+    /* -- Métricas y Radios -- */
+    --spacing-unit: 8px;
+    --radius-none: 0px; /* Sin radios para bordes afilados */
+    --border-width-heavy: 2px;
+    --border-width-medium: 1px;
 }
 
-/* 2. Estilos Base Generales */
-body, .markdown-preview-view, .cm-editor,
-.universal-scribe-output {
-    background-color: var(--noir-bg-deep) !important;
-    color: var(--noir-text-medium) !important;
-    font-family: var(--font-main) !important;
-    font-weight: 400;
-    line-height: 1.6;
-    font-size: 16px;
-    padding: 25px;
-    background-image: 
-        linear-gradient(rgba(139, 0, 0, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139, 0, 0, 0.05) 1px, transparent 1px) !important;
-    background-size: 40px 40px !important;
+/* 2. ESTILOS BASE (Páginas del Grimorio Oscuro) */
+body, .universal-scribe-output {
+    background-color: var(--spawn-bg);
+    color: var(--spawn-text-primary);
+    font-family: var(--font-body);
+    font-size: 17px; /* Texto ligeramente más grande */
+    line-height: 1.7;
+    padding: calc(var(--spacing-unit) * 3);
+    margin: 0;
+    /* Textura de fondo muy sutil, como papel viejo o piedra */
+    background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232a2a2a' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* Scrollbars */
-::-webkit-scrollbar { height: 8px; width: 8px; background-color: var(--noir-bg-panel); }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background-color: var(--noir-border-medium); border-radius: 0; border: 1px solid var(--noir-border-dark); }
-::-webkit-scrollbar-thumb:hover { background-color: var(--noir-accent); }
-* { scrollbar-width: thin; scrollbar-color: var(--noir-border-medium) var(--noir-bg-panel); }
+/* Scrollbars (Simples y Oscuros) */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--spawn-bg); border: 1px solid var(--spawn-border-dark); }
+::-webkit-scrollbar-thumb { background: var(--spawn-border-medium); border: 1px solid var(--spawn-border-dark); }
+::-webkit-scrollbar-thumb:hover { background: var(--spawn-border-light); }
 
-/* 3. Estilos para Elementos Comunes */
+/* 3. ELEMENTOS COMUNES (Texto Tallado) */
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-title) !important;
-    color: var(--noir-text-light) !important;
-    margin-top: 1.6em; margin-bottom: 0.8em; font-weight: 700;
-    letter-spacing: 1px; line-height: 1.2; text-transform: uppercase;
-    border: none; padding-bottom: 0.3em; position: relative;
+    font-family: var(--font-headings);
+    color: var(--spawn-text-primary);
+    margin: calc(var(--spacing-unit) * 3) 0 calc(var(--spacing-unit) * 1.5) 0;
+    padding-bottom: calc(var(--spacing-unit) * 0.5);
+    border-bottom: var(--border-width-heavy) solid var(--spawn-border-dark);
+    font-weight: normal; /* La fuente ya tiene peso */
+    letter-spacing: 1px;
+    text-shadow: var(--text-shadow-crisp);
+    line-height: 1.2; /* Ajustar para fuente heading */
+}
+h1 { font-size: 3em; color: var(--accent-bone-white); }
+h2 { font-size: 2.4em; }
+h3 { font-size: 1.9em; border-bottom-style: dashed; border-color: var(--spawn-border-medium); }
+h4 { font-size: 1.5em; border-bottom: none; color: var(--spawn-text-secondary); text-shadow: none; }
+h5 { font-size: 1.2em; border-bottom: none; color: var(--spawn-text-secondary); font-style: italic; }
+h6 { font-size: 1em; border-bottom: none; color: var(--accent-shadow-gray); }
+
+/* Decoración Rúnica */
+h1::before, h2::before {
+    content: "❖"; /* Símbolo rúnico/primitivo */
+    color: var(--accent-blood-red);
+    margin-right: var(--spacing-unit);
+    font-size: 0.8em;
+    opacity: 0.9;
 }
 
-h1::after, h2::after {
-    content: ''; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%;
-    background: linear-gradient(90deg, var(--noir-accent), transparent 80%);
-    box-shadow: 0 0 8px var(--noir-accent-glow);
-    opacity: 0.7;
+p {
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
 }
 
-h1 { font-size: 2.8em; letter-spacing: 2px; color: var(--noir-highlight) !important; text-shadow: 0 0 10px var(--noir-accent-glow); margin-bottom: 1em;}
-h2 { font-size: 1.8em; color: var(--noir-text-light) !important; text-shadow: 0 0 5px var(--noir-shadow-dark);}
-h3 { font-size: 1.4em; color: var(--noir-text-light) !important; font-weight: 600; text-transform: none; }
-h4 { font-size: 1.1em; color: var(--noir-text-medium) !important; font-weight: 600; text-transform: none; margin-bottom: 0.4em;}
-h5, h6 { font-size: 1.0em; color: var(--noir-text-dark) !important; font-weight: 600; text-transform: none; margin-bottom: 0.3em;}
-
-p { margin-bottom: 1.1em; color: var(--noir-text-medium) !important; }
-h1 + p, h2 + p, h3 + p, h4 + p { margin-top: 0.6em; }
-
-a { color: var(--noir-accent) !important; text-decoration: none; border-bottom: 1px dotted rgba(139, 0, 0, 0.5); transition: all 0.2s ease; font-weight: 600;}
-a:hover, a:focus { color: var(--noir-highlight) !important; border-bottom-color: var(--noir-accent); text-shadow: 0 0 8px var(--noir-accent-glow); background-color: rgba(139, 0, 0, 0.05);}
-
-strong, b { color: var(--noir-text-light) !important; font-weight: 700; }
-em, i { color: var(--noir-highlight) !important; font-style: italic; }
-
-/* Listas */
-ul, ol { margin-left: 15px; margin-bottom: 1.1em; padding-left: 20px; list-style: none; }
-li { margin-bottom: 0.5em; color: var(--noir-text-medium) !important; position: relative; }
-ul li::before {
-    content: ''; position: absolute; left: -15px; top: 0.5em; transform: translateY(-50%);
-    width: 6px; height: 6px; background-color: var(--noir-accent);
-    border-radius: 50%; box-shadow: 0 0 6px var(--noir-accent-glow);
+a {
+    color: var(--accent-bone-white); /* Enlaces como texto resaltado */
+    text-decoration: none;
+    border-bottom: var(--border-width-medium) dotted var(--accent-blood-red);
+    font-weight: bold;
+    transition: color 0.2s ease, border-bottom-color 0.2s ease;
+}
+a:hover {
+    color: var(--accent-blood-red);
+    border-bottom-color: var(--accent-bone-white);
 }
 
-/* Tablas */
-div:has(> table), .table-container, [data-matrix-table="true"] {
-    max-width: 100%; overflow-x: auto; margin: 1.8em 0;
+strong, b {
+    font-weight: 700;
+    color: var(--spawn-text-primary); /* Mismo color pero más peso */
+}
+em, i {
+    font-style: italic;
+    color: var(--spawn-text-secondary); /* Itálica más sutil */
+}
+
+ul, ol {
+    margin-left: calc(var(--spacing-unit) * 1.5);
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    padding-left: calc(var(--spacing-unit) * 2);
+    border-left: var(--border-width-heavy) solid var(--spawn-border-dark);
+}
+li {
+    margin-bottom: calc(var(--spacing-unit) * 0.5);
+}
+
+ul li::marker {
+    content: "†"; /* Daga/Marca */
+    color: var(--accent-blood-red);
+    font-size: 1.2em;
+}
+
+ol {
+    list-style-type: none;
+    counter-reset: grim-counter;
+}
+ol li {
+    counter-increment: grim-counter;
+}
+ol li::marker {
+    content: counter(grim-counter, upper-roman); /* Números romanos */
+    color: var(--accent-bone-white);
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-right: var(--spacing-unit);
+}
+
+/* Blockquote - Fragmento de Saber Prohibido */
+blockquote {
+    margin: calc(var(--spacing-unit) * 2) 0;
+    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+    border: var(--border-width-heavy) solid var(--spawn-border-dark);
+    background-color: var(--spawn-bg-alt);
+    box-shadow: var(--shadow-hard-inset);
+    color: var(--spawn-text-secondary);
+    font-style: italic;
+}
+blockquote p:last-child { margin-bottom: 0; }
+blockquote strong:first-child { /* Fuente del Fragmento */
+    color: var(--accent-bone-white);
+    font-family: var(--font-headings);
+    font-style: normal;
+    margin-right: var(--spacing-unit);
+}
+
+/* Código - Glifos Antiguos */
+code {
+    font-family: var(--font-code);
+    background-color: var(--spawn-bg-alt);
+    color: var(--accent-ichor-green); /* Código como texto verdoso */
+    padding: 0.1em 0.4em;
+    border: var(--border-width-medium) solid var(--spawn-border-medium);
+    font-size: 1.1em; /* VT323 se ve mejor un poco más grande */
+    text-shadow: 1px 1px 0 #000;
+}
+pre {
+    background-color: var(--spawn-bg);
+    border: var(--border-width-heavy) solid var(--spawn-border-dark);
+    padding: var(--spacing-unit);
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    overflow-x: auto;
+    box-shadow: var(--shadow-hard-inset);
+    font-size: 1.1em;
+}
+pre code {
+    background-color: transparent;
+    padding: 0;
     border: none;
-    background-color: var(--noir-bg-panel) !important;
-    border-radius: 4px;
-    box-shadow: var(--noir-panel-shadow);
-    padding: 1px;
+    line-height: 1.4;
 }
 
+hr { /* Fractura en la Realidad */
+    border: none;
+    height: 4px;
+    background-color: var(--spawn-border-dark);
+    border-top: 1px solid var(--spawn-border-light);
+    border-bottom: 1px solid var(--spawn-border-light);
+    margin: calc(var(--spacing-unit) * 4) 0;
+}
+
+/* --- TABLA: Tabla de Anatomía Monstruosa --- */
+.table-wrapper {
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    border: var(--border-width-heavy) solid var(--spawn-border-dark);
+    overflow: hidden;
+    box-shadow: var(--shadow-hard-outset);
+}
 table {
-    width: 100%; border-collapse: separate; border-spacing: 0;
-    font-size: 0.9em; table-layout: auto; border: none !important; margin: 0;
-    background: var(--noir-bg-panel) !important;
-    border-radius: 3px;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
-th, .table-header-cell {
-    color: var(--noir-text-light) !important; font-family: var(--font-tech) !important;
-    font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
-    padding: 10px 15px; text-align: left;
-    border-bottom: none !important; border-left: none !important;
-    text-shadow: 0 0 4px var(--noir-shadow-dark);
-    white-space: nowrap; vertical-align: middle;
-    background-color: rgba(40, 40, 40, 0.4) !important;
+thead {
+    background-color: var(--spawn-bg-alt);
+    border-bottom: var(--border-width-heavy) solid var(--spawn-border-dark);
 }
+th {
+    font-family: var(--font-headings);
+    font-weight: normal;
+    color: var(--accent-bone-white);
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+    text-align: left;
+    letter-spacing: 0.5px;
+    text-shadow: var(--text-shadow-crisp);
+    border-right: var(--border-width-medium) solid var(--spawn-border-medium);
+}
+th:last-child { border-right: none; }
+
+tbody tr {
+    border-bottom: var(--border-width-medium) solid var(--spawn-border-medium);
+}
+/* Zebra striping oscuro */
+tbody tr:nth-child(even) {
+    background-color: var(--spawn-bg-alt);
+}
+tbody tr:last-child { border-bottom: none; }
 
 td {
-    padding: 9px 15px; color: var(--noir-text-medium) !important;
-    border: none !important;
-    border-top: 1px solid var(--noir-border-dark) !important;
-    vertical-align: middle; white-space: normal; overflow-wrap: break-word; word-break: break-word;
-    line-height: 1.5; position: relative;
+    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+    vertical-align: top; /* Alinear arriba para textos largos */
+    border-right: var(--border-width-medium) solid var(--spawn-border-medium);
+    font-size: 0.95em;
+}
+td:last-child { border-right: none; }
+
+/* --- TABLA: Data Matrix Específico (Diagrama Rúnico) --- */
+table.data-matrix {
+    /* Más condensado */
+}
+table.data-matrix th {
+    color: var(--accent-blood-red);
+    font-size: 0.9em;
+}
+table.data-matrix td {
+    font-family: var(--font-code);
+    font-size: 1em;
+    padding: calc(var(--spacing-unit) * 0.5) var(--spacing-unit);
 }
 
-/* Bloques Personalizados V2.5 */
-.mixed-panel, [class*="panel-"], .datamatrix, .statblock, .note, .warning, .error, .codeblock, .quote, .image {
-    background-color: var(--noir-bg-panel) !important;
-    border: 1px solid var(--noir-border-medium) !important;
-    border-radius: 4px !important;
-    margin: 1.5em 0 !important;
-    box-shadow: var(--noir-panel-shadow) !important;
-    overflow: hidden !important;
-    position: relative !important;
+
+/* --- ESTILOS PARA MEJORAS JS V2.5 (Marcas de los Primigenios) --- */
+
+/* 1. Hover Interactivo (`.is-hovered`) */
+.is-hovered {
+    background-color: var(--spawn-bg-alt) !important;
+    outline: var(--border-width-heavy) solid var(--accent-blood-red) !important; /* Borde exterior rojo */
+    outline-offset: -2px; /* Ajustar dentro del borde */
+    box-shadow: var(--shadow-hard-inset) !important;
+    cursor: default;
+    transform: scale(1.005); /* Movimiento casi imperceptible */
+}
+/* Ajuste para tablas */
+table .is-hovered td {
+    color: var(--accent-bone-white);
 }
 
-.panel-header, .mixed-panel > h2:first-child {
-    background-color: var(--panel-header-bg) !important;
-    color: var(--noir-highlight) !important;
-    font-family: var(--font-title) !important;
-    font-weight: 600 !important;
-    font-size: 1.25em !important;
-    padding: 12px 15px !important;
-    margin: 0 !important;
-    border-bottom: 1px solid var(--noir-border-dark) !important;
-    text-shadow: 0 0 5px var(--noir-accent-glow) !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
+/* 2. Indicadores de Estado Inline (Sellos) */
+.status-indicator {
+    display: inline-block;
+    padding: 0.1em 0.6em;
+    border-radius: var(--radius-none); /* Bordes rectos */
+    font-size: 0.85em;
+    font-weight: bold;
+    font-family: var(--font-body); /* Usar fuente de cuerpo */
+    margin: 0 0.2em;
+    border: var(--border-width-medium) solid;
+    background-color: var(--spawn-bg); /* Fondo sólido */
+    box-shadow: var(--shadow-hard-outset);
+    text-transform: uppercase;
 }
 
-.panel-content {
-    padding: 15px !important;
-    font-size: 0.95em !important;
+.status-indicator--ok {
+    color: var(--accent-ichor-green);
+    border-color: var(--accent-ichor-green);
+}
+.status-indicator--warn {
+    color: var(--accent-bone-white);
+    border-color: var(--accent-bone-white);
+}
+.status-indicator--error {
+    color: var(--accent-blood-red);
+    border-color: var(--accent-blood-red);
+    animation: flicker-error 1.5s infinite steps(2);
+}
+@keyframes flicker-error {
+    0%, 100% { opacity: 1; transform: skewX(0deg); }
+    50% { opacity: 0.7; transform: skewX(-2deg); }
+}
+.status-indicator--neutral {
+    color: var(--accent-shadow-gray);
+    border-color: var(--accent-shadow-gray);
 }
 
-/* Bloques Flotantes */
-.float-left {
-    float: left !important;
-    margin-right: 20px !important;
-    margin-bottom: 20px !important;
-    width: var(--float-width) !important;
-    clear: left !important;
+/* 3. Texto Redactado (Conocimiento Borrado) */
+.redacted-text {
+    background-color: var(--spawn-border-dark);
+    color: transparent; /* Ocultar texto */
+    text-shadow: none;
+    padding: 0.1em 0.3em;
+    user-select: none;
+    font-family: sans-serif;
+    /* Efecto de tinta corrida */
+    background-image: linear-gradient(var(--spawn-border-dark) 50%, #111 50%);
+    background-size: 100% 4px;
+    display: inline-block;
+    line-height: 1.2;
 }
+.redacted-text::selection { background-color: #000; color: transparent; }
 
-.float-right {
-    float: right !important;
-    margin-left: 20px !important;
-    margin-bottom: 20px !important;
-    width: var(--float-width) !important;
-    clear: right !important;
+/* 4. Datos Inline (Atributos Primordiales) */
+.inline-data {
+    border-bottom: var(--border-width-medium) dashed var(--spawn-border-medium);
+    padding-bottom: 2px;
+    margin: 0 0.2em;
 }
+.inline-data__label {
+    font-family: var(--font-headings);
+    color: var(--spawn-text-secondary);
+    font-size: 0.8em;
+    margin-right: 0.3em;
+    letter-spacing: 0.5px;
+}
+.inline-data__value {
+    font-weight: 700;
+    color: var(--spawn-text-primary);
+    font-family: var(--font-body); /* Usar fuente principal */
+}
+.inline-data__max {
+    font-size: 0.9em;
+    color: var(--spawn-text-secondary);
+    margin-left: 0.1em;
+    font-family: var(--font-body);
+}
+/* Colores específicos */
+.inline-data--hp .inline-data__value, .inline-data--health .inline-data__value { color: var(--accent-blood-red); }
+.inline-data--armor .inline-data__value, .inline-data--defense .inline-data__value { color: var(--accent-bone-white); }
+.inline-data--stamina .inline-data__value, .inline-data--energy .inline-data__value { color: var(--accent-ichor-green); }
 
-/* Estilos Específicos por Tipo de Bloque */
-.panel-warning, .warning {
-    border-left: 4px solid var(--noir-status-warn) !important;
-}
-.panel-warning .panel-header, .warning .panel-header {
-    color: var(--noir-status-warn) !important;
-}
-
-.panel-error, .error {
-    border-left: 4px solid var(--noir-status-error) !important;
-}
-.panel-error .panel-header, .error .panel-header {
-    color: var(--noir-status-error) !important;
-}
-
-.panel-info-box, .note {
-    border-left: 4px solid var(--noir-accent) !important;
-}
-
-/* Estilos para Bloques RPG */
-.panel-character, .panel-npc, .panel-location, .panel-encounter, 
-.panel-quest, .panel-treasure, .panel-map {
-    margin: 25px 0 !important;
-    border: 1px solid var(--noir-border-light) !important;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3) !important;
-}
-
-.panel-character {
-    border-left: 4px solid var(--noir-status-ok) !important;
-}
-.panel-character .panel-header {
-    color: var(--noir-status-ok) !important;
-}
-
-.panel-npc {
-    border-left: 4px solid var(--noir-accent-dark) !important;
-}
-
-.panel-location {
-    border-left: 4px solid #606060 !important;
-}
-
-.panel-encounter {
-    border-left: 4px solid var(--noir-status-error) !important;
-}
-.panel-encounter .panel-header {
-    color: var(--noir-status-error) !important;
-}
-
-.panel-quest {
-    border-left: 4px solid #8b5a00 !important;
-}
-.panel-quest .panel-header {
-    color: #8b5a00 !important;
-}
-
-.panel-treasure {
-    border-left: 4px solid var(--noir-highlight) !important;
-    background-image: linear-gradient(to bottom, 
-        rgba(40, 30, 0, 0.3), 
-        rgba(20, 15, 0, 0.3)
-    ) !important;
-}
-.panel-treasure .panel-header {
-    color: var(--noir-highlight) !important;
-}
-
-.panel-map {
-    border-left: 4px solid #4a4a4a !important;
-}
-.panel-map .panel-header {
-    color: #4a4a4a !important;
-}
-
-/* Tiradas de Dados */
-.dice-roll {
-    display: inline-block !important;
-    font-family: var(--font-tech) !important;
-    font-weight: 600 !important;
-    color: var(--noir-highlight) !important;
-    text-shadow: 0 0 5px var(--noir-accent-glow) !important;
-    background-color: rgba(139, 0, 0, 0.1) !important;
-    padding: 3px 8px !important;
-    border-radius: 3px !important;
-    border: 1px solid rgba(139, 0, 0, 0.3) !important;
-    margin: 0 2px !important;
-}
-
-/* Elementos Interactivos */
-[data-interactive-container="true"], .is-interactive {
-    transition: all 0.2s ease-out !important;
-    position: relative !important;
-    z-index: 1 !important;
-}
-
-[data-interactive-container="true"]:hover, 
-[data-interactive-container="true"].is-hovered,
-.is-interactive:hover {
-    box-shadow: 0 0 15px var(--noir-accent-glow) !important;
-    transform: translateY(-2px) !important;
-}
-
-/* Barras de Progreso */
+/* 5. Barras de Progreso Dinámicas (Conductos Biológicos) */
 .dynamic-progress-bar {
-    height: 15px !important;
-    background-color: var(--noir-bg-panel) !important;
-    border: 1px solid var(--noir-border-dark) !important;
-    border-radius: 7px !important;
-    overflow: hidden !important;
-    margin: 5px 0 !important;
-    position: relative !important;
+    width: 100%;
+    height: 12px; /* Altura moderada */
+    background-color: var(--spawn-bg-alt);
+    border-radius: var(--radius-none);
+    overflow: hidden;
+    margin-top: calc(var(--spacing-unit) * 0.5);
+    border: var(--border-width-medium) solid var(--spawn-border-dark);
+    box-shadow: var(--shadow-hard-inset);
+    position: relative;
+}
+/* Textura interna */
+.dynamic-progress-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 0h2v2H1V0zm2 2h2v2H3V2z' fill='%23000000' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+    opacity: 0.5;
 }
 
 .dynamic-progress-bar .bar-fill {
-    height: 100% !important;
-    background: linear-gradient(to right, var(--noir-accent-dark), var(--noir-accent)) !important;
-    box-shadow: 0 0 8px var(--noir-accent-glow) !important;
-    transition: width 0.5s ease-out !important;
-    animation: noir-bar-pulse 2s infinite !important;
+    height: 100%;
+    border-radius: 0;
+    transition: width 0.5s ease-in-out, background-color 0.5s ease;
+    box-shadow: none;
+    border-right: 2px solid var(--spawn-border-dark); /* Borde grueso al final */
 }
 
-.dynamic-progress-bar .bar-fill.ok {
-    background: linear-gradient(to right, #2a4a00, var(--noir-status-ok)) !important;
+.dynamic-progress-bar .bar-fill.ok { background-color: var(--accent-ichor-green); }
+.dynamic-progress-bar .bar-fill.warn { background-color: var(--accent-bone-white); }
+.dynamic-progress-bar .bar-fill.error { background-color: var(--accent-blood-red); }
+
+
+/* --- PANELES ::: (Losas Grabadas) --- */
+.mixed-panel {
+    background-color: var(--spawn-bg);
+    border: var(--border-width-heavy) solid var(--spawn-border-dark);
+    border-radius: var(--radius-none);
+    margin: calc(var(--spacing-unit) * 3) 0;
+    padding: 0;
+    box-shadow: var(--shadow-hard-outset), var(--shadow-hard-inset);
+    position: relative;
+    overflow: hidden;
 }
 
-.dynamic-progress-bar .bar-fill.warn {
-    background: linear-gradient(to right, #5a3a00, var(--noir-status-warn)) !important;
+.mixed-panel[data-interactive-container="true"].is-hovered {
+     border-color: var(--accent-bone-white);
+     box-shadow: var(--shadow-hard-outset), var(--shadow-hard-inset), 0 0 0 3px var(--accent-blood-red);
 }
 
-.dynamic-progress-bar .bar-fill.error {
-    background: linear-gradient(to right, #5a0000, var(--noir-status-error)) !important;
+/* Cabecera de Losa */
+.mixed-panel > h2:first-child,
+.mixed-panel > h3:first-child {
+    background-color: var(--spawn-bg-alt);
+    color: var(--spawn-text-primary);
+    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+    margin: 0;
+    border-bottom: var(--border-width-heavy) solid var(--spawn-border-dark);
+    font-size: 1.5em;
+    font-weight: normal;
+    text-shadow: var(--text-shadow-crisp);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-unit);
+}
+.mixed-panel > h3:first-child { /* Sub-cabecera */
+    background-color: var(--spawn-bg);
+    color: var(--accent-bone-white);
+    font-size: 1.2em;
+    border-bottom-style: dashed;
+    border-color: var(--spawn-border-medium);
 }
 
-@keyframes noir-bar-pulse {
-    0%, 100% { filter: brightness(0.8); }
-    50% { filter: brightness(1.2); }
+/* Icono/Símbolo de Losa */
+.mixed-panel > *::before { /* Aplica a H2/H3 para simplificar */
+    content: "❈"; /* Símbolo tribal/orgánico */
+    font-size: 1em;
+    color: var(--accent-shadow-gray);
+    line-height: 1;
+    font-family: sans-serif; /* Asegurar renderizado */
 }
+.mixed-panel > h2:first-child::before { color: var(--spawn-text-primary); }
+.mixed-panel > h3:first-child::before { color: var(--accent-bone-white); }
+/* Iconos específicos (mismos símbolos con diferente color quizás) */
+/* ... Añadir si se necesita diferenciar más ... */
+
+/* Contenido de Losa */
+.panel-content,
+.mixed-panel > *:not(h2:first-child):not(h3:first-child) {
+     padding: calc(var(--spacing-unit) * 1.5);
+     background-color: var(--spawn-bg); /* Asegurar fondo interior */
+}
+.mixed-panel > *:last-child { padding-bottom: calc(var(--spacing-unit) * 1.5); }
+/* Ajustes para tablas/pre */
+.mixed-panel > table, .mixed-panel > pre {
+     margin: 0; /* Sin margen extra dentro del panel */
+     width: 100%;
+     padding: 0;
+     border: none; /* Quitar bordes, el panel ya tiene */
+     box-shadow: none; /* Quitar sombras, el panel ya tiene */
+}
+.mixed-panel > table thead { background-color: var(--spawn-bg-alt); border-bottom: var(--border-width-medium) solid var(--spawn-border-medium); }
+.mixed-panel > table tbody tr:nth-child(even) { background-color: transparent; } /* Quitar zebra interna */
+
+
+/* --- FIN DEL GRIMOIRE OF THE FIRST SPAWN --- */
+
+

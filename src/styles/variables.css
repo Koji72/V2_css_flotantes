@@ -1,0 +1,112 @@
+:root {
+  /* Colores base (Ajustados para mejor contraste) */
+  --bg-primary: #1e1e1e; /* Ligeramente más claro */
+  --bg-secondary: #333333; /* Más claro */
+  --bg-tertiary: #444444; /* Más claro */
+  --text-primary: #f0f0f0; /* Casi blanco */
+  --text-secondary: #cccccc; /* Gris claro, mucho mejor contraste */
+  --border-color: #555555; /* Más claro */
+
+  /* Colores modo oscuro (Ajustados) */
+  --bg-secondary-dark: #252525; /* Ajustado */
+  --bg-tertiary-dark: #353535; /* Ajustado */
+  --text-secondary-dark: #bbbbbb; /* Más claro */
+  --border-color-dark: #4a4a4a; /* Ajustado */
+
+  /* Colores RGB para efectos (Actualizados) */
+  --bg-rgb: 30, 30, 30;
+  --border-rgb: 85, 85, 85;
+  --bg-dark-rgb: 37, 37, 37;
+  --border-dark-rgb: 74, 74, 74;
+
+  /* Colores de acento (Ajustado) */
+  --accent-color: #00bfff; /* DeepSkyBlue - Más vibrante */
+  --accent-color-rgb: 0, 191, 255; /* RGB para el acento */
+
+  /* Colores de acento */
+  --primary-color: #4a90e2;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
+  --info-color: #2196f3;
+
+  /* Variables para scrollbars */
+  --scrollbar-track: rgba(0, 0, 0, 0.1);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
+  
+  /* Variables para divisores */
+  --divider-color: #444444;
+  --divider-hover-color: var(--accent-color);
+  --divider-active-color: color-mix(in srgb, var(--accent-color) 80%, white);
+  --divider-handle-color: rgba(255, 255, 255, 0.7);
+
+  /* Colores para Botones */
+  --btn-text: var(--text-primary);
+  --btn-primary-bg: var(--primary-color);
+  --btn-primary-border: var(--primary-color);
+  --btn-primary-text: var(--btn-text);
+  --btn-primary-hover-bg: color-mix(in srgb, var(--primary-color) 90%, black);
+  --btn-primary-hover-border: color-mix(in srgb, var(--primary-color) 90%, black);
+  --btn-primary-hover-text: var(--btn-text);
+
+  --btn-secondary-bg: var(--bg-tertiary);
+  --btn-secondary-border: var(--border-color);
+  --btn-secondary-text: var(--text-secondary);
+  --btn-secondary-hover-bg: color-mix(in srgb, var(--bg-tertiary) 90%, white);
+  --btn-secondary-hover-border: var(--border-color);
+  --btn-secondary-hover-text: var(--text-primary);
+
+  --btn-success-bg: var(--success-color);
+  --btn-success-border: var(--success-color);
+  --btn-success-text: var(--btn-text);
+  --btn-success-hover-bg: color-mix(in srgb, var(--success-color) 90%, black);
+  --btn-success-hover-border: color-mix(in srgb, var(--success-color) 90%, black);
+  --btn-success-hover-text: var(--btn-text);
+
+  --btn-warning-bg: var(--warning-color);
+  --btn-warning-border: var(--warning-color);
+  --btn-warning-text: #1a1a1a;
+  --btn-warning-hover-bg: color-mix(in srgb, var(--warning-color) 90%, black);
+  --btn-warning-hover-border: color-mix(in srgb, var(--warning-color) 90%, black);
+  --btn-warning-hover-text: #1a1a1a;
+
+  --btn-danger-bg: var(--danger-color);
+  --btn-danger-border: var(--danger-color);
+  --btn-danger-text: var(--btn-text);
+  --btn-danger-hover-bg: color-mix(in srgb, var(--danger-color) 90%, black);
+  --btn-danger-hover-border: color-mix(in srgb, var(--danger-color) 90%, black);
+  --btn-danger-hover-text: var(--btn-text);
+
+  --btn-info-bg: var(--info-color);
+  --btn-info-border: var(--info-color);
+  --btn-info-text: var(--btn-text);
+  --btn-info-hover-bg: color-mix(in srgb, var(--info-color) 90%, black);
+  --btn-info-hover-border: color-mix(in srgb, var(--info-color) 90%, black);
+  --btn-info-hover-text: var(--btn-text);
+
+  /* Sombras */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-color-rgb: 0, 0, 0; /* Añadido para consistencia */
+
+  /* Espaciado */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+
+  /* Bordes */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  /* Transiciones */
+  --transition-normal: 0.3s;
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+  /* Tamaños de corte */
+  --cut-size-md: 10px;
+} 

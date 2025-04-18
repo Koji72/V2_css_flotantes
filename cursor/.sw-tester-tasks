@@ -1,0 +1,77 @@
+# Tareas de Testing - SW-Tester
+
+## Prioridad Alta
+
+### 1. Pruebas de Botones en Paneles
+- **Descripción**: Verificar el funcionamiento y apariencia de los botones
+- **Archivos de prueba**:
+  - tests/button-tests.md
+- **Casos a probar**:
+  - Renderizado correcto de botones
+  - Estados hover y active
+  - Estados disabled y loading
+  - Compatibilidad entre navegadores
+  - Accesibilidad (ARIA, teclado)
+  - Eventos y callbacks
+
+### 2. Pruebas de Esquinas Cortadas
+- **Descripción**: Verificar el renderizado de esquinas cortadas
+- **Archivos de prueba**:
+  - tests/corner-tests.md
+- **Casos a probar**:
+  - Diferentes tamaños de corte
+  - Combinaciones de esquinas
+  - Transiciones y animaciones
+  - Compatibilidad entre navegadores
+  - Rendimiento en diferentes dispositivos
+
+## Prioridad Media
+
+### 3. Pruebas de Rendimiento
+- **Descripción**: Evaluar el rendimiento de los estilos
+- **Archivos de prueba**:
+  - tests/performance-tests.md
+- **Casos a probar**:
+  - Tiempo de carga de estilos
+  - Rendimiento de animaciones
+  - Uso de memoria
+  - Impacto en FPS
+  - Optimización de selectores
+
+### 4. Pruebas de Accesibilidad
+- **Descripción**: Verificar la accesibilidad de los componentes
+- **Archivos de prueba**:
+  - tests/accessibility-tests.md
+- **Casos a probar**:
+  - Lectores de pantalla
+  - Navegación por teclado
+  - Contraste de colores
+  - Etiquetas ARIA
+  - Orden de tabulación
+
+## Prioridad Baja
+
+### 5. Pruebas de Documentación
+- **Descripción**: Verificar la calidad de la documentación
+- **Archivos de prueba**:
+  - tests/documentation-tests.md
+- **Casos a probar**:
+  - Completitud de ejemplos
+  - Claridad de instrucciones
+  - Actualización de cambios
+  - Consistencia de formato
+  - Enlaces y referencias
+
+## Métricas de Éxito
+- 100% de cobertura en pruebas críticas
+- 0 errores en pruebas de accesibilidad
+- Rendimiento dentro de los límites aceptables
+- Documentación completa y actualizada
+- Todos los casos de uso cubiertos
+
+## Notas Adicionales
+- Priorizar pruebas manuales para problemas visuales
+- Automatizar pruebas repetitivas
+- Documentar todos los bugs encontrados
+- Mantener un registro de pruebas realizadas
+- Probar en diferentes entornos y dispositivos 

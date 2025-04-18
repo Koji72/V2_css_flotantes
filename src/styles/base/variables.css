@@ -1,6 +1,6 @@
-/* Variables de color */
+/* Sistema de Temas */
 :root {
-  /* Colores base */
+  /* Paleta de Colores Base */
   --color-primary: #00FFFF;
   --color-secondary: #000000;
   --color-tertiary: #808080;
@@ -8,93 +8,103 @@
   --color-accent2: #FFA500;
   --color-glow: #00FFFF;
 
-  /* Colores de fondo */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e9ecef;
-  --bg-highlight: #f1f3f5;
+  /* Colores de Estado */
+  --color-success: rgb(34, 197, 94);
+  --color-warning: rgb(234, 179, 8);
+  --color-error: rgb(239, 68, 68);
+  --color-info: rgb(59, 130, 246);
 
-  /* Colores de texto */
-  --text-primary: #212529;
-  --text-secondary: #495057;
-  --text-muted: #6c757d;
+  /* Tema Claro (Default) */
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8f9fa;
+  --theme-bg-tertiary: #e9ecef;
+  --theme-bg-highlight: #f1f3f5;
 
-  /* Colores de acento */
-  --accent-color: #2563eb;
-  --accent-hover: #1e40af;
-  --accent-light: #93c5fd;
+  --theme-text-primary: #212529;
+  --theme-text-secondary: #495057;
+  --theme-text-muted: #6c757d;
 
-  /* Colores de borde */
-  --border-color: #dee2e6;
-  --border-light: #e9ecef;
-  --border-dark: #adb5bd;
+  --theme-border-color: #dee2e6;
+  --theme-border-light: #e9ecef;
+  --theme-border-dark: #adb5bd;
 
-  /* Colores de código */
-  --code-bg: #f1f5f9;
-  --code-text: #334155;
+  --theme-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --theme-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --theme-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 
-  /* Colores de panel */
-  --panel-bg: #f8fafc;
-  --panel-header: #f1f5f9;
-  --panel-border: #e2e8f0;
+  /* Variables de Componentes */
+  --panel-bg: var(--theme-bg-secondary);
+  --panel-header: var(--theme-bg-tertiary);
+  --panel-border: var(--theme-border-color);
 
-  /* Colores de estado */
-  --error-color: 239, 68, 68; /* RGB format for rgba() */
-  --success-color: 34, 197, 94; /* RGB format for rgba() */
-  --info-color: 59, 130, 246; /* RGB format for rgba() */
-  --warning-color: 234, 179, 8; /* RGB format for rgba() */
+  --code-bg: var(--theme-bg-tertiary);
+  --code-text: var(--theme-text-primary);
 
-  /* Sombras */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  /* Botones */
+  --btn-primary-bg: var(--color-primary);
+  --btn-primary-text: #ffffff;
+  --btn-primary-border: var(--color-primary);
+  --btn-primary-hover-bg: color-mix(in srgb, var(--color-primary) 90%, black);
+  --btn-primary-hover-text: #ffffff;
+  --btn-primary-hover-border: color-mix(in srgb, var(--color-primary) 90%, black);
+
+  --btn-secondary-bg: transparent;
+  --btn-secondary-text: var(--theme-text-primary);
+  --btn-secondary-border: var(--theme-border-color);
+  --btn-secondary-hover-bg: var(--theme-bg-highlight);
+  --btn-secondary-hover-text: var(--theme-text-primary);
+  --btn-secondary-hover-border: var(--theme-border-dark);
+
+  --btn-success-bg: var(--color-success);
+  --btn-success-text: #ffffff;
+  --btn-success-border: var(--color-success);
+  --btn-success-hover-bg: color-mix(in srgb, var(--color-success) 90%, black);
+  --btn-success-hover-text: #ffffff;
+  --btn-success-hover-border: color-mix(in srgb, var(--color-success) 90%, black);
+
+  --btn-warning-bg: var(--color-warning);
+  --btn-warning-text: #000000;
+  --btn-warning-border: var(--color-warning);
+  --btn-warning-hover-bg: color-mix(in srgb, var(--color-warning) 90%, black);
+  --btn-warning-hover-text: #000000;
+  --btn-warning-hover-border: color-mix(in srgb, var(--color-warning) 90%, black);
+
+  --btn-danger-bg: var(--color-error);
+  --btn-danger-text: #ffffff;
+  --btn-danger-border: var(--color-error);
+  --btn-danger-hover-bg: color-mix(in srgb, var(--color-error) 90%, black);
+  --btn-danger-hover-text: #ffffff;
+  --btn-danger-hover-border: color-mix(in srgb, var(--color-error) 90%, black);
+
+  --btn-info-bg: var(--color-info);
+  --btn-info-text: #ffffff;
+  --btn-info-border: var(--color-info);
+  --btn-info-hover-bg: color-mix(in srgb, var(--color-info) 90%, black);
+  --btn-info-hover-text: #ffffff;
+  --btn-info-hover-border: color-mix(in srgb, var(--color-info) 90%, black);
 }
 
-/* Variables para modo oscuro */
-.dark-mode {
-  /* Colores de fondo */
-  --bg-primary: #121212;
-  --bg-secondary: #1e1e1e;
-  --bg-tertiary: #252525;
-  --bg-highlight: #2d2d2d;
+/* Tema Oscuro */
+[data-theme="dark"] {
+  --theme-bg-primary: #121212;
+  --theme-bg-secondary: #1e1e1e;
+  --theme-bg-tertiary: #252525;
+  --theme-bg-highlight: #2d2d2d;
 
-  /* Colores de texto */
-  --text-primary: #e9ecef;
-  --text-secondary: #adb5bd;
-  --text-muted: #6c757d;
+  --theme-text-primary: #e9ecef;
+  --theme-text-secondary: #adb5bd;
+  --theme-text-muted: #6c757d;
 
-  /* Colores de acento */
-  --accent-color: #3b82f6;
-  --accent-hover: #60a5fa;
-  --accent-light: #1e40af;
+  --theme-border-color: #2d3748;
+  --theme-border-light: #374151;
+  --theme-border-dark: #4b5563;
 
-  /* Colores de borde */
-  --border-color: #2d3748;
-  --border-light: #374151;
-  --border-dark: #4b5563;
-
-  /* Colores de código */
-  --code-bg: #1e293b;
-  --code-text: #e2e8f0;
-
-  /* Colores de panel */
-  --panel-bg: #1a1a1a;
-  --panel-header: #252525;
-  --panel-border: #2d3748;
-
-  /* Colores de estado */
-  --error-color: 248, 113, 113; /* RGB format for rgba() */
-  --success-color: 74, 222, 128; /* RGB format for rgba() */
-  --info-color: 96, 165, 250; /* RGB format for rgba() */
-  --warning-color: 250, 204, 21; /* RGB format for rgba() */
-
-  /* Sombras */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  --theme-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --theme-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --theme-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
 }
 
-/* Variables de espaciado */
+/* Variables de Espaciado */
 :root {
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
@@ -105,7 +115,7 @@
   --spacing-3xl: 4rem;
 }
 
-/* Variables de tipografía */
+/* Variables de Tipografía */
 :root {
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
@@ -126,7 +136,7 @@
   --line-height-relaxed: 1.75;
 }
 
-/* Variables de animación */
+/* Variables de Animación */
 :root {
   --transition-fast: 150ms;
   --transition-normal: 300ms;
@@ -138,7 +148,7 @@
   --ease-linear: linear;
 }
 
-/* Variables de bordes */
+/* Variables de Bordes */
 :root {
   --radius-sm: 0.125rem;
   --radius-md: 0.25rem;

@@ -1,0 +1,200 @@
+# Plan de Implementación de Mejoras — Sistema de Paneles Flotantes V3.0
+> **SW-PM: SagaWeaver Project Manager**
+
+## 1. Definición del Proyecto
+
+### Objetivo Principal
+Implementar todas las mejoras recomendadas en el informe V2.6 para transformar el sistema de paneles flotantes en una solución más modular, eficiente y mantenible, preparando la base para la versión 3.0.
+
+### Alcance
+- Modularizar `PreviewManager.ts` (reduciendo su tamaño en ≥50%)
+- Implementar sistema de caché selectiva para mejorar rendimiento
+- Migrar a un parser basado en AST para mayor robustez
+- Añadir sistema de feature flags para despliegues incrementales
+- Implementar renderizado diferencial para optimizar actualizaciones
+- Aumentar cobertura de pruebas (≥90%)
+- Crear documentación técnica actualizada y guías de migración
+
+### Restricciones
+- Mantener retrocompatibilidad con documentos y sintaxis existentes
+- Optimizar rendimiento sin incrementar significativamente el tamaño del bundle
+- Finalizar la implementación en 3 semanas para alinear con el lanzamiento previsto
+
+## 2. Equipo de Trabajo y Responsabilidades
+
+| Agente | Rol | Responsabilidades |
+|--------|-----|-------------------|
+| **SW-PM** | Project Manager | Coordinar equipos, monitorear progreso, gestionar riesgos |
+| **SW-Architect** | Arquitecto | Diseñar arquitectura modular, definir interfaces entre componentes, implementar parser AST |
+| **SW-DevOps** | DevOps | Implementar CI/CD, configurar tests automatizados, sistema de feature flags |
+| **SW-CSS** | Especialista CSS | Optimizar estilos, refactorizar selectores, implementar design system |
+| **SW-Tester** | QA/Tester | Desarrollar pruebas, validar implementaciones, aumentar cobertura |
+| **SW-Documentation** | Documentación | Actualizar guías, generar ejemplos, documentar nueva API |
+| **SW-Debugger** | Debugger | Resolver problemas complejos, optimizar rendimiento, implementar caché selectiva |
+
+## 3. Desglose de Tareas y Asignaciones
+
+### Fase 1: Preparación y Arquitectura (5 días)
+
+| ID | Tarea | Responsable | Dependencias | Estimación |
+|----|-------|-------------|--------------|------------|
+| 1.1 | Análisis detallado del código existente | SW-Architect | - | 1 día |
+| 1.2 | Diseño de la nueva arquitectura modular | SW-Architect | 1.1 | 1 día |
+| 1.3 | Definición de interfaz entre componentes | SW-Architect | 1.2 | 1 día |
+| 1.4 | Configuración del entorno de pruebas | SW-DevOps | - | 1 día |
+| 1.5 | Evaluación y selección de bibliotecas para AST | SW-Architect | 1.1 | 1 día |
+| 1.6 | Crear plan de pruebas para nuevas funcionalidades | SW-Tester | 1.2 | 1 día |
+| 1.7 | Diseño del sistema de feature flags | SW-DevOps | 1.3 | 1 día |
+
+### Fase 2: Implementación Modular (8 días)
+
+| ID | Tarea | Responsable | Dependencias | Estimación |
+|----|-------|-------------|--------------|------------|
+| 2.1 | Refactorizar PreviewManager a módulos | SW-Architect | 1.3 | 3 días |
+| 2.2 | Implementar sistema de caché selectiva | SW-Debugger | 2.1 | 2 días |
+| 2.3 | Desarrollar sistema de feature flags | SW-DevOps | 1.7 | 1 día |
+| 2.4 | Migrar procesador a enfoque basado en AST | SW-Architect | 1.5, 2.1 | 3 días |
+| 2.5 | Implementar renderizado diferencial | SW-Debugger | 2.1 | 2 días |
+| 2.6 | Optimizar CSS para selectores unificados | SW-CSS | 1.3 | 2 días |
+| 2.7 | Implementar métrica de rendimiento | SW-Debugger | 2.1, 2.2 | 1 día |
+| 2.8 | Desarrollar plugins de extensión | SW-Architect | 2.1, 2.4 | 2 días |
+
+### Fase 3: Testing y Validación (5 días)
+
+| ID | Tarea | Responsable | Dependencias | Estimación |
+|----|-------|-------------|--------------|------------|
+| 3.1 | Desarrollar tests unitarios para componentes | SW-Tester | 2.1, 2.4 | 2 días |
+| 3.2 | Implementar tests de integración | SW-Tester | 2.1, 2.4 | 2 días |
+| 3.3 | Validación de rendimiento | SW-Tester | 2.2, 2.5, 2.7 | 1 día |
+| 3.4 | Configurar CI/CD para ejecución de tests | SW-DevOps | 3.1, 3.2 | 1 día |
+| 3.5 | Pruebas de regresión | SW-Tester | 2.4, 2.5, 2.6 | 1 día |
+| 3.6 | Validación de accesibilidad | SW-Tester | 2.6 | 1 día |
+
+### Fase 4: Documentación y Despliegue (4 días)
+
+| ID | Tarea | Responsable | Dependencias | Estimación |
+|----|-------|-------------|--------------|------------|
+| 4.1 | Actualizar documentación técnica | SW-Documentation | 2.1, 2.4 | 2 días |
+| 4.2 | Generar ejemplos de uso | SW-Documentation | 2.1, 2.4, 2.6 | 1 día |
+| 4.3 | Preparar guía de migración | SW-Documentation | 4.1 | 1 día |
+| 4.4 | Desarrollar extensión VS Code | SW-DevOps | 2.4, 2.8 | 2 días |
+| 4.5 | Revisión final y despliegue | SW-PM | 3.3, 4.3 | 1 día |
+
+## 4. Cronograma
+
+```
+Semana 1: Fase 1 (Preparación) + Inicio Fase 2
+  - Análisis y diseño de arquitectura
+  - Configuración de entornos
+  - Inicio de refactorización modular
+  - Diseño del sistema de feature flags
+
+Semana 2: Continuación Fase 2 (Implementación)
+  - Finalización de estructura modular
+  - Implementación de caché y feature flags
+  - Migración a parser AST
+  - Implementación de renderizado diferencial
+  - Optimización CSS
+
+Semana 3: Fase 3 (Testing) + Inicio Fase 4
+  - Desarrollo y ejecución de tests
+  - Validación de rendimiento
+  - Configuración CI/CD
+  - Inicio de documentación
+  - Desarrollo de extensión VS Code
+
+Semana 4: Finalización Fase 4 (Documentación y Despliegue)
+  - Completar documentación
+  - Finalizar guía de migración
+  - Revisión final
+  - Despliegue
+```
+
+## 5. Gestión de Riesgos
+
+| Riesgo | Impacto | Probabilidad | Mitigación |
+|--------|---------|--------------|------------|
+| Incompatibilidad con documentos existentes | Alto | Media | Pruebas exhaustivas con corpus de documentos reales, mantener modo compatibilidad |
+| Degradación de rendimiento | Alto | Baja | Benchmarks durante desarrollo, implementación incremental, métricas constantes |
+| Dependencias externas inestables | Medio | Media | Congelar versiones específicas, tests de regresión |
+| Complejidad excesiva en refactorización | Alto | Media | Revisiones de código, enfoque incremental, documentación detallada |
+| Retrasos en implementación | Medio | Alta | Buffer de tiempo en cronograma, priorización constante |
+| Dificultades de integración entre componentes | Medio | Media | Definición clara de interfaces, pruebas de integración tempranas |
+
+## 6. Métricas de Éxito
+
+1. **Rendimiento**:
+   - TTFB < 150ms para documentos de 1.000 líneas
+   - Reducción de 50% en tiempo de procesamiento
+   - Reducción de 30% en uso de memoria
+
+2. **Calidad**:
+   - Cobertura de tests > 90%
+   - 0 errores críticos en procesamiento de documentos de test
+   - Puntuación A en Lighthouse para accesibilidad
+
+3. **Desarrollo**:
+   - Tiempo de implementación de nuevas características reducido en 40%
+   - Reducción de 50% en tamaño de archivos críticos (PreviewManager)
+   - >200 descargas/mes de la extensión VS Code
+
+4. **Experiencia de usuario**:
+   - Tasa de errores visible < 0.1%
+   - Satisfacción del equipo de contenido > 8/10
+   - Incremento del 30% en uso de paneles avanzados
+
+## 7. Plan de Comunicación
+
+| Tipo | Frecuencia | Participantes | Objetivo |
+|------|------------|---------------|----------|
+| Reunión de inicio | Una vez | Todo el equipo | Presentar el plan, aclarar roles |
+| Stand-up | Diario | Todo el equipo | Actualización rápida, identificar bloqueos |
+| Revisión de sprint | Semanal | Todo el equipo | Evaluar progreso, ajustar plan |
+| Demo técnica | Bisemanal | Equipo + stakeholders | Mostrar avances funcionales |
+| Retrospectiva | Al final | Todo el equipo | Identificar mejoras para futuros proyectos |
+
+## 8. Asignaciones Inmediatas para Agentes
+
+### SW-Architect
+1. Comenzar análisis detallado del código existente (PreviewManager.ts)
+2. Diseñar estructura modular para separar responsabilidades
+3. Investigar y seleccionar biblioteca AST óptima (unified/remark recomendado)
+
+### SW-Debugger
+1. Analizar puntos críticos de rendimiento actual
+2. Diseñar sistema de caché selectiva (según propuesta LRU)
+3. Preparar entorno para medir métricas de rendimiento
+
+### SW-CSS
+1. Revisar sistema actual de estilos
+2. Identificar selectores duplicados o conflictivos
+3. Preparar plan de refactorización CSS
+
+### SW-Tester
+1. Desarrollar plan de pruebas para nueva arquitectura
+2. Implementar tests base para componentes existentes
+3. Configurar entorno para pruebas automatizadas
+
+### SW-DevOps
+1. Preparar entorno de desarrollo con hot-reload
+2. Diseñar sistema de feature flags (según propuesta informe)
+3. Configurar pipeline CI/CD inicial
+
+### SW-Documentation
+1. Revisar documentación existente
+2. Identificar áreas que requerirán actualización
+3. Preparar estructura de nueva documentación técnica
+
+## 9. Próximos Pasos Inmediatos
+
+1. **SW-PM**: Convocar reunión de inicio con todo el equipo
+2. **SW-Architect**: Comenzar Tarea 1.1 (Análisis detallado)
+3. **SW-DevOps**: Comenzar Tarea 1.4 (Configuración entorno)
+4. **SW-Tester**: Comenzar Tarea 1.6 (Plan de pruebas)
+5. **Todos**: Revisar informe de mejoras v2.6 para comprender completamente el alcance
+
+---
+
+*Documento preparado por SW-PM (SagaWeaver Project Manager)*
+*Fecha: `new Date().toLocaleDateString()`*
+*Versión: 1.0* 

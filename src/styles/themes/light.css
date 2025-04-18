@@ -1,0 +1,30 @@
+/* Tema Claro */
+[data-theme="light"] {
+  /* Variables específicas del tema claro que sobreescriben las variables base */
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8f9fa;
+  --theme-bg-tertiary: #e9ecef;
+  --theme-bg-highlight: #f1f3f5;
+
+  --theme-text-primary: #212529;
+  --theme-text-secondary: #495057;
+  --theme-text-muted: #6c757d;
+
+  --theme-border-color: #dee2e6;
+  --theme-border-light: #e9ecef;
+  --theme-border-dark: #adb5bd;
+
+  --theme-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --theme-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --theme-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  
+  /* Colores de elementos específicos para tema claro */
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-thumb-hover: #a1a1a1;
+  
+  --divider-color: rgba(128, 128, 128, 0.2);
+  --divider-hover-color: var(--color-primary);
+  --divider-active-color: color-mix(in srgb, var(--color-primary) 80%, black);
+  --divider-handle-color: rgba(0, 0, 0, 0.5);
+} 
