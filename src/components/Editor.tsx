@@ -1,43 +1,19 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { useStore } from '../store'; // Import useStore
+import React, { useEffect, useRef } from 'react';
+import { useStore } from '../store';
 import MarkdownToolbar from './MarkdownToolbar';
 import KeyboardShortcutsHelp from './KeyboardShortcutsHelp';
 
 interface EditorProps {
-  initialValue?: string;
   onChange?: (value: string) => void;
   showPreview?: boolean;
 }
 
 export const Editor: React.FC<EditorProps> = ({
-  initialValue = '',
   onChange,
   showPreview = true
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { content, setContent } = useStore();
-  const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null);
-
-  // Auto-save content to localStorage every 30 seconds
-  useEffect(() => {
-    const autoSaveInterval = setInterval(() => {
-      if (content) {
-        localStorage.setItem('markdown-content', content);
-        console.log('Auto-saved content');
-      }
-    }, 30000);
-
-    return () => clearInterval(autoSaveInterval);
-  }, [content]);
-
-  // Load saved content on initial load
-  useEffect(() => {
-    const savedContent = localStorage.getItem('markdown-content');
-    if (savedContent && !content) {
-      setContent(savedContent);
-      showNotification('Contenido cargado desde la última sesión', 'info');
-    }
-  }, []);
+  const { content, setContent, showNotification } = useStore();
 
   // Auto-focus the textarea when the component mounts
   useEffect(() => {
@@ -45,27 +21,6 @@ export const Editor: React.FC<EditorProps> = ({
       textareaRef.current.focus();
     }
   }, []);
-
-  // Show notification message with auto-dismiss
-  const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
-    setNotification({ message, type });
-    
-    // Auto-dismiss after 3 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 3000);
-  };
-
-  // Save content manually
-  const saveContent = () => {
-    try {
-      localStorage.setItem('markdown-content', content);
-      showNotification('Contenido guardado correctamente');
-    } catch (error) {
-      console.error('Error saving content:', error);
-      showNotification('Error al guardar el contenido', 'error');
-    }
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
@@ -151,7 +106,10 @@ export const Editor: React.FC<EditorProps> = ({
           break;
         case 's': // Save: Ctrl+S
           event.preventDefault();
-          saveContent();
+          showNotification({
+            message: 'Contenido guardado automáticamente',
+            type: 'success'
+          });
           break;
         // No default needed
       }
@@ -168,7 +126,10 @@ export const Editor: React.FC<EditorProps> = ({
               {content.length} caracteres | {content.split(/\s+/).filter(Boolean).length} palabras
             </div>
             <button
-              onClick={saveContent}
+              onClick={() => showNotification({
+                message: 'Contenido guardado automáticamente',
+                type: 'success'
+              })}
               className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded flex items-center"
               title="Guardar (Ctrl+S)"
             >
@@ -191,23 +152,6 @@ export const Editor: React.FC<EditorProps> = ({
           onKeyDown={handleKeyDown}
         />
       </div>
-
-      {notification && (
-        <div className={`fixed bottom-4 right-4 px-4 py-2 rounded shadow-lg z-50 transition-all duration-300 ease-in-out
-          ${notification.type === 'success' ? 'bg-green-600' : ''}
-          ${notification.type === 'error' ? 'bg-red-600' : ''}
-          ${notification.type === 'info' ? 'bg-blue-600' : ''}
-        `}>
-          <div className="flex items-center text-white">
-            <span className="mr-2">
-              {notification.type === 'success' && '✅'}
-              {notification.type === 'error' && '❌'}
-              {notification.type === 'info' && 'ℹ️'}
-            </span>
-            <span>{notification.message}</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

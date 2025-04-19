@@ -9,6 +9,7 @@ import ResizablePanels from './components/ResizablePanels';
 import Toolbar from './components/Toolbar';
 import { useStore } from './store';
 import { templates } from './types/templates';
+import NotificationCenter from './components/NotificationCenter';
 
 const App: React.FC = () => {
   const darkMode = useStore((state) => state.darkMode);
@@ -52,7 +53,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${darkMode ? 'dark' : ''}`}>
       <Toolbar 
         onPanelDirectionToggle={togglePanelDirection}
         onSidebarToggle={toggleSidebar}
@@ -96,6 +97,7 @@ const App: React.FC = () => {
       <footer className="app-footer">
         <p>Universal Scribe V2.6 - Markdown Editor</p>
       </footer>
+      <NotificationCenter />
     </div>
   );
 };

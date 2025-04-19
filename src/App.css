@@ -1,195 +1,95 @@
-/* Estilos para el layout principal de la aplicación */
+/* Estilos base */
+:root {
+  --editor-background: #1e1e1e;
+  --preview-background: #252526;
+  --toolbar-background: #333333;
+  --border-color: #404040;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --accent-color: #0078d7;
+}
+
+/* Layout principal */
 .app-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  background-color: var(--bg-primary);
+  background-color: var(--editor-background);
   color: var(--text-primary);
 }
 
-/* Contenedor principal del contenido */
 .main-content {
   display: flex;
   flex: 1;
-  min-height: 0;
+  overflow: hidden;
   position: relative;
-  background-color: var(--bg-primary);
 }
 
-/* Contenedor principal cuando el preview está oculto */
-.main-content > div:last-child {
-  flex: 1;
+/* Editor */
+.editor-container {
   display: flex;
-  min-height: 0;
+  flex-direction: column;
+  height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
-/* Contenedor del editor cuando está a pantalla completa */
-.main-content > div:last-child > .flex-1.flex {
-  flex: 1;
-  display: flex;
-  min-height: 0;
-  width: 100%;
-}
-
-/* Sección del editor */
 .editor-section {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 100%;
-  background-color: var(--bg-primary);
-}
-
-.editor-section textarea {
   flex: 1;
-  width: 100%;
-  min-height: 0;
-  padding: 1rem;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'Fira Code', monospace;
-  font-size: 1rem;
-  line-height: 1.5;
-  border: none;
-  outline: none;
-  resize: none;
-}
-
-/* Editor a pantalla completa (sin vista previa) */
-.editor-fullscreen {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
-  background-color: var(--bg-primary);
 }
 
-.editor-fullscreen .editor-section {
+.editor-content {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
-.editor-fullscreen textarea {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  padding: 1.5rem;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'Fira Code', monospace;
-  font-size: 1rem;
-  line-height: 1.6;
-  border: none;
-  outline: none;
-  resize: none;
-}
-
-/* Asegurar que el editor a pantalla completa ocupe todo el espacio disponible */
-.editor-container .editor-fullscreen {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-}
-
-/* Asegurar que los ResizablePanels tengan la altura y ancho completos */
-.editor-container .resizable-container {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Mejora para el scroll del editor */
-.editor-section textarea {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-}
-
-.editor-section textarea::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.editor-section textarea::-webkit-scrollbar-track {
-  background: var(--scrollbar-track);
-}
-
-.editor-section textarea::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
-  border-radius: 4px;
-  border: 2px solid var(--scrollbar-track);
-}
-
-.editor-section textarea::-webkit-scrollbar-thumb:hover {
-  background-color: var(--scrollbar-thumb-hover);
-}
-
-/* Asegurar visibilidad correcta del preview */
+/* Preview */
 .preview-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 100%;
-  background-color: var(--bg-secondary);
   overflow: hidden;
-  min-width: 0; /* Importante para flexbox */
-  flex: 1;
+  background-color: var(--preview-background);
 }
 
-.preview-iframe {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: var(--bg-secondary);
-}
-
-/* Selector de plantillas */
-.flex-shrink-0.border-b {
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--border-color);
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-/* Contenedor del editor */
-.editor-wrapper,
-.flex-1.overflow-auto {
+.preview-content {
   flex: 1;
   overflow: auto;
-  position: relative;
-  min-height: 200px; /* Asegurar altura mínima */
+  padding: 1rem;
 }
 
-/* Estilos para layout responsivo */
-@media (max-width: 768px) {
-  .main-content,
-  .flex.flex-1.overflow-hidden {
-    flex-direction: column;
-  }
-
-  .editor-section,
-  .preview-container,
-  .flex.flex-col.w-1\/2,
-  .w-1\/2.overflow-hidden {
-    width: 100%;
-    height: 50%;
-  }
-
-  .editor-section,
-  .flex.flex-col.w-1\/2 {
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-  }
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: var(--toolbar-background);
+  border-bottom: 1px solid var(--border-color);
+  min-height: 40px;
 }
 
-/* Estilos para el estado de carga */
+/* Markdown buttons */
+.markdown-button {
+  padding: 5px 10px;
+  background-color: var(--toolbar-background);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.markdown-button:hover {
+  background-color: var(--accent-color);
+}
+
+/* Loading */
 .loading-overlay {
   position: absolute;
   top: 0;
@@ -217,599 +117,7 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Estilos para los botones de markdown */
-.markdown-buttons,
-.markdown-toolbar {
-  display: flex;
-  gap: 5px;
-  margin: 5px 0;
-  flex-wrap: wrap;
-}
-
-.markdown-buttons button,
-.markdown-button {
-  padding: 5px 10px;
-  min-width: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  border-radius: 4px;
-  color: #fff !important;
-  background-color: #333 !important;
-  border: 1px solid #666 !important;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.2s ease;
-}
-
-.markdown-buttons button:hover,
-.markdown-button:hover {
-  background-color: #444 !important;
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
-.markdown-button:active {
-  transform: translateY(0);
-  box-shadow: 0 0 2px rgba(255, 255, 255, 0.2);
-}
-
-.toolbar-divider {
-  width: 1px;
-  height: 24px;
-  background-color: #666;
-  margin: 0 5px;
-}
-
-/* Asegurar que los botones funcionen incluso si los estilos del template no cargan */
-button.white-button {
-  color: #fff !important;
-  background-color: #333 !important;
-  border: 1px solid #666 !important;
-}
-
-/* MEJORA: Soporte para paneles flexibles */
-#resizable-container {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  will-change: contents;
-}
-
-/* Estilos para layout horizontal */
-#resizable-container.flex-row > div {
-  height: 100%;
-  will-change: width;
-}
-
-/* Estilos para layout vertical */
-#resizable-container.flex-col {
-  flex-direction: column !important;
-  height: 100%;
-}
-
-#resizable-container.flex-col > div {
-  width: 100% !important;
-  will-change: height;
-}
-
-/* Estilos para el panel del editor cuando está dentro de ResizablePanels */
-#resizable-container .editor-wrapper {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Estilos para el panel de vista previa cuando está dentro de ResizablePanels */
-#resizable-container .preview-container {
-  height: 100%;
-  width: 100%;
-}
-
-/* Asegurar que los paneles hijos mantengan la altura completa */
-#resizable-container > div > * {
-  height: 100%;
-}
-
-/* Estilos para el divisor y su interacción */
-.divider {
-  position: relative;
-  z-index: 10;
-  transition: background-color 0.2s ease-out, width 0.2s ease-out, height 0.2s ease-out;
-  touch-action: none;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Aumento del área táctil sin afectar la visualización */
-.divider::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 24px;
-  height: 100%;
-  background: transparent;
-  cursor: inherit;
-  z-index: 1;
-}
-
-.divider.active {
-  transition: none;
-}
-
-.divider:hover, .divider:active {
-  background-color: var(--accent-color);
-}
-
-/* Mejora para el divisor activo */
-.divider:active::after,
-.divider.active::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--accent-color);
-  opacity: 0.5;
-  z-index: -1;
-  box-shadow: 0 0 12px var(--accent-color);
-}
-
-/* Indicador de arrastre */
-.divider::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 0.7);
-  transition: opacity 0.2s;
-}
-
-/* Indicador de arrastre para divisor horizontal */
-.flex-row .divider::after {
-  width: 2px;
-  height: 30px;
-  border-radius: 1px;
-}
-
-/* Indicador de arrastre para divisor vertical */
-.flex-col .divider::after {
-  width: 30px;
-  height: 2px;
-  border-radius: 1px;
-}
-
-/* Hacer más visible el indicador al pasar el mouse */
-.divider:hover::after {
-  opacity: 0.9;
-}
-
-/* Soporte para tema claro/oscuro en los divisores */
-[data-theme='light'] .divider:hover,
-[data-theme='light'] .divider:active {
-  background-color: var(--accent-color);
-}
-
-[data-theme='dark'] .divider:hover,
-[data-theme='dark'] .divider:active {
-  background-color: var(--accent-color);
-}
-
-/* MEJORA: Asegurar que el contenido se adapte al espacio disponible */
-.editor-section, .preview-container {
-  min-height: 0; /* Importante para flex */
-  overflow: hidden;
-}
-
-/* Ajuste para ocultar completamente la vista previa cuando no está activa */
-.preview-container.hidden {
-  display: none !important;
-}
-
-/* Asegurar que el editor ocupe todo el espacio disponible cuando la vista previa está oculta */
-.editor-wrapper {
-  width: 100%;
-  height: 100%;
-  transition: width 0.3s ease;
-}
-
-/* Estilos para el contenedor cuando está en modo pantalla completa (solo editor) */
-#resizable-container.editor-only {
-  display: flex;
-  width: 100% !important;
-}
-
-#resizable-container.editor-only .editor-wrapper {
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-/* Asegurar que el textarea ocupe todo el espacio disponible */
-.editor-wrapper textarea {
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.resizable-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  max-width: 100vw;
-}
-
-.resizable-container.flex-row {
-  flex-direction: row;
-}
-
-.resizable-container.flex-col {
-  flex-direction: column;
-}
-
-.panel {
-  position: relative;
-  height: 100%;
-  overflow: hidden; /* Cambiado de auto a hidden para evitar scroll innecesario */
-  transition: width 0.1s ease;
-  min-width: 0; /* Importante para flexbox */
-  min-height: 0; /* Importante para flexbox */
-}
-
-.resizable-container.flex-row > .panel {
-  height: 100%;
-  flex-shrink: 0; /* Evita que se encoja */
-}
-
-.resizable-container.flex-col > .panel {
-  width: 100%;
-  flex-shrink: 0; /* Evita que se encoja */
-}
-
-.left-panel {
-  display: flex;
-  flex-direction: column;
-}
-
-.right-panel {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Asegurar que los paneles ocupen todo su espacio asignado */
-.left-panel > *,
-.right-panel > * {
-  width: 100%;
-  height: 100%;
-  flex: 1;
-}
-
-/* Ajustes específicos para el editor y preview */
-.editor-container .resizable-container {
-  flex: 1;
-  width: 100% !important;
-  height: 100% !important;
-  box-sizing: border-box;
-}
-
-/* Asegurar que los paneles redimensionables ocupen espacio completo */
-.main-content .editor-container {
-  display: flex;
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-}
-
-/* Previene scrollbars innecesarios */
-body, html {
-  overflow: hidden;
-}
-
-/* Editor Styles */
-.editor-wrapper {
-  background-color: var(--bg-secondary);
-  border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.editor-fullscreen .editor-wrapper {
-  width: 100%;
-  height: 100vh;
-  max-width: none;
-  border-radius: 0;
-}
-
-.editor-fullscreen textarea {
-  font-size: 1.1em;
-  line-height: 1.6;
-  padding: 2rem;
-}
-
-.editor-header {
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
-}
-
-/* Ensure the textarea fills available space */
-.editor-wrapper textarea {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  border: none;
-  resize: none;
-  min-height: 300px;
-  width: 100%;
-  height: 100%;
-  outline: none;
-  font-family: 'Fira Code', monospace;
-  line-height: 1.5;
-  padding: 1rem;
-  transition: all 0.3s ease;
-}
-
-.editor-wrapper textarea:focus {
-  box-shadow: none;
-  border-color: transparent;
-}
-
-.editor-section {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  flex: 1;
-  overflow: hidden;
-}
-
-.editor-section textarea {
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  resize: none;
-  padding: 1rem;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'Fira Code', monospace;
-  font-size: 1rem;
-  line-height: 1.5;
-  border: none;
-  outline: none;
-}
-
-.editor-section textarea:focus {
-  outline: none;
-}
-
-/* Ensure editor fills available space */
-.h-full {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-grow {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Ensure the editor container takes full height when preview is hidden */
-.h-full.flex-grow {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-}
-
-/* Sidebar */
-.sidebar-left {
-  width: 250px;
-  height: 100%;
-  background-color: var(--bg-secondary);
-  border-right: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-}
-
-/* Editor container */
-.editor-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  position: relative;
-}
-
-/* Editor section - contains the actual editor */
-.editor-container > .editor-section {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Keep ResizablePanels container styles separate */
-.resizable-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Ensure editor section has proper layout */
-.editor-section {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background-color: var(--bg-primary);
-}
-
-/* Ensure textarea fills editor section */
-.editor-section textarea {
-  flex: 1;
-  width: 100%;
-  min-height: 0;
-  padding: 1rem;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'Fira Code', monospace;
-  font-size: 1rem;
-  line-height: 1.5;
-  border: none;
-  outline: none;
-  resize: none;
-}
-
-/* Editor Header */
-.editor-header {
-  flex-shrink: 0;
-}
-
-/* Editor Content Area */
-.editor-content {
-  flex: 1;
-  position: relative;
-  overflow: auto;
-}
-
-/* Editor Textarea */
-.editor-textarea {
-  width: 100%;
-  height: 100%;
-  padding: 1rem;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'Consolas', 'Monaco', 'Andale Mono', monospace;
-  font-size: 1rem;
-  resize: none;
-  border: none;
-  outline: none;
-  line-height: 1.5;
-}
-
-/* Footer */
-.app-footer {
-  flex-shrink: 0;
-  padding: 0.5rem;
-  background-color: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  text-align: center;
-}
-
-.editor-container.with-sidebar {
-  margin-left: 1px;
-}
-
-/* Editor container - the main wrapper for editor and preview */
-.editor-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  position: relative;
-}
-
-/* Editor section - contains the actual editor */
-.editor-section {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  background-color: var(--bg-primary);
-}
-
-.editor-header {
-  border-bottom: 1px solid var(--border-color);
-}
-
-.editor-content {
-  flex: 1;
-  position: relative;
-  overflow: auto;
-}
-
-.editor-textarea {
-  width: 100%;
-  height: 100%;
-  padding: 1rem;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'Consolas', 'Monaco', 'Andale Mono', monospace;
-  font-size: 1rem;
-  resize: none;
-  border: none;
-  outline: none;
-  line-height: 1.5;
-}
-
-/* Resizable panels container */
-.resizable-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-/* Panel styles */
-.panel {
-  position: relative;
-  height: 100%;
-  overflow: auto;
-  transition: width 0.1s ease;
-}
-
-.panel-left {
-  border-right: 1px solid var(--border-color);
-}
-
-.panel-right {
-  border-left: 1px solid var(--border-color);
-}
-
-/* Divider styles */
-.divider {
-  width: 10px;
-  background-color: var(--divider-color);
-  cursor: col-resize;
-  transition: background-color 0.2s;
-  will-change: transform;
-  user-select: none;
-}
-
-.divider:hover, .divider.active {
-  background-color: var(--divider-hover-color);
-}
-
-.divider:active {
-  background-color: var(--divider-active-color);
-}
-
 /* Utility classes */
-.flex-grow {
-  flex-grow: 1;
-}
-
-.flex-shrink-0 {
-  flex-shrink: 0;
-}
-
-.min-h-0 {
-  min-height: 0;
-}
-
 .h-full {
   height: 100%;
 }
@@ -818,275 +126,82 @@ body, html {
   width: 100%;
 }
 
-/* Transiciones suaves entre modos */
-.resizable-container {
-  transition: all 0.3s ease-out;
-}
-
-.resizable-container.fullwidth-left .left-panel {
-  transition: width 0.3s ease-out, height 0.3s ease-out;
-}
-
-.editor-container {
-  transition: all 0.3s ease-out;
-}
-
-.editor-fullscreen {
-  transition: all 0.3s ease-out;
-}
-
-/* Evita el parpadeo durante las transiciones */
-.editor-section,
-.preview-container,
-.editor-fullscreen,
-.resizable-container,
-.panel {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  -webkit-transform: translateZ(0) scale(1.0, 1.0);
-  transform: translateZ(0) scale(1.0, 1.0);
-}
-
-/* Mejora de animación */
-.fade-in {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Mejora para el botón de alternar vista */
-.toggle-preview-button {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.toggle-preview-button::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.toggle-preview-button:hover::after {
-  opacity: 1;
-}
-
-/* Optimizaciones de rendimiento para paneles */
-.left-panel,
-.right-panel {
-  min-width: 0;
-  min-height: 0;
-  will-change: flex-basis;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
-
-/* Estilos para el divisor entre paneles */
-.panel-divider {
-  width: 8px;
-  background-color: var(--divider-color);
-  cursor: col-resize;
-  user-select: none;
-  position: relative;
-  transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0; /* Evita que se encoja */
-  z-index: 10;
-}
-
-.panel-divider:hover,
-.panel-divider:active {
-  background-color: var(--divider-hover-color);
-}
-
-.panel-divider.horizontal {
-  width: 100%;
-  height: 8px;
-  cursor: row-resize;
-}
-
-.panel-divider.vertical {
-  height: 100%;
-  width: 8px;
-  cursor: col-resize;
-}
-
-/* Indicador visual para el divisor */
-.panel-divider::after {
-  content: '';
-  position: absolute;
-  background-color: var(--divider-handle-color);
-  border-radius: 4px;
-  opacity: 0.5;
-  transition: opacity 0.2s ease;
-}
-
-.panel-divider.horizontal::after {
-  width: 64px;
-  height: 4px;
-}
-
-.panel-divider.vertical::after {
-  width: 4px;
-  height: 64px;
-}
-
-.panel-divider:hover::after {
-  opacity: 1;
-}
-
-/* Desactivar selección de texto durante el arrastre */
-.resizing * {
-  user-select: none !important;
-  pointer-events: none !important;
-}
-
-/* Reglas importantes para asegurar que los paneles redimensionables funcionen bien */
-.resizable-container {
-  display: flex;
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* Forzar el ancho del panel derecho */
-.right-panel {
-  width: auto !important;
+.flex {
   display: flex;
 }
 
-/* Forzar que la vista previa ocupe todo el espacio */
-.preview-container {
-  width: 100% !important;
-  height: 100% !important;
-  position: relative;
-  display: flex;
+.flex-col {
   flex-direction: column;
 }
 
-/* Estilos para el iframe de vista previa */
-.preview-iframe {
+.flex-1 {
   flex: 1;
-  width: 100% !important;
-  height: 100% !important;
-  border: none;
-  display: block;
 }
 
-/* Estilos para elementos Markdown en la vista previa */
-.preview-container .task-list-item {
-  list-style-type: none;
-  margin-left: -20px;
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
 }
 
-.preview-container .task-list-item input[type="checkbox"] {
-  margin-right: 8px;
-  cursor: default;
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --editor-background: #1e1e1e;
+    --preview-background: #252526;
+    --toolbar-background: #333333;
+  }
 }
 
-.preview-container li.task-list-item {
-  display: flex;
-  align-items: center;
-  margin: 4px 0;
+/* Notification Styles */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
-/* Añadir estos estilos al iframe al cargar */
-.preview-manager-styles {
-  /* Estilos para listas de tareas */
-  --task-checkbox-size: 16px;
-  --task-checkbox-border: #666;
-  --task-checkbox-bg: transparent;
-  --task-checkbox-checked-bg: #4a90e2;
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
 
-/* Estilos para la barra de markdown */
-.markdown-toolbar {
-  background-color: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-  padding: 5px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
+.notification-item {
+  will-change: transform, opacity;
+  animation: slideIn 0.3s ease-out;
 }
 
-.markdown-button {
-  background-color: var(--bg-tertiary) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 4px;
-  min-width: 30px;
-  height: 30px;
-  display: flex;
+.notification-item.removing {
+  animation: slideOut 0.3s ease-in forwards;
+}
+
+.notification-icon {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Hover effect */
+.notification-item {
   cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s;
+  transition: transform 0.2s ease;
 }
 
-.markdown-button:hover {
-  background-color: var(--bg-tertiary-dark) !important;
-  transform: translateY(-1px);
-}
-
-.markdown-button:active {
-  transform: translateY(0);
-}
-
-/* Transiciones mejoradas para los paneles redimensionables */
-.resizable-container {
-  transition: flex-direction 0.2s ease-out;
-  width: 100% !important;
-  height: 100% !important;
-  display: flex;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.panel {
-  transition: width 0.2s ease-out, height 0.2s ease-out, flex-basis 0.2s ease-out;
-}
-
-/* Estilos específicos para el cambio de modo horizontal/vertical */
-.resizable-container.flex-row .panel {
-  width: var(--panel-width, auto);
-  height: 100% !important;
-}
-
-.resizable-container.flex-col .panel {
-  height: var(--panel-height, auto);
-  width: 100% !important;
-}
-
-/* Optimización para evitar parpadeos durante transiciones */
-.resizable-container, 
-.panel, 
-.panel-divider {
-  will-change: flex-direction, width, height, transform;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
-
-/* Estabilizar los paneles durante el redimensionamiento */
-.resizable-container.resizing,
-.resizable-container.changing-direction {
-  transition: none;
-}
-
-.resizable-container.changing-direction .panel {
-  transition: none;
+.notification-item:hover {
+  transform: translateY(-2px);
 } 

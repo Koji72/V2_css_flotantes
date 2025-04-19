@@ -63,8 +63,13 @@
   flex: 1;
 }
 
-/* Divisor */
-.panel-divider {
+/* ===================== */
+/* Estilos para Divisores */
+/* ===================== */
+
+/* Divisor - Estilos comunes para ambas clases */
+.panel-divider,
+.divider {
   width: 8px;
   background-color: var(--divider-color, rgba(128, 128, 128, 0.3));
   cursor: col-resize;
@@ -76,22 +81,28 @@
   justify-content: center;
   flex-shrink: 0;
   z-index: 10;
+  touch-action: none;
 }
 
-.panel-divider.horizontal {
+/* Orientación horizontal */
+.panel-divider.horizontal,
+.divider.divider-horizontal {
   width: 100%;
   height: 8px;
   cursor: row-resize;
 }
 
-.panel-divider.vertical {
+/* Orientación vertical */
+.panel-divider.vertical,
+.divider.divider-vertical {
   height: 100%;
   width: 8px;
   cursor: col-resize;
 }
 
 /* Indicador visual para el divisor */
-.panel-divider::after {
+.panel-divider::after,
+.divider::after {
   content: '';
   position: absolute;
   background-color: var(--divider-handle-color, rgba(255, 255, 255, 0.7));
@@ -100,23 +111,46 @@
   transition: opacity 0.2s ease;
 }
 
-.panel-divider.horizontal::after {
+.panel-divider.horizontal::after,
+.divider.divider-horizontal::after {
   width: 64px;
   height: 4px;
 }
 
-.panel-divider.vertical::after {
+.panel-divider.vertical::after,
+.divider.divider-vertical::after {
   width: 4px;
   height: 64px;
 }
 
-.panel-divider:hover::after {
+/* Estados hover y active */
+.panel-divider:hover::after,
+.divider:hover::after {
   opacity: 1;
 }
 
 .panel-divider:hover,
-.panel-divider:active {
-  background-color: var(--divider-hover-color, var(--color-primary));
+.panel-divider:active,
+.panel-divider.active,
+.divider:hover,
+.divider:active,
+.divider.active {
+  background-color: var(--divider-hover-color, var(--accent-color, #0078d7));
+}
+
+/* Estado active adicional */
+.panel-divider.active::after,
+.divider.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--accent-color, #0078d7);
+  opacity: 0.3;
+  z-index: -1;
+  box-shadow: 0 0 8px var(--accent-color, #0078d7);
 }
 
 /* Estabilizar los paneles durante cambios de dirección */
@@ -129,6 +163,15 @@
 .resizing * {
   user-select: none !important;
   pointer-events: none !important;
+  cursor: inherit !important;
+}
+
+.resizable-container.resizing {
+  cursor: col-resize;
+}
+
+.resizable-container.resizing.flex-col {
+  cursor: row-resize;
 }
 
 .resizable-container.fullwidth-left .left-panel {
