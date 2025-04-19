@@ -78,6 +78,14 @@
   transform: scale(0.95);
 }
 
+/* Separador de la barra de herramientas */
+.toolbar-separator {
+  width: 1px;
+  height: 20px; /* Ajustar altura según el tamaño de los botones */
+  background-color: var(--border-color);
+  margin: 0 4px; /* Margen horizontal para separar */
+}
+
 /* Botón de tema */
 .theme-toggle {
   margin-left: auto;

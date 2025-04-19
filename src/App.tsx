@@ -2,10 +2,18 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import remarkDirective from 'remark-directive';
 import remarkGithubBetaBlockquoteAdmonitions from 'remark-github-beta-blockquote-admonitions';
+import remarkCustomPanels from './utils/remarkCustomPanels';
 // import remarkCollapse from 'remark-collapse'; // Incompatible, comentado
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+// Importar iconos de Lucide
+import {
+  Bold, Italic, Heading1, Heading2, List, Quote, Code, Link2, Image as ImageIcon,
+  Table, Strikethrough, ListTodo, Superscript, Subscript, Highlighter, ChevronsUpDown,
+  Moon, Sun
+} from 'lucide-react';
 import './App.css';
 
 const AUTOSAVE_KEY = 'markdown-editor-content';
@@ -20,6 +28,10 @@ const App: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null); // Ref para el input de archivo
   const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hasLoadedRef = useRef(false); // Bandera para carga inicial
+  const previewRef = useRef<HTMLDivElement>(null); // <-- Ref para la vista previa
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Ref para timeout
+  const scrollingPanel = useRef<'editor' | 'preview' | null>(null); // Para saber quién inició
+  const animationFrameRef = useRef<number | null>(null); // Para throttling
 
   // Refs para funciones usadas en callbacks para evitar problemas de dependencia/orden
   const handleImageButtonClickRef = useRef<() => void>(() => {});
@@ -245,6 +257,62 @@ const App: React.FC = () => {
     insertText(template, template.indexOf('</summary>'));
   }, [insertText]);
 
+  // Función THROTTLED para sincronizar scroll
+  const syncScroll = useCallback((source: 'editor' | 'preview') => {
+    if (!textareaRef.current || !previewRef.current) return;
+
+    const editor = textareaRef.current;
+    const preview = previewRef.current;
+
+    // Cancelar frame anterior si existe
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+
+    // Programar la sincronización en el siguiente frame
+    animationFrameRef.current = requestAnimationFrame(() => {
+      // Solo sincronizar si el scroll NO fue iniciado por el panel destino
+      if (scrollingPanel.current === source) {
+        if (source === 'editor') {
+          const scrollRatio = editor.scrollTop / (editor.scrollHeight - editor.clientHeight);
+          // Solo aplicar si hay espacio para scroll
+          if (preview.scrollHeight > preview.clientHeight) {
+             preview.scrollTop = scrollRatio * (preview.scrollHeight - preview.clientHeight);
+          }
+        } else { // source === 'preview'
+          const scrollRatio = preview.scrollTop / (preview.scrollHeight - preview.clientHeight);
+          // Solo aplicar si hay espacio para scroll
+          if (editor.scrollHeight > editor.clientHeight) {
+            editor.scrollTop = scrollRatio * (editor.scrollHeight - editor.clientHeight);
+          }
+        }
+      }
+    });
+
+    // Resetear quién inició el scroll después de un cooldown
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    scrollTimeoutRef.current = setTimeout(() => {
+      scrollingPanel.current = null;
+    }, 150); // Cooldown un poco más largo: 150ms
+
+  }, []);
+
+  // Listener para scroll del editor
+  const handleEditorScroll = useCallback(() => {
+    if (!scrollingPanel.current) { // Si nadie ha iniciado scroll recientemente
+      scrollingPanel.current = 'editor';
+    }
+    syncScroll('editor');
+  }, [syncScroll]);
+
+  // Listener para scroll de la vista previa
+  const handlePreviewScroll = useCallback(() => {
+    if (!scrollingPanel.current) { // Si nadie ha iniciado scroll recientemente
+      scrollingPanel.current = 'preview';
+    }
+    syncScroll('preview');
+  }, [syncScroll]);
+
   return (
     <div className="app">
       <input 
@@ -255,30 +323,47 @@ const App: React.FC = () => {
         style={{ display: 'none' }} 
       />
       <div className="toolbar">
-        <div className="flex gap-2">
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('**', 'wrap')} title="Negrita (Ctrl+B)">B</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('*', 'wrap')} title="Cursiva (Ctrl+I)">I</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('# ', 'line')} title="Título 1 (Ctrl+1)">H1</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('## ', 'line')} title="Título 2 (Ctrl+2)">H2</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('- ', 'line')} title="Lista (Ctrl+L)">•</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('> ', 'line')} title="Cita (Ctrl+Q)">❝</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('`', 'wrap')} title="Código (Ctrl+`)">`</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('[](url)', 'insert')} title="Enlace (Ctrl+K)">🔗</button>
-          <button className="toolbar-button" onClick={handleImageButtonClickRef.current} title="Insertar Imagen Local (Ctrl+G)">🖼️</button>
-          <button className="toolbar-button" onClick={insertTableTemplateRef.current} title="Insertar Tabla (Ctrl+T)">▦</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('~~', 'wrap')} title="Tachado (Ctrl+S)" style={{ textDecoration: 'line-through' }}>S</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('- [ ] ', 'line')} title="Lista de Tareas (Ctrl+Shift+C)">✔️</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('<sup>', 'wrap')} title="Superíndice (Ctrl+Shift+P)">x²</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('<sub>', 'wrap')} title="Subíndice (Ctrl+Shift+B)">x₂</button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('<mark>', 'wrap')} title="Resaltado (Ctrl+Shift+H)" style={{ backgroundColor: '#ffec3d', color: '#333' }}>M</button>
-          <button className="toolbar-button" onClick={insertDetailsTemplate} title="Sección Colapsable (Ctrl+Shift+D)">[+]</button>
+        <div className="flex gap-2 flex-wrap items-center">
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('**', 'wrap')} title="Negrita (Ctrl+B)"><Bold size={16} /></button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('*', 'wrap')} title="Cursiva (Ctrl+I)"><Italic size={16} /></button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('~~', 'wrap')} title="Tachado (Ctrl+S)"><Strikethrough size={16} /></button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('<mark>', 'wrap')} title="Resaltado (Ctrl+Shift+H)"><Highlighter size={16} /></button>
+
+          <div className="toolbar-separator"></div>
+
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('# ', 'line')} title="Título 1 (Ctrl+1)"><Heading1 size={16} /></button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('## ', 'line')} title="Título 2 (Ctrl+2)"><Heading2 size={16} /></button>
+
+          <div className="toolbar-separator"></div>
+
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('- ', 'line')} title="Lista (Ctrl+L)"><List size={16} /></button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('- [ ] ', 'line')} title="Lista de Tareas (Ctrl+Shift+C)"><ListTodo size={16} /></button>
+
+          <div className="toolbar-separator"></div>
+
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('> ', 'line')} title="Cita (Ctrl+Q)"><Quote size={16} /></button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('`', 'wrap')} title="Código (Ctrl+`)"><Code size={16} /></button>
+          <button className="toolbar-button" onClick={insertDetailsTemplate} title="Sección Colapsable (Ctrl+Shift+D)"><ChevronsUpDown size={16} /></button>
+
+          <div className="toolbar-separator"></div>
+
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('[](url)', 'insert')} title="Enlace (Ctrl+K)"><Link2 size={16} /></button>
+          <button className="toolbar-button" onClick={handleImageButtonClickRef.current} title="Insertar Imagen Local (Ctrl+G)"><ImageIcon size={16} /></button>
+          <button className="toolbar-button" onClick={insertTableTemplateRef.current} title="Insertar Tabla (Ctrl+T)"><Table size={16} /></button>
+
+          <div className="toolbar-separator"></div>
+
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('<sup>', 'wrap')} title="Superíndice (Ctrl+Shift+P)"><Superscript size={16} /></button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('<sub>', 'wrap')} title="Subíndice (Ctrl+Shift+B)"><Subscript size={16} /></button>
+
         </div>
+        <div className="toolbar-separator mx-2"></div>
         <button
           className="theme-toggle"
           onClick={toggleTheme}
           title={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
         >
-          {isDarkMode ? '🌞' : '🌙'}
+          {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
         </button>
       </div>
       <div className="flex flex-1 h-full">
@@ -289,6 +374,7 @@ const App: React.FC = () => {
             value={content}
             onChange={handleEditorChange}
             onKeyDown={handleKeyDown}
+            onScroll={handleEditorScroll} // Listener sin cambios
             placeholder="Escribe aquí tu markdown..."
           />
         </div>
@@ -299,12 +385,14 @@ const App: React.FC = () => {
         />
 
         <div
+          ref={previewRef}
           className="preview"
           style={{ width: `${100 - leftWidth - 1}%` }}
+          onScroll={handlePreviewScroll} // Listener sin cambios
         >
           <ReactMarkdown
             key={content}
-            remarkPlugins={[remarkGfm, remarkGithubBetaBlockquoteAdmonitions]}
+            remarkPlugins={[remarkGfm, remarkDirective, remarkCustomPanels, remarkGithubBetaBlockquoteAdmonitions]}
             rehypePlugins={[[rehypeRaw, { passThrough: ['element', 'text'] }]]}
             components={{
               code(props: any) {

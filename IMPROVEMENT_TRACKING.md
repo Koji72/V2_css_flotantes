@@ -55,4 +55,13 @@ Se ha ampliado el soporte de sintaxis Markdown y se han añadido bloques semánt
 
 *   **Problema:** Los bloques de código Markdown sin lenguaje especificado (``` ```) o con lenguajes no soportados por el resaltador (` ```markdown ```) mostraban "undefined" o no se renderizaban correctamente.
 *   **Solución:** Se ajustó la lógica del componente `code` personalizado dentro de `ReactMarkdown` en `src/App.tsx`. Ahora, si no se detecta un lenguaje válido (`language-xxx`) o si el bloque es inline, se renderiza el contenido como texto plano dentro de una etiqueta `<code>` estándar, sin intentar usar `SyntaxHighlighter`. Se añadió una comprobación explícita para manejar casos donde `children` pudiera ser `undefined`.
-*   **Beneficios:** Todos los bloques de código y el código inline se renderizan correctamente, ya sea con resaltado de sintaxis (si el lenguaje es soportado) o como texto plano, eliminando errores visuales. 
+*   **Beneficios:** Todos los bloques de código y el código inline se renderizan correctamente, ya sea con resaltado de sintaxis (si el lenguaje es soportado) o como texto plano, eliminando errores visuales.
+
+## Mejora: Refinamiento de Interfaz y Experiencia de Usuario (UI/UX)
+
+*   **Problema:** La barra de herramientas utilizaba texto/símbolos poco estándar y carecía de organización visual. El scroll entre paneles no estaba sincronizado.
+*   **Solución Implementada:**
+    1.  **Iconos en Barra de Herramientas:** Se reemplazaron los textos/símbolos de los botones por iconos de la librería `lucide-react` en `src/App.tsx`, proporcionando una apariencia más limpia y estándar.
+    2.  **Agrupación y Separadores:** Los botones de la barra de herramientas se reorganizaron en grupos lógicos (formato, encabezados, listas, bloques, inserciones, otros) en `src/App.tsx`. Se añadieron separadores visuales (usando `div.toolbar-separator` y CSS en `src/App.css`) entre los grupos para mejorar la claridad.
+    3.  **Sincronización de Scroll:** Se implementó la sincronización de scroll entre el `textarea` del editor y el `div` de la vista previa. Se añadieron `refs` y `onScroll` listeners en `src/App.tsx`. La lógica utiliza `requestAnimationFrame` para throttling y rastrea el panel de origen para evitar rebotes, usando un cálculo porcentual para la posición de scroll.
+*   **Beneficios:** Barra de herramientas más intuitiva y estéticamente agradable. Experiencia de usuario mejorada al mantener la posición relativa entre el editor y la vista previa durante el scroll (aunque con las limitaciones inherentes al scroll porcentual). 
