@@ -34,6 +34,69 @@ La versión 2.6 introduce mejoras significativas en el procesamiento y renderiza
 
 **Solución:** Implementación de un sistema de redimensionamiento optimizado utilizando manipulación directa del DOM y técnicas avanzadas de renderizado para garantizar una experiencia fluida y precisa.
 
+### 5. ✅ Implementación de Funcionalidad Básica del Editor (Fase 1)
+
+**Objetivo:** Establecer las bases funcionales del editor Markdown, permitiendo al usuario aplicar formatos básicos y visualizarlos correctamente.
+
+**Mejoras Realizadas:**
+
+1.  **Barra de Herramientas Funcional:**
+    *   Se implementaron botones para los formatos Markdown más comunes: Negrita, Cursiva, Títulos (H1, H2), Lista, Cita, Código y Enlace.
+    *   Se desarrolló la lógica (`applyFormat` en `App.tsx`) para interactuar con el contenido del `textarea`:
+        *   **Formato con Selección (`wrap`):** Envuelve el texto seleccionado con los caracteres Markdown correspondientes (e.g., `**texto**`).
+        *   **Formato sin Selección (`wrap`):** Inserta los caracteres de formato (e.g., `****`) y posiciona el cursor en medio para facilitar la escritura.
+        *   **Formato de Línea (`line`):** Aplica formatos que afectan a toda la línea (e.g., `# `, `- `) al inicio de la línea actual.
+        *   **Inserción (`insert`):** Inserta texto específico como plantillas de enlace (`[](url)`) en la posición del cursor.
+    *   Se añadió la gestión del foco y la posición del cursor para una mejor experiencia de usuario después de aplicar un formato.
+
+2.  **Vista Previa con Renderizado Markdown:**
+    *   **Problema Identificado:** La vista previa mostraba el texto Markdown crudo (con `**`, `#`, etc.) en lugar del resultado formateado.
+    *   **Solución:** Se integró la librería `react-markdown` junto con `remark-gfm` (para soporte de GitHub Flavored Markdown) en el panel de vista previa.
+    *   **Resultado:** La vista previa ahora interpreta y renderiza correctamente el contenido Markdown introducido en el editor.
+
+3.  **Consistencia de Temas (Claro/Oscuro):**
+    *   Se añadieron estilos CSS específicos (`src/App.css`) para los elementos HTML generados por `react-markdown` dentro del contenedor `.preview`.
+    *   Se incluyeron ajustes específicos para el modo oscuro (`[data-theme="dark"] .preview ...`) para garantizar la legibilidad y coherencia visual de títulos, enlaces, bloques de código, etc., al cambiar de tema.
+
+4.  **Depuración y Estabilización:**
+    *   Se realizaron varios ciclos de depuración utilizando `console.log` para identificar y solucionar problemas en la lógica de `applyFormat` y la interacción con el `textarea`.
+    *   Se simplificó y refactorizó el código relacionado con el formato para mejorar la robustez.
+
+**Beneficios:**
+- El usuario puede aplicar formatos básicos de Markdown de forma intuitiva.
+- La vista previa refleja fielmente el resultado final del documento.
+- La experiencia visual es consistente entre los temas claro y oscuro.
+- Se ha establecido una base sólida para futuras mejoras del editor.
+
+### 6. ✅ Mejoras de UX - Atajos de Teclado y Corrección Renderizado (Fase 2 - Parte 1)
+
+**Objetivo:** Aumentar la eficiencia del usuario mediante atajos de teclado y solucionar problemas persistentes de renderizado en la vista previa.
+
+**Mejoras Realizadas:**
+
+1.  **Implementación de Atajos de Teclado:**
+    *   Se añadió un manejador de eventos `onKeyDown` al `textarea` del editor (`App.tsx`).
+    *   Este manejador detecta la pulsación de `Ctrl` (o `Cmd` en Mac) junto con teclas específicas (`B`, `I`, `1`, `2`, `L`, `Q`, `` ` ``, `K`).
+    *   Al detectar un atajo válido, se llama a la función `applyFormat` correspondiente.
+    *   Se utiliza `event.preventDefault()` para evitar las acciones por defecto del navegador asociadas a algunas de estas combinaciones.
+    *   Se actualizaron los tooltips (atributo `title`) de los botones de la barra de herramientas para indicar los atajos disponibles.
+
+2.  **Diagnóstico y Solución de Problema de Renderizado de Listas:**
+    *   **Problema Identificado:** A pesar de que la lógica de `applyFormat` para listas (`type='line'`, formato `'- '`) actualizaba correctamente el estado `content`, la vista previa (`ReactMarkdown`) no renderizaba el elemento como una lista (no aparecía el bullet point).
+    *   **Pasos de Diagnóstico:**
+        *   Se verificó mediante logs exhaustivos que `applyFormat` y `setContent` funcionaban correctamente.
+        *   Se forzó el re-renderizado de `ReactMarkdown` añadiendo `key={content}`.
+        *   Se eliminó temporalmente el plugin `remark-gfm` para descartar interferencias.
+        *   Se inicializó el estado `content` con una lista estática para confirmar que `ReactMarkdown` *podía* renderizar listas.
+        *   **Se inspeccionó el DOM generado**, confirmando que `ReactMarkdown` producía `<ul><li>...</li></ul>` correctamente.
+    *   **Causa Raíz Identificada:** Estilos CSS globales (probablemente un "reset" en `index.css` u otro archivo base) estaban eliminando los estilos de lista por defecto (`list-style-type`, `display: list-item`) para los elementos `ul` y `li`.
+    *   **Solución:** Se añadieron reglas CSS explícitas en `src/App.css` para los elementos `ul`, `ol`, y `li` *dentro* de la clase `.preview` para restaurar los estilos de lista (`list-style-type: disc`, `display: list-item`, etc.) y asegurar que prevalecieran sobre los resets globales.
+
+**Beneficios:**
+- Los usuarios pueden aplicar formatos comunes mucho más rápido usando el teclado.
+- Se resolvió un bug persistente y confuso que impedía el correcto renderizado de las listas en la vista previa.
+- La aplicación es ahora más robusta y predecible en su comportamiento de renderizado.
+
 ## Cambios Técnicos Implementados
 
 ### 1. Pre-procesador de Paneles en `markdownProcessor.ts`
