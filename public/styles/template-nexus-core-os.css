@@ -1,0 +1,748 @@
+/* ================================================== */
+/*         MASTER THEME: NEXUS CORE OS (V2.5)         */
+/*        (Pushing the Limits of Universal Scribe)    */
+/*          Designed by the Code Weaver GOD          */
+/* ================================================== */
+
+/* 0. IMPORTAR FUENTES (Hiper-Avanzadas y Claras) */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500;600&display=swap');
+
+/* 1. VARIABLES FUNDAMENTALES (Paleta Nexus y Quantum) */
+:root {
+    /* -- Núcleo del Nexus (Colores Base) -- */
+    --nexus-bg-deep: #0a0a14;        /* Vacío profundo con tinte índigo */
+    --nexus-bg-primary: #10121f;     /* Superficie principal del OS */
+    --nexus-bg-secondary: #1a1d2e;   /* Superficie ligeramente elevada */
+    --nexus-bg-tertiary: #252a40;   /* Superficie de énfasis / hover */
+    --nexus-border-primary: rgba(100, 120, 255, 0.3); /* Borde de energía contenida */
+    --nexus-border-secondary: rgba(150, 180, 255, 0.5);/* Borde más brillante */
+    --nexus-border-accent: #80a0ff; /* Borde de energía activa */
+    --nexus-text-primary: #e0e8ff;     /* Texto principal, blanco cristalino */
+    --nexus-text-secondary: #a0b0d0;   /* Texto secundario, menos intensidad */
+    --nexus-text-disabled: #506080;    /* Texto/elementos inactivos */
+
+    /* -- Quantum Flux (Acentos y Estados) -- */
+    --quantum-cyan-glow: #00f0ff;     /* Cian cuántico primario */
+    --quantum-magenta-glow: #ff00f0; /* Magenta energético secundario */
+    --quantum-lime-ok: #70ff70;     /* Verde lima de estado positivo */
+    --quantum-yellow-warn: #ffef80;  /* Amarillo solar de advertencia */
+    --quantum-red-error: #ff5060;   /* Rojo de brecha de sistema */
+    --quantum-blue-link: #80b0ff;    /* Azul de hipervínculo estable */
+    --quantum-purple-neutral: #d0a0ff; /* Púrpura de estado neutral/info */
+
+    /* -- Tipografía del Nexus -- */
+    --font-display: 'Rajdhani', sans-serif; /* Cabeceras angulares y tech */
+    --font-body: 'Inter', sans-serif;        /* Cuerpo de texto limpio y legible */
+    --font-code: 'Fira Code', monospace;     /* Código con ligaduras */
+
+    /* -- Efectos de Energía y Sombras -- */
+    --glow-cyan-text: 0 0 8px var(--quantum-cyan-glow);
+    --glow-magenta-text: 0 0 8px var(--quantum-magenta-glow);
+    --glow-lime-text: 0 0 8px var(--quantum-lime-ok);
+    --glow-yellow-text: 0 0 8px var(--quantum-yellow-warn);
+    --glow-red-text: 0 0 8px var(--quantum-red-error);
+    --glow-purple-text: 0 0 8px var(--quantum-purple-neutral);
+
+    --glow-cyan-box-soft: 0 0 15px 2px rgba(0, 240, 255, 0.3);
+    --glow-magenta-box-soft: 0 0 15px 2px rgba(255, 0, 240, 0.3);
+    --glow-active-box: 0 0 18px 3px var(--nexus-border-accent);
+
+    --inset-shadow-light: inset 0 1px 1px rgba(224, 232, 255, 0.08);
+    --inset-shadow-deep: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+    --depth-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+    /* -- Métricas y Radios -- */
+    --spacing-unit: 8px;
+    --radius-sharp: 0px;       /* Sin radios para estética angular */
+    --radius-corner-cut: 4px; /* Para esquinas "cortadas" */
+    --border-width-thin: 1px;
+    --border-width-medium: 2px;
+}
+
+/* 2. ESTILOS BASE (El Entorno del Nexus Core OS) */
+body, .universal-scribe-output {
+    background-color: var(--nexus-bg-deep);
+    color: var(--nexus-text-primary);
+    font-family: var(--font-body);
+    font-size: 16px; /* Base sólida */
+    line-height: 1.65;
+    padding: calc(var(--spacing-unit) * 3);
+    margin: 0;
+    /* Fondo con patrón de circuito animado sutil */
+    background-image:
+        radial-gradient(var(--nexus-bg-primary) 1px, transparent 1.5px),
+        radial-gradient(var(--nexus-bg-primary) 1px, transparent 1.5px),
+        linear-gradient(rgba(100, 120, 255, 0.05) 1px, transparent 1px), /* Scanlines horizontales */
+        linear-gradient(90deg, rgba(100, 120, 255, 0.05) 1px, transparent 1px); /* Scanlines verticales */
+    background-size: 50px 50px, 50px 50px, 100% 40px, 40px 100%;
+    background-position: 0 0, 25px 25px, 0 0, 0 0;
+    background-attachment: fixed; /* Fondo fijo */
+    animation: pulse-background 20s infinite linear;
+}
+
+@keyframes pulse-background {
+    0% { background-color: var(--nexus-bg-deep); }
+    50% { background-color: #0d0d1a; } /* Ligeramente más claro/púrpura */
+    100% { background-color: var(--nexus-bg-deep); }
+}
+
+/* Scrollbars Quantum */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--nexus-bg-primary);
+    border: var(--border-width-thin) solid var(--nexus-border-primary);
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, var(--quantum-cyan-glow), var(--quantum-magenta-glow));
+    border-radius: var(--radius-corner-cut);
+    border: var(--border-width-thin) solid var(--nexus-bg-primary);
+    box-shadow: var(--glow-cyan-box-soft);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, var(--quantum-magenta-glow), var(--quantum-cyan-glow));
+    box-shadow: var(--glow-magenta-box-soft);
+}
+
+/* 3. ELEMENTOS COMUNES (Componentes del OS) */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--nexus-text-primary);
+    margin: calc(var(--spacing-unit) * 3) 0 calc(var(--spacing-unit) * 1.5) 0;
+    padding-bottom: calc(var(--spacing-unit) * 1);
+    border-bottom: var(--border-width-thin) solid var(--nexus-border-primary);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase; /* Estilo OS */
+    position: relative; /* Para pseudo-elementos */
+}
+h1 { font-size: 2.8em; font-weight: 700; color: var(--quantum-cyan-glow); text-shadow: var(--glow-cyan-text); border-color: var(--nexus-border-secondary); border-bottom-width: var(--border-width-medium); }
+h2 { font-size: 2.2em; color: var(--quantum-magenta-glow); text-shadow: var(--glow-magenta-text); }
+h3 { font-size: 1.7em; color: var(--nexus-text-primary); border-bottom-style: dotted; }
+h4 { font-size: 1.4em; border-bottom: none; color: var(--nexus-text-secondary); text-transform: none; font-weight: 500; }
+h5 { font-size: 1.2em; border-bottom: none; color: var(--nexus-text-secondary); font-style: italic; text-transform: none; }
+h6 { font-size: 1em; border-bottom: none; color: var(--nexus-text-disabled); font-weight: 400; text-transform: none; }
+
+/* Indicador de Sistema para Cabeceras */
+h1::before, h2::before, h3::before {
+    content: "[SYS]>"; /* Prefijo tipo terminal */
+    font-family: var(--font-code);
+    font-size: 0.6em;
+    color: var(--quantum-blue-link);
+    margin-right: var(--spacing-unit);
+    opacity: 0.8;
+}
+h2::before { color: var(--quantum-magenta-glow); content: "[MOD]>"; }
+h3::before { color: var(--nexus-text-secondary); content: "[LOG]>"; }
+
+/* Efecto glitch sutil en cabeceras principales */
+h1:hover, h2:hover {
+    animation: glitch-subtle 0.3s infinite alternate;
+}
+
+@keyframes glitch-subtle {
+    0% { transform: translate(0, 0); text-shadow: var(--glow-cyan-text); }
+    25% { transform: translate(-1px, 1px); text-shadow: 0 0 8px var(--quantum-red-error); }
+    50% { transform: translate(1px, -1px); text-shadow: 0 0 8px var(--quantum-lime-ok); }
+    75% { transform: translate(-1px, -1px); text-shadow: 0 0 8px var(--quantum-magenta-glow); }
+    100% { transform: translate(0, 0); text-shadow: var(--glow-magenta-text); }
+}
+
+p {
+    margin-bottom: calc(var(--spacing-unit) * 1.75);
+    color: var(--nexus-text-secondary); /* Texto de párrafo ligeramente más suave */
+}
+p strong { color: var(--nexus-text-primary); }
+
+a {
+    color: var(--quantum-blue-link);
+    text-decoration: none;
+    position: relative; /* Para el underline animado */
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--quantum-blue-link);
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+a:hover {
+    color: var(--quantum-cyan-glow);
+    text-shadow: var(--glow-cyan-text);
+}
+a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+strong, b {
+    font-weight: 600;
+    color: var(--nexus-text-primary);
+}
+em, i {
+    font-style: italic;
+    color: var(--nexus-text-secondary);
+    text-shadow: 0 0 3px var(--quantum-purple-neutral); /* Ligero brillo púrpura */
+}
+
+ul, ol {
+    margin-left: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    padding-left: calc(var(--spacing-unit) * 2.5);
+    border-left: var(--border-width-thin) solid var(--nexus-border-primary);
+}
+li {
+    margin-bottom: calc(var(--spacing-unit) * 0.75);
+    position: relative;
+}
+
+ul li::marker {
+    content: "»"; /* Marcador de flujo de datos */
+    color: var(--quantum-cyan-glow);
+    font-size: 1.2em;
+    position: absolute;
+    left: calc(-1 * var(--spacing-unit) * 2.5);
+    top: 0.1em;
+}
+
+ol {
+    list-style-type: none;
+    counter-reset: nexus-counter;
+}
+ol li {
+    counter-increment: nexus-counter;
+}
+ol li::marker {
+    content: "[" counter(nexus-counter, decimal-leading-zero) "]"; /* Contador formateado */
+    color: var(--quantum-magenta-glow);
+    font-family: var(--font-code);
+    font-weight: 500;
+    font-size: 0.9em;
+    position: absolute;
+    left: calc(-1 * var(--spacing-unit) * 3);
+    top: 0.2em;
+}
+
+/* Blockquote - Canal de Datos Encriptado */
+blockquote {
+    margin: calc(var(--spacing-unit) * 2.5) 0;
+    padding: calc(var(--spacing-unit) * 2);
+    border: var(--border-width-thin) solid var(--nexus-border-secondary);
+    border-left-width: 5px; /* Borde izquierdo más grueso */
+    border-left-color: var(--quantum-magenta-glow);
+    background: linear-gradient(135deg, var(--nexus-bg-secondary), var(--nexus-bg-primary));
+    border-radius: var(--radius-corner-cut);
+    box-shadow: var(--inset-shadow-deep), 0 2px 5px rgba(0,0,0,0.2);
+    color: var(--nexus-text-secondary);
+    position: relative; /* Para pseudo-elementos */
+}
+
+blockquote::before { /* Icono de candado */
+    content: "\f023"; /* Unicode para lock en Font Awesome (necesitaría importarlo) - usar SVG o pseudo-elemento si no */
+    /* Alternativa con pseudo-elemento: */
+    /* content: ''; */
+    /* ... estilos para dibujar un candado ... */
+    font-family: 'Font Awesome 6 Free'; /* Asumiendo FA */
+    font-weight: 900;
+    position: absolute;
+    top: var(--spacing-unit);
+    right: var(--spacing-unit);
+    color: var(--quantum-magenta-glow);
+    opacity: 0.5;
+    font-size: 1.5em;
+}
+
+blockquote p:last-of-type {
+    margin-bottom: 0;
+}
+
+/* Línea Divisoria (Separador de Datos) */
+hr {
+    border: none;
+    height: 3px;
+    background: linear-gradient(90deg,
+        transparent,
+        var(--quantum-cyan-glow) 20%,
+        var(--quantum-magenta-glow) 80%,
+        transparent
+    );
+    margin: calc(var(--spacing-unit) * 4) 0;
+    box-shadow: 0 0 10px var(--quantum-cyan-glow), 0 0 10px var(--quantum-magenta-glow);
+    position: relative;
+}
+hr::before, hr::after { /* Terminales de la línea */
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: var(--quantum-cyan-glow);
+    border-radius: 50%;
+    box-shadow: 0 0 5px var(--quantum-cyan-glow);
+}
+hr::before { left: 15%; }
+hr::after { right: 15%; background-color: var(--quantum-magenta-glow); box-shadow: 0 0 5px var(--quantum-magenta-glow); }
+
+
+/* Código (Interfaz de Comandos) */
+code {
+    font-family: var(--font-code);
+    background-color: var(--nexus-bg-secondary);
+    padding: 0.2em 0.4em;
+    border-radius: var(--radius-corner-cut);
+    font-size: 0.9em;
+    color: var(--quantum-lime-ok); /* Código inline en verde */
+    text-shadow: var(--glow-lime-text);
+    border: 1px solid var(--nexus-border-primary);
+}
+
+pre {
+    background-color: var(--nexus-bg-primary);
+    border: var(--border-width-thin) solid var(--nexus-border-secondary);
+    border-radius: var(--radius-corner-cut);
+    padding: calc(var(--spacing-unit) * 2);
+    margin: calc(var(--spacing-unit) * 2) 0;
+    overflow-x: auto; /* Scroll horizontal si es necesario */
+    box-shadow: var(--inset-shadow-deep);
+    position: relative;
+}
+
+pre::before { /* Etiqueta "CODE STREAM" */
+    content: 'CODE STREAM';
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: linear-gradient(45deg, var(--quantum-cyan-glow), var(--quantum-magenta-glow));
+    color: var(--nexus-bg-deep);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.8em;
+    padding: 2px 8px;
+    border-radius: var(--radius-corner-cut);
+    z-index: 1;
+    letter-spacing: 1px;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    color: var(--nexus-text-secondary); /* Color base para código en bloque */
+    text-shadow: none;
+    font-size: 1em; /* Tamaño normal en bloques */
+    line-height: 1.5;
+}
+
+/* Tablas (Matrices de Datos) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: calc(var(--spacing-unit) * 2) 0;
+    background-color: var(--nexus-bg-primary);
+    border: var(--border-width-medium) solid var(--nexus-border-secondary);
+    box-shadow: var(--depth-shadow);
+    border-radius: var(--radius-corner-cut);
+    overflow: hidden; /* Para que el radius afecte a las celdas */
+}
+
+thead {
+    background: linear-gradient(to bottom, var(--nexus-bg-tertiary), var(--nexus-bg-secondary));
+    border-bottom: var(--border-width-medium) solid var(--nexus-border-secondary);
+}
+
+th, td {
+    padding: calc(var(--spacing-unit) * 1.25);
+    text-align: left;
+    border: var(--border-width-thin) solid var(--nexus-border-primary);
+}
+
+th {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--quantum-cyan-glow);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: var(--glow-cyan-text);
+    border-bottom: var(--border-width-medium) solid var(--nexus-border-secondary);
+}
+
+td {
+    color: var(--nexus-text-secondary);
+}
+
+tbody tr:nth-child(even) {
+    background-color: rgba(26, 29, 46, 0.5); /* Fondo alterno sutil */
+}
+
+tbody tr:hover {
+    background-color: var(--nexus-bg-tertiary);
+    color: var(--nexus-text-primary);
+}
+tbody tr:hover td {
+    color: var(--nexus-text-primary);
+}
+
+/* 4. PANEL PERSONALIZADO (Contenedor de Datos Nexus) */
+.panel, .panel-layout-centered {
+    background: linear-gradient(145deg, var(--nexus-bg-secondary), var(--nexus-bg-primary));
+    border: var(--border-width-medium) solid var(--nexus-border-primary);
+    border-radius: var(--radius-corner-cut);
+    padding: calc(var(--spacing-unit) * 2.5);
+    margin: calc(var(--spacing-unit) * 3) 0;
+    box-shadow: var(--inset-shadow-deep), var(--depth-shadow);
+    position: relative;
+    overflow: hidden; /* Para efectos como pseudo-elementos */
+}
+
+.panel::before, .panel::after { /* Indicadores de estado/energía */
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 60%;
+    top: 20%;
+    background: linear-gradient(var(--quantum-cyan-glow), var(--quantum-magenta-glow));
+    opacity: 0.7;
+    box-shadow: 0 0 8px var(--quantum-cyan-glow);
+    animation: panel-indicator-pulse 3s infinite ease-in-out;
+}
+.panel::before { left: 0; border-radius: 0 var(--radius-corner-cut) var(--radius-corner-cut) 0; }
+.panel::after { right: 0; border-radius: var(--radius-corner-cut) 0 0 var(--radius-corner-cut); animation-delay: -1.5s; }
+
+@keyframes panel-indicator-pulse {
+    0%, 100% { transform: scaleY(0.6); opacity: 0.5; }
+    50% { transform: scaleY(1); opacity: 0.9; }
+}
+
+.panel-title {
+    font-family: var(--font-display);
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--quantum-cyan-glow);
+    text-shadow: var(--glow-cyan-text);
+    margin: calc(-1 * var(--spacing-unit) * 2.5) calc(-1 * var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 2) calc(-1 * var(--spacing-unit) * 2.5);
+    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2.5);
+    background: linear-gradient(to right, var(--nexus-bg-tertiary), transparent);
+    border-bottom: var(--border-width-medium) solid var(--nexus-border-secondary);
+    border-radius: var(--radius-corner-cut) var(--radius-corner-cut) 0 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block; /* Asegura que ocupe todo el ancho */
+}
+
+/* 5. ESTILOS ESPECÍFICOS DE PANEL (`panel-style-*`) */
+
+/* Estilo: Tech Corners */
+.panel-style-tech-corners {
+    border-image: conic-gradient(var(--quantum-cyan-glow), var(--quantum-magenta-glow), var(--quantum-cyan-glow)) 1;
+    border-image-slice: 1;
+    border-width: 3px;
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    position: relative;
+}
+.panel-style-tech-corners::before, .panel-style-tech-corners::after {
+    display: none; /* Ocultar indicadores base */
+}
+.panel-style-tech-corners {
+    /* Crear "cortes" en las esquinas usando pseudo-elementos */
+    clip-path: polygon(
+        15px 0, calc(100% - 15px) 0,
+        100% 15px, 100% calc(100% - 15px),
+        calc(100% - 15px) 100%, 15px 100%,
+        0 calc(100% - 15px), 0 15px
+    );
+}
+
+/* Estilo: Hologram (Simulación con gradientes y ruido) */
+.panel-style-hologram {
+    background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%), var(--nexus-bg-secondary);
+    border: var(--border-width-thin) solid var(--quantum-cyan-glow);
+    box-shadow: var(--glow-cyan-box-soft), inset 0 0 30px rgba(0, 240, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    animation: hologram-flicker 5s infinite linear alternate;
+}
+.panel-style-hologram::after { /* Líneas de scan tipo CRT */
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(rgba(100, 150, 255, 0.08) 50%, transparent 50%);
+    background-size: 100% 4px;
+    animation: hologram-scanline 2s infinite linear;
+    pointer-events: none;
+    opacity: 0.5;
+}
+@keyframes hologram-flicker {
+    0% { opacity: 0.9; box-shadow: var(--glow-cyan-box-soft), inset 0 0 30px rgba(0, 240, 255, 0.1); }
+    50% { opacity: 1; box-shadow: 0 0 25px 5px rgba(0, 240, 255, 0.4), inset 0 0 40px rgba(0, 240, 255, 0.2); }
+    100% { opacity: 0.85; box-shadow: var(--glow-cyan-box-soft), inset 0 0 35px rgba(0, 240, 255, 0.15); }
+}
+@keyframes hologram-scanline {
+    from { background-position: 0 0; }
+    to { background-position: 0 -8px; }
+}
+
+/* Estilo: Neo-Frame (Marco Angular) */
+.panel-style-neo-frame {
+    border: none;
+    padding: 2px; /* Espacio para el borde gradiente */
+    background: linear-gradient(135deg, var(--quantum-cyan-glow), var(--quantum-magenta-glow));
+    border-radius: 0; /* Bordes afilados */
+    position: relative;
+}
+.panel-style-neo-frame > * { /* Contenido interior */
+    background: var(--nexus-bg-primary);
+    padding: calc(var(--spacing-unit) * 2.5);
+}
+.panel-style-neo-frame .panel-title { /* Título dentro del marco */
+    background: var(--nexus-bg-secondary);
+    margin: 0;
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 2.5);
+    border-radius: 0;
+    border-bottom: 2px solid var(--quantum-magenta-glow);
+}
+
+/* Estilo: Glass Panel */
+.panel-style-glass-panel {
+    background: rgba(26, 29, 46, 0.7); /* Fondo semi-transparente */
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    border: 1px solid rgba(150, 180, 255, 0.4);
+    border-radius: 8px; /* Bordes más suaves para cristal */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+.panel-style-glass-panel::before, .panel-style-glass-panel::after {
+    display: none; /* Ocultar indicadores de energía */
+}
+
+/* Estilo: Circuit Nodes (Nodos en esquinas) */
+.panel-style-circuit-nodes {
+    border-color: var(--nexus-border-secondary);
+    position: relative;
+}
+.panel-style-circuit-nodes::before, .panel-style-circuit-nodes::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: var(--quantum-cyan-glow);
+    border: 2px solid var(--nexus-bg-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--quantum-cyan-glow);
+}
+.panel-style-circuit-nodes::before { top: -8px; left: -8px; }
+.panel-style-circuit-nodes::after { bottom: -8px; right: -8px; background-color: var(--quantum-magenta-glow); box-shadow: 0 0 8px var(--quantum-magenta-glow); }
+/* Añadir nodos adicionales para las otras esquinas */
+.panel-style-circuit-nodes > div::before, .panel-style-circuit-nodes > div::after { /* Usar un div wrapper o similar */
+    /* ... estilos similares para top-right y bottom-left ... */
+}
+
+/* Estilo: Cut Corners */
+.panel-style-cut-corners {
+    clip-path: polygon(10px 0%, 100% 0%, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0% 100%, 0% 10px);
+    border-radius: 0;
+}
+
+/* Estilo: Corner Brackets (Soportes en esquina) */
+.panel-style-corner-brackets {
+    border: none; /* Sin borde principal */
+    position: relative;
+    padding: calc(var(--spacing-unit) * 3); /* Más padding para espacio */
+}
+.panel-style-corner-brackets::before, .panel-style-corner-brackets::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border: 3px solid var(--quantum-cyan-glow);
+    border-radius: var(--radius-corner-cut);
+}
+/* Esquina superior izquierda */
+.panel-style-corner-brackets::before {
+    top: 8px; left: 8px;
+    border-right: none;
+    border-bottom: none;
+}
+/* Esquina inferior derecha */
+.panel-style-corner-brackets::after {
+    bottom: 8px; right: 8px;
+    border-left: none;
+    border-top: none;
+    border-color: var(--quantum-magenta-glow);
+}
+
+
+/* 6. LAYOUTS (`panel-layout-*`) */
+
+.panel-layout-float-left {
+    float: left;
+    margin-right: calc(var(--spacing-unit) * 3) !important;
+    margin-bottom: calc(var(--spacing-unit) * 1.5) !important;
+    margin-left: 0 !important;
+    margin-top: var(--spacing-unit) !important;
+    clear: left;
+}
+
+.panel-layout-float-right {
+    float: right;
+    margin-left: calc(var(--spacing-unit) * 3) !important;
+    margin-bottom: calc(var(--spacing-unit) * 1.5) !important;
+    margin-right: 0 !important;
+    margin-top: var(--spacing-unit) !important;
+    clear: right;
+}
+
+/* Asegurarse de que los anchos funcionen */
+.panel-layout-float-left[style*="width"], .panel-layout-float-right[style*="width"] {
+    max-width: 90%; /* Prevenir anchos absurdos */
+}
+
+/* Utilidad para limpiar flotantes */
+.clear-float {
+    clear: both;
+}
+
+.panel-layout-centered {
+    display: block;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 80%; /* O el ancho especificado */
+    float: none !important;
+}
+
+/* 7. CLASES DE ESTADO (`panel-*`) */
+.panel-info {
+    border-left-color: var(--quantum-blue-link) !important; /* Usa !important con precaución */
+    box-shadow: inset 5px 0 0 var(--quantum-blue-link), var(--inset-shadow-deep), var(--depth-shadow);
+}
+.panel-info .panel-title {
+    color: var(--quantum-blue-link);
+    text-shadow: 0 0 5px var(--quantum-blue-link);
+    border-bottom-color: var(--quantum-blue-link);
+}
+
+.panel-success {
+    border-left-color: var(--quantum-lime-ok) !important;
+    box-shadow: inset 5px 0 0 var(--quantum-lime-ok), var(--inset-shadow-deep), var(--depth-shadow);
+}
+.panel-success .panel-title {
+    color: var(--quantum-lime-ok);
+    text-shadow: var(--glow-lime-text);
+    border-bottom-color: var(--quantum-lime-ok);
+}
+
+.panel-warning {
+    border-left-color: var(--quantum-yellow-warn) !important;
+    box-shadow: inset 5px 0 0 var(--quantum-yellow-warn), var(--inset-shadow-deep), var(--depth-shadow);
+}
+.panel-warning .panel-title {
+    color: var(--quantum-yellow-warn);
+    text-shadow: var(--glow-yellow-text);
+    border-bottom-color: var(--quantum-yellow-warn);
+}
+
+.panel-error {
+    border-left-color: var(--quantum-red-error) !important;
+    box-shadow: inset 5px 0 0 var(--quantum-red-error), var(--inset-shadow-deep), var(--depth-shadow);
+    animation: error-pulse 1.5s infinite;
+}
+.panel-error .panel-title {
+    color: var(--quantum-red-error);
+    text-shadow: var(--glow-red-text);
+    border-bottom-color: var(--quantum-red-error);
+}
+
+@keyframes error-pulse {
+    0% { box-shadow: inset 5px 0 0 var(--quantum-red-error), 0 0 0px var(--quantum-red-error), var(--inset-shadow-deep), var(--depth-shadow); }
+    50% { box-shadow: inset 5px 0 0 var(--quantum-red-error), 0 0 15px var(--quantum-red-error), var(--inset-shadow-deep), var(--depth-shadow); }
+    100% { box-shadow: inset 5px 0 0 var(--quantum-red-error), 0 0 0px var(--quantum-red-error), var(--inset-shadow-deep), var(--depth-shadow); }
+}
+
+
+/* 8. ANIMACIONES (`panel-animation-*`) */
+.panel-animation-pulse {
+    animation: pulse 2s infinite ease-in-out;
+}
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.02); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.panel-animation-glow {
+    animation: glow 3s infinite alternate;
+}
+@keyframes glow {
+    from {
+        box-shadow: var(--inset-shadow-deep), var(--depth-shadow), 0 0 10px 2px var(--quantum-cyan-glow);
+    }
+    to {
+        box-shadow: var(--inset-shadow-deep), var(--depth-shadow), 0 0 25px 5px var(--quantum-magenta-glow);
+    }
+}
+
+/* 9. ELEMENTOS ADICIONALES DENTRO DE PANELES */
+
+.panel img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-corner-cut);
+    border: var(--border-width-thin) solid var(--nexus-border-primary);
+    margin-top: var(--spacing-unit);
+}
+
+.panel .button, /* Asumiendo una clase .button genérica */
+.panel button {
+    /* Estilos futuristas para botones dentro de paneles */
+    background: linear-gradient(45deg, var(--nexus-bg-tertiary), var(--nexus-bg-secondary));
+    border: var(--border-width-medium) solid var(--nexus-border-secondary);
+    color: var(--quantum-cyan-glow);
+    padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: var(--radius-corner-cut);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-shadow: var(--glow-cyan-text);
+    margin-right: var(--spacing-unit);
+}
+
+.panel .button:hover,
+.panel button:hover {
+    background: linear-gradient(45deg, var(--quantum-cyan-glow), var(--quantum-magenta-glow));
+    color: var(--nexus-bg-deep);
+    border-color: var(--quantum-cyan-glow);
+    box-shadow: var(--glow-active-box);
+    text-shadow: none;
+}
+
+/* Estilos específicos para botones primarios, de error, etc. */
+.panel .button-primary { /* ... */ }
+.panel .button-danger { /* ... */ }
+
+/* 10. RESPONSIVIDAD */
+@media (max-width: 768px) {
+    .panel-layout-float-left, .panel-layout-float-right {
+        float: none;
+        width: 100% !important; /* Ocupa todo el ancho */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    body, .universal-scribe-output {
+        padding: calc(var(--spacing-unit) * 1.5);
+    }
+    h1 { font-size: 2.2em; }
+    h2 { font-size: 1.8em; }
+}
+
+/* Fin del Tema Nexus Core OS V2.5 */ 

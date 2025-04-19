@@ -232,3 +232,6 @@ dist-ssr
 
 # Coverage output
 coverage
+
+# Cursor editor directory
+cursor/

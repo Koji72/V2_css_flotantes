@@ -1,5 +1,8 @@
 # 🎯 Universal Scribe V2.6 - Roadmap y Objetivos
 
+## ✨ Visión General
+Crear un editor Markdown avanzado (Universal Scribe) centrado en el texto plano pero con capacidades avanzadas de estructuración visual, superando las limitaciones de herramientas existentes como Notion y Obsidian. El editor debe ofrecer una experiencia de usuario fluida, soporte offline robusto, exportación de alta calidad y extensibilidad.
+
 ## 📊 Análisis de Competencia (UI/UX)
 
 ### 🔍 Obsidian
@@ -105,6 +108,15 @@
 
 ## 🛠️ Implementación Técnica
 
+### 🥞 Stack Tecnológico Principal (V2.6)
+- **Framework**: React (v18+) con TypeScript
+- **Markdown Engine**: `react-markdown` con `remark-gfm` (tablas, tachado, listas tareas), `rehype-raw` (HTML básico), `remark-directive` y plugins personalizados (`remarkCustomPanels`).
+- **Code Highlighting**: `react-syntax-highlighter` (Prism.js, tema vscDarkPlus)
+- **Styling**: CSS estándar, Variables CSS, potencialmente Tailwind CSS para utilidades.
+- **Editor Core**: `react-codemirror` (CodeMirror 6)
+- **Persistencia**: `localStorage` (auto-guardado básico)
+- **Imágenes Locales**: `FileReader API`
+
 ### 📦 Componentes Principales
 - Editor (CodeMirror)
 - Preview (iframe)
@@ -115,31 +127,46 @@
 
 ### 🔄 Gestión de Estado
 - Zustand para estado global
-- Estado de paneles
+  - Estado de editor/preview
+  - Estado de paneles y layout
 - Configuración de usuario
 - Plantilla activa
 
 ### 📐 Layout
-- react-resizable-panels
+- `react-resizable-panels` (base)
 - Flexbox/Grid
 - Diseño responsive
 - Soporte para múltiples monitores
 
 ## 📅 Fases de Desarrollo
 
-### 🎯 V2.6 (Actual)
-- [x] Layout base con editor/preview
-- [x] Soporte para plantillas
-- [x] Funcionalidades markdown básicas
-- [ ] Barra de herramientas mejorada
-- [ ] Sistema de notificaciones
+### 🎯 V2.6 (Actual - Base y Bloques Semánticos)
+- [x] Layout base con editor/preview (`react-resizable-panels`).
+- [x] Integración de `react-codemirror`.
+- [x] Soporte inicial para plantillas CSS.
+- [x] Funcionalidades markdown básicas (GFM via `remark-gfm`).
+- [x] Resaltado de sintaxis (`react-syntax-highlighter`).
+- [x] Soporte HTML básico (`rehype-raw` para `<sup>`, `<sub>`, `<mark>`, `<details>`).
+- [x] Bloques semánticos:
+    - [x] Admoniciones (via `remark-github-beta-blockquote-admonitions` o similar).
+    - [x] Secciones colapsables (via `<details>`/`<summary>`).
+    - [x] Paneles configurables (via `remark-directive` y `remarkCustomPanels`).
+- [ ] Barra de herramientas mejorada (interacción, botones de formato).
+- [ ] Sistema de notificaciones (feedback usuario).
+- [ ] Mejoras UI/UX generales y estabilidad del redimensionado.
+- [ ] Persistencia básica (`localStorage`).
 
-### 🚀 V3.0 (Futuro)
-- [ ] Gestor de assets
-- [ ] Panel de análisis
-- [ ] Previsualización inline
-- [ ] Extensiones y plugins
-- [ ] Colaboración en tiempo real
+### 🚀 V3.0 (Futuro - Expansión y Profesionalización)
+- [ ] **Exportación Avanzada**: PDF y HTML de alta fidelidad.
+- [ ] **Modo Offline Completo**: Evaluar IndexedDB para gestión avanzada de documentos.
+- [ ] **Extensibilidad y Bloques Personalizados**: Desarrollar más plugins `remark`/`rehype` para sintaxis únicas y bloques interactivos.
+- [ ] **Gestor de Assets**: Manejo integrado de imágenes y otros archivos.
+- [ ] **Panel de Análisis**: Información sobre estructura y contenido del documento.
+- [ ] **Previsualización Inline**: Mejoras WYSIWYM.
+- [ ] **Mejoras de Editor Avanzadas**: Considerar alternativas si `CodeMirror` no es suficiente (ej. Slate.js).
+- [ ] **Gestión de Imágenes Avanzada**: Opciones de almacenamiento en nube.
+- [ ] **Prácticas de Desarrollo Robustas**: Testing (Jest, RTL), linting (ESLint, Prettier), Storybook.
+- [ ] **Colaboración en tiempo real** (Opcional, muy largo plazo).
 
 ## 🎯 Objetivos Clave
 
@@ -151,7 +178,7 @@
 2. **Flexibilidad**
    - Personalización extensa
    - Soporte para múltiples flujos de trabajo
-   - Extensibilidad
+   - Extensibilidad (plugins, bloques personalizados)
 
 3. **Profesionalidad**
    - UI/UX de alta calidad
@@ -162,6 +189,11 @@
    - Arquitectura modular
    - Base para futuras características
    - Soporte para plugins
+
+### ✨ Diferenciación Clave
+*   **Offline First:** Superar la dependencia online de Notion mediante un robusto almacenamiento local.
+*   **Exportación Profesional:** Ofrecer más control y calidad en las exportaciones que Obsidian.
+*   **Extensibilidad Semántica:** Proveer un sistema de bloques más flexible y personalizable que las alternativas generalistas.
 
 ## 📈 Métricas de Éxito
 
