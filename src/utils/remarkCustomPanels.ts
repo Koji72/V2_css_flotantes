@@ -3,6 +3,7 @@ import { visit } from 'unist-util-visit';
 import type { Root, Parent, Content } from 'mdast';
 import type { ContainerDirective } from 'mdast-util-directive';
 import type { Plugin } from 'unified';
+import { h } from 'hastscript';
 
 // Ya no necesitamos nuestras interfaces Node/DirectiveNode
 
@@ -48,28 +49,32 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
           classList.push(`panel-style--${style}`);
         }
 
-        // --- Añadir lógica para el título --- 
-        if (title) {
-          // Asegurar que node.children exista
-          node.children = node.children || [];
+        // --- Añadir lógica para el título ---
+        if (title && typeof title === 'string') {
+          // Asegurar que node.children exista y sea un array
+          if (!node.children) {
+             node.children = [];
+          } else if (!Array.isArray(node.children)) {
+             console.warn("[remarkCustomPanels] Panel directive children was not an array, converting...");
+             node.children = [node.children];
+          }
 
-          // Convertir el nodo HAST a un nodo mdast compatible si es necesario,
-          // o insertarlo directamente si el ecosistema lo maneja.
-          // Por ahora, intentaremos insertarlo directamente asumiendo
-          // que rehype manejará la conversión o que el tipo es compatible.
-          // ¡Importante! Esto podría necesitar ajustes dependiendo de la cadena completa de plugins.
-          // Si esto falla, podríamos necesitar un paso intermedio o un tipo diferente.
-          // Necesitamos asegurar que `titleNode` sea del tipo `Content` de mdast
-          // Lo más seguro es crear un nodo 'html' crudo si rehype-raw está activado
-          // O, más correctamente, manipular el árbol después con rehype. 
-          // Vamos a intentarlo añadiendo el nodo como 'html' para rehype-raw
+          // Crear el nodo HAST para el título usando hastscript
+          const titleHastNode = h('h4', { className: 'panel-title' }, title); 
 
-          const titleHtmlNode = {
-              type: 'html' as const, // Usar 'html' para que rehype-raw lo procese
-              value: `<h4 class="panel-title">${title}</h4>` // Generar el HTML directamente
+          // Intento 1: Crear un nodo MDAST compatible con HAST (usando data)
+          const titleMdastNode: Content = {
+            type: 'paragraph',
+            data: {
+              hName: titleHastNode.tagName, 
+              hProperties: titleHastNode.properties,
+            },
+            children: [{ type: 'text', value: title }]
           };
-
-          node.children.unshift(titleHtmlNode);
+          
+          // Insertar el nodo MDAST con datos HAST al principio
+          node.children.unshift(titleMdastNode);
+        } else if (attributes.hasOwnProperty('title')) {
         }
         // --- Fin de la lógica del título ---
 

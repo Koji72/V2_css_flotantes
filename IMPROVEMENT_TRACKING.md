@@ -50,17 +50,21 @@ Se ha ampliado el soporte de sintaxis Markdown y se han añadido bloques semánt
         *   Se añadió un botón (`[+]`) y un atajo (`Ctrl+Shift+D`) en `src/App.tsx` para insertar una plantilla `<details><summary>...</summary>...</details>`.
         *   Se añadieron estilos CSS básicos a `src/App.css` para formatear los elementos `details` y `summary`.
     9.  **Paneles Configurables (Directivas `:::panel`):**
-        *   **Necesidad:** Crear bloques de contenido flexibles con diferentes layouts (flotante, centrado) y estilos visuales, controlados desde Markdown.
+        *   **Necesidad:** Crear bloques de contenido flexibles con diferentes layouts (flotante, centrado) y estilos visuales, controlados desde Markdown, incluyendo un título opcional.
         *   **Solución:** Se utilizó el plugin `remark-directive` para habilitar la sintaxis de directivas (`:::name[attr]{key=val}`).
         *   Se creó un plugin personalizado `remarkCustomPanels` (`src/utils/remarkCustomPanels.ts`) para procesar específicamente las directivas `:::panel`.
         *   Este plugin:
             *   Utiliza `unist-util-visit` para encontrar nodos `containerDirective` con el nombre `panel`.
-            *   Lee los atributos de la directiva (ej., `{layout=floating-left style=simple}`).
+            *   Lee los atributos de la directiva (ej., `{layout=floating-left style=simple title="Mi Título"}`).
             *   Transforma el nodo en un elemento HTML `<div>` asignando `'div'` a `node.data.hName`.
-            *   Asigna clases CSS a `node.data.hProperties.className` basadas en los atributos `layout` y `style` (ej., `panel`, `panel-layout-floating-left`, `panel-style-simple`).
+            *   Asigna clases CSS a `node.data.hProperties.className` basadas en los atributos `layout` y `style` (ej., `panel`, `layout--floating-left`, `panel-style-simple`).
+            *   **Manejo del Título:**
+                *   Si se proporciona el atributo `title`, se crea un nodo HAST para el título (ej., `<h4>`) usando la librería `hastscript`.
+                *   Este nodo HAST del título se inserta al principio del contenido del panel (`node.children`) mediante un nodo MDAST intermedio (ej., `paragraph`) que lleva la información HAST en su propiedad `data` (`hName`, `hProperties`). Esto asegura la compatibilidad con `rehype-raw` y `ReactMarkdown`.
+                *   (Nota: Un intento previo de insertar HTML crudo (`{type: 'html', value: '<h4>...'}`) falló en el renderizado).
             *   Inicialmente hubo errores de tipos con `unist-util-visit`; se resolvieron importando y usando los tipos correctos (`ContainerDirective`) de `mdast-util-directive` e instalando `@types/mdast`.
-        *   Se añadieron estilos CSS básicos en `blank-template.css` para las clases `panel`, `panel-layout-*` y `panel-style-*` para definir la apariencia inicial.
-*   **Beneficios:** Mayor capacidad de expresión y formato dentro del editor, incluyendo estructuración semántica con admoniciones, organización con secciones colapsables y **diseño flexible con paneles configurables**. La interfaz (botones y atajos) facilita el uso de estas funcionalidades. Se resolvieron incompatibilidades de plugins buscando alternativas funcionales y se implementaron soluciones personalizadas con directivas.
+        *   Se añadieron estilos CSS básicos en `blank-template.css` (o el CSS de la plantilla activa) para las clases `panel`, `panel-layout-*`, `panel-style-*` y `panel-title` para definir la apariencia inicial.
+*   **Beneficios:** Mayor capacidad de expresión y formato dentro del editor, incluyendo estructuración semántica con admoniciones, organización con secciones colapsables y diseño flexible con paneles configurables **que ahora soportan títulos, layouts y estilos personalizados**. La interfaz (botones y atajos) facilita el uso de estas funcionalidades. Se resolvieron incompatibilidades de plugins buscando alternativas funcionales y se implementaron soluciones personalizadas con directivas.
 
 ## Mejora: Renderizado de Bloques de Código
 

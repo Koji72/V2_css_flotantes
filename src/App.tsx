@@ -17,6 +17,7 @@ import {
   Minus,
   ListOrdered
 } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 import './App.css';
 
 const AUTOSAVE_KEY = 'markdown-editor-content';
@@ -63,6 +64,11 @@ const App: React.FC = () => {
   }, [isDarkMode]);
 
   useEffect(() => {
+    if (!hasLoadedRef.current) {
+      console.log('[Autosave] Skipping initial autosave check.');
+      return;
+    }
+
     if (autosaveTimeoutRef.current) {
       clearTimeout(autosaveTimeoutRef.current);
     }
@@ -70,6 +76,7 @@ const App: React.FC = () => {
     autosaveTimeoutRef.current = setTimeout(() => {
       console.log('[Autosave] Saving content to localStorage...');
       localStorage.setItem(AUTOSAVE_KEY, content);
+      toast.success('Contenido auto-guardado!');
     }, AUTOSAVE_DELAY);
 
     return () => {
@@ -359,6 +366,18 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: isDarkMode ? '#333' : '#fff',
+            color: isDarkMode ? '#fff' : '#333',
+          },
+          success: {
+            duration: 3000,
+          },
+        }}
+      />
       <input 
         type="file"
         ref={fileInputRef}

@@ -151,10 +151,10 @@ Crear un editor Markdown avanzado (Universal Scribe) centrado en el texto plano 
     - [x] Admoniciones (via `remark-github-beta-blockquote-admonitions` o similar).
     - [x] Secciones colapsables (via `<details>`/`<summary>`).
     - [x] Paneles configurables (via `remark-directive` y `remarkCustomPanels`).
-- [ ] Barra de herramientas mejorada (interacción, botones de formato).
-- [ ] Sistema de notificaciones (feedback usuario).
-- [ ] Mejoras UI/UX generales y estabilidad del redimensionado.
-- [ ] Persistencia básica (`localStorage`).
+- [x] Barra de herramientas mejorada (interacción, botones de formato).
+- [x] Sistema de notificaciones (feedback usuario).
+- [x] Mejoras UI/UX generales y estabilidad del redimensionado.
+- [x] Persistencia básica (`localStorage`).
 
 ### 🚀 V3.0 (Futuro - Expansión y Profesionalización)
 - [ ] **Exportación Avanzada**: PDF y HTML de alta fidelidad.

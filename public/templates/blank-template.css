@@ -90,6 +90,43 @@ body {
   background-color: white;
 }
 
+/* --- Nuevos Estilos Semánticos --- */
+
+/* Estilo Nota (Azul claro) */
+.panel-style--note {
+  background-color: #e7f3fe; /* Fondo azul muy claro */
+  border-left: 5px solid #2980b9; /* Borde izquierdo azul */
+  padding-left: 15px; /* Añadir padding izquierdo para separar del borde */
+}
+.panel-style--note > .panel-title {
+  color: #2980b9; /* Título azul */
+  border-bottom-color: #aed6f1; /* Borde inferior azul claro */
+}
+
+/* Estilo Advertencia (Amarillo/Naranja) */
+.panel-style--warning {
+  background-color: #fff9e6; /* Fondo amarillo muy claro */
+  border-left: 5px solid #f39c12; /* Borde izquierdo naranja */
+  padding-left: 15px;
+}
+.panel-style--warning > .panel-title {
+  color: #f39c12; /* Título naranja */
+  border-bottom-color: #fde3a7; /* Borde inferior amarillo claro */
+}
+
+/* Estilo Éxito (Verde) */
+.panel-style--success {
+  background-color: #eafaf1; /* Fondo verde muy claro */
+  border-left: 5px solid #2ecc71; /* Borde izquierdo verde */
+  padding-left: 15px;
+}
+.panel-style--success > .panel-title {
+  color: #2ecc71; /* Título verde */
+  border-bottom-color: #abebc6; /* Borde inferior verde claro */
+}
+
+/* --- Fin Nuevos Estilos Semánticos --- */
+
 /* Layouts de panel */
 .layout--left {
   float: left;
