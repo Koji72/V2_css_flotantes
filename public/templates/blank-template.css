@@ -36,6 +36,17 @@ body {
   padding: 5px;
 }
 
+/* Estilos para el título del panel */
+.panel-title {
+  margin-top: 0; /* Eliminar margen superior si es h4 */
+  margin-bottom: 15px; /* Espacio antes del contenido */
+  padding-bottom: 10px; /* Espacio dentro del borde inferior */
+  border-bottom: 1px solid #eee; /* Línea separadora */
+  font-size: 1.3em; /* Un poco más grande */
+  font-weight: bold; /* Destacar el título */
+  color: #333; /* Color principal oscuro */
+}
+
 /* Estilo tech-corners */
 .panel-style--tech-corners {
   position: relative;

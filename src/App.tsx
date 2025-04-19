@@ -12,7 +12,10 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import {
   Bold, Italic, Heading1, Heading2, List, Quote, Code, Link2, Image as ImageIcon,
   Table, Strikethrough, ListTodo, Superscript, Subscript, Highlighter, ChevronsUpDown,
-  Moon, Sun
+  Moon, Sun,
+  PanelTopOpen,
+  Minus,
+  ListOrdered
 } from 'lucide-react';
 import './App.css';
 
@@ -313,6 +316,47 @@ const App: React.FC = () => {
     syncScroll('preview');
   }, [syncScroll]);
 
+  // Definir la función insertOrWrapBlock (si no existe ya una similar)
+  // O simplemente usar insertText directamente si es solo inserción
+  const insertBlock = useCallback((textToInsert: string) => {
+    insertText(textToInsert);
+  }, [insertText]);
+
+  // --- Toolbar Buttons Definition ---
+  const buttons = [
+    // Grupo Formato Básico
+    { title: "Negrita (Ctrl+B)", icon: <Bold size={18} />, action: () => applyFormatRef.current('**', 'wrap') },
+    { title: "Cursiva (Ctrl+I)", icon: <Italic size={18} />, action: () => applyFormatRef.current('*', 'wrap') },
+    { title: "Tachado (Ctrl+S)", icon: <Strikethrough size={18} />, action: () => applyFormatRef.current('~~', 'wrap') },
+    { title: "Resaltado (Ctrl+Shift+H)", icon: <Highlighter size={18} />, action: () => applyFormatRef.current('<mark>', 'wrap') },
+    { title: "Superíndice (Ctrl+Shift+P)", icon: <Superscript size={18} />, action: () => applyFormatRef.current('<sup>', 'wrap') },
+    { title: "Subíndice (Ctrl+Shift+B)", icon: <Subscript size={18} />, action: () => applyFormatRef.current('<sub>', 'wrap') },
+    { isSeparator: true },
+    // Grupo Encabezados
+    { title: "Encabezado 1 (Ctrl+1)", icon: <Heading1 size={18} />, action: () => insertBlock('# ') },
+    { title: "Encabezado 2 (Ctrl+2)", icon: <Heading2 size={18} />, action: () => insertBlock('## ') },
+    { isSeparator: true },
+    // Grupo Listas
+    { title: "Lista Desordenada (Ctrl+L)", icon: <List size={18} />, action: () => insertBlock('- ') },
+    { title: "Lista Ordenada", icon: <ListOrdered size={18} />, action: () => insertBlock('1. ') }, // Añadir si se desea
+    { title: "Lista de Tareas (Ctrl+Shift+C)", icon: <ListTodo size={18} />, action: () => insertBlock('- [ ] ') },
+    { isSeparator: true },
+    // Grupo Bloques
+    { title: "Cita (Ctrl+Q)", icon: <Quote size={18} />, action: () => insertBlock('> ') },
+    { title: "Código (Ctrl+`)", icon: <Code size={18} />, action: () => applyFormatRef.current('`', 'wrap') }, // O insertar bloque ```
+    { title: "Bloque Colapsable (Ctrl+Shift+D)", icon: <ChevronsUpDown size={18} />, action: () => insertText('\n<details>\n  <summary>Título</summary>\n  \n  Contenido oculto...\n  \n</details>\n') },
+    { title: "Insertar Panel", icon: <PanelTopOpen size={18} />, action: () => insertText('\n:::panel{title="Título"}\n\n:::\n') }, // <-- NUEVO BOTÓN
+    { isSeparator: true },
+    // Grupo Inserciones
+    { title: "Enlace (Ctrl+K)", icon: <Link2 size={18} />, action: () => applyFormatRef.current('[](url)', 'insert') },
+    { title: "Imagen (Ctrl+G)", icon: <ImageIcon size={18} />, action: () => handleImageButtonClickRef.current() },
+    { title: "Tabla (Ctrl+T)", icon: <Table size={18} />, action: () => insertTableTemplateRef.current() },
+    { title: "Línea Horizontal", icon: <Minus size={18} />, action: () => insertText('\n\n---\n\n') },
+    { isSeparator: true },
+    // Grupo Otros
+    { title: "Cambiar Tema", icon: isDarkMode ? <Sun size={18} /> : <Moon size={18} />, action: toggleTheme },
+  ];
+
   return (
     <div className="app">
       <input 
@@ -323,48 +367,15 @@ const App: React.FC = () => {
         style={{ display: 'none' }} 
       />
       <div className="toolbar">
-        <div className="flex gap-2 flex-wrap items-center">
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('**', 'wrap')} title="Negrita (Ctrl+B)"><Bold size={16} /></button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('*', 'wrap')} title="Cursiva (Ctrl+I)"><Italic size={16} /></button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('~~', 'wrap')} title="Tachado (Ctrl+S)"><Strikethrough size={16} /></button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('<mark>', 'wrap')} title="Resaltado (Ctrl+Shift+H)"><Highlighter size={16} /></button>
-
-          <div className="toolbar-separator"></div>
-
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('# ', 'line')} title="Título 1 (Ctrl+1)"><Heading1 size={16} /></button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('## ', 'line')} title="Título 2 (Ctrl+2)"><Heading2 size={16} /></button>
-
-          <div className="toolbar-separator"></div>
-
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('- ', 'line')} title="Lista (Ctrl+L)"><List size={16} /></button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('- [ ] ', 'line')} title="Lista de Tareas (Ctrl+Shift+C)"><ListTodo size={16} /></button>
-
-          <div className="toolbar-separator"></div>
-
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('> ', 'line')} title="Cita (Ctrl+Q)"><Quote size={16} /></button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('`', 'wrap')} title="Código (Ctrl+`)"><Code size={16} /></button>
-          <button className="toolbar-button" onClick={insertDetailsTemplate} title="Sección Colapsable (Ctrl+Shift+D)"><ChevronsUpDown size={16} /></button>
-
-          <div className="toolbar-separator"></div>
-
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('[](url)', 'insert')} title="Enlace (Ctrl+K)"><Link2 size={16} /></button>
-          <button className="toolbar-button" onClick={handleImageButtonClickRef.current} title="Insertar Imagen Local (Ctrl+G)"><ImageIcon size={16} /></button>
-          <button className="toolbar-button" onClick={insertTableTemplateRef.current} title="Insertar Tabla (Ctrl+T)"><Table size={16} /></button>
-
-          <div className="toolbar-separator"></div>
-
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('<sup>', 'wrap')} title="Superíndice (Ctrl+Shift+P)"><Superscript size={16} /></button>
-          <button className="toolbar-button" onClick={() => applyFormatRef.current('<sub>', 'wrap')} title="Subíndice (Ctrl+Shift+B)"><Subscript size={16} /></button>
-
-        </div>
-        <div className="toolbar-separator mx-2"></div>
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-          title={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-        >
-          {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
+        {buttons.map((btn, index) => (
+          btn.isSeparator ? (
+            <div key={`sep-${index}`} className="toolbar-separator"></div>
+          ) : (
+            <button key={btn.title} title={btn.title} onClick={btn.action} className="toolbar-button">
+              {btn.icon}
+            </button>
+          )
+        ))}
       </div>
       <div className="flex flex-1 h-full">
         <div className="editor-container" style={{ width: `${leftWidth}%` }}>
