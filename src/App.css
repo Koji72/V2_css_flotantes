@@ -229,6 +229,99 @@
   font-size: 1em;
 }
 
+/* Estilo explícito para superíndice dentro de la vista previa */
+.preview sup,
+.preview code sup {
+  font-size: 0.75em;
+  vertical-align: super;
+  line-height: 0;
+  position: relative;
+}
+
+/* Estilo explícito para subíndice dentro de la vista previa */
+.preview sub,
+.preview code sub {
+  font-size: 0.75em;
+  vertical-align: sub;
+  line-height: 0;
+  position: relative;
+}
+
+/* Estilo explícito para texto resaltado (mark) dentro de la vista previa */
+.preview mark,
+.preview code mark {
+  background-color: #ffec3d;
+  color: #333333;
+  padding: 0.1em 0.2em;
+  border-radius: 3px;
+}
+
+/* Estilos para Admoniciones (GitHub Style) */
+.preview .admonition {
+  padding: 1em 1.5em;
+  margin-bottom: 1em;
+  border-left-width: 4px;
+  border-left-style: solid;
+  border-radius: 4px;
+  background-color: var(--bg-secondary);
+}
+
+.preview .admonition p {
+  margin-bottom: 0.5em; /* Menos espacio entre párrafos dentro de la admonición */
+}
+
+.preview .admonition p:last-child {
+  margin-bottom: 0; /* Sin espacio extra al final */
+}
+
+.preview .admonition .admonition-title {
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  display: block; /* Asegurar que esté en su propia línea */
+  text-transform: uppercase; /* Poner el título en mayúsculas como en GitHub */
+}
+
+/* Colores específicos por tipo */
+.preview .admonition.note {
+  border-left-color: #58a6ff; /* Azul */
+}
+.preview .admonition.note .admonition-title {
+  color: #58a6ff;
+}
+
+.preview .admonition.tip {
+  border-left-color: #3fb950; /* Verde */
+}
+.preview .admonition.tip .admonition-title {
+  color: #3fb950;
+}
+
+.preview .admonition.important {
+  border-left-color: #a371f7; /* Púrpura */
+}
+.preview .admonition.important .admonition-title {
+  color: #a371f7;
+}
+
+.preview .admonition.warning {
+  border-left-color: #d29922; /* Naranja/Amarillo */
+}
+.preview .admonition.warning .admonition-title {
+  color: #d29922;
+}
+
+.preview .admonition.caution {
+  border-left-color: #f85149; /* Rojo */
+}
+.preview .admonition.caution .admonition-title {
+  color: #f85149;
+}
+
+/* Ajustes para modo oscuro si es necesario */
+[data-theme="dark"] .preview .admonition {
+   background-color: rgba(50, 50, 50, 0.3); /* Fondo ligeramente más oscuro */
+}
+
 /* Ajustes Modo Oscuro para Vista Previa */
 [data-theme="dark"] .preview a {
   color: #60a5fa;
@@ -243,6 +336,61 @@
 [data-theme="dark"] .preview code,
 [data-theme="dark"] .preview pre {
   background-color: var(--bg-secondary);
+}
+
+/* Estilos para imágenes en la vista previa */
+.preview img {
+  max-width: 100%; /* Asegurar que no desborden el contenedor */
+  height: auto; /* Mantener proporción */
+  display: block; /* Evitar espacio extra debajo */
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border: 1px solid var(--border-color); /* Opcional: añadir un borde */
+  border-radius: 4px; /* Opcional: redondear esquinas */
+}
+
+/* Estilos para tablas en la vista previa */
+.preview table {
+  width: auto; /* Opcional: o width: 100% */
+  border-collapse: collapse;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border: 1px solid var(--border-color);
+}
+
+.preview th,
+.preview td {
+  border: 1px solid var(--border-color);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+
+.preview th {
+  background-color: var(--bg-secondary);
+  font-weight: 600;
+}
+
+/* Ajustes Modo Oscuro para Tablas */
+[data-theme="dark"] .preview th {
+  background-color: var(--bg-secondary);
+}
+
+/* Estilo explícito para texto tachado (del) en la vista previa */
+.preview del {
+  text-decoration: line-through;
+}
+
+/* Estilos para listas de tareas en la vista previa */
+.preview ul > li.task-list-item {
+  list-style-type: none; /* Ocultar el bullet point normal */
+}
+
+.preview input[type="checkbox"][disabled] {
+  margin-right: 0.5em;
+  vertical-align: middle; /* Alinear mejor con el texto */
+  /* Estilos básicos para el checkbox, se pueden personalizar más */
+  width: 1em;
+  height: 1em;
 }
 
 /* Utilidades */
@@ -375,4 +523,32 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Estilos para Secciones Colapsables (<details>) */
+.preview details {
+  display: block; /* Asegurar que ocupe su propia línea */
+  margin-bottom: 1em;
+  padding: 0.8em 1em;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.preview summary {
+  display: block; /* Para que el marcador se ponga al inicio */
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 0.5em; /* Espacio entre el título y el contenido */
+  user-select: none; /* Evitar seleccionar el texto del título al hacer clic */
+}
+
+.preview summary:hover {
+  color: var(--accent-color);
+}
+
+/* Ajuste modo oscuro para <details> */
+[data-theme="dark"] .preview details {
+  background-color: rgba(50, 50, 50, 0.3);
+  border-color: var(--border-color);
 } 

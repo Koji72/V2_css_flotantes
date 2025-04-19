@@ -1,0 +1,1 @@
+declare module 'remark-github-beta-blockquote-admonitions'; 

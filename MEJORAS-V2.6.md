@@ -97,6 +97,55 @@ La versión 2.6 introduce mejoras significativas en el procesamiento y renderiza
 - Se resolvió un bug persistente y confuso que impedía el correcto renderizado de las listas en la vista previa.
 - La aplicación es ahora más robusta y predecible en su comportamiento de renderizado.
 
+### 7. ✅ Implementación de Funcionalidades Avanzadas (Fase 3 - Parte 1)
+
+**Objetivo:** Ampliar las capacidades del editor añadiendo soporte para elementos Markdown más complejos como imágenes, tablas, texto tachado y listas de tareas.
+
+**Mejoras Realizadas:**
+
+1.  **Soporte para Imágenes:**
+    *   **Sintaxis Estándar:** Se utiliza la sintaxis `![Alt text](url)`.
+    *   **Botón e Inserción:** Se añadió un botón 🖼️ y el atajo `Ctrl+G` para insertar la plantilla `![Alt text](url)`. La lógica posiciona el cursor dentro de `(url)` para facilitar la introducción de la dirección.
+    *   **Incrustación Local (Data URL):**
+        *   Se implementó la capacidad de seleccionar una imagen local haciendo clic en el botón 🖼️ (o `Ctrl+G`).
+        *   La imagen seleccionada se lee usando `FileReader` y se convierte a formato Data URL (Base64).
+        *   El Markdown resultante (`![nombre_archivo](data:image/...)`) se inserta en el editor.
+        *   **Mitigación de Bloqueo:** Se añadió una validación para limitar el tamaño de las imágenes incrustadas (ej. < 1MB) para prevenir bloqueos del navegador causados por Data URLs excesivamente largas.
+    *   **Renderizado y Estilo:** `ReactMarkdown` renderiza las imágenes (tanto URL como Data URL). Se añadieron estilos CSS (`src/App.css`) a `.preview img` para limitar el ancho (`max-width: 100%`) y asegurar una visualización adecuada.
+
+2.  **Soporte para Tablas:**
+    *   **Sintaxis Estándar GFM:** Se utiliza la sintaxis de tablas de GitHub Flavored Markdown.
+    *   **Botón e Inserción:** Se añadió un botón ▦ y el atajo `Ctrl+T` para insertar una plantilla de tabla básica:
+        ```markdown
+        | Cabecera 1 | Cabecera 2 |
+        | :--------- | :--------- |
+        | Celda 1    | Celda 2    |
+        | Celda 3    | Celda 4    |
+        ```
+    *   **Renderizado y Estilo:** `ReactMarkdown` con el plugin `remark-gfm` renderiza las tablas correctamente. Se añadieron estilos CSS (`src/App.css`) a `.preview table, th, td` para aplicar bordes, padding y un fondo a las cabeceras, mejorando la legibilidad.
+
+3.  **Soporte para Texto Tachado:**
+    *   **Sintaxis Estándar GFM:** Se utiliza la sintaxis `~~texto~~`.
+    *   **Botón e Inserción:** Se añadió un botón 'S' (con estilo tachado) y el atajo `Ctrl+S` para envolver el texto seleccionado con `~~` o insertar `~~~~` si no hay selección.
+    *   **Prevención de Conflicto:** Se añadió `event.preventDefault()` al atajo `Ctrl+S` para evitar que el navegador intente guardar la página.
+    *   **Renderizado y Estilo:** `ReactMarkdown` con `remark-gfm` renderiza el texto tachado como `<del>`. Se añadió una regla CSS explícita (`.preview del { text-decoration: line-through; }`) para asegurar la visualización.
+
+4.  **Soporte para Listas de Tareas:**
+    *   **Sintaxis Estándar GFM:** Se utiliza `- [ ]` para tareas incompletas y `- [x]` para completas.
+    *   **Botón e Inserción:** Se añadió un botón ✔️ y el atajo `Ctrl+Shift+C` para insertar la plantilla `- [ ] ` al inicio de la línea actual.
+    *   **Renderizado y Estilo:** `ReactMarkdown` con `remark-gfm` renderiza esto como checkboxes (`<input type="checkbox">`) deshabilitados. Se añadieron estilos CSS (`.preview ul > li.task-list-item`, `.preview input[type="checkbox"][disabled]`) para ocultar el bullet point estándar y estilizar el checkbox.
+
+5.  **Refactorización y Estabilidad:**
+    *   Se refactorizó el manejo de callbacks (`useCallback`) y referencias (`useRef`) en `App.tsx` para solucionar errores del linter relacionados con el orden de declaración y las dependencias, particularmente en la función `handleKeyDown`.
+
+**Beneficios:**
+- El editor ahora soporta imágenes, tablas, texto tachado y listas de tareas.
+- Los usuarios pueden insertar fácilmente plantillas para estos elementos mediante botones o atajos.
+- Se proporciona una solución (aunque limitada) para incluir imágenes locales sin necesidad de un servidor.
+- Las imágenes y tablas se visualizan correctamente y de forma estilizada en la vista previa.
+- Se ha añadido otra opción de formato de texto común.
+- Se añade la posibilidad de crear checklists simples.
+
 ## Cambios Técnicos Implementados
 
 ### 1. Pre-procesador de Paneles en `markdownProcessor.ts`

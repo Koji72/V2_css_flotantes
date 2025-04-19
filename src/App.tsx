@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import remarkGithubBetaBlockquoteAdmonitions from 'remark-github-beta-blockquote-admonitions';
+// import remarkCollapse from 'remark-collapse'; // Incompatible, comentado
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import './App.css';
 
 const AUTOSAVE_KEY = 'markdown-editor-content';
@@ -12,8 +17,14 @@ const App: React.FC = () => {
   const [content, setContent] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null); // Ref para el input de archivo
   const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hasLoadedRef = useRef(false); // Bandera para carga inicial
+
+  // Refs para funciones usadas en callbacks para evitar problemas de dependencia/orden
+  const handleImageButtonClickRef = useRef<() => void>(() => {});
+  const insertTableTemplateRef = useRef<() => void>(() => {});
+  const applyFormatRef = useRef<typeof applyFormat>(() => {});
 
   useEffect(() => {
     console.log('[Initial Load] useEffect triggered.');
@@ -53,111 +64,10 @@ const App: React.FC = () => {
     };
   }, [content]);
 
-  const applyFormat = useCallback((format: string, type: 'wrap' | 'line' | 'insert') => {
-    console.log(`[applyFormat] Called with: format=${format}, type=${type}`);
-    const textarea = textareaRef.current;
-    if (!textarea) {
-      console.error('[applyFormat] Textarea ref is not available!');
-      return;
-    }
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const currentContent = textarea.value;
-    const selectedText = currentContent.substring(start, end);
-    console.log(`[applyFormat] Selection: start=${start}, end=${end}, selectedText="${selectedText}"`);
-    
-    let newText = '';
-    let newCursorPos = start;
-
-    if (type === 'wrap') {
-      if (start === end) {
-        console.log('[applyFormat] Wrap type, no selection.');
-        newText = currentContent.substring(0, start) + format + format + currentContent.substring(end);
-        newCursorPos = start + format.length;
-      } else {
-        console.log('[applyFormat] Wrap type, with selection.');
-        newText = currentContent.substring(0, start) + format + selectedText + format + currentContent.substring(end);
-        newCursorPos = end + (format.length * 2);
-      }
-    } else if (type === 'line') {
-      console.log('[applyFormat] Line type.');
-      const lineStart = currentContent.lastIndexOf('\n', start - 1) + 1;
-      console.log(`[applyFormat] Line start calculated: ${lineStart}`);
-      
-      const needsNewline = lineStart > 0 && currentContent[lineStart - 1] !== '\n';
-      const prefix = needsNewline ? '\n' : '';
-      console.log(`[applyFormat] Needs preceding newline: ${needsNewline}`);
-
-      newText = currentContent.substring(0, lineStart) + prefix + format + currentContent.substring(lineStart);
-      
-      newCursorPos = start + prefix.length + format.length;
-      console.log(`[applyFormat] Line format applied. Original start: ${start}, newCursorPos: ${newCursorPos}`);
-    } else if (type === 'insert') {
-      console.log('[applyFormat] Insert type.');
-      newText = currentContent.substring(0, start) + format + currentContent.substring(end);
-      if (format.includes('[](url)')) {
-        newCursorPos = start + format.indexOf('(') + 1;
-      } else {
-        newCursorPos = start + format.length;
-      }
-    }
-
-    console.log(`[applyFormat] Calculated: newText="${newText.substring(0, 100)}...", newCursorPos=${newCursorPos}`);
-    console.log(`[applyFormat] *** BEFORE setContent: Current content length=${currentContent.length}, New text length=${newText.length}`);
-    console.log(`[applyFormat] newText char codes: ${[...newText].map(c => c.charCodeAt(0)).join(' ')}`);
-    setContent(newText);
-
-    setTimeout(() => {
-      console.log(`[applyFormat] setTimeout: Restoring focus and selection to ${newCursorPos}`);
-      if (textareaRef.current) {
-        textareaRef.current.focus();
-        textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
-        console.log('[applyFormat] setTimeout: Focus and selection restored.');
-      } else {
-        console.error('[applyFormat] setTimeout: Textarea ref became null!');
-      }
-    }, 0);
-  }, [content, setContent]);
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.ctrlKey || e.metaKey) {
-      let handled = true;
-      switch (e.key.toLowerCase()) {
-        case 'b':
-          applyFormat('**', 'wrap');
-          break;
-        case 'i':
-          applyFormat('*', 'wrap');
-          break;
-        case '1':
-          applyFormat('# ', 'line');
-          break;
-        case '2':
-          applyFormat('## ', 'line');
-          break;
-        case 'l':
-          applyFormat('- ', 'line');
-          break;
-        case 'q':
-          applyFormat('> ', 'line');
-          break;
-        case '`':
-          applyFormat('`', 'wrap');
-          break;
-        case 'k':
-          applyFormat('[](url)', 'insert');
-          break;
-        default:
-          handled = false;
-      }
-
-      if (handled) {
-        e.preventDefault();
-        console.log(`[handleKeyDown] Handled shortcut: Ctrl/Cmd+${e.key}`);
-      }
-    }
-  }, [applyFormat]);
+  const handleEditorChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log(`[handleEditorChange] New content length: ${e.target.value.length}`);
+    setContent(e.target.value);
+  };
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -167,50 +77,201 @@ const App: React.FC = () => {
     setIsResizing(true);
   };
 
-  const stopResizing = () => {
+  const stopResizing = useCallback(() => {
     setIsResizing(false);
-  };
+  }, []);
 
-  const resize = (e: MouseEvent) => {
+  const resize = useCallback((e: MouseEvent) => {
     if (!isResizing) return;
 
     const newWidth = (e.clientX / window.innerWidth) * 100;
     if (newWidth > 20 && newWidth < 80) {
       setLeftWidth(newWidth);
     }
-  };
-
-  const handleEditorChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(`[handleEditorChange] New content length: ${e.target.value.length}`);
-    setContent(e.target.value);
-  };
+  }, [setLeftWidth, isResizing]);
 
   useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => resize(e);
     if (isResizing) {
-      window.addEventListener('mousemove', resize);
+      window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', stopResizing);
       document.body.style.cursor = 'col-resize';
+    } else {
+      document.body.style.cursor = '';
     }
-
     return () => {
-      window.removeEventListener('mousemove', resize);
+      window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', stopResizing);
       document.body.style.cursor = '';
     };
-  }, [isResizing]);
+  }, [isResizing, resize, stopResizing]);
+
+  const insertText = useCallback((textToInsert: string, cursorPosOffset?: number) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const currentContent = textarea.value;
+
+    const newText = currentContent.substring(0, start) + textToInsert + currentContent.substring(end);
+    const newCursorPos = cursorPosOffset !== undefined ? start + cursorPosOffset : start + textToInsert.length;
+
+    setContent(newText);
+
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+        textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
+      }
+    }, 0);
+  }, [setContent]);
+
+  // Definir applyFormat (sin useCallback inicialmente, se asignará a ref)
+  function applyFormat (format: string, type: 'wrap' | 'line' | 'insert') {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const currentContent = textarea.value;
+    const selectedText = currentContent.substring(start, end);
+
+    if (type === 'wrap') {
+      if (start === end) insertText(format + format, format.length);
+      else insertText(format + selectedText + format, start + format.length + selectedText.length + format.length);
+    } else if (type === 'line') {
+      const lineStart = currentContent.lastIndexOf('\n', start - 1) + 1;
+      const needsNewline = lineStart > 0 && currentContent[lineStart - 1] !== '\n';
+      const prefix = needsNewline ? '\n' : '';
+      const lineContent = currentContent.substring(lineStart);
+      const textBeforeLine = currentContent.substring(0, lineStart);
+      const textToInsert = prefix + format + lineContent;
+      setContent(textBeforeLine + textToInsert); // Actualización directa
+      setTimeout(() => {
+        if (textareaRef.current) {
+          const cursor = start + prefix.length + format.length;
+          textareaRef.current.focus();
+          textareaRef.current.setSelectionRange(cursor, cursor);
+        }
+      }, 0);
+    } else if (type === 'insert') {
+      let cursorPosOffset = format.length;
+      if (format.includes('[](url)') || format.includes('![Alt text](url)')) {
+        cursorPosOffset = format.indexOf('(') + 1;
+      }
+      insertText(format, cursorPosOffset);
+    }
+  }
+  // Asignar la función al ref en cada render para que handleKeyDown tenga la última versión
+  applyFormatRef.current = applyFormat; 
+
+  // Asignar handleImageButtonClick a ref
+  handleImageButtonClickRef.current = () => {
+    fileInputRef.current?.click();
+  };
+  
+  // Asignar insertTableTemplate a ref
+  insertTableTemplateRef.current = () => {
+    const tableTemplate =
+`\n| Cabecera 1 | Cabecera 2 |\n| :--------- | :--------- |\n| Celda 1    | Celda 2    |\n| Celda 3    | Celda 4    |\n\n`;
+    insertText(tableTemplate, tableTemplate.length);
+  };
+
+  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const MAX_SIZE_MB = 1;
+    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+      alert(`Imagen > ${MAX_SIZE_MB} MB`);
+      event.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      const altText = file.name.replace(/\.[^/.]+$/, "");
+      const imageMarkdown = `![${altText}](${base64String})\n`;
+      insertText(imageMarkdown);
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+  }, [insertText]);
+
+  // handleKeyDown ahora usa las funciones a través de refs
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const currentApplyFormat = applyFormatRef.current;
+    const currentHandleImageButtonClick = handleImageButtonClickRef.current;
+    const currentInsertTableTemplate = insertTableTemplateRef.current;
+
+    if (e.ctrlKey || e.metaKey) {
+      let handled = true;
+      if (e.shiftKey) { // Combos con Shift
+        switch (e.key.toLowerCase()) {
+          case 'c': currentApplyFormat('- [ ] ', 'line'); break; // Checklist
+          case 'p': currentApplyFormat('<sup>', 'wrap'); break; // Superscript (Power)
+          case 'b': currentApplyFormat('<sub>', 'wrap'); break; // Subscript (Base/Bottom)
+          case 'h': currentApplyFormat('<mark>', 'wrap'); break; // Highlight (Mark)
+          case 'd': insertText('\n<details>\n  <summary>Título</summary>\n  \n  Contenido oculto...\n  \n</details>\n'); handled = true; break; // Details/Collapse
+          default: handled = false;
+        }
+      } else { // Solo Ctrl/Cmd sin Shift
+        switch (e.key.toLowerCase()) {
+          case 'b': currentApplyFormat('**', 'wrap'); break;
+          case 'i': currentApplyFormat('*', 'wrap'); break;
+          case '1': currentApplyFormat('# ', 'line'); break;
+          case '2': currentApplyFormat('## ', 'line'); break;
+          case 'l': currentApplyFormat('- ', 'line'); break;
+          case 'q': currentApplyFormat('> ', 'line'); break;
+          case '`': currentApplyFormat('`', 'wrap'); break;
+          case 'k': currentApplyFormat('[](url)', 'insert'); break;
+          case 'g': currentHandleImageButtonClick(); break;
+          case 't': currentInsertTableTemplate(); break;
+          case 's': currentApplyFormat('~~', 'wrap'); break;
+          default: handled = false;
+        }
+      }
+
+      if (handled) {
+        e.preventDefault();
+        console.log(`[handleKeyDown] Handled shortcut: ${e.shiftKey ? 'Ctrl/Cmd+Shift+' : 'Ctrl/Cmd+'}${e.key}`);
+      }
+    }
+  }, [insertText]); // <- Añadir insertText como dependencia
+
+  // Función para insertar la plantilla <details>
+  const insertDetailsTemplate = useCallback(() => {
+    const template = '\n<details>\n  <summary>Título</summary>\n  \n  Contenido oculto...\n  \n</details>\n';
+    // Colocar el cursor justo después de <summary>
+    insertText(template, template.indexOf('</summary>'));
+  }, [insertText]);
 
   return (
     <div className="app">
+      <input 
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*" 
+        style={{ display: 'none' }} 
+      />
       <div className="toolbar">
         <div className="flex gap-2">
-          <button className="toolbar-button" onClick={() => applyFormat('**', 'wrap')} title="Negrita (Ctrl+B)">B</button>
-          <button className="toolbar-button" onClick={() => applyFormat('*', 'wrap')} title="Cursiva (Ctrl+I)">I</button>
-          <button className="toolbar-button" onClick={() => applyFormat('# ', 'line')} title="Título 1 (Ctrl+1)">H1</button>
-          <button className="toolbar-button" onClick={() => applyFormat('## ', 'line')} title="Título 2 (Ctrl+2)">H2</button>
-          <button className="toolbar-button" onClick={() => applyFormat('- ', 'line')} title="Lista (Ctrl+L)">•</button>
-          <button className="toolbar-button" onClick={() => applyFormat('> ', 'line')} title="Cita (Ctrl+Q)">❝</button>
-          <button className="toolbar-button" onClick={() => applyFormat('`', 'wrap')} title="Código (Ctrl+`)">`</button>
-          <button className="toolbar-button" onClick={() => applyFormat('[](url)', 'insert')} title="Enlace (Ctrl+K)">🔗</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('**', 'wrap')} title="Negrita (Ctrl+B)">B</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('*', 'wrap')} title="Cursiva (Ctrl+I)">I</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('# ', 'line')} title="Título 1 (Ctrl+1)">H1</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('## ', 'line')} title="Título 2 (Ctrl+2)">H2</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('- ', 'line')} title="Lista (Ctrl+L)">•</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('> ', 'line')} title="Cita (Ctrl+Q)">❝</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('`', 'wrap')} title="Código (Ctrl+`)">`</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('[](url)', 'insert')} title="Enlace (Ctrl+K)">🔗</button>
+          <button className="toolbar-button" onClick={handleImageButtonClickRef.current} title="Insertar Imagen Local (Ctrl+G)">🖼️</button>
+          <button className="toolbar-button" onClick={insertTableTemplateRef.current} title="Insertar Tabla (Ctrl+T)">▦</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('~~', 'wrap')} title="Tachado (Ctrl+S)" style={{ textDecoration: 'line-through' }}>S</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('- [ ] ', 'line')} title="Lista de Tareas (Ctrl+Shift+C)">✔️</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('<sup>', 'wrap')} title="Superíndice (Ctrl+Shift+P)">x²</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('<sub>', 'wrap')} title="Subíndice (Ctrl+Shift+B)">x₂</button>
+          <button className="toolbar-button" onClick={() => applyFormatRef.current('<mark>', 'wrap')} title="Resaltado (Ctrl+Shift+H)" style={{ backgroundColor: '#ffec3d', color: '#333' }}>M</button>
+          <button className="toolbar-button" onClick={insertDetailsTemplate} title="Sección Colapsable (Ctrl+Shift+D)">[+]</button>
         </div>
         <button
           className="theme-toggle"
@@ -241,7 +302,48 @@ const App: React.FC = () => {
           className="preview"
           style={{ width: `${100 - leftWidth - 1}%` }}
         >
-          <ReactMarkdown key={content} remarkPlugins={[remarkGfm]}>
+          <ReactMarkdown
+            key={content}
+            remarkPlugins={[remarkGfm, remarkGithubBetaBlockquoteAdmonitions]}
+            rehypePlugins={[[rehypeRaw, { passThrough: ['element', 'text'] }]]}
+            components={{
+              code(props: any) {
+                const { node, inline, className, children, ...rest } = props;
+                // Log para depuración
+                // console.log('[Code Renderer RAW Props]', props); // Eliminado
+
+                const match = /language-(\w+)/.exec(className || '');
+                const language = match?.[1]; // Obtener el lenguaje si existe
+
+                // Usar SyntaxHighlighter SOLO si NO es inline Y hay un lenguaje detectado
+                if (!inline && language) {
+                  // Comprobar si el lenguaje es soportado (opcional, pero bueno para evitar errores)
+                  // Por ahora, asumimos que si hay 'language-xxx', intentamos resaltarlo.
+                  return (
+                    <SyntaxHighlighter
+                      style={vscDarkPlus} // Usar el tema importado
+                      language={language} // Usar el lenguaje detectado
+                      PreTag="div"
+                      // Pasar los children como string, eliminando saltos de línea finales
+                    >
+                      {String(children).replace(/\n$/, '')}
+                    </SyntaxHighlighter>
+                  );
+                } else {
+                  // Renderizar como <code> normal si es inline O si no se especificó lenguaje
+                  // Quitar la clase 'language-xxx' si es inline para evitar estilos no deseados
+                  const finalClassName = inline ? undefined : className;
+                  // Asegurar que renderizamos algo, incluso si children es undefined
+                  const contentToRender = children !== undefined && children !== null ? children : '';
+                  return (
+                    <code className={finalClassName} {...rest}>
+                      {contentToRender}
+                    </code>
+                  );
+                }
+              }
+            }}
+          >
             {content}
           </ReactMarkdown>
         </div>
