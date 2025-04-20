@@ -17,37 +17,36 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
         const layout = attributes.layout;
         const style = attributes.style;
         const title = attributes.title;
+        const directiveClass = attributes.class;
 
         // Asegurarse de que node.data y node.data.hProperties existan
         const data = node.data || (node.data = {});
         const hProperties = data.hProperties || (data.hProperties = {});
 
-        // Asegurar que className sea un array
-        let classList: string[] = [];
-        if (hProperties.className) {
-          if (Array.isArray(hProperties.className)) {
-            classList = hProperties.className.map(String);
-          } else {
-            classList = String(hProperties.className).split(' ');
-          }
-        } else {
-           hProperties.className = classList;
+        // --- Lógica de Fusión de Clases --- 
+        let finalClasses: Set<string> = new Set(); // Usar Set para evitar duplicados fácilmente
+
+        // 1. Añadir clases del atributo 'class' de la directiva
+        if (directiveClass && typeof directiveClass === 'string') {
+            directiveClass.split(' ').forEach(cls => cls.trim() && finalClasses.add(cls));
         }
 
-        // Añadir clase base 'panel'
-        if (!classList.includes('panel')) {
-          classList.push('panel');
+        // 2. Añadir clase base 'panel'
+        finalClasses.add('panel');
+
+        // 3. Añadir clase de layout
+        if (layout && typeof layout === 'string') {
+            finalClasses.add(`layout--${layout.trim()}`);
         }
 
-        // Añadir clase de layout
-        if (layout) {
-          classList.push(`layout--${layout}`);
+        // 4. Añadir clase de estilo
+        if (style && typeof style === 'string') {
+            finalClasses.add(`panel-style--${style.trim()}`);
         }
+        // --- Fin Lógica de Fusión de Clases ---
 
-        // Añadir clase de estilo
-        if (style) {
-          classList.push(`panel-style--${style}`);
-        }
+        // Asignar el array final a hProperties
+        hProperties.className = Array.from(finalClasses);
 
         // --- Añadir lógica para el título ---
         if (title && typeof title === 'string') {
@@ -80,9 +79,6 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
 
         // Establecer el nombre del tag HTML
         data.hName = 'div';
-
-        // Actualizar className en hProperties
-        hProperties.className = classList;
 
       }
     });
