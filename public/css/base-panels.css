@@ -1,0 +1,136 @@
+/* public/css/base-panels.css */
+/* Archivo ahora vacío o solo con comentarios. */
+/* Las decoraciones de esquina se definen ahora en base-corners.css (posición) */
+/* y en los archivos de tema específicos (apariencia por tipo) */
+
+/* Asegurarse de que los estilos se apliquen dentro de .preview */
+.preview .panel {
+  margin: 1.5em 0; /* Espaciado vertical */
+  padding: 1.5em;  /* Padding interno */
+  border: 1px solid #444; /* Borde por defecto */
+  border-radius: 3px;
+  background-color: rgba(20, 22, 26, 0.8); /* Fondo oscuro semitransparente por defecto */
+  position: relative; /* Necesario para pseudo-elementos */
+  color: #e0f0ff;    /* Texto claro por defecto */
+  overflow: hidden; /* Ayuda a contener pseudo-elementos decorativos */
+}
+
+/* Estilo del título */
+.preview .panel-title {
+  font-family: 'Teko', system-ui, sans-serif; /* Fuente Teko para títulos */
+  font-size: 1.5em;
+  font-weight: 500;
+  color: #00a0ff; /* Azul por defecto */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: -1.5em -1.5em 1em -1.5em; /* Se extiende a los bordes del padding */
+  padding: 0.5em 1.5em;
+  border-bottom: 1px solid #303540; /* Línea separadora */
+  background-color: rgba(18, 20, 26, 0.9); /* Fondo ligeramente distinto para el título */
+  /* Espacio para icono si se usa (los temas pueden añadir el icono) */
+}
+
+/* --- DECORACIONES DE ESQUINA REUTILIZABLES --- */
+/* Se aplican a .panel añadiendo la clase correspondiente */
+/* Deben tener z-index > 0 para superponerse al contenido del panel del tema */
+
+/* Decoración Esquina Superior Derecha (Overlay Azul Tenue) */
+.preview .panel.corner-tr-overlay-deco::before {
+  content: '';
+  position: absolute;
+  top: -1px; /* Alinear con borde */
+  right: -1px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0, 160, 255, 0.2) 50%); /* Azul Aegis tenue */
+  clip-path: polygon(100% 0, 100% 100%, 0 100%); /* Triángulo */
+  opacity: 0.8;
+  pointer-events: none; /* No interferir con clics */
+  z-index: 999 !important; /* Asegurar que esté por encima de TODO */
+}
+
+/* Decoración Esquina Inferior Derecha (Rayas Verdes Tenues) */
+.preview .panel.corner-br-stripes::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 60px;
+  height: 30px;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 5px,
+    rgba(0, 255, 136, 0.25) 5px, /* Verde Aegis, opacidad aumentada a 0.25 */
+    rgba(0, 255, 136, 0.25) 10px
+  );
+  clip-path: polygon(calc(100% - 30px) 0, 100% 0, 100% 100%, 0 100%); /* Forma trapezoidal */
+  pointer-events: none;
+  z-index: 999 !important; /* Asegurar que esté por encima */
+}
+
+/* Decoración Esquina Superior Izquierda (Rayas Ámbar Tenues) */
+.preview .panel.corner-tl-stripes::before {
+   content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 30px;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 5px,
+    rgba(255, 183, 0, 0.25) 5px, /* Ámbar Aegis, opacidad aumentada a 0.25 */
+    rgba(255, 183, 0, 0.25) 10px
+  );
+  clip-path: polygon(0 0, 30px 0, 100% 100%, 0% 100%); /* Forma trapezoidal invertida */
+  pointer-events: none;
+   z-index: 999 !important; /* Asegurar que esté por encima */
+}
+
+/* Decoración Esquina Inferior Izquierda (Bloque Rojo Tenue con Muesca) */
+.preview .panel.corner-bl-block::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 64, 64, 0.15); /* Rojo Aegis, opacidad aumentada a 0.15 */
+  border-right: 2px solid rgba(255, 64, 64, 0.5); /* Borde rojo más visible */
+  border-top: 2px solid rgba(255, 64, 64, 0.5);
+  pointer-events: none;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 calc(100% - 10px), calc(100% - 10px) calc(100% - 10px)); /* Muesca */
+   z-index: 999 !important; /* Asegurar que esté por encima */
+}
+
+/* --- ESTILOS SEMÁNTICOS BASE --- */
+/* Los temas pueden sobreescribir estos colores */
+.preview .panel-style--note {
+  border-left: 4px solid #00a0ff; /* Azul */
+  background-color: rgba(0, 160, 255, 0.05);
+}
+.preview .panel-style--note > .panel-title {
+  color: #00a0ff;
+  border-color: rgba(0, 160, 255, 0.3);
+}
+
+.preview .panel-style--warning {
+  border-left: 4px solid #ffb700; /* Ámbar */
+  background-color: rgba(255, 183, 0, 0.05);
+}
+.preview .panel-style--warning > .panel-title {
+  color: #ffb700;
+  border-color: rgba(255, 183, 0, 0.3);
+}
+
+/* Añadir más estilos base (success, danger, etc.) si es necesario */
+
+/* --- PRUEBA DE DEBUG --- */
+.preview .panel.corner-br-stripes {
+    border: 5px solid red !important; /* Borde rojo muy visible */
+    outline: 5px solid lime !important; /* Contorno verde lima muy visible */
+    background-color: yellow !important; /* Fondo amarillo */
+}
+/* --- FIN PRUEBA DEBUG --- */ 

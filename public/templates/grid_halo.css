@@ -1,7 +1,7 @@
-/* ---------- PANEL STYLES ---------- */
+/* ---------- PANEL STYLES (Applied within .preview) ---------- */
 
 /* Estilo: Esquinas Cortadas */
-.panel-style--cut-corners {
+.preview .panel-style--cut-corners {
   --corner-cut-size: 15px;
   clip-path: polygon(
     var(--corner-cut-size) 0%, 
@@ -16,23 +16,23 @@
 }
 
 /* Estilo: Esquinas hacia adentro */
-.panel-style--inset-corners {
+.preview .panel-style--inset-corners {
   position: relative;
   border: none !important;
   background-clip: padding-box;
-  padding: calc(var(--spacing) + 3px);
+  padding: calc(var(--spacing, 8px) + 3px); /* Assuming --spacing might not be globally defined */
 }
 
-.panel-style--inset-corners::before {
+.preview .panel-style--inset-corners::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-panel);
+  background: var(--bg-panel, #1a2042); /* Assuming --bg-panel might not be globally defined */
   z-index: -1;
-  border: 2px solid var(--accent);
+  border: 2px solid var(--accent, #008dd2);
   clip-path: polygon(
     0 15px, 15px 0, calc(100% - 15px) 0, 100% 15px,
     100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px),
@@ -42,95 +42,96 @@
 }
 
 /* Estilo: Soportes de Esquina */
-.panel-style--corner-brackets {
+.preview .panel-style--corner-brackets {
   position: relative;
   border: none !important;
-  padding: var(--spacing);
+  padding: var(--spacing, 8px);
   background-color: rgba(26, 32, 66, 0.85);
 }
 
-.panel-style--corner-brackets::before,
-.panel-style--corner-brackets::after,
-.panel-style--corner-brackets .panel-header::before,
-.panel-style--corner-brackets .panel-header::after {
+.preview .panel-style--corner-brackets::before,
+.preview .panel-style--corner-brackets::after,
+.preview .panel-style--corner-brackets .panel-header::before, /* Assuming .panel-header exists */
+.preview .panel-style--corner-brackets .panel-header::after { /* Assuming .panel-header exists */
   content: '';
   position: absolute;
   width: 20px;
   height: 20px;
   border-style: solid;
-  border-color: var(--accent);
-  box-shadow: 0 0 8px var(--glow);
+  border-color: var(--accent, #008dd2);
+  box-shadow: 0 0 8px var(--glow, rgba(0, 141, 210, 0.5)); /* Assuming --glow might not be globally defined */
   z-index: 1;
 }
 
-.panel-style--corner-brackets::before {
+.preview .panel-style--corner-brackets::before {
   top: 5px;
   left: 5px;
   border-width: 2px 0 0 2px;
 }
 
-.panel-style--corner-brackets::after {
+.preview .panel-style--corner-brackets::after {
   top: 5px;
   right: 5px;
   border-width: 2px 2px 0 0;
 }
 
-.panel-style--corner-brackets .panel-header::before {
+/* Apply to panel-title if that's the header class */
+.preview .panel-style--corner-brackets .panel-title::before { 
   bottom: 5px;
   left: 5px;
   border-width: 0 0 2px 2px;
 }
 
-.panel-style--corner-brackets .panel-header::after {
+.preview .panel-style--corner-brackets .panel-title::after { 
   bottom: 5px;
   right: 5px;
   border-width: 0 2px 2px 0;
 }
 
 /* Estilo: Borde Ornamentado */
-.panel-style--ornate-border {
+.preview .panel-style--ornate-border {
   border: none;
   position: relative;
-  margin: calc(var(--spacing) * 2 + 10px) 0;
-  box-shadow: 0 0 15px var(--glow);
-  padding: var(--spacing);
+  margin: calc(var(--spacing, 8px) * 2 + 10px) 0;
+  box-shadow: 0 0 15px var(--glow, rgba(0, 141, 210, 0.5));
+  padding: var(--spacing, 8px);
 }
 
-.panel-style--ornate-border::before {
+.preview .panel-style--ornate-border::before {
   content: "";
   position: absolute;
   top: -8px;
   left: -8px;
   right: -8px;
   bottom: -8px;
-  background: linear-gradient(135deg, var(--accent), transparent 80%);
+  background: linear-gradient(135deg, var(--accent, #008dd2), transparent 80%);
   z-index: -1;
-  border-radius: var(--radius);
+  border-radius: var(--radius, 4px); /* Assuming --radius might not be globally defined */
   opacity: 0.6;
 }
 
-.panel-style--ornate-border::after {
+.preview .panel-style--ornate-border::after {
   content: "";
   position: absolute;
   top: -4px;
   left: -4px;
   right: -4px;
   bottom: -4px;
-  background: var(--bg-deep);
+  background: var(--bg-deep, #0d1929); /* Assuming --bg-deep might not be globally defined */
   z-index: -1;
-  border-radius: calc(var(--radius) - 1px);
-  border: 1px solid var(--accent-alt);
+  border-radius: calc(var(--radius, 4px) - 1px);
+  border: 1px solid var(--accent-alt, #005b8a); /* Assuming --accent-alt might not be globally defined */
 }
 
-.panel-style--ornate-border .panel-header {
-  margin: calc(-1 * var(--spacing)) calc(-1 * var(--spacing)) var(--spacing);
-  padding: calc(var(--spacing) / 2) var(--spacing);
+.preview .panel-style--ornate-border .panel-title { /* Assuming .panel-title */
+  margin: calc(-1 * var(--spacing, 8px)) calc(-1 * var(--spacing, 8px)) var(--spacing, 8px);
+  padding: calc(var(--spacing, 8px) / 2) var(--spacing, 8px);
   background: linear-gradient(90deg, rgba(0, 141, 210, 0.1), rgba(0, 141, 210, 0.3));
-  border-bottom: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent, #008dd2);
 }
 
 /* Estilo: Panel de Cristal */
-.panel-style--glass-panel {
+.preview .panel-style--glass-panel {
   background-color: rgba(13, 25, 40, 0.6);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 141, 210, 0.4);
@@ -138,37 +139,37 @@
               inset 0 0 15px rgba(0, 141, 210, 0.05);
 }
 
-.panel-style--glass-panel .panel-header {
+.preview .panel-style--glass-panel .panel-title { /* Assuming .panel-title */
   background: rgba(0, 141, 210, 0.15);
   border-bottom: 1px solid rgba(0, 141, 210, 0.4);
   text-shadow: 0 0 5px rgba(0, 141, 210, 0.5);
 }
 
-/* ---------- LAYOUT STYLES ---------- */
+/* ---------- LAYOUT STYLES (Applied within .preview) ---------- */
 
-.layout--float-left {
+.preview .layout--float-left {
   float: left;
-  width: calc(50% - var(--spacing) * 2);
-  margin-right: calc(var(--spacing) * 2);
-  margin-bottom: calc(var(--spacing) * 2);
+  width: calc(50% - var(--spacing, 8px) * 2);
+  margin-right: calc(var(--spacing, 8px) * 2);
+  margin-bottom: calc(var(--spacing, 8px) * 2);
   clear: left;
 }
 
-.layout--float-right {
+.preview .layout--float-right {
   float: right;
-  width: calc(50% - var(--spacing) * 2);
-  margin-left: calc(var(--spacing) * 2);
-  margin-bottom: calc(var(--spacing) * 2);
+  width: calc(50% - var(--spacing, 8px) * 2);
+  margin-left: calc(var(--spacing, 8px) * 2);
+  margin-bottom: calc(var(--spacing, 8px) * 2);
   clear: right;
 }
 
-.layout--full-width {
+.preview .layout--full-width {
   width: 100%;
   clear: both;
-  margin-bottom: calc(var(--spacing) * 2);
+  margin-bottom: calc(var(--spacing, 8px) * 2);
 }
 
-.layout--center {
+.preview .layout--center {
   margin-left: auto;
   margin-right: auto;
   width: 75%;
@@ -176,7 +177,7 @@
   display: block;
 }
 
-.layout--narrow {
+.preview .layout--narrow {
   width: 33%;
   margin-left: auto;
   margin-right: auto;
@@ -184,25 +185,27 @@
   display: block;
 }
 
-/* ---------- HOVER EFFECTS ---------- */
+/* ---------- HOVER EFFECTS (Applied within .preview) ---------- */
 
 /* Hover en paneles */
-.mixed-panel:hover {
-  box-shadow: 0 0 15px var(--glow);
-  border-color: var(--accent);
+/* Assuming a base .panel class exists from other themes or should be added */
+.preview .panel:hover, 
+.preview .mixed-panel:hover { /* Include .mixed-panel if used */
+  box-shadow: 0 0 15px var(--glow, rgba(0, 141, 210, 0.5));
+  border-color: var(--accent, #008dd2);
 }
 
-.panel-style--glass-panel:hover,
-.panel-style--corner-brackets:hover {
-  box-shadow: 0 0 20px var(--glow);
+.preview .panel-style--glass-panel:hover,
+.preview .panel-style--corner-brackets:hover {
+  box-shadow: 0 0 20px var(--glow, rgba(0, 141, 210, 0.5));
 }
 
-/* ---------- MEDIA QUERIES ---------- */
+/* ---------- MEDIA QUERIES (Applied within .preview) ---------- */
 
 @media (max-width: 768px) {
-  .float-left, .float-right,
-  .layout--float-left, .layout--float-right,
-  .layout--center, .layout--narrow {
+  .preview .float-left, .preview .float-right,
+  .preview .layout--float-left, .preview .layout--float-right,
+  .preview .layout--center, .preview .layout--narrow {
     float: none;
     width: 100%;
     margin-left: 0;

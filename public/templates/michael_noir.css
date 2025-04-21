@@ -1,33 +1,39 @@
 /* ================================================== */
 /*       THEME: Michael Noir (V2.5)                   */
 /*   (Inspired by Noir Detective Style)               */
+/*       MODIFIED FOR .preview CONTAINER              */
 /* ================================================== */
 
 /* 0. IMPORTAR FUENTES */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Crimson+Text:wght@400;600;700&family=Special+Elite&display=swap');
 
-/* 1. VARIABLES FUNDAMENTALES */
+/* 1. VARIABLES FUNDAMENTALES - Globales */
 :root {
     /* -- Base de Noir -- */
     --noir-bg-deep: #0a0a0a;
     --noir-bg-surface: #1a1a1a;
+    --noir-bg-surface-rgb: 26, 26, 26;
     --noir-bg-elevated: #2a2a2a;
     --noir-glass-bg: rgba(20, 20, 20, 0.75);
     --noir-border-fine: rgba(200, 200, 200, 0.2);
     --noir-border-medium: rgba(200, 200, 200, 0.4);
     --noir-border-main: #666666;
     --noir-text-primary: #e0e0e0;
+    --noir-text-primary-rgb: 224, 224, 224;
     --noir-text-secondary: #a0a0a0;
     --noir-text-disabled: #606060;
 
     /* -- Acentos Noir -- */
     --noir-amber-primary: #ffc800;
+    --noir-amber-primary-rgb: 255, 200, 0;
     --noir-amber-secondary: #ffd966;
     --noir-amber-dark: #b38a00;
     --noir-red-primary: #ff4040;
+    --noir-red-primary-rgb: 255, 64, 64;
     --noir-red-secondary: #ff8080;
     --noir-red-dark: #b32d2d;
     --noir-blue-primary: #4a6b9c;
+    --noir-blue-primary-rgb: 74, 107, 156;
     --noir-blue-secondary: #6b8cbc;
 
     /* -- Tipografía -- */
@@ -53,29 +59,32 @@
     --border-width-main: 3px;
 }
 
-/* 2. ESTILOS BASE */
-body, .universal-scribe-output {
+/* 2. ESTILOS BASE (Aplicados a .preview) */
+.preview {
     background-color: var(--noir-bg-deep);
     color: var(--noir-text-primary);
     font-family: var(--font-body);
     font-size: 16px;
     line-height: 1.6;
-    padding: calc(var(--spacing-unit) * 2.5);
+    /* padding: calc(var(--spacing-unit) * 2.5); gestionado por App.css */
     margin: 0;
     background-image: 
         linear-gradient(rgba(255, 200, 0, 0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 200, 0, 0.02) 1px, transparent 1px);
     background-size: 30px 30px;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 
-/* Scrollbars */
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--noir-bg-surface); border: 1px solid var(--noir-border-fine); }
-::-webkit-scrollbar-thumb { background: var(--noir-border-main); border-radius: var(--radius-sharp); border: 1px solid var(--noir-bg-surface); }
-::-webkit-scrollbar-thumb:hover { background: var(--noir-amber-secondary); }
+/* Scrollbars (Dentro de .preview) */
+.preview ::-webkit-scrollbar { width: 10px; height: 10px; }
+.preview ::-webkit-scrollbar-track { background: var(--noir-bg-surface); border: 1px solid var(--noir-border-fine); }
+.preview ::-webkit-scrollbar-thumb { background: var(--noir-border-main); border-radius: var(--radius-sharp); border: 1px solid var(--noir-bg-surface); }
+.preview ::-webkit-scrollbar-thumb:hover { background: var(--noir-amber-secondary); }
 
-/* 3. ELEMENTOS COMUNES */
-h1, h2, h3, h4, h5, h6 {
+/* 3. ELEMENTOS COMUNES (Dentro de .preview) */
+.preview h1, .preview h2, .preview h3, .preview h4, .preview h5, .preview h6 {
     font-family: var(--font-display);
     color: var(--noir-text-primary);
     margin: calc(var(--spacing-unit) * 2.5) 0 calc(var(--spacing-unit) * 1.5) 0;
@@ -86,7 +95,7 @@ h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
 }
 
-h1 { 
+.preview h1 { 
     font-size: 2.8em; 
     font-weight: 600; 
     color: var(--noir-amber-primary); 
@@ -95,26 +104,26 @@ h1 {
     border-color: var(--noir-amber-dark); 
 }
 
-h2 { 
+.preview h2 { 
     font-size: 2.2em; 
     color: var(--noir-red-primary); 
     text-shadow: var(--glow-red-text); 
 }
 
-h3 { 
+.preview h3 { 
     font-size: 1.8em; 
     border-bottom-style: dashed; 
     border-color: var(--noir-border-fine); 
 }
 
-h4 { 
+.preview h4 { 
     font-size: 1.5em; 
     border-bottom: none; 
     color: var(--noir-text-secondary); 
     text-transform: none; 
 }
 
-h5 { 
+.preview h5 { 
     font-size: 1.3em; 
     border-bottom: none; 
     color: var(--noir-text-secondary); 
@@ -122,7 +131,7 @@ h5 {
     text-transform: none; 
 }
 
-h6 { 
+.preview h6 { 
     font-size: 1.1em; 
     border-bottom: none; 
     color: var(--noir-text-disabled); 
@@ -131,65 +140,65 @@ h6 {
 }
 
 /* Prefijo de Display */
-h1::before, h2::before {
+.preview h1::before, .preview h2::before {
     content: "► ";
     color: var(--noir-amber-primary);
     margin-right: var(--spacing-unit);
 }
 
-p {
+.preview p {
     margin-bottom: calc(var(--spacing-unit) * 1.5);
 }
 
-a {
+.preview a {
     color: var(--noir-amber-secondary);
     text-decoration: none;
     border-bottom: 1px solid var(--noir-amber-dark);
     transition: color 0.2s ease, text-shadow 0.2s ease, border-bottom-color 0.2s ease;
 }
 
-a:hover {
+.preview a:hover {
     color: var(--noir-text-primary);
     text-shadow: var(--glow-amber-text);
     border-bottom-color: var(--noir-amber-primary);
 }
 
-strong, b {
+.preview strong, .preview b {
     font-weight: 600;
     color: var(--noir-text-primary);
 }
 
-em, i {
+.preview em, .preview i {
     font-style: italic;
     color: var(--noir-text-secondary);
 }
 
-ul, ol {
+.preview ul, .preview ol {
     margin-left: calc(var(--spacing-unit) * 2);
     margin-bottom: calc(var(--spacing-unit) * 1.5);
     padding-left: calc(var(--spacing-unit) * 2);
 }
 
-li {
+.preview li {
     margin-bottom: calc(var(--spacing-unit) * 0.75);
 }
 
-ul li::marker {
+.preview ul li::marker {
     content: "// ";
     color: var(--noir-red-secondary);
     font-size: 1em;
 }
 
-ol {
+.preview ol {
     list-style-type: none;
     counter-reset: noir-counter;
 }
 
-ol li {
+.preview ol li {
     counter-increment: noir-counter;
 }
 
-ol li::marker {
+.preview ol li::marker {
     content: "0" counter(noir-counter) ".";
     color: var(--noir-amber-primary);
     font-family: var(--font-mono);
@@ -198,8 +207,8 @@ ol li::marker {
     margin-right: var(--spacing-unit);
 }
 
-/* Blockquote */
-blockquote {
+/* Blockquote (Dentro de .preview) */
+.preview blockquote {
     margin: calc(var(--spacing-unit) * 2) 0;
     padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
     border-left: var(--border-width-main) solid var(--noir-red-primary);
@@ -211,19 +220,19 @@ blockquote {
     font-size: 0.95em;
 }
 
-blockquote p:last-child { 
+.preview blockquote p:last-child { 
     margin-bottom: 0; 
 }
 
-blockquote strong:first-child {
+.preview blockquote strong:first-child {
     color: var(--noir-red-secondary);
     font-family: var(--font-display);
     text-transform: uppercase;
     margin-right: var(--spacing-unit);
 }
 
-/* Código */
-code {
+/* Código (Dentro de .preview) */
+.preview code {
     font-family: var(--font-mono);
     background-color: rgba(255, 200, 0, 0.05);
     color: var(--noir-amber-primary);
@@ -233,7 +242,7 @@ code {
     border: 1px solid var(--noir-border-fine);
 }
 
-pre {
+.preview pre {
     background-color: var(--noir-bg-surface);
     border: 1px solid var(--noir-border-medium);
     border-radius: var(--radius-medium);
@@ -244,70 +253,65 @@ pre {
     font-size: 0.95em;
 }
 
-pre code {
+.preview pre code {
     background-color: transparent;
     padding: 0;
     border: none;
-    line-height: 1.5;
-    color: var(--noir-text-secondary);
+    color: inherit; /* Heredar color de pre */
 }
 
-hr {
+/* Línea divisoria (Dentro de .preview) */
+.preview hr {
     border: none;
     height: var(--border-width-medium);
     background-color: var(--noir-border-main);
-    box-shadow: 0 0 8px rgba(102, 102, 102, 0.5);
     margin: calc(var(--spacing-unit) * 3) 0;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.5);
 }
 
-/* --- TABLA --- */
-.table-wrapper {
+/* Tablas (Dentro de .preview) */
+.preview .table-wrapper { /* Si usas wrapper */
     margin-bottom: calc(var(--spacing-unit) * 2);
-    border: 1px solid var(--noir-border-medium);
+    border: 1px solid var(--noir-border-main);
     border-radius: var(--radius-medium);
     overflow: hidden;
+    box-shadow: var(--outset-shadow);
 }
-
-table {
+.preview table {
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
 }
 
-thead {
-    background-color: rgba(40, 40, 40, 0.7);
-    backdrop-filter: blur(3px);
-    border-bottom: var(--border-width-medium) solid var(--noir-amber-primary);
+.preview thead {
+    background-color: var(--noir-bg-elevated);
+    border-bottom: var(--border-width-medium) solid var(--noir-border-main);
 }
-
-th {
+.preview th {
     font-family: var(--font-display);
-    font-weight: 500;
     color: var(--noir-amber-secondary);
-    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+    padding: calc(var(--spacing-unit) * 1.2) var(--spacing-unit);
     text-align: left;
-    letter-spacing: 0.5px;
+    font-weight: 500;
     text-transform: uppercase;
-    font-size: 1.1em;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--noir-border-fine);
 }
 
-tbody tr {
-    background-color: var(--noir-bg-surface);
+.preview tbody tr {
+    border-bottom: 1px solid var(--noir-border-fine);
     transition: background-color 0.2s ease;
 }
-
-tbody tr:hover {
-    background-color: var(--noir-bg-elevated);
+.preview tbody tr:hover {
+    background-color: rgba(255, 200, 0, 0.05);
+}
+.preview td {
+    padding: var(--spacing-unit);
+    vertical-align: top;
 }
 
-td {
-    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
-    border-bottom: 1px solid var(--noir-border-fine);
-    color: var(--noir-text-secondary);
-}
-
-/* --- ELEMENTOS FLOTANTES --- */
-.floating-block {
+/* Otros elementos (Dentro de .preview) */
+.preview .floating-block {
     background-color: var(--noir-glass-bg);
     border: 1px solid var(--noir-border-medium);
     border-radius: var(--radius-medium);
@@ -317,77 +321,26 @@ td {
     box-shadow: var(--outset-shadow);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
-.floating-block:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* --- ESTADOS DE TABLA --- */
-.table-state-active {
+.preview .table-state-active, .preview .table-state-warning, .preview .table-state-error {
     background-color: rgba(255, 200, 0, 0.1);
     border-left: 3px solid var(--noir-amber-primary);
 }
-
-.table-state-warning {
-    background-color: rgba(255, 64, 64, 0.1);
-    border-left: 3px solid var(--noir-red-primary);
-}
-
-.table-state-error {
-    background-color: rgba(255, 64, 64, 0.2);
-    border-left: 3px solid var(--noir-red-primary);
-}
-
-/* --- EFECTOS HOVER --- */
-.hover-effect {
+.preview .hover-effect {
     transition: all 0.2s ease;
 }
-
-.hover-effect:hover {
-    transform: scale(1.02);
-    box-shadow: var(--glow-amber-border);
-}
-
-/* --- ANIMACIONES --- */
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.7; }
-    100% { opacity: 1; }
-}
-
-.pulse {
+.preview .pulse {
     animation: pulse 2s infinite;
 }
-
-/* --- EFECTOS DE GRID --- */
-.grid-effect {
+.preview .grid-effect {
     position: relative;
     overflow: hidden;
 }
-
-.grid-effect::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(rgba(255, 200, 0, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 200, 0, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-    pointer-events: none;
-}
-
-/* --- BORDES Y EFECTOS --- */
-.border-effect {
+.preview .border-effect {
     position: relative;
     border: 1px solid var(--noir-border-medium);
     border-radius: var(--radius-medium);
 }
-
-.border-effect::after {
+.preview .border-effect::after {
     content: '';
     position: absolute;
     top: -2px;
@@ -399,33 +352,255 @@ td {
     opacity: 0;
     transition: opacity 0.2s ease;
 }
-
-.border-effect:hover::after {
+.preview .border-effect:hover::after {
     opacity: 0.5;
 }
 
-/* --- MEDIA QUERIES --- */
+/* Media Queries (Dentro de .preview) */
 @media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
+    .preview * {
+        animation: none !important;
+        transition: none !important;
     }
 }
 
 @media (max-width: 768px) {
-    body, .universal-scribe-output {
+    .preview h1 { font-size: 2.2em; }
+    .preview h2 { font-size: 1.8em; }
+    .preview h3 { font-size: 1.5em; }
+    .preview .floating-block {
         padding: var(--spacing-unit);
     }
-    
-    h1 { font-size: 2.2em; }
-    h2 { font-size: 1.8em; }
-    h3 { font-size: 1.5em; }
-    
-    .floating-block {
-        padding: var(--spacing-unit);
-    }
+}
+
+/* === ESTILOS DE PANELES SEMÁNTICOS (NOIR) === */
+
+/* Base común para paneles semánticos */
+.preview .panel-style--note,
+.preview .panel-style--warning,
+.preview .panel-style--success,
+.preview .panel-style--danger {
+  border: var(--border-width-fine) solid var(--noir-border-medium);
+  border-left-width: var(--border-width-main);
+  margin-top: calc(var(--spacing-unit) * 2);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  padding: calc(var(--spacing-unit) * 1.5);
+  border-radius: var(--radius-sharp);
+  background-color: var(--noir-bg-surface); /* Fondo ligeramente más claro que el base */
+  box-shadow: var(--inset-shadow);
+}
+
+/* Estilo específico del título dentro de panel semántico */
+.preview .panel-style--note > .panel-title,
+.preview .panel-style--warning > .panel-title,
+.preview .panel-style--success > .panel-title,
+.preview .panel-style--danger > .panel-title {
+  font-family: var(--font-display);
+  font-size: 1.3em; /* Ligeramente más pequeño que h3 */
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-unit);
+  padding-bottom: calc(var(--spacing-unit) * 0.5);
+  border-bottom-style: dashed;
+  border-bottom-width: var(--border-width-fine);
+  text-shadow: none; /* Quitar brillo base del título */
+  display: flex; /* Para alinear icono y texto */
+  align-items: center;
+}
+
+/* Icono base para paneles semánticos */
+.preview .panel-style--note > .panel-title::before,
+.preview .panel-style--warning > .panel-title::before,
+.preview .panel-style--success > .panel-title::before,
+.preview .panel-style--danger > .panel-title::before {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: calc(var(--spacing-unit) * 0.8);
+  vertical-align: middle; /* Ajustar alineación */
+  background-color: currentColor; /* Hereda color del título */
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+/* --- Estilos por Tipo (Noir) --- */
+
+/* Note (Azul apagado) */
+.preview .panel-style--note {
+  border-left-color: var(--noir-blue-primary);
+  background-color: rgba(var(--noir-blue-primary-rgb, 74, 107, 156), 0.1); /* Necesita definir --noir-blue-primary-rgb */
+}
+.preview .panel-style--note > .panel-title {
+  color: var(--noir-blue-secondary);
+  border-bottom-color: var(--noir-blue-primary);
+}
+.preview .panel-style--note > .panel-title::before {
+  background-color: var(--noir-blue-secondary);
+  /* Icono: FileText (Documento) */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3C/svg%3E");
+}
+
+/* Warning (Ámbar) */
+.preview .panel-style--warning {
+  border-left-color: var(--noir-amber-primary);
+  background-color: rgba(var(--noir-amber-primary-rgb, 255, 200, 0), 0.1); /* Necesita definir --noir-amber-primary-rgb */
+}
+.preview .panel-style--warning > .panel-title {
+  color: var(--noir-amber-secondary);
+  border-bottom-color: var(--noir-amber-primary);
+}
+.preview .panel-style--warning > .panel-title::before {
+  background-color: var(--noir-amber-secondary);
+  /* Icono: AlertTriangle */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
+}
+
+/* Success (Gris claro / Blanco sucio como éxito discreto) */
+.preview .panel-style--success {
+  border-left-color: var(--noir-text-secondary);
+  background-color: rgba(160, 160, 160, 0.1);
+}
+.preview .panel-style--success > .panel-title {
+  color: var(--noir-text-primary);
+  border-bottom-color: var(--noir-text-secondary);
+}
+.preview .panel-style--success > .panel-title::before {
+  background-color: var(--noir-text-primary);
+  /* Icono: Check */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+}
+
+/* Danger (Rojo apagado) */
+.preview .panel-style--danger {
+  border-left-color: var(--noir-red-primary);
+  background-color: rgba(var(--noir-red-primary-rgb, 255, 64, 64), 0.1); /* Necesita definir --noir-red-primary-rgb */
+}
+.preview .panel-style--danger > .panel-title {
+  color: var(--noir-red-secondary);
+  border-bottom-color: var(--noir-red-primary);
+}
+.preview .panel-style--danger > .panel-title::before {
+  background-color: var(--noir-red-secondary);
+  /* Icono: Skull */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='12' r='1'/%3E%3Ccircle cx='15' cy='12' r='1'/%3E%3Cpath d='M8 20v2h8v-2'/%3E%3Cpath d='M12.5 17.5c0-1.5.5-3 1.5-4.5C15 11.5 16 10 16 8.5a4.5 4.5 0 0 0-9 0c0 1.5 1 3 2 4.5 1 1.5 1.5 3 1.5 4.5'/%3E%3Cpath d='M2 7.5A4.5 4.5 0 0 1 6.5 3H18c2.2 0 4 1.8 4 4V14a8 8 0 0 1-8 8h0a8 8 0 0 1-8-8V7.5Z'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='12' r='1'/%3E%3Ccircle cx='15' cy='12' r='1'/%3E%3Cpath d='M8 20v2h8v-2'/%3E%3Cpath d='M12.5 17.5c0-1.5.5-3 1.5-4.5C15 11.5 16 10 16 8.5a4.5 4.5 0 0 0-9 0c0 1.5 1 3 2 4.5 1 1.5 1.5 3 1.5 4.5'/%3E%3Cpath d='M2 7.5A4.5 4.5 0 0 1 6.5 3H18c2.2 0 4 1.8 4 4V14a8 8 0 0 1-8 8h0a8 8 0 0 1-8-8V7.5Z'/%3E%3C/svg%3E");
+}
+
+/* --- Estilos Adicionales de Panel (Noir) --- */
+
+/* Glass */
+.preview .panel-style--glass {
+  /* background-color: rgba(20, 20, 20, 0.65); */ /* Mantener transparencia anterior o ajustar si es necesario */
+  background-color: var(--noir-glass-bg); /* Usar variable base por ahora */
+  backdrop-filter: blur(10px); /* Mantener blur */
+  -webkit-backdrop-filter: blur(10px);
+  /* Borde más distintivo: blanco muy tenue y con brillo */
+  border: var(--border-width-fine) solid rgba(var(--noir-text-primary-rgb, 224, 224, 224), 0.4);
+  box-shadow: 
+    /* Sombra interior muy suave para efecto cristal */
+    inset 0 0 10px rgba(var(--noir-text-primary-rgb, 224, 224, 224), 0.05), 
+    /* Sombra exterior base */
+    var(--outset-shadow);
+}
+
+.preview .panel-style--glass > .panel-title {
+  color: var(--noir-text-primary);
+  text-shadow: 0 0 6px rgba(224, 224, 224, 0.6); /* Brillo blanco un poco más intenso */
+  border-bottom-color: rgba(var(--noir-text-primary-rgb, 224, 224, 224), 0.3);
+}
+
+.preview .panel-style--glass > .panel-title::before {
+  display: none;
+}
+
+/* HUD Frame */
+.preview .panel-style--hud-frame {
+  border: none;
+  background-color: transparent;
+  padding: 2px; /* Espacio para el borde simulado */
+  position: relative;
+  overflow: hidden;
+  margin-top: calc(var(--spacing-unit) * 2);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+/* Restore complex pseudo-elements and nested div */
+.preview .panel-style--hud-frame > div { /* Contenedor interno */
+  background-color: rgba(var(--noir-bg-surface-rgb, 26, 26, 26), 0.9);
+  border: var(--border-width-fine) solid var(--noir-border-fine);
+  padding: calc(var(--spacing-unit) * 2);
+  position: relative;
+  z-index: 1;
+}
+
+.preview .panel-style--hud-frame::before,
+.preview .panel-style--hud-frame::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  border-style: solid;
+  border-color: var(--noir-amber-primary); /* Usar ámbar para el marco HUD */
+}
+
+.preview .panel-style--hud-frame::before {
+  top: 0;
+  left: 0;
+  right: 10px;
+  bottom: 10px;
+  border-width: var(--border-width-medium) 0 0 var(--border-width-medium);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, calc(100% - 10px) 10px, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) calc(100% - 10px), 10px calc(100% - 10px), 10px 100%, 0 100%);
+}
+
+.preview .panel-style--hud-frame::after {
+  top: 10px;
+  left: 10px;
+  right: 0;
+  bottom: 0;
+  border-width: 0 var(--border-width-medium) var(--border-width-medium) 0;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, calc(100% - 10px) 10px, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) calc(100% - 10px), 10px calc(100% - 10px), 0 calc(100% - 10px));
+}
+
+.preview .panel-style--hud-frame > div > .panel-title {
+  color: var(--noir-amber-secondary);
+  border-bottom-color: var(--noir-amber-dark);
+  text-shadow: var(--glow-amber-text);
+  font-family: var(--font-mono);
+}
+
+/* Restore title icon */
+.preview .panel-style--hud-frame > div > .panel-title::before {
+  background-color: var(--noir-amber-secondary);
+   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-radio-tower'%3E%3Cpath d='M4.9 16.1C1 12.2 1 5.8 4.9 1.9'/%3E%3Cpath d='M7.8 4.7a6.3 6.3 0 0 1 8.5 0'/%3E%3Cpath d='M10.6 7.6C11.4 6.7 12.6 6.7 13.4 7.6'/%3E%3Cpath d='M19.1 1.9c3.9 3.9 3.9 10.3 0 14.2'/%3E%3Cpath d='M16.2 4.7a6.3 6.3 0 0 1 0 8.5'/%3E%3Cpath d='M13.4 7.6a2.4 2.4 0 0 1 0 3.3'/%3E%3Cpath d='M12 12h.01'/%3E%3Cpath d='m10 22 2-10 2 10'/%3E%3Cpath d='M10.2 17.8 12 22l1.8-4.2'/%3E%3C/svg%3E");
+   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-radio-tower'%3E%3Cpath d='M4.9 16.1C1 12.2 1 5.8 4.9 1.9'/%3E%3Cpath d='M7.8 4.7a6.3 6.3 0 0 1 8.5 0'/%3E%3Cpath d='M10.6 7.6C11.4 6.7 12.6 6.7 13.4 7.6'/%3E%3Cpath d='M19.1 1.9c3.9 3.9 3.9 10.3 0 14.2'/%3E%3Cpath d='M16.2 4.7a6.3 6.3 0 0 1 0 8.5'/%3E%3Cpath d='M13.4 7.6a2.4 2.4 0 0 1 0 3.3'/%3E%3Cpath d='M12 12h.01'/%3E%3Cpath d='m10 22 2-10 2 10'/%3E%3Cpath d='M10.2 17.8 12 22l1.8-4.2'/%3E%3C/svg%3E");
+}
+
+/* 6. ESTILOS PARA ESQUINAS DE PANEL (Panel Corners) */
+
+/* Aquí podríamos añadir estilos para .corner-type--stripes, .corner-type--dots etc. más adelante */
+
+/* Estilo específico para corner-type--stripes en tema Noir */
+/* Aplicado dentro del contenedor .preview */
+.preview .panel-corner.corner-type--stripes {
+  /* Usamos un gradiente lineal repetido para crear rayas diagonales */
+  background-image: repeating-linear-gradient(
+    -45deg, 
+    var(--noir-amber-primary), /* Color principal de la raya (ámbar) */
+    var(--noir-amber-primary) 5px, /* Ancho de la raya principal */
+    var(--noir-bg-elevated) 5px, /* Color del espacio entre rayas (un gris oscuro del tema) */
+    var(--noir-bg-elevated) 10px /* Ancho total del patrón (raya + espacio) */
+  );
+  border: 1px solid var(--noir-amber-dark); /* Borde oscuro ámbar */
+  /* Sobrescribir tamaño base si es necesario para este tema */
+  /* width: 30px; */
+  /* height: 30px; */
 }
 
 

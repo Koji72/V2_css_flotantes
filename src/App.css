@@ -12,6 +12,7 @@
   --preview-background: #252526;
   --toolbar-background: #333333;
   --accent-color: #0078d7;
+  --dropdown-bg: rgba(255, 255, 255, 0.95); /* Light theme dropdown background */
 }
 
 /* Modo oscuro */
@@ -23,6 +24,7 @@
   --text-secondary: #cccccc;
   --border-color: #404040;
   --border-hover: #505050;
+  --dropdown-bg: rgba(26, 26, 26, 0.95); /* Dark theme dropdown background */
 }
 
 /* Layout principal */
@@ -559,4 +561,67 @@
 [data-theme="dark"] .preview details {
   background-color: rgba(50, 50, 50, 0.3);
   border-color: var(--border-color);
+}
+
+/* === Estilos para Botón Desplegable === */
+.toolbar-dropdown-container {
+  position: relative; /* Necesario para posicionar el menú */
+  display: inline-block; /* O flex si es parte de un layout flex */
+}
+
+/* El botón principal no necesita mucho cambio, quizás un indicador */
+/* .toolbar-button::after { content: ' ▼'; font-size: 0.6em; } */ /* Opcional */
+
+.toolbar-dropdown-menu {
+  position: absolute;
+  top: 100%; /* Position below the button */
+  left: 0;
+  /* background-color: var(--bg-primary); */ /* Use the new variable */
+  background-color: var(--dropdown-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  z-index: 1000; 
+  min-width: 160px; /* Ancho mínimo */
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  text-align: left;
+  /* Añadir fondo semitransparente */
+  /* Usar variable --aegis-bg-graphite si está disponible o un fallback oscuro */
+  backdrop-filter: blur(5px); /* Opcional: Añadir un ligero blur */
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.toolbar-dropdown-item {
+  /* Mantener estilos existentes */
+}
+
+.toolbar-dropdown-item button {
+  display: block;
+  width: 100%;
+  padding: 8px 15px; /* Más padding */
+  clear: both;
+  font-weight: normal;
+  color: var(--text-primary); /* Usar variable de texto primario */
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent; /* Fondo transparente para el botón en sí */
+  border: 0;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.toolbar-dropdown-item button:hover {
+  color: var(--text-primary); /* Mantener color de texto */
+  /* Usar variable de hover más oscura o fallback */
+  background-color: rgba(var(--aegis-accent-blue-rgb, 0, 160, 255), 0.2); /* Resaltado azul hover */
+  text-decoration: none;
+}
+
+/* Estilo para el tema activo en el dropdown */
+.toolbar-dropdown-item button[style*="font-weight: bold"] {
+    /* background-color: rgba(var(--aegis-accent-blue-rgb, 0, 160, 255), 0.3); /* Fondo ligeramente más destacado */
+    /* color: var(--aegis-accent-blue); */ /* Color de acento si se prefiere */
+    /* No es necesario estilo adicional si ya está en negrita */
 } 

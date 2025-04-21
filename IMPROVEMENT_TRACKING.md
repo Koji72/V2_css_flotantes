@@ -50,21 +50,21 @@ Se ha ampliado el soporte de sintaxis Markdown y se han añadido bloques semánt
         *   Se añadió un botón (`[+]`) y un atajo (`Ctrl+Shift+D`) en `src/App.tsx` para insertar una plantilla `<details><summary>...</summary>...</details>`.
         *   Se añadieron estilos CSS básicos a `src/App.css` para formatear los elementos `details` y `summary`.
     9.  **Paneles Configurables (Directivas `:::panel`):**
-        *   **Necesidad:** Crear bloques de contenido flexibles con diferentes layouts (flotante, centrado) y estilos visuales, controlados desde Markdown, incluyendo un título opcional.
-        *   **Solución:** Se utilizó el plugin `remark-directive` para habilitar la sintaxis de directivas (`:::name[attr]{key=val}`).
-        *   Se creó un plugin personalizado `remarkCustomPanels` (`src/utils/remarkCustomPanels.ts`) para procesar específicamente las directivas `:::panel`.
-        *   Este plugin:
-            *   Utiliza `unist-util-visit` para encontrar nodos `containerDirective` con el nombre `panel`.
-            *   Lee los atributos de la directiva (ej., `{layout=floating-left style=simple title="Mi Título"}`).
-            *   Transforma el nodo en un elemento HTML `<div>` asignando `'div'` a `node.data.hName`.
-            *   Asigna clases CSS a `node.data.hProperties.className` basadas en los atributos `layout` y `style` (ej., `panel`, `layout--floating-left`, `panel-style-simple`).
-            *   **Manejo del Título:**
-                *   Si se proporciona el atributo `title`, se crea un nodo HAST para el título (ej., `<h4>`) usando la librería `hastscript`.
-                *   Este nodo HAST del título se inserta al principio del contenido del panel (`node.children`) mediante un nodo MDAST intermedio (ej., `paragraph`) que lleva la información HAST en su propiedad `data` (`hName`, `hProperties`). Esto asegura la compatibilidad con `rehype-raw` y `ReactMarkdown`.
-                *   (Nota: Un intento previo de insertar HTML crudo (`{type: 'html', value: '<h4>...'}`) falló en el renderizado).
-            *   Inicialmente hubo errores de tipos con `unist-util-visit`; se resolvieron importando y usando los tipos correctos (`ContainerDirective`) de `mdast-util-directive` e instalando `@types/mdast`.
-        *   Se añadieron estilos CSS básicos en `blank-template.css` (o el CSS de la plantilla activa) para las clases `panel`, `panel-layout-*`, `panel-style-*` y `panel-title` para definir la apariencia inicial.
-*   **Beneficios:** Mayor capacidad de expresión y formato dentro del editor, incluyendo estructuración semántica con admoniciones, organización con secciones colapsables y diseño flexible con paneles configurables **que ahora soportan títulos, layouts y estilos personalizados**. La interfaz (botones y atajos) facilita el uso de estas funcionalidades. Se resolvieron incompatibilidades de plugins buscando alternativas funcionales y se implementaron soluciones personalizadas con directivas.
+        *   **Necesidad:** Crear bloques de contenido flexibles con diferentes layouts (flotante, centrado) y estilos visuales, controlados desde Markdown, incluyendo un título opcional y una estética avanzada.
+        *   **Solución:** 
+            *   Se utilizó el plugin `remark-directive` y se creó el plugin personalizado `remarkCustomPanels`.
+            *   **Funcionalidad del Plugin:** Procesa directivas `:::panel`, transforma a `<div>`, lee atributos `layout`, `style`, `title`, y ahora también fusiona clases del atributo `class` con las generadas por el plugin.
+            *   **Manejo del Título:** Implementado usando `hastscript` para crear un nodo HAST `<h4>`.
+            *   **Implementación de Estilo "Aegis":**
+                *   Se definió una paleta de colores y variables CSS (`:root`) en `blank-template.css` inspirada en el prompt de diseño "Aegis" (estética Halo x Infinity, tema oscuro, colores específicos para acentos y texto).
+                *   Se aplicó el estilo base "Aegis" a `body` y a la clase `.panel` (fondo grafito, borde sutil, tipografía, etc.).
+                *   Se integraron fuentes web de Google Fonts (`Exo 2`, `Teko`) para la tipografía del cuerpo y los títulos, mejorando la estética.
+                *   Se rehicieron los estilos semánticos `.panel-style--note/warning/success/danger/info/muted` para usar la paleta Aegis, añadiendo iconos SVG (mediante máscaras CSS) a los títulos para mayor claridad visual.
+                *   Se experimentó con estilos visuales avanzados como `.panel-style--glass` (translúcido) y `.panel-style--cut-corner` (con variantes de tamaño), y `.panel-style--hud-frame` (usando `clip-path` y pseudo-elementos para formas y decoraciones complejas).
+                *   **Decoraciones Modulares:** Se crearon clases CSS específicas para decoraciones de esquina (`.corner-tr-overlay-deco`, `.corner-br-stripes`, `.corner-tl-stripes`, `.corner-bl-block`) que utilizan pseudo-elementos (`::before`/`::after`) y pueden combinarse (máximo una que use `::before` y una que use `::after` simultáneamente) aplicándolas en el atributo `class` de la directiva.
+            *   Se resolvieron problemas de tipos y se corrigió la lógica de fusión de clases en el plugin `remarkCustomPanels`.
+        *   Se añadieron/actualizaron los estilos CSS correspondientes en `blank-template.css`.
+*   **Beneficios:** Sistema de paneles muy flexible y visualmente rico, con soporte para títulos, layouts, múltiples estilos semánticos y visuales (incluyendo el tema "Aegis"), y decoraciones de esquina modulares combinables. Se mantiene la robustez al controlar la mayoría de los estilos visuales mediante CSS.
 
 ## Mejora: Renderizado de Bloques de Código
 

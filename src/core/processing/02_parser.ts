@@ -60,10 +60,15 @@ export async function parseToAst(normalizedMarkdown: string): Promise<{ ast: Roo
         // Asegurarse que los bloques de panel tengan el formato esperado por el parser
         // Si encontramos :::panel{title="..."} necesitamos transformarlo a :::panel[]{title="..."}
         processedMarkdown = processedMarkdown.replace(
-            /:::(panel|datamatrix)(\{[^}]*\})/g, 
-            ':::$1[]$2'
+            /^(:::(?:panel|datamatrix))\{/gm,
+            '$1[]{'
         );
         
+        // --- NEW DEBUG LOG ---
+        console.log('[Parser] Markdown AFTER pre-processing to add []:');
+        console.log(processedMarkdown.substring(0, 500)); // Log first 500 chars
+        // --- END NEW DEBUG LOG ---
+
         console.log('[Parser] After pre-processing:', processedMarkdown.substring(0, 200));
         
         // Configurar micromark y mdast-util-from-markdown con las extensiones

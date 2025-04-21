@@ -108,14 +108,25 @@ export class PanelManager {
     const panel = document.createElement('div');
     panel.className = 'floating-block panel';
     
+    // --- DEBUG LOGGING ---
+    console.log('[PanelManager.createPanel] Initial panel classList:', panel.classList);
+    console.log('[PanelManager.createPanel] Received attributes:', attributes);
+    // --- END DEBUG ---
+
     // Añadir clases base desde el atributo 'class'
     if (attributes.class) {
       // Asegurarse de que solo se añaden tokens válidos
+      console.log(`[PanelManager.createPanel] Processing attributes.class: "${attributes.class}"`); // DEBUG
       attributes.class.split(' ').forEach(cls => {
-        if (cls) { // Evitar añadir strings vacíos
-          panel.classList.add(cls.trim());
+        const trimmedCls = cls.trim();
+        if (trimmedCls) { // Evitar añadir strings vacíos
+          console.log(`[PanelManager.createPanel] Adding class: "${trimmedCls}"`); // DEBUG
+          panel.classList.add(trimmedCls);
         }
       });
+      // --- DEBUG LOGGING ---
+      console.log('[PanelManager.createPanel] panel classList AFTER processing class attribute:', panel.classList);
+      // --- END DEBUG ---
     }
     
     // Añadir estilo específico si se proporciona, asegurándose de que sea un token válido
@@ -249,27 +260,28 @@ export class PanelManager {
 
     while ((match = panelRegex.exec(markdown)) !== null) {
       matchCount++;
-      console.log(`[PanelManager.processPanelSyntax] Match #${matchCount}:`, {
-        fullMatch: match[0],
-        attributes: match[1],
-        content: match[2]
-      }); // DEBUG
+      const [fullMatch, attributesStr, content] = match;
+      
+      console.log(`[PanelManager.processPanelSyntax] Match #${matchCount}:`, { // DEBUG
+          fullMatch: `"${fullMatch.substring(0, 50)}..."`, // Log only start for brevity
+          attributesStr: attributesStr,
+          content: `"${content.substring(0, 50)}..."` // Log only start for brevity
+      }); 
 
       try {
-        const [fullMatch, attributesStr, innerContent] = match;
-        console.log('[PanelManager.processPanelSyntax] Processing attributes:', attributesStr); // DEBUG
-
         const attributes = this.parsePanelAttributes(attributesStr);
-        console.log('[PanelManager.processPanelSyntax] Parsed attributes:', attributes); // DEBUG
+        // --- DEBUG LOGGING ---
+        console.log(`[PanelManager.processPanelSyntax] Match #${matchCount} Parsed Attributes:`, attributes); 
+        // --- END DEBUG ---
 
-        const panelElement = this.createPanel(attributes);
-        console.log('[PanelManager.processPanelSyntax] Created panel element:', panelElement.outerHTML); // DEBUG
-
-        const processedContent = this.processButtonSyntax(innerContent);
+        const panel = this.createPanel(attributes);
+        
+        // Procesar botones dentro del contenido del panel ANTES de añadirlo
+        const processedContent = this.processButtonSyntax(content);
         console.log('[PanelManager.processPanelSyntax] Processed inner content:', processedContent); // DEBUG
 
-        panelElement.innerHTML = processedContent;
-        const finalHTML = panelElement.outerHTML;
+        panel.innerHTML = processedContent;
+        const finalHTML = panel.outerHTML;
         console.log('[PanelManager.processPanelSyntax] Final panel HTML:', finalHTML); // DEBUG
 
         result = result.replace(fullMatch, finalHTML);
@@ -278,10 +290,10 @@ export class PanelManager {
         const errorPanel = `<div class="panel panel-error floating-block">
           <strong>Error Processing Panel:</strong><br>
           ${escapeHtmlPreview(String(error))}<br>
-          <pre>Attributes: ${escapeHtmlPreview(match[1])}
-Content: ${escapeHtmlPreview(match[2].substring(0,100))}...</pre>
+          <pre>Attributes: ${escapeHtmlPreview(attributesStr)}
+Content: ${escapeHtmlPreview(content.substring(0,100))}...</pre>
         </div>`;
-        result = result.replace(match[0], errorPanel);
+        result = result.replace(fullMatch, errorPanel);
       }
     }
 

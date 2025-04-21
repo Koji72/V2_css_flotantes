@@ -2,17 +2,19 @@
  * Master Template - Universal Scribe V2.5
  * Este template sirve como base para otros temas
  * Actualizado con estilos de Codex Antiqua (RPG Fantasy)
+ * MODIFIED FOR .preview CONTAINER
  */
 
 /* ================================================== */
 /*                 MASTER TEMPLATE V2.6                 */
 /*       Template central con todos los estilos         */
+/*       MODIFIED FOR .preview CONTAINER              */
 /* ================================================== */
 
 /* 0. IMPORTAR FUENTES */
 @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600&family=Exo+2:wght@400;500;600;700&family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap');
 
-/* Variables extendidas (V2.6) */
+/* Variables extendidas (V2.6) - Globales */
 :root {
   /* Efectos de neón y glow */
   --neon-blue-glow: 0 0 5px rgba(0, 195, 255, 0.4), 0 0 20px rgba(0, 195, 255, 0.2);
@@ -34,7 +36,7 @@
   --animation-speed-fast: 0.5s;
 }
 
-/* --- Variables root --- */
+/* --- Variables root (Base Codex Antiqua) --- Globales */
 :root {
   /* Colores base (actualizados con la paleta de Codex Antiqua) */
   --bg-primary: #f5f0e6;
@@ -60,18 +62,21 @@
   --status-neutral: #6e7a8a;
 }
 
-/* --- Estilos base para el documento --- */
-body {
+/* --- Estilos base para el documento (Aplicados a .preview) --- */
+.preview {
   font-family: 'Arial', sans-serif;
   line-height: 1.6;
   color: var(--text-primary);
   background-color: var(--bg-primary);
-  padding: calc(var(--spacing-unit) * 3);
+  /* padding: calc(var(--spacing-unit) * 3); gestionado por App.css */
   margin: 0;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
-/* --- Encabezados --- */
-h1, h2, h3, h4, h5, h6 {
+/* --- Encabezados (Dentro de .preview) --- */
+.preview h1, .preview h2, .preview h3, .preview h4, .preview h5, .preview h6 {
   margin-top: calc(var(--spacing-unit) * 3);
   margin-bottom: calc(var(--spacing-unit) * 1.5);
   line-height: 1.2;
@@ -79,56 +84,56 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
-h1 {
+.preview h1 {
   font-size: 2rem;
   border-bottom: 2px solid var(--border-dark);
   padding-bottom: calc(var(--spacing-unit) * 0.5);
 }
 
-h2 {
+.preview h2 {
   font-size: 1.6rem;
   border-bottom: 1px solid var(--border-light);
   padding-bottom: calc(var(--spacing-unit) * 0.25);
 }
 
-h3 {
+.preview h3 {
   font-size: 1.4rem;
 }
 
-h4 {
+.preview h4 {
   font-size: 1.2rem;
   font-style: italic;
 }
 
-/* --- Párrafos --- */
-p {
+/* --- Párrafos (Dentro de .preview) --- */
+.preview p {
   margin-bottom: calc(var(--spacing-unit) * 1.5);
 }
 
-/* --- Enlaces --- */
-a {
+/* --- Enlaces (Dentro de .preview) --- */
+.preview a {
   color: var(--accent-primary);
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
-a:hover {
+.preview a:hover {
   text-decoration: underline;
   color: var(--accent-secondary);
 }
 
-/* --- Listas --- */
-ul, ol {
+/* --- Listas (Dentro de .preview) --- */
+.preview ul, .preview ol {
   margin-bottom: calc(var(--spacing-unit) * 2);
   padding-left: calc(var(--spacing-unit) * 3);
 }
 
-li {
+.preview li {
   margin-bottom: calc(var(--spacing-unit) * 0.5);
 }
 
-/* --- Tablas --- */
-table {
+/* --- Tablas (Dentro de .preview) --- */
+.preview table {
   width: 100%;
   margin: calc(var(--spacing-unit) * 2) 0;
   border-collapse: separate;
@@ -138,7 +143,7 @@ table {
   box-shadow: var(--shadow-soft);
 }
 
-th {
+.preview th {
   background-color: var(--accent-primary);
   color: var(--bg-primary);
   padding: calc(var(--spacing-unit) * 1);
@@ -148,40 +153,40 @@ th {
   border-bottom: 2px solid var(--border-dark);
 }
 
-td {
+.preview td {
   padding: calc(var(--spacing-unit) * 1);
   border-bottom: 1px solid var(--border-light);
 }
 
-tr:last-child td {
+.preview tr:last-child td {
   border-bottom: none;
 }
 
-tr:nth-child(odd) {
+.preview tr:nth-child(odd) {
   background-color: rgba(0, 0, 0, 0.03);
 }
 
-/* --- Código --- */
-code, pre {
+/* --- Código (Dentro de .preview) --- */
+.preview code, .preview pre {
   font-family: monospace;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
   border-radius: 3px;
 }
 
-code {
+.preview code {
   padding: 2px 4px;
 }
 
-pre {
+.preview pre {
   padding: calc(var(--spacing-unit) * 1);
   margin: calc(var(--spacing-unit) * 2) 0;
   overflow-x: auto;
   white-space: pre-wrap;
 }
 
-/* --- Bloques de cita --- */
-blockquote {
+/* --- Bloques de cita (Dentro de .preview) --- */
+.preview blockquote {
   font-style: italic;
   margin: calc(var(--spacing-unit) * 2);
   padding: calc(var(--spacing-unit) * 2);
@@ -190,8 +195,9 @@ blockquote {
   position: relative;
 }
 
-/* --- Paneles V2.5 --- */
-.mixed-panel {
+/* --- Paneles V2.5 (Dentro de .preview) --- */
+/* Nota: Estos podrían ser estilos legacy o base para el nuevo sistema .panel */
+.preview .mixed-panel {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
   border-radius: 3px;
@@ -201,7 +207,7 @@ blockquote {
   color: #1a1a1a; /* Color más oscuro para texto en paneles */
 }
 
-.panel-header {
+.preview .panel-header { /* Probablemente reemplazado por .panel-title */
   margin-top: 0;
   margin-bottom: calc(var(--spacing-unit) * 1);
   font-weight: 600;
@@ -210,15 +216,15 @@ blockquote {
   padding-bottom: calc(var(--spacing-unit) * 0.5);
 }
 
-/* --- Layout de Columnas --- */
-.panel-columns-2 {
+/* --- Layout de Columnas (Dentro de .preview) --- */
+.preview .panel-columns-2 {
   column-count: 2;
   column-gap: calc(var(--spacing-unit) * 4); /* Espacio entre columnas */
   column-rule: 1px solid var(--border-light); /* Línea opcional entre columnas */
   margin-bottom: calc(var(--spacing-unit) * 2); /* Espacio después del bloque de columnas */
 }
 
-.panel-columns-3 {
+.preview .panel-columns-3 {
   column-count: 3;
   column-gap: calc(var(--spacing-unit) * 3);
   column-rule: 1px solid var(--border-light);
@@ -226,21 +232,21 @@ blockquote {
 }
 
 /* Evitar que ciertos elementos se rompan entre columnas */
-.panel-columns-2 h2,
-.panel-columns-2 h3,
-.panel-columns-2 h4,
-.panel-columns-3 h2,
-.panel-columns-3 h3,
-.panel-columns-3 h4,
-.panel-columns-2 .inset-box,
-.panel-columns-3 .inset-box { 
+.preview .panel-columns-2 h2,
+.preview .panel-columns-2 h3,
+.preview .panel-columns-2 h4,
+.preview .panel-columns-3 h2,
+.preview .panel-columns-3 h3,
+.preview .panel-columns-3 h4,
+.preview .panel-columns-2 .inset-box,
+.preview .panel-columns-3 .inset-box { 
   break-inside: avoid-column;
   -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
 }
 
-/* --- Layout Flotante --- */
-.layout--float-left {
+/* --- Layout Flotante (Dentro de .preview) --- */
+.preview .layout--float-left {
   float: left;
   width: calc(35% - (var(--spacing-unit) * 2)); /* Ancho de la caja flotante */
   margin-right: calc(var(--spacing-unit) * 2);
@@ -250,280 +256,197 @@ blockquote {
   vertical-align: top; /* Alinear arriba */
 }
 
-.layout--float-right {
+.preview .layout--float-right {
   float: right;
-  width: calc(35% - (var(--spacing-unit) * 2)); /* Ancho de la caja flotante */
+  width: calc(35% - (var(--spacing-unit) * 2));
   margin-left: calc(var(--spacing-unit) * 2);
   margin-bottom: var(--spacing-unit);
   display: inline-block;
   vertical-align: top;
 }
 
-/* Limpiador de Floats */
-.clearfix::after {
+.preview .clearfix::after {
   content: "";
   display: table;
   clear: both;
 }
 
-/* --- Estilos para cajas inset --- */
-.inset-box { /* Estilo base para todas las cajas inset */
-  border: 1px solid var(--border-dark);
-  background-color: var(--bg-secondary);
+/* --- Inset Box (Dentro de .preview) --- */
+.preview .inset-box { /* Estilo base para todas las cajas inset */
+  background-color: rgba(0,0,0,0.05);
+  border: 1px solid var(--border-light);
   padding: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  border-radius: 3px;
   box-shadow: var(--shadow-inset);
-  border-radius: 3px;
-  margin-bottom: calc(var(--spacing-unit) * 1.5);
-  color: #1a1a1a; /* Color más oscuro para el texto dentro de las cajas */
 }
 
-.inset-box h4 { /* Cabecera específica para inset */
+.preview .inset-box h4 { /* Cabecera específica para inset */
   margin-top: 0;
-  margin-bottom: var(--spacing-unit);
-  color: var(--text-secondary);
-  border-bottom: 1px dashed var(--border-light);
+  margin-bottom: calc(var(--spacing-unit) * 1);
+  font-style: normal;
   font-size: 1.1em;
-  text-align: center;
+  color: var(--accent-secondary);
+  border-bottom: 1px dashed var(--border-light);
+  padding-bottom: calc(var(--spacing-unit) * 0.5);
 }
 
-/* --- Elementos de Estado --- */
-.status-low, .status-medium, .status-high, .status-critical {
-  font-weight: 600;
-  padding: 2px 5px;
-  border-radius: 3px;
+/* --- Indicadores de Estado (Dentro de .preview) --- */
+.preview .status-low, .preview .status-medium, .preview .status-high, .preview .status-critical {
+  padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 1);
+  border-radius: 1em;
+  font-size: 0.9em;
+  display: inline-block;
+  font-weight: bold;
 }
 
-.status-low {
-  background-color: rgba(44, 124, 67, 0.2);
+.preview .status-low {
+  background-color: #e6f4ea; 
   color: var(--status-good);
 }
 
-.status-medium {
-  background-color: rgba(199, 167, 88, 0.2);
+.preview .status-medium {
+  background-color: #fff8e6;
   color: var(--status-warn);
 }
 
-.status-high {
-  background-color: rgba(167, 62, 62, 0.2);
+.preview .status-high {
+  background-color: #fdecea;
   color: var(--status-bad);
 }
 
-.status-critical {
-  background-color: rgba(167, 62, 62, 0.3);
-  color: var(--status-bad);
-  font-weight: 700;
+.preview .status-critical {
+  background-color: #444; /* Fondo oscuro */
+  color: #fff; /* Texto blanco */
 }
 
-/* --- Matrices de Datos --- */
-.datamatrix table {
-  width: 100%;
-  border-collapse: collapse;
+/* --- Datamatrix (Dentro de .preview) --- */
+.preview .datamatrix table {
+  border: 1px solid var(--border-light);
+  box-shadow: none;
+  background-color: transparent;
 }
 
-.datamatrix th {
-  font-size: 0.9em;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.preview .datamatrix th {
+  background-color: transparent;
+  color: var(--text-secondary);
+  font-size: 1em;
+  border-bottom: 1px solid var(--border-light);
 }
 
-.datamatrix td, .datamatrix th {
-  padding: 6px 10px;
+.preview .datamatrix td, .preview .datamatrix th {
+  border: none; /* Quitar bordes internos */
+  border-bottom: 1px dashed var(--border-light); /* Líneas punteadas */
+  padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 1);
 }
 
-/* --- Media Query para Responsividad --- */
+/* --- Media Queries (Dentro de .preview) --- */
 @media (max-width: 768px) {
-  /* Desactivar columnas en pantallas pequeñas */
-  .panel-columns-2,
-  .panel-columns-3 {
+  .preview .panel-columns-2,
+  .preview .panel-columns-3 {
     column-count: 1;
     column-rule: none;
   }
-  
-  /* Desactivar floats */
-  .layout--float-left,
-  .layout--float-right,
-  img.float-left,
-  img.float-right {
+  .preview .layout--float-left,
+  .preview .layout--float-right {
     float: none;
     width: 100%;
-    max-width: 100%;
     margin-left: 0;
     margin-right: 0;
     display: block;
   }
-  
-  /* Ajustar tamaños de texto */
-  h1 {
+  /* Ajustes específicos para móvil si son necesarios */
+  .preview h1 {
     font-size: 1.8rem;
   }
-  
-  h2 {
-    font-size: 1.5rem;
+  .preview h2 {
+    font-size: 1.4rem;
   }
-  
-  body {
-    padding: calc(var(--spacing-unit) * 1.5);
-  }
+  /* No aplicar estilos de body aquí dentro */
+  /* .preview body { padding: var(--spacing-unit); } */
 }
 
-/* =================================== */
-/* Nuevo estilo: panel-style--hologram (V2.6) */
-/* =================================== */
+/* === Paneles Adicionales Tech (Prefijados con .preview) === */
 
-.panel-style--hologram {
-  background: linear-gradient(135deg, rgba(0, 20, 40, 0.8), rgba(0, 10, 30, 0.8));
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(0, 195, 255, 0.3);
-  box-shadow: 0 0 15px rgba(0, 100, 200, 0.2), inset 0 0 20px rgba(0, 100, 200, 0.1);
-  position: relative;
-  overflow: hidden;
-  padding: 15px;
-  margin-bottom: 20px;
+/* Estilo: Hologram */
+.preview .panel-style--hologram {
+    /* ... estilos copiados de aegis-tactical ... */
+    --panel-bg: rgba(8, 10, 15, 0.6);
+    --panel-border: rgba(0, 255, 195, 0.3); /* Verde táctico */
+    --panel-header-color: #80ff00;
+    --panel-icon-color: #80ff00;
+    --panel-content-color: #c0f0d0;
+    
+    background-color: var(--panel-bg);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px dashed var(--panel-border);
+    box-shadow: inset 0 0 15px rgba(128, 255, 0, 0.2);
+    /* ... resto de estilos hologram ... */
 }
-
-/* Efecto de línea de escaneo holográfico */
-.panel-style--hologram::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(to right, transparent, rgba(0, 195, 255, 0.8), transparent);
-  animation: hologram-scan 3s linear infinite;
-  z-index: 5;
-  pointer-events: none;
+.preview .panel-style--hologram::before { /* Scan line animada */
+    /* ... estilos copiados ... */
+     background: linear-gradient(to right, transparent, var(--tactical-green-bright, #80ff00), transparent);
+     /* ... */
+     animation: hologram-scan var(--animation-speed-slow) linear infinite;
 }
-
 @keyframes hologram-scan {
-  0% { top: 0; opacity: 0; }
-  5% { opacity: 1; }
-  95% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+    /* ... keyframes copiados ... */
+    0% { transform: translateY(5px); }
+    50% { transform: translateY(calc(100% - 5px)); }
+    100% { transform: translateY(5px); }
+}
+.preview .panel-style--hologram::after { /* Patrón de grid sutil */
+    /* ... estilos copiados ... */
+     background-image: linear-gradient(rgba(100, 200, 100, 0.05) 1px, transparent 1px),
+                       linear-gradient(90deg, rgba(100, 200, 100, 0.05) 1px, transparent 1px);
+     /* ... */
+}
+.preview .panel-style--hologram > .panel-title { /* Usar .panel-title si aplica */
+    /* ... estilos copiados ... */
+     text-shadow: 0 0 8px var(--tactical-green-bright, #80ff00);
+     border-bottom-color: rgba(100, 200, 100, 0.3);
 }
 
-/* Líneas de ruido horizontal */
-.panel-style--hologram::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 195, 255, 0.03) 2px,
-    rgba(0, 195, 255, 0.03) 4px
-  );
-  pointer-events: none;
-  z-index: 2;
+/* Estilo: Neo Frame */
+.preview .panel-style--neo-frame {
+    /* ... estilos copiados de aegis-tactical ... */
+     border: 2px solid transparent;
+     background-clip: padding-box;
 }
-
-.panel-style--hologram > .panel-header,
-.panel-style--hologram > h2:first-child {
-  font-family: var(--font-tech);
-  color: rgba(0, 225, 255, 0.9);
-  text-shadow: 0 0 5px rgba(0, 195, 255, 0.7);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  border-bottom: 1px solid rgba(0, 195, 255, 0.3);
-  padding-bottom: 8px;
-  margin-bottom: 15px;
+.preview .panel-style--neo-frame::before { /* Borde animado */
+    /* ... estilos copiados ... */
+     background: linear-gradient(90deg, #00aaff, #ffcc00, #80ff00, #00aaff);
+     background-size: 400% 100%;
+     animation: neo-border-flow calc(var(--animation-speed-slow) * 2) linear infinite;
 }
-
-/* =================================== */
-/* Nuevo estilo: panel-style--neo-frame (V2.6) */
-/* =================================== */
-
-.panel-style--neo-frame {
-  background-color: rgba(15, 20, 35, 0.9);
-  border: none;
-  border-radius: 2px;
-  position: relative;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  padding: 15px;
-  margin-bottom: 20px;
-}
-
-/* Marco de neón */
-.panel-style--neo-frame::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border: 2px solid transparent;
-  border-image: linear-gradient(45deg, 
-    #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
-  ) 1;
-  animation: neo-border-flow 3s linear infinite;
-  pointer-events: none;
-  z-index: 2;
-}
-
 @keyframes neo-border-flow {
-  0% {
-    border-image: linear-gradient(45deg, 
-      #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
-    ) 1;
-  }
-  25% {
-    border-image: linear-gradient(45deg, 
-      #00ffcc, #00aaff, #00ffcc, #00aaff, #00ffcc
-    ) 1;
-  }
-  50% {
-    border-image: linear-gradient(45deg, 
-      #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
-    ) 1;
-  }
-  75% {
-    border-image: linear-gradient(45deg, 
-      #00ffcc, #00aaff, #00ffcc, #00aaff, #00ffcc
-    ) 1;
-  }
-  100% {
-    border-image: linear-gradient(45deg, 
-      #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
-    ) 1;
-  }
+    /* ... keyframes copiados ... */
+    0% { background-position: 0% 50%; }
+    100% { background-position: 400% 50%; }
+}
+.preview .panel-style--neo-frame > .panel-title { /* Usar .panel-title si aplica */
+    /* ... estilos copiados ... */
+     background: linear-gradient(to right, #1c1e24, #2a2d35);
+     color: #fff;
 }
 
-.panel-style--neo-frame > .panel-header,
-.panel-style--neo-frame > h2:first-child {
-  font-family: var(--font-tech);
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(0, 170, 255, 0.7), 0 0 15px rgba(0, 170, 255, 0.4);
-  border-bottom: 1px solid rgba(0, 195, 255, 0.3);
-  padding-bottom: 10px;
-  margin-top: 0;
-  margin-bottom: 15px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-weight: 400;
-}
-
-/* === Animaciones adicionales (V2.6) === */
-
+/* === Animaciones Base (Prefijadas con .preview) === */
 @keyframes soft-pulse {
-  0% { opacity: 0.7; }
-  50% { opacity: 1; }
-  100% { opacity: 0.7; }
+  /* ... keyframes copiados ... */
+  0%, 100% { box-shadow: var(--outset-shadow-ui, 0 2px 4px rgba(0,0,0,0.3)), var(--inset-shadow-ui, inset 0 1px 1px rgba(255,255,255,0.1)), var(--glow-active-box, 0 0 10px rgba(0,170,255,0.5)); }
+  50% { box-shadow: var(--outset-shadow-ui, 0 2px 4px rgba(0,0,0,0.3)), var(--inset-shadow-ui, inset 0 1px 1px rgba(255,255,255,0.1)), 0 0 15px var(--cyber-blue-glow, rgba(0,170,255,0.5)); }
 }
-
 @keyframes slow-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(359deg); }
+  /* ... keyframes copiados ... */
+  from { transform: rotate(0deg); } to { transform: rotate(360deg); }
 }
 
-.animate-pulse {
-  animation: soft-pulse var(--animation-speed-medium) ease-in-out infinite;
+.preview .animate-pulse {
+  /* ... estilos copiados ... */
+  animation: soft-pulse var(--animation-speed-medium) infinite ease-in-out;
 }
-
-.animate-rotate {
-  animation: slow-rotate var(--animation-speed-slow) linear infinite;
+.preview .animate-rotate {
+  /* ... estilos copiados ... */
+  animation: slow-rotate calc(var(--animation-speed-slow) * 3) linear infinite;
 } 

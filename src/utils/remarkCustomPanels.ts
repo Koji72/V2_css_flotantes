@@ -1,6 +1,6 @@
 import { visit } from 'unist-util-visit';
 // Importar tipos correctos de mdast y mdast-util-directive
-import type { Root, Parent, Content } from 'mdast';
+import type { Root, Parent, Content, Text, Paragraph } from 'mdast';
 import type { ContainerDirective } from 'mdast-util-directive';
 import type { Plugin } from 'unified';
 import { h } from 'hastscript';
@@ -9,77 +9,88 @@ import { h } from 'hastscript';
 
 const remarkCustomPanels: Plugin<[], Root> = () => {
   return (tree) => {
-    // Usar el tipo importado ContainerDirective y una firma de visitor más simple
-    visit(tree, 'containerDirective', (node: ContainerDirective) => { 
+    visit(tree, 'containerDirective', (node: ContainerDirective) => {
       if (node.name === 'panel') {
-        // Los atributos pueden ser undefined o null según el tipo
         const attributes = node.attributes || {};
         const layout = attributes.layout;
         const style = attributes.style;
         const title = attributes.title;
         const directiveClass = attributes.class;
 
-        // Asegurarse de que node.data y node.data.hProperties existan
         const data = node.data || (node.data = {});
         const hProperties = data.hProperties || (data.hProperties = {});
 
-        // --- Lógica de Fusión de Clases --- 
-        let finalClasses: Set<string> = new Set(); // Usar Set para evitar duplicados fácilmente
-
-        // 1. Añadir clases del atributo 'class' de la directiva
+        let finalClasses: Set<string> = new Set();
         if (directiveClass && typeof directiveClass === 'string') {
-            directiveClass.split(' ').forEach(cls => cls.trim() && finalClasses.add(cls));
+          directiveClass.split(' ').forEach(cls => cls.trim() && finalClasses.add(cls));
         }
-
-        // 2. Añadir clase base 'panel'
         finalClasses.add('panel');
-
-        // 3. Añadir clase de layout
         if (layout && typeof layout === 'string') {
-            finalClasses.add(`layout--${layout.trim()}`);
+          finalClasses.add(`layout--${layout.trim()}`);
         }
-
-        // 4. Añadir clase de estilo
         if (style && typeof style === 'string') {
-            finalClasses.add(`panel-style--${style.trim()}`);
+          finalClasses.add(`panel-style--${style.trim()}`);
         }
-        // --- Fin Lógica de Fusión de Clases ---
-
-        // Asignar el array final a hProperties
         hProperties.className = Array.from(finalClasses);
 
-        // --- Añadir lógica para el título ---
         if (title && typeof title === 'string') {
-          // Asegurar que node.children exista y sea un array
           if (!node.children) {
-             node.children = [];
+            node.children = [];
           } else if (!Array.isArray(node.children)) {
-             console.warn("[remarkCustomPanels] Panel directive children was not an array, converting...");
-             node.children = [node.children];
+            console.warn("[remarkCustomPanels] Panel directive children was not an array, converting...");
+            node.children = [node.children];
           }
-
-          // Crear el nodo HAST para el título usando hastscript
-          const titleHastNode = h('h4', { className: 'panel-title' }, title); 
-
-          // Intento 1: Crear un nodo MDAST compatible con HAST (usando data)
           const titleMdastNode: Content = {
-            type: 'paragraph',
+            type: 'heading',
+            depth: 4,
             data: {
-              hName: titleHastNode.tagName, 
-              hProperties: titleHastNode.properties,
+              hName: 'h4',
+              hProperties: { className: 'panel-title' },
             },
             children: [{ type: 'text', value: title }]
           };
-          
-          // Insertar el nodo MDAST con datos HAST al principio
           node.children.unshift(titleMdastNode);
         } else if (attributes.hasOwnProperty('title')) {
+            // Podríamos querer manejar el caso de title="" explícitamente si es necesario
+            // console.log("[remarkCustomPanels] Panel has empty title attribute.");
         }
-        // --- Fin de la lógica del título ---
 
-        // Establecer el nombre del tag HTML
+        if (node.children && node.children.length > 0) {
+          const numChildren = node.children.length;
+          const startIndex = Math.max(0, numChildren - 3);
+          for (let i = numChildren - 1; i >= startIndex; i--) {
+            const childNode = node.children[i];
+            if (childNode.type === 'paragraph' && childNode.children) {
+              for (let j = childNode.children.length - 1; j >= 0; j--) {
+                const inlineNode = childNode.children[j];
+                if (inlineNode.type === 'text') {
+                  const textNode = inlineNode as Text;
+                  if (typeof textNode.value === 'string') {
+                    const trimmedText = textNode.value.trimEnd();
+                    if (trimmedText === ':::' || trimmedText.endsWith('\n:::') || trimmedText.endsWith(' :::')) {
+                      childNode.children.splice(j, 1);
+                      if (childNode.children.length === 0) {
+                        node.children.splice(i, 1);
+                      }
+                      break;
+                    } else if (trimmedText.endsWith(':::')) {
+                      textNode.value = textNode.value.slice(0, textNode.value.lastIndexOf(':::'));
+                      if (!textNode.value.trim()) {
+                        childNode.children.splice(j, 1);
+                        if (childNode.children.length === 0) {
+                          node.children.splice(i, 1);
+                        }
+                      }
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
         data.hName = 'div';
-
       }
     });
   };

@@ -1,0 +1,778 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Teko:wght@300..700&display=swap');
+
+/* 
+ * Plantilla CSS Aegis (Halo x Infinity) - V2.6
+ * Basado en el prompt de diseño detallado.
+ * Modificado para aplicar estilos dentro de `.preview`
+ */
+
+/* === Variables de Color Aegis === */
+:root {
+  /* Fondos */
+  --aegis-bg-dark: #05080F;
+  --aegis-bg-graphite: #12141A;
+  --aegis-bg-steel-desat: #1C2128;
+  --aegis-bg-grey-medium: #2A313B;
+
+  /* Acentos Primarios */
+  --aegis-accent-blue: #00A0FF;
+  --aegis-accent-blue-rgb: 0, 160, 255;
+  --aegis-accent-green: #00FF88;
+  --aegis-accent-green-rgb: 0, 255, 136;
+
+  /* Acentos Secundarios */
+  --aegis-accent-amber: #FFB700;
+  --aegis-accent-amber-rgb: 255, 183, 0;
+  --aegis-accent-red: #FF4040;
+  --aegis-accent-red-rgb: 255, 64, 64;
+
+  /* Texto */
+  --aegis-text-primary: #E0F0FF; /* Blanco Hielo */
+  --aegis-text-secondary: #A0B8D0; /* Gris Azulado Claro */
+
+  /* Bordes */
+  --aegis-border-main: var(--aegis-accent-blue);
+  --aegis-border-medium: #303540;
+  --aegis-border-fine: rgba(var(--aegis-text-secondary-rgb, 160, 184, 208), 0.3); /* Necesita definir --aegis-text-secondary-rgb si se usa */
+
+  /* Sombras / Brillos */
+  --aegis-glow-blue-soft: 0 0 8px rgba(var(--aegis-accent-blue-rgb), 0.7);
+  --aegis-glow-green-soft: 0 0 8px rgba(var(--aegis-accent-green-rgb), 0.7);
+  --aegis-glow-amber-soft: 0 0 8px rgba(var(--aegis-accent-amber-rgb), 0.7);
+  --aegis-glow-red-soft: 0 0 8px rgba(var(--aegis-accent-red-rgb), 0.7);
+}
+
+/* === Estilos Generales Aegis aplicados a .preview === */
+.preview {
+  font-family: 'Exo 2', system-ui, sans-serif; /* Usar Exo 2 como principal */
+  line-height: 1.6;
+  color: var(--aegis-text-primary);
+  background-color: var(--aegis-bg-dark);
+  margin: 0; /* El padding ya lo gestiona el div .preview en App.css */
+  /* padding: 20px; Eliminar padding aquí, gestionado por App.css */
+  height: 100%; /* Asegurar que ocupa toda la altura */
+  overflow-y: auto; /* Permitir scroll */
+  box-sizing: border-box; /* Incluir padding en el tamaño */
+}
+
+/* === Estilos de Panel Aegis === */
+
+/* Contenedor base (Reemplaza .mixed-panel si se usaba) */
+/* Asegúrate de que tus elementos <ReactMarkdown> o el contenedor usen la clase .panel */
+.preview .panel {
+  margin: 20px 0; /* Mantener margen vertical */
+  padding: 20px; /* Aumentar padding */
+  border: 1px solid var(--aegis-border-medium); /* Borde gris medio */
+  border-radius: 4px; /* Esquinas suavizadas */
+  background-color: var(--aegis-bg-graphite); /* Fondo grafito mate */
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3); /* Sutil biselado interior */
+  color: var(--aegis-text-primary);
+  /* Transición para posibles efectos hover */
+  transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out;
+  position: relative; /* Necesario para algunos estilos decorativos */
+}
+
+/* Efecto Hover para Paneles */
+.preview .panel:hover {
+  border-color: var(--aegis-accent-blue); /* Resaltar borde en hover */
+  /* Combinar sombra interior existente con brillo exterior */
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3), var(--aegis-glow-blue-soft);
+}
+
+/* Estilos para el título del panel */
+.preview .panel-title {
+  margin-top: 0;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--aegis-border-medium); /* Borde separador más oscuro */
+  font-family: 'Teko', system-ui, sans-serif; /* Usar Teko como principal */
+  font-size: 1.6em; /* Más grande */
+  font-weight: 500; /* Teko necesita un peso específico, 500=Medium */
+  color: var(--aegis-accent-blue); /* Azul cibernético por defecto */
+  text-transform: uppercase; /* Mayúsculas para títulos */
+  letter-spacing: 0.05em;
+  text-shadow: var(--aegis-glow-blue-soft); /* Brillo sutil azul */
+  /* z-index: 1; */ /* <-- Comentado */
+  position: relative; /* Mantener por si acaso */
+  /* Añadir espacio para el icono si existe */
+}
+
+/* Estilos base para iconos en títulos (vía ::before) */
+/* Solo se aplica si el .panel-title está dentro de .preview */
+.preview .panel-title::before {
+  content: '';
+  display: inline-block;
+  width: 1.1em; /* Tamaño relativo al font-size del título */
+  height: 1.1em;
+  margin-right: 0.6em;
+  vertical-align: -0.15em; /* Ajuste fino vertical */
+  background-color: currentColor; /* Hereda color del título por defecto */
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+/* Contenido del panel */
+/* .panel-content no parece ser generado por remarkCustomPanels, */
+/* aplicar estilos directamente a los elementos hijos si es necesario */
+/* .preview .panel-content { */
+  /* color: var(--aegis-text-secondary); */
+/* } */
+
+/* Aplicar estilos a párrafos y listas dentro del panel */
+.preview .panel p,
+.preview .panel ul,
+.preview .panel ol {
+    color: var(--aegis-text-primary); /* Asegurar que párrafos y listas usen color primario */
+    margin-bottom: 1em;
+}
+
+/* === Estilos Semánticos Aegis === */
+
+/* Base para paneles semánticos (borde izquierdo + fondo tintado) */
+.preview .panel-style--note,
+.preview .panel-style--warning,
+.preview .panel-style--success,
+.preview .panel-style--danger { /* Añadimos danger/red */
+  padding-left: 20px;
+  border-width: 1px; /* Resetear borde general si es necesario */
+  border-left-width: 5px; /* Borde izquierdo más grueso */
+  border-style: solid;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3); /* Mantener bisel */
+}
+
+/* Estilo Nota (Azul) */
+.preview .panel-style--note {
+  border-color: var(--aegis-border-medium);
+  border-left-color: var(--aegis-accent-blue);
+  background-color: rgba(var(--aegis-accent-blue-rgb), 0.08); /* Fondo azul muy sutil */
+}
+.preview .panel-style--note > .panel-title {
+  color: var(--aegis-accent-blue);
+  border-bottom-color: rgba(var(--aegis-accent-blue-rgb), 0.3);
+  text-shadow: var(--aegis-glow-blue-soft);
+}
+.preview .panel-style--note > .panel-title::before {
+  background-color: var(--aegis-accent-blue);
+  /* Icono Lucide: Info */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='16' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12.01' y2='8'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='16' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12.01' y2='8'/%3E%3C/svg%3E");
+}
+
+/* Estilo Advertencia (Ámbar) */
+.preview .panel-style--warning {
+  border-color: var(--aegis-border-medium);
+  border-left-color: var(--aegis-accent-amber);
+  background-color: rgba(var(--aegis-accent-amber-rgb), 0.08);
+}
+.preview .panel-style--warning > .panel-title {
+  color: var(--aegis-accent-amber);
+  border-bottom-color: rgba(var(--aegis-accent-amber-rgb), 0.3);
+  text-shadow: var(--aegis-glow-amber-soft);
+}
+.preview .panel-style--warning > .panel-title::before {
+  background-color: var(--aegis-accent-amber);
+  /* Icono Lucide: AlertTriangle */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
+}
+
+/* Estilo Éxito (Verde) */
+.preview .panel-style--success {
+  border-color: var(--aegis-border-medium);
+  border-left-color: var(--aegis-accent-green);
+  background-color: rgba(var(--aegis-accent-green-rgb), 0.08);
+}
+.preview .panel-style--success > .panel-title {
+  color: var(--aegis-accent-green);
+  border-bottom-color: rgba(var(--aegis-accent-green-rgb), 0.3);
+  text-shadow: var(--aegis-glow-green-soft);
+}
+.preview .panel-style--success > .panel-title::before {
+  background-color: var(--aegis-accent-green);
+  /* Icono Lucide: CheckCircle */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/%3E%3Cpolyline points='22 4 12 14.01 9 11.01'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/%3E%3Cpolyline points='22 4 12 14.01 9 11.01'/%3E%3C/svg%3E");
+}
+
+/* Estilo Peligro (Rojo) */
+.preview .panel-style--danger {
+  border-color: var(--aegis-border-medium);
+  border-left-color: var(--aegis-accent-red);
+  background-color: rgba(var(--aegis-accent-red-rgb), 0.08);
+}
+.preview .panel-style--danger > .panel-title {
+  color: var(--aegis-accent-red);
+  border-bottom-color: rgba(var(--aegis-accent-red-rgb), 0.3);
+  text-shadow: var(--aegis-glow-red-soft);
+}
+.preview .panel-style--danger > .panel-title::before {
+  background-color: var(--aegis-accent-red);
+  /* Icono Lucide: AlertOctagon */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E");
+}
+
+/* Estilo Info (Azul) */
+.preview .panel-style--info {
+  border-color: var(--aegis-border-medium);
+  border-left-color: var(--aegis-accent-blue); /* Usando azul principal como Note */
+  background-color: rgba(var(--aegis-accent-blue-rgb), 0.08);
+}
+.preview .panel-style--info > .panel-title {
+  color: var(--aegis-accent-blue);
+  border-bottom-color: rgba(var(--aegis-accent-blue-rgb), 0.3);
+  text-shadow: var(--aegis-glow-blue-soft);
+}
+.preview .panel-style--info > .panel-title::before {
+  background-color: var(--aegis-accent-blue); /* Mismo color que note */
+  /* Icono Lucide: Info (Mismo que note) */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='16' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12.01' y2='8'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='16' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12.01' y2='8'/%3E%3C/svg%3E");
+}
+
+/* Estilo Muted (Gris sutil) */
+.preview .panel-style--muted {
+  border-color: var(--aegis-border-medium);
+  border-left-color: var(--aegis-text-secondary); /* Borde izquierdo gris */
+  background-color: rgba(160, 184, 208, 0.05); /* Fondo muy sutil basado en gris azulado */
+}
+.preview .panel-style--muted > .panel-title {
+  color: var(--aegis-text-secondary); /* Título gris */
+  border-bottom-color: rgba(160, 184, 208, 0.2); /* Borde inferior muy tenue */
+  text-shadow: none; /* Sin brillo para el estilo muted */
+  text-transform: none; /* Quizás sin mayúsculas para diferenciar */
+  font-size: 1.4em; /* Ligeramente más pequeño */
+}
+/* Opcionalmente, definir .preview .panel-style--muted > .panel-title::before { display: none; } si el estilo base lo hereda */
+
+/* --- Mantener otros estilos prefijados --- */
+
+/* Estilo tech-corners */
+.preview .panel-style--tech-corners {
+  position: relative; /* Necesario para los ::before/::after */
+  border: none; /* Sobrescribir borde base */
+  background-color: transparent; /* Sin fondo base */
+  padding: 0; /* Resetear padding base */
+  margin-top: 25px; /* Más espacio arriba para las esquinas */
+  margin-bottom: 25px; /* Más espacio abajo para las esquinas */
+}
+
+.preview .panel-style--tech-corners::before,
+.preview .panel-style--tech-corners::after {
+  content: '';
+  position: absolute;
+  width: 20px; /* Tamaño de las esquinas */
+  height: 20px;
+  border-color: var(--aegis-accent-blue); /* Color de las esquinas */
+  border-style: solid;
+}
+
+.preview .panel-style--tech-corners::before {
+  top: -5px;
+  left: -5px;
+  border-width: 2px 0 0 2px; /* Esquina superior izquierda */
+}
+.preview .panel-style--tech-corners::after {
+  bottom: -5px;
+  right: -5px;
+  border-width: 0 2px 2px 0; /* Esquina inferior derecha */
+}
+/* Añadir contenido dentro de un div para padding */
+.preview .panel-style--tech-corners > div {
+  padding: 20px;
+  border: 1px solid var(--aegis-border-medium);
+  background-color: var(--aegis-bg-graphite);
+}
+
+/* Estilo holographic - experimental */
+.preview .panel-style--holographic {
+  background: linear-gradient(135deg, rgba(var(--aegis-accent-blue-rgb), 0.1), rgba(var(--aegis-accent-green-rgb), 0.1));
+  border: 1px solid transparent;
+  border-image: linear-gradient(135deg, var(--aegis-accent-blue), var(--aegis-accent-green)) 1;
+  box-shadow: var(--aegis-glow-blue-soft), var(--aegis-glow-green-soft);
+}
+
+/* Estilo floating - experimental */
+.preview .panel-style--floating {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), var(--aegis-glow-blue-soft);
+  transform: translateY(-2px); /* Ligero levantamiento */
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+.preview .panel-style--floating:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), var(--aegis-glow-blue-soft);
+}
+
+/* Layouts */
+.preview .layout--left {
+  float: left;
+  width: 48%; /* Ajustar ancho según necesidad */
+  margin-right: 2%;
+  margin-bottom: 20px; /* Espacio debajo si hay elementos después */
+}
+.preview .layout--right {
+  float: right;
+  width: 48%;
+  margin-left: 2%;
+  margin-bottom: 20px;
+}
+.preview .layout--center {
+  display: block; /* O flex si se usa en contenedor flex */
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%; /* Ajustar ancho */
+  float: none; /* Asegurar que no flote */
+}
+
+/* Clearfix para contenedores con floats */
+.preview .clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Animaciones */
+@keyframes pulse {
+  0% { box-shadow: inset 0 0 5px rgba(0,0,0,0.3), var(--aegis-glow-blue-soft); }
+  50% { box-shadow: inset 0 0 5px rgba(0,0,0,0.3), 0 0 15px rgba(var(--aegis-accent-blue-rgb), 0.9); }
+  100% { box-shadow: inset 0 0 5px rgba(0,0,0,0.3), var(--aegis-glow-blue-soft); }
+}
+.preview .animation--pulse {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.preview .animation--rotate .panel-title::before { /* Aplicar a icono */
+  animation: rotate 5s linear infinite;
+}
+
+
+/* --- Nuevos Estilos y Modificaciones V2.6 --- */
+
+/* Estilo Glass */
+.preview .panel-style--glass {
+  background-color: rgba(var(--aegis-bg-steel-desat-rgb, 28, 33, 40), 0.6); /* Fondo semitransparente */
+  backdrop-filter: blur(10px); /* Efecto blur */
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--aegis-accent-blue-rgb), 0.3); /* Borde azul translúcido */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.preview .panel-style--glass > .panel-title {
+  color: var(--aegis-text-primary); /* Texto primario para título */
+  text-shadow: 0 0 5px rgba(var(--aegis-text-primary-rgb, 224, 240, 255), 0.5); /* Brillo blanco */
+  border-bottom-color: rgba(var(--aegis-accent-blue-rgb), 0.2);
+}
+/* Opcional: ajustar color de icono para glass */
+.preview .panel-style--glass > .panel-title::before {
+   background-color: var(--aegis-text-primary); /* Icono blanco */
+}
+
+
+/* Estilo Cut Corner (configurable) */
+.preview .panel-style--cut-corner {
+  position: relative;
+  padding-top: 25px; /* Espacio para el corte superior */
+  border: 1px solid var(--aegis-border-medium);
+}
+.preview .panel-style--cut-corner::before { /* Usamos ::before para el corte */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 20px; /* Tamaño base del corte (sm) */
+  /* Corte superior izquierdo */
+  border-left-color: var(--aegis-bg-dark); /* Color del fondo de .preview */
+  border-top-color: var(--aegis-bg-dark);
+  /* Efecto visual */
+  box-shadow: -2px -2px 0 0 var(--aegis-accent-blue); /* Línea de corte */
+}
+/* Modificadores de tamaño */
+.preview .cut-corner-sm::before { border-width: 20px; }
+.preview .cut-corner-md::before { border-width: 30px; }
+.preview .cut-corner-lg::before { border-width: 40px; }
+
+/* Ajustar posición del título si se usa con cut-corner */
+/* Asumiendo que el title es el primer hijo o tiene clase específica */
+.preview .panel-style--cut-corner > .panel-title {
+  margin-top: 5px; /* Bajar un poco el título */
+}
+
+
+/* Estilo HUD Frame (Más complejo) */
+.preview .panel-style--hud-frame {
+  border: none; /* Quitar borde base */
+  background-color: transparent; /* Sin fondo base */
+  padding: 2px; /* Espacio para el borde simulado */
+  position: relative;
+  overflow: hidden; /* Para que los pseudo-elementos no se salgan */
+}
+/* Contenedor interno para contenido real y fondo */
+.preview .panel-style--hud-frame > div {
+  background-color: rgba(var(--aegis-bg-graphite-rgb, 18, 20, 26), 0.85); /* Fondo interno */
+  border: 1px solid rgba(var(--aegis-accent-blue-rgb), 0.2); /* Borde interno suave */
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+/* Simular borde exterior con pseudo-elementos */
+.preview .panel-style--hud-frame::before,
+.preview .panel-style--hud-frame::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  border-style: solid;
+  border-color: var(--aegis-accent-blue);
+}
+/* Borde superior e izquierdo */
+.preview .panel-style--hud-frame::before {
+  top: 0;
+  left: 0;
+  right: 10px; /* No llega hasta el final */
+  bottom: 10px;
+  border-width: 2px 0 0 2px;
+  /* Efecto de corte/bisel en esquina */
+  clip-path: polygon(0 0, calc(100% - 10px) 0, calc(100% - 10px) 10px, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) calc(100% - 10px), 10px calc(100% - 10px), 10px 100%, 0 100%);
+}
+/* Borde inferior y derecho */
+.preview .panel-style--hud-frame::after {
+  top: 10px;
+  left: 10px;
+  right: 0;
+  bottom: 0;
+  border-width: 0 2px 2px 0;
+   clip-path: polygon(0 0, calc(100% - 10px) 0, calc(100% - 10px) 10px, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) calc(100% - 10px), 10px calc(100% - 10px), 0 calc(100% - 10px));
+}
+/* Ajuste Título HUD */
+.preview .panel-style--hud-frame > div > .panel-title {
+  margin-top: 0;
+  color: var(--aegis-accent-green); /* Título verde para HUD */
+  border-bottom-color: rgba(var(--aegis-accent-green-rgb), 0.3);
+  text-shadow: var(--aegis-glow-green-soft);
+}
+.preview .panel-style--hud-frame > div > .panel-title::before {
+  background-color: var(--aegis-accent-green);
+  /* Icono Lucide: ScanLine (o similar) */
+   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-scan-line'%3E%3Cpath d='M3 7V5a2 2 0 0 1 2-2h2'/%3E%3Cpath d='M17 3h2a2 2 0 0 1 2 2v2'/%3E%3Cpath d='M21 17v2a2 2 0 0 1-2 2h-2'/%3E%3Cpath d='M7 21H5a2 2 0 0 1-2-2v-2'/%3E%3Cpath d='M7 12h10'/%3E%3C/svg%3E");
+   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-scan-line'%3E%3Cpath d='M3 7V5a2 2 0 0 1 2-2h2'/%3E%3Cpath d='M17 3h2a2 2 0 0 1 2 2v2'/%3E%3Cpath d='M21 17v2a2 2 0 0 1-2 2h-2'/%3E%3Cpath d='M7 21H5a2 2 0 0 1-2-2v-2'/%3E%3Cpath d='M7 12h10'/%3E%3C/svg%3E");
+}
+
+/* --- Decoraciones Adicionales (ejemplos) --- */
+/* Aplicar como clases adicionales: <div class="panel panel-style--note corner-tr-overlay-deco"> */
+
+.preview .panel { /* Asegurarse de que el panel base tenga position relative */
+  position: relative;
+  /* overflow: hidden; */  /* <-- Comentado para permitir decoraciones de esquina */
+}
+
+/* Decoraciones de esquina ahora definidas en /css/base-panels.css */
+/*
+.preview .corner-tr-overlay-deco::before {
+  content: '';
+  position: absolute;
+  top: -1px; 
+  right: -1px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, transparent 50%, rgba(var(--aegis-accent-blue-rgb), 0.2) 50%);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%); 
+  opacity: 0.7;
+  pointer-events: none; 
+}
+
+.preview .corner-br-stripes::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 60px;
+  height: 30px;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 5px,
+    rgba(var(--aegis-accent-green-rgb), 0.15) 5px,
+    rgba(var(--aegis-accent-green-rgb), 0.15) 10px
+  );
+  clip-path: polygon(calc(100% - 30px) 0, 100% 0, 100% 100%, 0 100%); 
+  pointer-events: none;
+}
+
+.preview .corner-tl-stripes::before {
+   content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 30px;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 5px,
+    rgba(var(--aegis-accent-amber-rgb), 0.15) 5px,
+    rgba(var(--aegis-accent-amber-rgb), 0.15) 10px
+  );
+  clip-path: polygon(0 0, 30px 0, 100% 100%, 0% 100%); 
+  pointer-events: none;
+}
+
+.preview .corner-bl-block::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(var(--aegis-accent-red-rgb), 0.1);
+  border-right: 2px solid var(--aegis-accent-red);
+  border-top: 2px solid var(--aegis-accent-red);
+  pointer-events: none;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 calc(100% - 10px), calc(100% - 10px) calc(100% - 10px)); 
+}
+*/
+
+/* Panel con Deco Geométrica (Ejemplo Combinado) */
+.preview .panel-style--geometric-deco {
+  position: relative; /* Necesario para pseudo-elementos */
+  /* --- ¡CUIDADO! Tamaño fijo --- */
+  width: 400px;  /* Define un ancho fijo */
+  height: 300px; /* Define un alto fijo */
+  /* Esto puede romper layouts flexibles si se aplica a muchos paneles */
+  
+  background: linear-gradient(135deg, #0a1f2b, #1a3c4d); /* Fondo con gradiente */
+  clip-path: polygon(10% 0%, 90% 0%, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0% 80%, 0% 20%);
+  overflow: hidden; /* Para clip-path y pseudo-elementos */
+  border: none; /* Anular borde base si es necesario */
+  padding: 20px; /* Mantener algo de padding */
+  margin-bottom: 20px; /* Mantener margen inferior */
+  color: var(--aegis-text-primary); /* Usar color de texto del tema */
+}
+
+.preview .panel-style--geometric-deco::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  background: rgba(255, 255, 255, 0.1); /* Decoración interna translúcida */
+  clip-path: polygon(15% 15%, 85% 15%, 85% 85%, 15% 85%);
+  transform: rotate(5deg);
+}
+
+.preview .panel-style--geometric-deco::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  background: teal; /* Color específico para esta decoración */
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Forma de diamante */
+  transform: translate(-50%, -50%) rotate(45deg); /* Centrado y rotado */
+}
+
+/* Ajustar título para este estilo si es necesario */
+.preview .panel-style--geometric-deco > .panel-title {
+    /* Podría necesitar ajustes de color/posición específicos */
+    /* Por ejemplo, asegurar contraste con el fondo gradiente */
+    color: var(--aegis-text-primary); /* Blanco hielo podría funcionar bien */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7); /* Sombra más fuerte */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Borde más sutil */
+    font-size: 1.4em;
+    text-transform: uppercase;
+    font-family: 'Teko', system-ui, sans-serif; 
+}
+
+/* === Estilos de Esquina para Aegis Theme === */
+
+/* Base para todas las esquinas en este tema */
+.preview .panel .panel-corner {
+  position: absolute !important;
+  width: 60px;  /* Tamaño base ajustable */
+  height: 35px; /* Aumentado ligeramente */
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* --- Tipo 1: Stripes (Verde Aegis) --- */
+.preview .panel .corner-type-1 {
+  background: repeating-linear-gradient(
+    -45deg, /* Gradiente base (orientación "derecha") */
+    transparent,
+    transparent 5px,
+    rgba(var(--aegis-accent-green-rgb), 0.8) 5px,
+    rgba(var(--aegis-accent-green-rgb), 0.8) 10px
+  );
+}
+
+/* --- Formas BASE para Tipo 1 --- */
+.preview .panel .corner-pos--top-left.corner-type-1 {
+  clip-path: polygon(0 0, 40% 0, 100% 100%, 0% 100%);
+}
+.preview .panel .corner-pos--bottom-left.corner-type-1 {
+  clip-path: polygon(0 0, 60% 0, 0 100%);
+}
+.preview .panel .corner-pos--top-right.corner-type-1 {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 60% 100%);
+}
+.preview .panel .corner-pos--bottom-right.corner-type-1 {
+  clip-path: polygon(0 100%, 100% 100%, 100% 0, 60% 0);
+}
+
+/* --- Formas INVERTIDAS H (MÁS ESPECÍFICO) --- */
+.preview .panel .corner-pos--top-left.corner-type-1.corner-shape-flipped-h {
+  clip-path: polygon(60% 0, 100% 0, 100% 100%, 0 100%) !important; /* Espejo H de TR */
+}
+.preview .panel .corner-pos--bottom-left.corner-type-1.corner-shape-flipped-h {
+  clip-path: polygon(40% 100%, 100% 100%, 100% 0, 0 0) !important; /* Espejo H de BR */
+}
+.preview .panel .corner-pos--top-right.corner-type-1.corner-shape-flipped-h {
+  clip-path: polygon(0 0, 100% 0, 60% 100%, 0% 100%) !important; /* Espejo H de TL */
+}
+.preview .panel .corner-pos--bottom-right.corner-type-1.corner-shape-flipped-h {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 40% 100%) !important; /* Espejo H de BL */
+}
+
+/* --- Formas INVERTIDAS V (MÁS ESPECÍFICO) --- */
+.preview .panel .corner-pos--top-left.corner-type-1.corner-shape-flipped-v {
+  clip-path: polygon(0 0, 100% 0, 0 100%) !important; /* Ajustado a 100% */
+}
+.preview .panel .corner-pos--bottom-left.corner-type-1.corner-shape-flipped-v {
+  clip-path: polygon(0 0, 40% 0, 100% 100%, 0% 100%) !important; /* Espejo V de TL (Base TL) */
+}
+.preview .panel .corner-pos--top-right.corner-type-1.corner-shape-flipped-v {
+  clip-path: polygon(0 100%, 100% 100%, 100% 0, 60% 0) !important; /* Espejo V de BR (Base BR) */
+}
+.preview .panel .corner-pos--bottom-right.corner-type-1.corner-shape-flipped-v {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 60% 100%) !important; /* Espejo V de TR (Base TR) */
+}
+
+/* --- Formas INVERTIDAS H y V (Rotación 180°) (MÁS ESPECÍFICO) --- */
+.preview .panel .corner-pos--top-left.corner-type-1.corner-shape-flipped-h.corner-shape-flipped-v {
+  clip-path: polygon(0 100%, 100% 100%, 100% 0, 60% 0) !important; /* Opuesto BR */
+}
+.preview .panel .corner-pos--bottom-left.corner-type-1.corner-shape-flipped-h.corner-shape-flipped-v {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 60% 100%) !important; /* Opuesto TR */
+}
+.preview .panel .corner-pos--top-right.corner-type-1.corner-shape-flipped-h.corner-shape-flipped-v {
+  clip-path: polygon(0 0, 60% 0, 0 100%) !important; /* Opuesto BL */
+}
+.preview .panel .corner-pos--bottom-right.corner-type-1.corner-shape-flipped-h.corner-shape-flipped-v {
+  clip-path: polygon(0 0, 40% 0, 100% 100%, 0% 100%) !important; /* Opuesto TL */
+}
+
+/* --- Posicionamiento (Común a todas las formas de Tipo 1) --- */
+.preview .panel .corner-pos--top-left.corner-type-1 {
+  top: var(--corner-offset, -1px) !important;
+  left: var(--corner-offset, -1px) !important;
+}
+.preview .panel .corner-pos--bottom-left.corner-type-1 {
+  bottom: var(--corner-offset, -1px) !important;
+  left: var(--corner-offset, -1px) !important;
+}
+.preview .panel .corner-pos--top-right.corner-type-1 {
+  top: var(--corner-offset, -1px) !important;
+  right: var(--corner-offset, -1px) !important;
+}
+.preview .panel .corner-pos--bottom-right.corner-type-1 {
+  bottom: var(--corner-offset, -1px) !important;
+  right: var(--corner-offset, -1px) !important;
+}
+
+/* --- Regla para invertir ESTILO VISUAL (gradiente) Tipo 1 --- */
+.preview .panel .corner-type-1.corner-flipped {
+  background: repeating-linear-gradient(
+    45deg, /* Dirección invertida para flip=true */
+    transparent,
+    transparent 5px,
+    rgba(var(--aegis-accent-green-rgb), 0.8) 5px,
+    rgba(var(--aegis-accent-green-rgb), 0.8) 10px
+  );
+}
+
+/* --- Tipo 2, 3, 4, etc. (sin cambios) --- */
+.preview .panel .corner-type-2 {
+  width: 50px; /* Ajustar tamaño si es necesario para overlay */
+  height: 50px;
+  background: linear-gradient(135deg, transparent 50%, rgba(var(--aegis-accent-blue-rgb), 0.3) 50%);
+  opacity: 0.8;
+}
+.preview .panel .corner-pos--top-left.corner-type-2 {
+  top: var(--corner-offset, -1px) !important;
+  left: var(--corner-offset, -1px) !important;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.preview .panel .corner-pos--bottom-left.corner-type-2 {
+  bottom: var(--corner-offset, -1px) !important;
+  left: var(--corner-offset, -1px) !important;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+.preview .panel .corner-pos--top-right.corner-type-2 {
+  top: var(--corner-offset, -1px) !important;
+  right: var(--corner-offset, -1px) !important;
+  clip-path: polygon(100% 0, 100% 100%, 0 0);
+}
+.preview .panel .corner-pos--bottom-right.corner-type-2 {
+  bottom: var(--corner-offset, -1px) !important;
+  right: var(--corner-offset, -1px) !important;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+.preview .panel .corner-type-3 {
+  width: 40px; /* Ajustar tamaño para bloque */
+  height: 40px;
+  background-color: rgba(var(--aegis-accent-amber-rgb), 0.7);
+}
+.preview .panel .corner-pos--top-left.corner-type-3 {
+  top: var(--corner-offset, -1px) !important;
+  left: var(--corner-offset, -1px) !important;
+  clip-path: polygon(0 0, 50% 0, 50% 50%, 0 50%); /* Cuadrado simple */
+}
+.preview .panel .corner-pos--bottom-left.corner-type-3 {
+  bottom: var(--corner-offset, -1px) !important;
+  left: var(--corner-offset, -1px) !important;
+  clip-path: polygon(0 50%, 50% 50%, 50% 100%, 0 100%);
+}
+.preview .panel .corner-pos--top-right.corner-type-3 {
+  top: var(--corner-offset, -1px) !important;
+  right: var(--corner-offset, -1px) !important;
+  clip-path: polygon(50% 0, 100% 0, 100% 50%, 50% 50%);
+}
+.preview .panel .corner-pos--bottom-right.corner-type-3 {
+  bottom: var(--corner-offset, -1px) !important;
+  right: var(--corner-offset, -1px) !important;
+  clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
+}
+.preview .panel .corner-type-4 {
+  width: 40px; /* Mismo tamaño que tipo 3 */
+  height: 40px;
+  background-color: rgba(var(--aegis-accent-red-rgb), 0.7);
+}
+.preview .panel .corner-pos--top-left.corner-type-4 {
+  top: var(--corner-offset, -1px) !important;
+  left: var(--corner-offset, -1px) !important;
+  clip-path: polygon(0 0, 50% 0, 50% 50%, 0 50%);
+}
+.preview .panel .corner-pos--bottom-left.corner-type-4 {
+  bottom: var(--corner-offset, -1px) !important;
+  left: var(--corner-offset, -1px) !important;
+  clip-path: polygon(0 50%, 50% 50%, 50% 100%, 0 100%);
+}
+.preview .panel .corner-pos--top-right.corner-type-4 {
+  top: var(--corner-offset, -1px) !important;
+  right: var(--corner-offset, -1px) !important;
+  clip-path: polygon(50% 0, 100% 0, 100% 50%, 50% 50%);
+}
+.preview .panel .corner-pos--bottom-right.corner-type-4 {
+  bottom: var(--corner-offset, -1px) !important;
+  right: var(--corner-offset, -1px) !important;
+  clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
+} 

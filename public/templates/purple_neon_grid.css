@@ -1,6 +1,7 @@
 /* ============================================== */
 /*      Purple Neon Grid Theme (V2.5)           */
 /*     (Adapted for Universal Scribe)           */
+/*       MODIFIED FOR .preview CONTAINER        */
 /* ============================================== */
 
 /* 0. IMPORTAR FUENTES */
@@ -8,7 +9,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap'); /* Fuente Orbitron para detalles tech */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap'); /* Monospace para código */
 
-/* 1. Variables Fundamentales (Paleta Neón Púrpura) */
+/* 1. Variables Fundamentales (Paleta Neón Púrpura) - Globales */
 :root {
     /* Theme Name */
     /* Theme: Purple Neon Grid */
@@ -69,78 +70,80 @@
     --scroll-thumb-color: var(--neon-accent-purple);
 }
 
-/* 2. Estilos Base Generales */
-body, .markdown-preview-view, .cm-editor,
-.universal-scribe-output {
-    background-color: var(--neon-bg-deep) !important;
-    color: var(--neon-text-medium) !important;
-    font-family: var(--font-main) !important;
+/* 2. Estilos Base Generales (Aplicados a .preview) */
+.preview {
+    background-color: var(--neon-bg-deep);
+    color: var(--neon-text-medium);
+    font-family: var(--font-main);
     font-weight: 400;
     line-height: 1.6;
     font-size: 16px;
-    padding: 25px;
+    /* padding: 25px; gestionado por App.css */
     /* Fondo con rejilla energética muy sutil */
     background-image:
         linear-gradient(rgba(144, 112, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(144, 112, 255, 0.05) 1px, transparent 1px) !important;
-    background-size: 40px 40px !important; /* Tamaño rejilla */
+        linear-gradient(90deg, rgba(144, 112, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px; /* Tamaño rejilla */
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 
-/* Scrollbars (Estilo Neón) */
-::-webkit-scrollbar { height: 8px; width: 8px; background-color: var(--neon-bg-panel); }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background-color: var(--neon-border-medium); border-radius: 0; border: 1px solid var(--neon-border-dark); }
-::-webkit-scrollbar-thumb:hover { background-color: var(--neon-accent-purple); }
-* { scrollbar-width: thin; scrollbar-color: var(--neon-border-medium) var(--neon-bg-panel); }
+/* Scrollbars (Estilo Neón - Dentro de .preview) */
+.preview ::-webkit-scrollbar { height: 8px; width: 8px; background-color: var(--neon-bg-panel); }
+.preview ::-webkit-scrollbar-track { background: transparent; }
+.preview ::-webkit-scrollbar-thumb { background-color: var(--neon-border-medium); border-radius: 0; border: 1px solid var(--neon-border-dark); }
+.preview ::-webkit-scrollbar-thumb:hover { background-color: var(--neon-accent-purple); }
+.preview * { scrollbar-width: thin; scrollbar-color: var(--neon-border-medium) var(--neon-bg-panel); }
 
 
-/* 3. Estilos para Elementos Comunes (Estilo Purple Neon Grid) */
+/* 3. Estilos para Elementos Comunes (Dentro de .preview) */
 
 /* --- ENCABEZADOS (Fuente Rajdhani, Acento Púrpura) --- */
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-title) !important; /* Rajdhani */
-    color: var(--neon-text-light) !important;
+.preview h1, .preview h2, .preview h3, .preview h4, .preview h5, .preview h6 {
+    font-family: var(--font-title);
+    color: var(--neon-text-light);
     margin-top: 1.6em; margin-bottom: 0.8em; font-weight: 700;
     letter-spacing: 1px; line-height: 1.2; text-transform: uppercase;
     border: none; padding-bottom: 0.3em; position: relative;
 }
 /* Línea fina Neón */
-h1::after, h2::after {
+.preview h1::after, .preview h2::after {
     content: ''; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%;
     background: linear-gradient(90deg, var(--neon-accent-purple), transparent 80%);
     box-shadow: 0 0 8px var(--neon-accent-purple-glow);
     opacity: 0.7;
 }
-h2::after { width: 70%; opacity: 0.5; }
-h3::after { content: none; }
+.preview h2::after { width: 70%; opacity: 0.5; }
+.preview h3::after { content: none; }
 
-h1 { font-size: 2.8em; letter-spacing: 2px; color: var(--neon-accent-purple) !important; text-shadow: 0 0 10px var(--neon-accent-purple-glow); margin-bottom: 1em;}
-h2 { font-size: 1.8em; color: var(--neon-highlight) !important; text-shadow: 0 0 5px var(--neon-shadow-light);}
-h3 { font-size: 1.4em; color: var(--neon-text-light) !important; font-weight: 600; text-transform: none; }
-h4 { font-size: 1.1em; color: var(--neon-text-medium) !important; font-weight: 600; text-transform: none; margin-bottom: 0.4em;}
-h5, h6 { font-size: 1.0em; color: var(--neon-text-dark) !important; font-weight: 600; text-transform: none; margin-bottom: 0.3em;}
+.preview h1 { font-size: 2.8em; letter-spacing: 2px; color: var(--neon-accent-purple); text-shadow: 0 0 10px var(--neon-accent-purple-glow); margin-bottom: 1em;}
+.preview h2 { font-size: 1.8em; color: var(--neon-highlight); text-shadow: 0 0 5px var(--neon-shadow-light, rgba(255,255,255,0.1));}
+.preview h3 { font-size: 1.4em; color: var(--neon-text-light); font-weight: 600; text-transform: none; }
+.preview h4 { font-size: 1.1em; color: var(--neon-text-medium); font-weight: 600; text-transform: none; margin-bottom: 0.4em;}
+.preview h5, .preview h6 { font-size: 1.0em; color: var(--neon-text-dark); font-weight: 600; text-transform: none; margin-bottom: 0.3em;}
 
-p { margin-bottom: 1.1em; color: var(--neon-text-medium) !important; }
-h1 + p, h2 + p, h3 + p, h4 + p { margin-top: 0.6em; }
+.preview p { margin-bottom: 1.1em; color: var(--neon-text-medium); }
+.preview h1 + p, .preview h2 + p, .preview h3 + p, .preview h4 + p { margin-top: 0.6em; }
 
 /* Enlaces: Púrpura brillante */
-a { color: var(--neon-accent-purple) !important; text-decoration: none; border-bottom: 1px dotted rgba(192, 128, 255, 0.5); transition: all 0.2s ease; font-weight: 600;}
-a:hover, a:focus { color: var(--neon-highlight) !important; border-bottom-color: var(--neon-accent-purple); text-shadow: 0 0 8px var(--neon-accent-purple-glow); background-color: rgba(192, 128, 255, 0.05);}
+.preview a { color: var(--neon-accent-purple); text-decoration: none; border-bottom: 1px dotted rgba(192, 128, 255, 0.5); transition: all 0.2s ease; font-weight: 600;}
+.preview a:hover, .preview a:focus { color: var(--neon-highlight); border-bottom-color: var(--neon-accent-purple); text-shadow: 0 0 8px var(--neon-accent-purple-glow); background-color: rgba(192, 128, 255, 0.05);}
 
-strong, b { color: var(--neon-text-light) !important; font-weight: 700; }
-em, i { color: var(--neon-highlight) !important; font-style: italic; } /* Cursiva clara */
+.preview strong, .preview b { color: var(--neon-text-light); font-weight: 700; }
+.preview em, .preview i { color: var(--neon-highlight); font-style: italic; } /* Cursiva clara */
 
 /* Listas (Marcadores de Puntos Neón) */
-ul, ol { margin-left: 15px; margin-bottom: 1.1em; padding-left: 20px; list-style: none; }
-li { margin-bottom: 0.5em; color: var(--neon-text-medium) !important; position: relative; }
-ul li::before { /* Punto neón */
+.preview ul, .preview ol { margin-left: 15px; margin-bottom: 1.1em; padding-left: 20px; list-style: none; }
+.preview li { margin-bottom: 0.5em; color: var(--neon-text-medium); position: relative; }
+.preview ul li::before { /* Punto neón */
     content: ''; position: absolute; left: -15px; top: 0.5em; transform: translateY(-50%);
     width: 6px; height: 6px; background-color: var(--neon-accent-purple);
     border-radius: 50%; box-shadow: 0 0 6px var(--neon-accent-purple-glow);
 }
-ol { counter-reset: list-counter; }
-ol li { counter-increment: list-counter; }
-ol li::before { /* Contador numérico */
+.preview ol { counter-reset: list-counter; }
+.preview ol li { counter-increment: list-counter; }
+.preview ol li::before { /* Contador numérico */
     content: counter(list-counter); position: absolute; left: -20px; top: 0.05em;
     color: var(--neon-accent-purple); font-weight: 600; font-family: var(--font-tech); font-size: 0.9em;
     text-shadow: 0 0 5px var(--neon-accent-purple-glow);
@@ -148,79 +151,80 @@ ol li::before { /* Contador numérico */
 
 
 /* ---- TABLA: Estilo Rejilla de Datos Neón ---- */
-div:has(> table), .table-container, [data-matrix-table="true"] {
+.preview div:has(> table), .preview .table-container, .preview [data-matrix-table="true"] {
     max-width: 100%; overflow-x: auto; margin: 1.8em 0;
     border: none; /* Sin borde exterior */
-    background-color: var(--neon-bg-panel) !important;
+    background-color: var(--neon-bg-panel);
     border-radius: 4px;
     box-shadow: var(--neon-panel-shadow);
     padding: 1px; /* Espacio para borde interno */
 }
 
-table {
+.preview table {
      width: 100%; border-collapse: separate; border-spacing: 0; /* Separado para bordes internos */
-     font-size: 0.9em; table-layout: auto; border: none !important; margin: 0;
-     background: var(--neon-bg-panel) !important; /* Fondo interior */
+     font-size: 0.9em; table-layout: auto; border: none;
+     background: var(--neon-bg-panel); /* Fondo interior */
      border-radius: 3px; /* Redondeo interior */
 }
-table.data-matrix { position: relative; } /* Para hover */
-.datamatrix table { position: relative; }
+.preview table.data-matrix { position: relative; } /* Para hover */
+.preview .datamatrix table { position: relative; }
 
-thead { background-color: transparent; border-bottom: 1px solid var(--neon-border-medium) !important; }
+.preview thead { background-color: transparent; border-bottom: 1px solid var(--neon-border-medium); }
 
-th, .table-header-cell { /* Cabecera Neón */
-    color: var(--neon-highlight) !important; font-family: var(--font-tech) !important; /* Orbitron */
+.preview th, .preview .table-header-cell { /* Cabecera Neón */
+    color: var(--neon-highlight);
+    font-family: var(--font-tech);
     font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
     padding: 10px 15px; text-align: left;
-    border-bottom: none !important; border-left: none !important; /* Sin bordes internos */
-    text-shadow: 0 0 4px var(--neon-shadow-light);
+    border-bottom: none; border-left: none; /* Sin bordes internos */
+    text-shadow: 0 0 4px var(--neon-shadow-light, rgba(255,255,255,0.1));
     white-space: nowrap; vertical-align: middle;
-    background-color: rgba(30, 20, 50, 0.4) !important;
+    background-color: rgba(30, 20, 50, 0.4);
 }
-th:last-child { text-align: right; }
+.preview th:last-child { text-align: right; }
 
-tbody tr { border: none !important; transition: background-color 0.15s ease-out; }
-tbody tr:nth-child(even) { background-color: rgba(15, 10, 25, 0.3) !important; } /* Alternancia sutil */
-tbody tr:last-child td { border-bottom: none !important; } /* Quitar borde inferior última fila */
+.preview tbody tr { border: none; transition: background-color 0.15s ease-out; }
+.preview tbody tr:nth-child(even) { background-color: rgba(15, 10, 25, 0.3); } /* Alternancia sutil */
+.preview tbody tr:last-child td { border-bottom: none; } /* Quitar borde inferior última fila */
 
 /* Hover con glow */
-tbody tr:hover, .hover-active, tbody tr.hover-active {
-    background-color: var(--neon-bg-panel-hover) !important;
-    box-shadow: inset 0 0 10px var(--neon-accent-purple-glow) !important; /* Glow interno */
+.preview tbody tr:hover, .preview .hover-active, .preview tbody tr.hover-active {
+    background-color: var(--neon-bg-panel-hover);
+    box-shadow: inset 0 0 10px var(--neon-accent-purple-glow); /* Glow interno */
 }
 
-td {
-    padding: 9px 15px; color: var(--neon-text-medium) !important;
-    border: none !important; /* Sin bordes internos por defecto */
-    border-top: 1px solid var(--neon-border-dark) !important; /* Solo separador horizontal */
+.preview td {
+    padding: 9px 15px; color: var(--neon-text-medium);
+    border: none; /* Sin bordes internos por defecto */
+    border-top: 1px solid var(--neon-border-dark); /* Solo separador horizontal */
     vertical-align: middle; white-space: normal; overflow-wrap: break-word; word-break: break-word;
     line-height: 1.5; position: relative;
 }
-td:first-child { color: var(--neon-text-light) !important; font-weight: 600; }
-td:last-child { text-align: right; }
-tbody tr:hover td, tr.hover-active td { color: var(--neon-highlight) !important; } /* Texto más claro en hover */
-tbody tr:hover td:first-child, tr.hover-active td:first-child { color: var(--neon-accent-purple) !important; }
+.preview td:first-child { color: var(--neon-text-light); font-weight: 600; }
+.preview td:last-child { text-align: right; }
+.preview tbody tr:hover td, .preview tr.hover-active td { color: var(--neon-highlight); } /* Texto más claro en hover */
+.preview tbody tr:hover td:first-child, .preview tr.hover-active td:first-child { color: var(--neon-accent-purple); }
 
 /* Spans de Estado Neón */
-td span.status-ok, .status-ok { color: var(--neon-status-ok) !important; text-shadow: 0 0 6px var(--neon-glow-ok) !important; }
-td span.status-warn, .status-warn { color: var(--neon-status-warn) !important; text-shadow: 0 0 6px var(--neon-glow-warn) !important; }
-td span.status-error, .status-error { color: var(--neon-status-error) !important; text-shadow: 0 0 6px var(--neon-glow-error) !important; }
-td span.status-neutral, .status-neutral { color: var(--neon-status-neutral) !important; }
-td span[class*="status-"], [class*="status-"] { font-weight: 700 !important; white-space: nowrap; display: inline-block; font-family: var(--font-tech) !important; }
-td.redacted, .redacted { color: var(--neon-text-dark) !important; font-style: italic; opacity: 0.5; }
+.preview td span.status-ok, .preview .status-ok { color: var(--neon-status-ok); text-shadow: 0 0 6px var(--neon-glow-ok); }
+.preview td span.status-warn, .preview .status-warn { color: var(--neon-status-warn); text-shadow: 0 0 6px var(--neon-glow-warn); }
+.preview td span.status-error, .preview .status-error { color: var(--neon-status-error); text-shadow: 0 0 6px var(--neon-glow-error); }
+.preview td span.status-neutral, .preview .status-neutral { color: var(--neon-status-neutral); }
+.preview td span[class*="status-"], .preview [class*="status-"] { font-weight: 700; white-space: nowrap; display: inline-block; font-family: var(--font-tech); }
+.preview td.redacted, .preview .redacted { color: var(--neon-text-dark); font-style: italic; opacity: 0.5; }
 
 /* --- Estilos para Bloques Personalizados V2.5 --- */
-.mixed-panel, [class*="panel-"], .datamatrix, .statblock, .note, .warning, .error, .codeblock, .quote, .image {
-    background-color: var(--neon-bg-panel) !important;
-    border: 1px solid var(--neon-border-medium) !important;
-    border-radius: 4px !important;
-    margin: 1.5em 0 !important;
-    box-shadow: var(--neon-panel-shadow) !important;
-    overflow: hidden !important;
-    position: relative !important;
+.preview .mixed-panel, .preview [class*="panel-"], .preview .datamatrix, .preview .statblock, .preview .note, .preview .warning, .preview .error, .preview .codeblock, .preview .quote, .preview .image {
+    background-color: var(--neon-bg-panel);
+    border: 1px solid var(--neon-border-medium);
+    border-radius: 4px;
+    margin: 1.5em 0;
+    box-shadow: var(--neon-panel-shadow);
+    overflow: hidden;
+    position: relative;
 }
 
-.mixed-panel::before, [class*="panel-"]::before, .datamatrix::before, .statblock::before {
+.preview .mixed-panel::before, .preview [class*="panel-"]::before, .preview .datamatrix::before, .preview .statblock::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -232,549 +236,453 @@ td.redacted, .redacted { color: var(--neon-text-dark) !important; font-style: it
     box-shadow: inset 0 0 10px var(--neon-accent-purple-glow);
 }
 
-.panel-header, .mixed-panel > h2:first-child {
-    background-color: var(--panel-header-bg) !important;
-    color: var(--neon-accent-purple) !important;
-    font-family: var(--font-title) !important;
-    font-weight: 600 !important;
-    font-size: 1.25em !important;
-    padding: 12px 15px !important;
-    margin: 0 !important;
-    border-bottom: 1px solid var(--neon-border-dark) !important;
-    text-shadow: 0 0 5px var(--neon-accent-purple-glow) !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
+.preview .panel-header, .preview .mixed-panel > h2:first-child {
+    background-color: var(--panel-header-bg, rgba(64, 40, 96, 0.8));
+    color: var(--neon-accent-purple);
+    font-family: var(--font-title);
+    font-weight: 600;
+    font-size: 1.25em;
+    padding: 12px 15px;
+    margin: 0;
+    border-bottom: 1px solid var(--neon-border-dark);
+    text-shadow: 0 0 5px var(--neon-accent-purple-glow);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.panel-content {
-    padding: 15px !important;
-    font-size: 0.95em !important;
+.preview .panel-content {
+    padding: 15px;
+}
+.preview .mixed-panel > *:not(.panel-header):not(h2:first-child) {
+     margin-left: 15px; margin-right: 15px;
+}
+.preview .mixed-panel > *:last-child {
+     padding-bottom: 15px;
 }
 
-/* Estilos para Bloques Flotantes V2.5 */
-.float-left {
-    float: left !important;
-    margin-right: 20px !important;
-    margin-bottom: 20px !important;
-    width: var(--float-width) !important;
-    clear: left !important;
+/* Layout Flotante */
+.preview .float-left {
+    float: left;
+    width: var(--float-width, 45%);
+    margin: 0 1.5em 1em 0;
+    clear: left;
 }
 
-.float-right {
-    float: right !important;
-    margin-left: 20px !important;
-    margin-bottom: 20px !important;
-    width: var(--float-width) !important;
-    clear: right !important;
+.preview .float-right {
+    float: right;
+    width: var(--float-width, 45%);
+    margin: 0 0 1em 1.5em;
+    clear: right;
 }
 
-/* Estilos Específicos por Tipo de Bloque */
-.panel-warning, .warning {
-    border-left: 4px solid var(--neon-status-warn) !important;
+/* Clearfix para flotantes */
+.preview .clearfix::after { content: ""; display: table; clear: both; }
+
+/* Estilos Semánticos */
+.preview .panel-warning, .preview .warning {
+    border-color: var(--neon-status-warn);
 }
-.panel-warning .panel-header, .warning .panel-header {
-    color: var(--neon-status-warn) !important;
-    text-shadow: 0 0 5px var(--neon-glow-warn) !important;
+.preview .panel-warning .panel-header, .preview .warning .panel-header {
+    color: var(--neon-status-warn); background-color: rgba(255, 221, 128, 0.1);
+    text-shadow: 0 0 5px var(--neon-glow-warn);
+}
+.preview .panel-error, .preview .error {
+    border-color: var(--neon-status-error);
+}
+.preview .panel-error .panel-header, .preview .error .panel-header {
+    color: var(--neon-status-error); background-color: rgba(255, 96, 128, 0.1);
+    text-shadow: 0 0 5px var(--neon-glow-error);
+}
+.preview .panel-info-box, .preview .note {
+    border-color: var(--neon-border-light);
+    /* Cabecera por defecto */
 }
 
-.panel-error, .error {
-    border-left: 4px solid var(--neon-status-error) !important;
+/* Datamatrix/Statblock específicos */
+.preview .datamatrix {
+    /* Estilos tabla ya definidos */
+    padding: 0 !important; /* Quitar padding al contenedor */
 }
-.panel-error .panel-header, .error .panel-header {
-    color: var(--neon-status-error) !important;
-    text-shadow: 0 0 5px var(--neon-glow-error) !important;
+.preview .statblock {
+    /* Estilos específicos si son necesarios */
 }
-
-.panel-info-box, .note {
-    border-left: 4px solid var(--neon-accent-purple) !important;
-}
-
-.datamatrix {
-    border: 1px solid var(--neon-border-light) !important;
-    box-shadow: 0 0 20px rgba(192, 128, 255, 0.1) !important;
+.preview .codeblock pre {
+    margin: 0;
 }
 
-.statblock {
-    background-image: linear-gradient(to bottom, 
-        rgba(64, 40, 96, 0.3), 
-        rgba(30, 20, 50, 0.3)
-    ) !important;
+/* --- Bloques V2.5 RPG --- */
+.preview .panel-character, .preview .panel-npc, .preview .panel-location, .preview .panel-encounter, 
+.preview .panel-quest, .preview .panel-treasure, .preview .panel-map, .preview .panel-readaloud {
+    /* Estilos base comunes */
 }
 
-/* Estilos para los Bloques de Juego de Rol */
-.panel-character, .panel-npc, .panel-location, .panel-encounter, 
-.panel-quest, .panel-treasure, .panel-map {
-    margin: 25px 0 !important;
-    border: 1px solid var(--neon-border-light) !important;
-    box-shadow: 0 0 25px rgba(192, 128, 255, 0.15) !important;
+.preview .panel-character {
+    border-color: var(--neon-status-ok);
+}
+.preview .panel-character .panel-header {
+    color: var(--neon-status-ok); background-color: rgba(128, 255, 192, 0.1);
+    text-shadow: 0 0 5px var(--neon-glow-ok);
 }
 
-.panel-character {
-    border-left: 4px solid var(--neon-status-ok) !important;
+.preview .panel-npc {
+    /* Similar a character o diferente */
 }
-.panel-character .panel-header {
-    color: var(--neon-status-ok) !important;
-    text-shadow: 0 0 5px var(--neon-glow-ok) !important;
+.preview .panel-location {
+    /* ... */
 }
-
-.panel-npc {
-    border-left: 4px solid var(--neon-accent-purple-dark) !important;
+.preview .panel-encounter {
+    border-color: var(--neon-status-error);
 }
-
-.panel-location {
-    border-left: 4px solid #8060c0 !important; /* Púrpura más azulado */
+.preview .panel-encounter .panel-header {
+    color: var(--neon-status-error); background-color: rgba(255, 96, 128, 0.1);
+    text-shadow: 0 0 5px var(--neon-glow-error);
 }
-
-.panel-encounter {
-    border-left: 4px solid var(--neon-status-error) !important;
+.preview .panel-quest {
+    border-color: var(--neon-status-warn);
 }
-.panel-encounter .panel-header {
-    color: var(--neon-status-error) !important;
-    text-shadow: 0 0 5px var(--neon-glow-error) !important;
+.preview .panel-quest .panel-header {
+    color: var(--neon-status-warn); background-color: rgba(255, 221, 128, 0.1);
+    text-shadow: 0 0 5px var(--neon-glow-warn);
 }
-
-.panel-quest {
-    border-left: 4px solid #ffa040 !important; /* Naranja neón */
+.preview .panel-treasure {
+    border-color: var(--neon-accent-purple);
+    /* Cabecera por defecto */
 }
-.panel-quest .panel-header {
-    color: #ffa040 !important;
-    text-shadow: 0 0 5px rgba(255, 160, 64, 0.6) !important;
+.preview .panel-treasure .panel-header {
+    /* ... */
 }
-
-.panel-treasure {
-    border-left: 4px solid #ffdd40 !important; /* Dorado neón */
-    background-image: linear-gradient(to bottom, 
-        rgba(50, 40, 20, 0.3), 
-        rgba(30, 25, 15, 0.3)
-    ) !important;
+.preview .panel-map {
+    /* ... */
 }
-.panel-treasure .panel-header {
-    color: #ffdd40 !important;
-    text-shadow: 0 0 5px rgba(255, 220, 64, 0.6) !important;
+.preview .panel-map .panel-header {
+    /* ... */
 }
 
-.panel-map {
-    border-left: 4px solid #40c0ff !important; /* Azul cielo neón */
+
+/* --- Mejoras JS V2.5 --- */
+.preview .dice-roll {
+    font-family: var(--font-tech);
+    background-color: rgba(192, 128, 255, 0.1);
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border: 1px solid var(--neon-border-medium);
+    color: var(--neon-highlight);
+    cursor: pointer;
+    transition: all 0.1s ease;
 }
-.panel-map .panel-header {
-    color: #40c0ff !important;
-    text-shadow: 0 0 5px rgba(64, 192, 255, 0.6) !important;
+.preview .dice-roll:hover {
+    background-color: rgba(192, 128, 255, 0.2);
+    color: var(--neon-accent-purple);
+    box-shadow: 0 0 5px var(--neon-accent-purple-glow);
 }
 
-/* Soporte para tiradas de dados */
-.dice-roll {
-    display: inline-block !important;
-    font-family: var(--font-tech) !important;
-    font-weight: 600 !important;
-    color: var(--neon-status-ok) !important;
-    text-shadow: 0 0 5px var(--neon-glow-ok) !important;
-    background-color: rgba(128, 255, 192, 0.1) !important;
-    padding: 3px 8px !important;
-    border-radius: 3px !important;
-    border: 1px solid rgba(128, 255, 192, 0.3) !important;
-    margin: 0 2px !important;
+.preview [data-interactive-container="true"], .preview .is-interactive {
+    cursor: pointer;
+    transition: background-color 0.15s ease-out;
 }
 
-/* Elementos interactivos */
-[data-interactive-container="true"], .is-interactive {
-    transition: all 0.2s ease-out !important;
-    position: relative !important;
-    z-index: 1 !important;
-}
-
-[data-interactive-container="true"]:hover, 
-[data-interactive-container="true"].is-hovered,
-.is-interactive:hover {
-    box-shadow: 0 0 15px var(--neon-accent-purple-glow) !important;
-    transform: translateY(-2px) !important;
+.preview [data-interactive-container="true"]:hover, 
+.preview .is-hovered, 
+.preview tbody tr:has([data-interactive-container="true"]):hover {
+    background-color: var(--hover-effect-color) !important; /* Usa variable */
 }
 
 /* Barras de Progreso */
-.dynamic-progress-bar {
-    height: 15px !important;
-    background-color: var(--neon-bg-panel) !important;
-    border: 1px solid var(--neon-border-dark) !important;
-    border-radius: 7px !important;
-    overflow: hidden !important;
-    margin: 5px 0 !important;
-    position: relative !important;
+.preview .dynamic-progress-bar {
+    width: 100%; height: 10px; background-color: var(--neon-border-dark);
+    border-radius: 2px; overflow: hidden; margin: 0.5em 0;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+    position: relative;
 }
 
-.dynamic-progress-bar .bar-fill {
-    height: 100% !important;
-    background: linear-gradient(to right, var(--neon-accent-purple-dark), var(--neon-accent-purple)) !important;
-    box-shadow: 0 0 8px var(--neon-accent-purple-glow) !important;
-    transition: width 0.5s ease-out !important;
-    animation: neon-bar-pulse 2s infinite !important;
+.preview .dynamic-progress-bar .bar-fill {
+    height: 100%; border-radius: 2px;
+    transition: width 0.4s ease-out, background-color 0.4s ease-out;
+    position: relative;
+    animation: neon-bar-pulse 2s infinite ease-in-out;
 }
 
-.dynamic-progress-bar .bar-fill.ok {
-    background: linear-gradient(to right, #40a060, var(--neon-status-ok)) !important;
-    box-shadow: 0 0 8px var(--neon-glow-ok) !important;
+.preview .dynamic-progress-bar .bar-fill.ok {
+    background-color: var(--neon-status-ok);
+    box-shadow: 0 0 8px var(--neon-glow-ok);
 }
-
-.dynamic-progress-bar .bar-fill.warn {
-    background: linear-gradient(to right, #c0a040, var(--neon-status-warn)) !important;
-    box-shadow: 0 0 8px var(--neon-glow-warn) !important;
+.preview .dynamic-progress-bar .bar-fill.warn {
+    background-color: var(--neon-status-warn);
+    box-shadow: 0 0 8px var(--neon-glow-warn);
 }
-
-.dynamic-progress-bar .bar-fill.error {
-    background: linear-gradient(to right, #c04050, var(--neon-status-error)) !important;
-    box-shadow: 0 0 8px var(--neon-glow-error) !important;
+.preview .dynamic-progress-bar .bar-fill.error {
+    background-color: var(--neon-status-error);
+    box-shadow: 0 0 8px var(--neon-glow-error);
 }
 
 @keyframes neon-bar-pulse {
-    0%, 100% { filter: brightness(0.8); }
-    50% { filter: brightness(1.2); }
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
 }
 
-/* Grid Background Animation */
+/* --- Animaciones y Efectos --- */
 @keyframes grid-scroll {
   0% { background-position: 0 0; }
-  100% { background-position: 0 50px; }
+    100% { background-position: 40px 40px; }
 }
-
-/* Floating Elements Animation */
 @keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
 }
-
-/* Pulse Animation */
 @keyframes pulse {
-  0% { box-shadow: 0 0 5px rgba(187, 0, 255, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(187, 0, 255, 0.8); }
-  100% { box-shadow: 0 0 5px rgba(187, 0, 255, 0.5); }
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
 }
 
-/* Main Document Setup */
-body {
-  font-family: var(--font-main);
-  background-color: var(--background-color);
-  color: var(--text-color);
-  line-height: 1.6;
-  margin: 0;
-  padding: 2rem;
-  background-image: 
-    linear-gradient(var(--grid-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-  background-size: 50px 50px;
-  animation: grid-scroll 20s linear infinite;
+
+/* --- Especificidad (Sobre-escritura si es necesario) --- */
+.preview body {
+    /* ... */
 }
 
-/* Typography */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-header);
-  color: #fff;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  text-shadow: var(--neon-glow);
-  animation: float 6s ease-in-out infinite;
+/* Ajustes finales para integración */
+.preview .markdown-preview-view {
+    /* No aplicar padding aquí si ya está en .preview */
 }
 
-h1 {
-  font-size: 3rem;
-  text-align: center;
-  border-bottom: 2px solid var(--accent-color);
-  padding-bottom: 0.5rem;
-  letter-spacing: 2px;
+
+/* ============================================== */
+/*      Estilos Adicionales/Compatibilidad       */
+/* ============================================== */
+
+/* Mantener estilos originales si es necesario, prefijados con .preview */
+.preview h1, .preview h2, .preview h3, .preview h4, .preview h5, .preview h6 {
+    /* Ya definidos arriba */
 }
 
-h2 {
-  font-size: 2.2rem;
-  color: var(--accent-color);
-  border-left: 4px solid var(--accent-color);
-  padding-left: 1rem;
+.preview h1 {
+    /* Ya definido */
 }
 
-h3 {
-  font-size: 1.8rem;
-  color: #d580ff;
+.preview h2 {
+    /* Ya definido */
 }
 
-p {
-  margin-bottom: 1.5rem;
-  animation: float 8s ease-in-out infinite;
+.preview h3 {
+    /* Ya definido */
 }
 
-a {
-  color: #00ffff;
-  text-decoration: none;
-  transition: all 0.3s;
-  text-shadow: 0 0 5px #00ffff;
+.preview p {
+    /* Ya definido */
 }
 
-a:hover {
-  color: #00ffee;
-  text-shadow: 0 0 10px #00ffee;
+.preview a {
+    /* Ya definido */
 }
 
-code {
+.preview a:hover {
+    /* Ya definido */
+}
+
+.preview code {
   font-family: var(--font-mono);
-  background-color: rgba(0, 0, 0, 0.5);
-  border: 1px solid #333;
-  padding: 0.2em 0.4em;
+    background-color: rgba(192, 128, 255, 0.05);
+    color: var(--neon-text-medium);
+    padding: 0.1em 0.4em;
   border-radius: 3px;
-  color: #00ffaa;
-  text-shadow: 0 0 3px #00ffaa;
+    font-size: 0.9em;
+    border: 1px solid var(--neon-border-dark);
 }
 
-/* Blockquotes */
-blockquote {
-  border-left: 4px solid var(--accent-color);
-  margin: 1.5rem 0;
-  padding: 1rem 2rem;
-  background-color: rgba(187, 0, 255, 0.1);
-  border-radius: 0 10px 10px 0;
-  animation: pulse 4s infinite;
+.preview blockquote {
+    border-left: 3px solid var(--neon-accent-purple);
+    margin: 1.5em 0 1.5em 1em;
+    padding: 0.5em 1em;
+    background-color: rgba(15, 10, 25, 0.4);
+    color: var(--neon-text-medium);
+    border-radius: 0 3px 3px 0;
+    box-shadow: inset 2px 0 8px rgba(0,0,0,0.3);
 }
 
-blockquote p {
-  font-style: italic;
-  color: #d8d8ff;
+.preview blockquote p {
+    margin-bottom: 0.5em;
+}
+.preview blockquote p:last-child { margin-bottom: 0; }
+
+
+.preview ul, .preview ol {
+    /* Ya definido */
+}
+.preview li {
+    /* Ya definido */
+}
+.preview ul {
+    /* Ya definido */
+}
+.preview ul li:before {
+    /* Ya definido */
 }
 
-/* Lists */
-ul, ol {
-  margin-bottom: 1.5rem;
-  padding-left: 2rem;
-}
-
-li {
-  margin-bottom: 0.5rem;
-}
-
-ul {
-  list-style-type: none;
-}
-
-ul li:before {
-  content: "►";
-  color: var(--accent-color);
-  display: inline-block;
-  width: 1.5em;
-  margin-left: -1.5em;
-}
-
-/* Code Blocks */
-pre {
-  background-color: rgba(0, 0, 0, 0.7);
-  border: 1px solid var(--accent-color);
-  border-radius: 5px;
-  padding: 1rem;
+.preview pre {
+    background-color: var(--neon-bg-panel);
+    border: 1px solid var(--neon-border-dark);
+    border-radius: 4px;
+    padding: 1em;
   overflow-x: auto;
-  margin: 1.5rem 0;
-  box-shadow: var(--panel-shadow);
+    margin: 1.5em 0;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
 }
 
-pre code {
+.preview pre code {
   background-color: transparent;
+    padding: 0;
   border: none;
-  padding: 0;
-  font-size: 0.9rem;
-  color: #00ffaa;
-  display: block;
+    color: var(--neon-text-medium);
+    font-size: 0.95em;
+    line-height: 1.5;
 }
 
-/* Tables */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1.5rem 0;
-  background-color: var(--panel-bg);
-  border: var(--panel-border);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: var(--panel-shadow);
-  animation: float 7s ease-in-out infinite;
+.preview table {
+    /* Estilos de tabla ya definidos */
 }
 
-th {
-  background-color: rgba(187, 0, 255, 0.3);
-  color: white;
-  padding: 0.8rem;
-  text-align: left;
-  font-family: var(--font-header);
-  letter-spacing: 1px;
+.preview th {
+    /* Ya definido */
 }
 
-td {
-  padding: 0.8rem;
-  border-top: 1px solid rgba(187, 0, 255, 0.2);
-  transition: background-color 0.3s;
+.preview td {
+    /* Ya definido */
 }
 
-tr:hover td {
-  background-color: rgba(187, 0, 255, 0.1);
+.preview tr:hover td {
+    /* Ya definido */
 }
 
-/* Status Colors */
-.status-high, .status-critical {
-  color: #ff4081;
-  font-weight: bold;
-  text-shadow: 0 0 5px #ff4081;
+.preview .status-high, .preview .status-critical {
+    /* Ya definido */
 }
 
-.status-medium, .status-low {
-  color: #00ffaa;
-  font-weight: bold;
-  text-shadow: 0 0 5px #00ffaa;
+.preview .status-medium, .preview .status-low {
+    /* Ya definido */
 }
 
-.status-standby {
-  color: #ffcc00;
-  font-weight: bold;
-  text-shadow: 0 0 5px #ffcc00;
+.preview .status-standby {
+    /* Ya definido */
 }
 
-.status-error {
-  color: #ff0000;
-  font-weight: bold;
-  text-shadow: 0 0 5px #ff0000;
+.preview .status-error {
+    /* Ya definido */
 }
 
-.status-unknown {
-  color: #8080ff;
-  font-weight: bold;
-  text-shadow: 0 0 5px #8080ff;
+.preview .status-unknown {
+    /* Ya definido */
 }
 
-/* Custom Blocks */
-.custom-block {
-  margin: 2rem 0;
-  padding: 1.5rem;
-  border-radius: 10px;
-  background-color: var(--panel-bg);
-  border: var(--panel-border);
-  box-shadow: var(--panel-shadow);
-  animation: float 9s ease-in-out infinite;
+/* Legacy .custom-block */
+.preview .custom-block {
+    background-color: var(--neon-bg-panel);
+    border: 1px solid var(--neon-border-medium);
+    border-radius: 4px;
+    margin: 1.5em 0;
+    box-shadow: var(--neon-panel-shadow);
+    overflow: hidden;
+    position: relative;
 }
 
-.custom-block-title {
-  font-family: var(--font-header);
-  font-size: 1.5rem;
-  color: var(--accent-color);
-  margin-top: 0;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--accent-color);
-  text-shadow: 0 0 5px var(--accent-color);
+.preview .custom-block-title {
+    background-color: var(--panel-header-bg, rgba(64, 40, 96, 0.8));
+    color: var(--neon-accent-purple);
+    font-family: var(--font-title);
+    font-weight: 600;
+    font-size: 1.1em;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--neon-border-dark);
+    text-shadow: 0 0 5px var(--neon-accent-purple-glow);
+    text-transform: uppercase;
 }
 
-/* DataMatrix Block */
-.datamatrix-block table {
-  animation: none;
-  box-shadow: none;
-  margin: 0;
-  border: none;
+/* Legacy .datamatrix-block */
+.preview .datamatrix-block table {
+    margin: 0 !important;
+    border-radius: 0 0 3px 3px;
 }
 
-.datamatrix-block {
-  position: relative;
-  overflow: hidden;
+.preview .datamatrix-block {
+    border: 1px solid var(--neon-border-medium);
+    padding: 0;
+}
+.preview .datamatrix-block::before {
+    display: none; /* No usar el glow interno aquí */
+}
+.preview .datamatrix-block .custom-block-title {
+    border-bottom: 1px solid var(--neon-border-medium);
+    border-radius: 3px 3px 0 0;
 }
 
-.datamatrix-block::before {
-  content: "";
-  position: absolute;
-  top: -50px;
-  left: -50px;
-  right: -50px;
-  bottom: -50px;
-  background: 
-    linear-gradient(45deg, var(--accent-color) 25%, transparent 25%) -50px 0,
-    linear-gradient(45deg, transparent 75%, var(--accent-color) 75%) -50px 0,
-    linear-gradient(45deg, transparent 75%, var(--accent-color) 75%) 0 -50px,
-    linear-gradient(45deg, var(--accent-color) 25%, transparent 25%) 0 -50px;
-  background-size: 100px 100px;
-  background-color: var(--panel-bg);
-  opacity: 0.05;
-  z-index: -1;
+/* Legacy .panel-info-box */
+.preview .panel-info-box {
+    border-color: var(--neon-border-light);
+    background-color: rgba(15, 10, 25, 0.5);
+}
+.preview .panel-info-box .custom-block-title {
+    background-color: rgba(30, 20, 50, 0.3);
+    color: var(--neon-text-light);
+    text-shadow: none;
 }
 
-/* Info Panel Block */
-.panel-info-box {
-  border-left: 4px solid #00ffcc;
-  background-color: rgba(0, 255, 204, 0.1);
+/* Legacy .statblock */
+.preview .statblock {
+    /* ... */
 }
 
-.panel-info-box .custom-block-title {
-  color: #00ffcc;
-  text-shadow: 0 0 5px #00ffcc;
-  border-bottom-color: #00ffcc;
-}
-
-/* Statblock Block */
-.statblock {
-  box-shadow: 0 0 20px rgba(187, 0, 255, 0.7);
-}
-
-/* Images */
-img {
+.preview img {
   max-width: 100%;
-  border-radius: 5px;
-  border: 2px solid var(--accent-color);
-  box-shadow: var(--panel-shadow);
-  transition: all 0.3s;
-  opacity: 0.9;
+    height: auto;
+    display: block;
+    margin: 1.5em auto;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    border: 1px solid var(--neon-border-dark);
 }
 
-img:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 25px rgba(187, 0, 255, 0.8);
-  opacity: 1;
+.preview img:hover {
+    box-shadow: 0 0 15px var(--neon-accent-purple-glow);
+    border-color: var(--neon-accent-purple);
 }
 
-/* Horizonteal Rule */
-hr {
+.preview hr {
   border: 0;
-  height: 2px;
-  background-image: linear-gradient(to right, transparent, var(--accent-color), transparent);
-  margin: 2rem 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-accent-purple), transparent);
+    margin: 2.5em 0;
+    box-shadow: 0 0 8px var(--neon-accent-purple-glow);
 }
 
-/* ScrollBar Styling */
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+/* Scrollbars - Compatibilidad */
+.preview ::-webkit-scrollbar {
+    /* Ya definido */
+}
+.preview ::-webkit-scrollbar-track {
+    /* Ya definido */
+}
+.preview ::-webkit-scrollbar-thumb {
+    /* Ya definido */
+}
+.preview ::-webkit-scrollbar-thumb:hover {
+    /* Ya definido */
 }
 
-::-webkit-scrollbar-track {
-  background: var(--background-color);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--accent-color);
-  border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #d580ff;
-}
-
-/* Font Imports */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap');
-
-/* Responsive Design */
+/* Media Query Final */
 @media (max-width: 768px) {
-  body {
-    padding: 1rem;
+  .preview {
+    /* padding: 15px; gestionado por App.css */
   }
-  
-  h1 {
-    font-size: 2.5rem;
+  .preview h1 {
+    font-size: 2.2em;
   }
-  
-  h2 {
-    font-size: 1.8rem;
+  .preview h2 {
+    font-size: 1.6em;
   }
-  
-  h3 {
-    font-size: 1.5rem;
+  .preview h3 {
+    font-size: 1.3em;
   }
-  
-  .custom-block {
-    padding: 1rem;
+  .preview .custom-block {
+    margin: 1em 0;
   }
 } 

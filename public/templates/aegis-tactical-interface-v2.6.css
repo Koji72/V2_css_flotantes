@@ -2,13 +2,14 @@
 /*       THEME: Aegis Tactical Interface (V2.6)       */
 /*   (Halo UNSC x Infinity Tech - Universal Scribe)   */
 /*        >>> PANELES OPTIMIZADOS V2.6 <<<            */
+/*        MODIFIED FOR .preview CONTAINER           */
 /* ================================================== */
 
 /* 0. IMPORTAR FUENTES */
 @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600&family=Exo+2:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap');
 
-/* 1. VARIABLES FUNDAMENTALES (Paleta Aegis) */
+/* 1. VARIABLES FUNDAMENTALES (Paleta Aegis) - Globales */
 :root {
     /* Fondo y Colores principales */
     --aegis-bg-deep: #080a0f;
@@ -79,35 +80,38 @@
     --animation-speed-fast: 0.5s;
 }
 
-/* 2. ESTILOS BASE */
-body, .universal-scribe-output {
+/* 2. ESTILOS BASE (Aplicados a .preview) */
+.preview {
     background-color: var(--aegis-bg-deep);
     color: #e0e0e0;
     font-family: var(--font-body);
     font-size: var(--font-base-size);
     line-height: 1.5;
     margin: 0;
-    padding: 20px;
+    /* padding: 20px; gestionado por App.css */
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 
-::-webkit-scrollbar {
+.preview ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
-::-webkit-scrollbar-track {
+.preview ::-webkit-scrollbar-track {
     background-color: var(--aegis-bg-graphite);
     border-radius: 4px;
 }
-::-webkit-scrollbar-thumb {
+.preview ::-webkit-scrollbar-thumb {
     background-color: var(--cyber-blue-dark);
     border-radius: 4px;
 }
-::-webkit-scrollbar-thumb:hover {
+.preview ::-webkit-scrollbar-thumb:hover {
     background-color: var(--cyber-blue-primary);
 }
 
-/* 3. ELEMENTOS COMUNES */
-h1, h2, h3, h4, h5, h6 {
+/* 3. ELEMENTOS COMUNES (Dentro de .preview) */
+.preview h1, .preview h2, .preview h3, .preview h4, .preview h5, .preview h6 {
     font-family: var(--font-heading);
     color: var(--cyber-blue-bright);
     margin-top: calc(var(--spacing-unit) * 3);
@@ -117,13 +121,13 @@ h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
 }
 
-h1 {
+.preview h1 {
     font-size: 1.8em;
     border-bottom: 2px solid var(--cyber-blue-primary);
     padding-bottom: var(--spacing-unit);
     position: relative;
 }
-h1::after {
+.preview h1::after {
     content: '';
     position: absolute;
     bottom: -2px;
@@ -133,34 +137,34 @@ h1::after {
     background: linear-gradient(to right, var(--cyber-blue-bright), transparent);
 }
 
-h2 {
+.preview h2 {
     font-size: 1.5em;
     color: var(--cyber-blue-primary);
 }
 
-h3 {
+.preview h3 {
     font-size: 1.3em;
     color: var(--cyber-blue-primary);
 }
 
-p {
+.preview p {
     margin-bottom: calc(var(--spacing-unit) * 1.5);
     text-align: justify;
 }
 
-a {
+.preview a {
     color: var(--cyber-blue-primary);
     text-decoration: none;
     border-bottom: 1px dotted var(--cyber-blue-dark);
     transition: all 0.2s ease;
 }
-a:hover {
+.preview a:hover {
     color: var(--cyber-blue-bright);
     border-bottom: 1px solid var(--cyber-blue-primary);
     text-shadow: var(--glow-active-text);
 }
 
-code, pre {
+.preview code, .preview pre {
     font-family: var(--font-mono);
     background-color: var(--aegis-bg-graphite);
     padding: 2px 4px;
@@ -168,7 +172,7 @@ code, pre {
     border-left: 2px solid var(--cyber-blue-dark);
 }
 
-pre {
+.preview pre {
     padding: var(--spacing-unit);
     overflow-x: auto;
     margin: calc(var(--spacing-unit) * 1.5) 0;
@@ -176,7 +180,7 @@ pre {
     box-shadow: var(--outset-shadow-ui);
 }
 
-table {
+.preview table {
     width: 100%;
     border-collapse: collapse;
     margin: calc(var(--spacing-unit) * 2) 0;
@@ -184,13 +188,13 @@ table {
     border: 1px solid var(--aegis-border-fine);
 }
 
-th, td {
+.preview th, .preview td {
     padding: var(--spacing-unit);
     text-align: left;
     border: 1px solid var(--aegis-border-fine);
 }
 
-th {
+.preview th {
     background-color: var(--aegis-bg-metal-dark);
     color: var(--cyber-blue-bright);
     font-family: var(--font-heading);
@@ -198,17 +202,17 @@ th {
     font-weight: 500;
 }
 
-tr:nth-child(odd) {
+.preview tr:nth-child(odd) {
     background-color: rgba(0, 170, 255, 0.05);
 }
 
-/* --- ESTILOS PARA MEJORAS JS V2.6 --- */
-.is-hovered {
+/* --- ESTILOS PARA MEJORAS JS V2.6 (Dentro de .preview) --- */
+.preview .is-hovered {
     box-shadow: var(--glow-active-box);
     transition: all 0.3s ease;
 }
 
-.status-indicator {
+.preview .status-indicator {
     display: inline-block;
     width: 10px;
     height: 10px;
@@ -216,7 +220,7 @@ tr:nth-child(odd) {
     margin-right: var(--spacing-unit);
     position: relative;
 }
-.status-indicator::after {
+.preview .status-indicator::after {
     content: '';
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
@@ -224,12 +228,12 @@ tr:nth-child(odd) {
     background: inherit;
     animation: pulse 1.5s infinite;
 }
-.status-error { background-color: var(--alert-red); }
-.status-warn { background-color: var(--alert-yellow); }
-.status-ok { background-color: var(--alert-green); }
-.status-neutral { background-color: var(--cyber-blue-primary); }
+.preview .status-error { background-color: var(--alert-red); }
+.preview .status-warn { background-color: var(--alert-yellow); }
+.preview .status-ok { background-color: var(--alert-green); }
+.preview .status-neutral { background-color: var(--cyber-blue-primary); }
 
-.dynamic-progress-bar {
+.preview .dynamic-progress-bar {
     height: 20px;
     background-color: var(--aegis-bg-graphite);
     border: 1px solid var(--aegis-border-medium);
@@ -237,7 +241,7 @@ tr:nth-child(odd) {
     overflow: hidden;
     position: relative;
 }
-.dynamic-progress-bar::before {
+.preview .dynamic-progress-bar::before {
     content: '';
     position: absolute;
     top: 0; left: 0; bottom: 0;
@@ -245,579 +249,531 @@ tr:nth-child(odd) {
     background: linear-gradient(to right, var(--cyber-blue-dark), var(--cyber-blue-primary));
     transition: width 0.3s ease;
 }
-.dynamic-progress-bar::after {
+.preview .dynamic-progress-bar::after {
     content: attr(data-value);
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+    right: var(--spacing-unit);
+    top: 50%;
+    transform: translateY(-50%);
     font-family: var(--font-mono);
     font-size: 0.8em;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
 }
 
-/* --- SISTEMA DE PANELES V2.6 --- */
+/* === PANELES OPTIMIZADOS V2.6 (Dentro de .preview) === */
 
-/* Panel Base */
-.mixed-panel {
-  background-color: var(--aegis-bg-metal-dark);
-  border: 1px solid var(--aegis-border-main);
+.preview .panel {
+    /* --- Variables Locales del Panel --- */
+    --panel-bg: var(--aegis-bg-metal-dark);
+    --panel-border: var(--aegis-border-main);
+    --panel-header-bg: transparent; /* Sin fondo explícito por defecto */
+    --panel-header-border: var(--aegis-border-medium);
+    --panel-header-color: var(--cyber-blue-bright);
+    --panel-content-color: #e0e0e0;
+    --panel-icon-color: var(--cyber-blue-primary);
+    --panel-glow-color: var(--cyber-blue-glow);
+
+    /* --- Estilos Base del Panel --- */
+    background-color: var(--panel-bg);
+    border: 1px solid var(--panel-border);
   border-radius: var(--radius-medium);
-  margin: calc(var(--spacing-unit) * 3) 0;
-  padding: calc(var(--spacing-unit) * 2);
-  box-shadow: var(--outset-shadow-ui);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: calc(var(--spacing-unit) * 2) 0;
+    color: var(--panel-content-color);
+    box-shadow: var(--outset-shadow-ui), var(--inset-shadow-ui);
+    position: relative;
+    overflow: hidden; /* Clave para efectos de borde y ::before/::after */
+    transition: all 0.3s ease;
 }
 
-.mixed-panel:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+.preview .panel:hover {
+    border-color: var(--cyber-blue-bright);
+    box-shadow: var(--outset-shadow-ui), var(--inset-shadow-ui), var(--glow-active-box);
 }
 
-/* Panel Headers */
-.mixed-panel .panel-header,
-.mixed-panel > h2:first-child,
-.mixed-panel > h3:first-child {
-  color: var(--cyber-blue-bright);
+/* --- Cabecera del Panel (H3 generado por el plugin) --- */
+.preview .panel .panel-title { /* Seleccionar el H3 con la clase */
   font-family: var(--font-heading);
-  letter-spacing: 0.03em;
+    background-color: var(--panel-header-bg);
+    color: var(--panel-header-color);
+    padding: calc(var(--spacing-unit) * 1.2) calc(var(--spacing-unit) * 2);
+    margin: 0; /* Resetear margen del H3 */
+    border-bottom: 1px solid var(--panel-header-border);
+    font-size: 1.2em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
   text-transform: uppercase;
-  margin-top: 0;
-  margin-bottom: calc(var(--spacing-unit) * 1.5);
-  padding-bottom: calc(var(--spacing-unit));
-  border-bottom: 1px solid var(--aegis-border-medium);
-  position: relative;
-  overflow: hidden;
+    text-shadow: var(--text-shadow-normal);
+    position: relative; /* Para el icono ::before */
+    display: flex; /* Alinear icono y texto */
+    align-items: center;
 }
 
-/* Efecto de línea animada bajo el header */
-.mixed-panel .panel-header::after,
-.mixed-panel > h2:first-child::after,
-.mixed-panel > h3:first-child::after {
+/* Icono por defecto para la cabecera */
+.preview .panel .panel-title::before {
+    content: '\e900'; /* Placeholder, idealmente un icono SVG o fuente */
+    font-family: 'icomoon'; /* Asume una fuente de iconos 'icomoon' */
+    margin-right: var(--spacing-unit);
+    color: var(--panel-icon-color);
+    font-size: 1.1em;
+    text-shadow: 0 0 5px var(--panel-icon-color);
+    /* Simplificado: usar mask-image si prefieres SVG */
+}
+
+/* Contenido principal del panel (hereda estilos base) */
+.preview .panel > *:not(.panel-title) {
+    padding: calc(var(--spacing-unit) * 2); /* Padding para el contenido */
+}
+.preview .panel > *:not(.panel-title):last-child {
+     padding-bottom: calc(var(--spacing-unit) * 2); /* Asegurar padding inferior */
+}
+/* Ajustes para elementos comunes dentro del panel */
+.preview .panel p {
+    text-align: left; /* Anular justificado general si se desea */
+    margin-bottom: var(--spacing-unit);
+}
+.preview .panel pre, .preview .panel table {
+    margin-left: calc(var(--spacing-unit) * -2); /* Compensar padding */
+    margin-right: calc(var(--spacing-unit) * -2);
+    width: calc(100% + var(--spacing-unit) * 4);
+    max-width: calc(100% + var(--spacing-unit) * 4); /* Evitar desbordamiento */
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+}
+.preview .panel table {
+     border-top: 1px solid var(--panel-header-border); /* Línea superior para tabla */
+     margin-top: 0;
+}
+.preview .panel pre {
+     border-bottom: none;
+     border-top: 1px solid var(--panel-header-border);
+}
+
+/* --- ESTILOS SEMÁNTICOS (Sobrescriben variables locales) --- */
+.preview .panel-style--note {
+    --panel-border: var(--alert-blue);
+    --panel-header-color: var(--alert-blue);
+    --panel-icon-color: var(--alert-blue);
+}
+.preview .panel-style--note .panel-title::before { content: '\e901'; } /* Icono Info */
+
+.preview .panel-style--warning {
+    --panel-border: var(--alert-yellow);
+    --panel-header-color: var(--alert-yellow);
+    --panel-icon-color: var(--alert-yellow);
+    --panel-bg: rgba(var(--aegis-bg-metal-dark-rgb, 42, 45, 53), 0.9); /* Fondo ligeramente diferente */
+}
+.preview .panel-style--warning .panel-title::before { content: '\e902'; } /* Icono Warning */
+
+.preview .panel-style--success {
+    --panel-border: var(--alert-green);
+    --panel-header-color: var(--alert-green);
+    --panel-icon-color: var(--alert-green);
+}
+.preview .panel-style--success .panel-title::before { content: '\e903'; } /* Icono Check */
+
+.preview .panel-style--danger {
+    --panel-border: var(--alert-red);
+    --panel-header-color: var(--alert-red);
+    --panel-icon-color: var(--alert-red);
+}
+.preview .panel-style--danger .panel-title::before { content: '\e904'; } /* Icono Danger/Error */
+
+/* --- ESTILOS VISUALES ADICIONALES (Aplicar como clases extra) --- */
+
+/* Estilo: Tech Corners (Decoración en esquinas) */
+.preview .panel-style--tech-corners {
+    --panel-bg: var(--aegis-bg-graphite);
+    border: none; /* Ocultar borde principal */
+    box-shadow: none;
+    padding: calc(var(--spacing-unit) * 1.5); /* Espacio interior para las esquinas */
+}
+.preview .panel-style--tech-corners:hover {
+     box-shadow: none; /* Mantener sin sombra exterior */
+}
+.preview .panel-style--tech-corners::before,
+.preview .panel-style--tech-corners::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
+    width: 25px; height: 25px;
+    border-style: solid;
+    border-color: var(--cyber-blue-primary);
+    transition: all var(--animation-speed-fast) ease;
+}
+.preview .panel-style--tech-corners::before {
+    top: 5px; left: 5px;
+    border-width: 2px 0 0 2px;
+}
+.preview .panel-style--tech-corners::after {
+    bottom: 5px; right: 5px;
+    border-width: 0 2px 2px 0;
+}
+.preview .panel-style--tech-corners:hover::before,
+.preview .panel-style--tech-corners:hover::after {
+    width: 35px; height: 35px;
+    border-color: var(--cyber-blue-bright);
+    box-shadow: var(--glow-active-box);
+}
+/* Cabecera y contenido dentro del estilo tech-corners */
+.preview .panel-style--tech-corners > .panel-title {
+    border-bottom: 1px dashed var(--aegis-border-fine);
+    padding-left: 10px; padding-right: 10px;
+}
+.preview .panel-style--tech-corners > *:not(.panel-title) {
+    padding: 15px 10px; /* Ajustar padding interno */
+}
+.preview .panel-style--tech-corners table, .preview .panel-style--tech-corners pre {
+     margin-left: -10px; margin-right: -10px; width: calc(100% + 20px); max-width: calc(100% + 20px);
+}
+
+/* Estilo: Hologram (Efecto translúcido y líneas de scan) */
+.preview .panel-style--hologram {
+    --panel-bg: rgba(var(--aegis-bg-deep-rgb, 8, 10, 15), 0.6);
+    --panel-border: var(--aegis-border-fine);
+    --panel-header-color: var(--tactical-green-bright);
+    --panel-icon-color: var(--tactical-green-bright);
+    --panel-content-color: #c0f0d0;
+    
+    background-color: var(--panel-bg);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-style: dashed;
+    box-shadow: inset 0 0 15px rgba(var(--tactical-green-bright-rgb, 128, 255, 0), 0.2);
+}
+.preview .panel-style--hologram::before { /* Scan line animada */
+  content: '';
+  position: absolute;
+    top: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(to right, transparent, var(--cyber-blue-primary), transparent);
-  transition: width 0.5s ease;
+    background: linear-gradient(to right, transparent, var(--tactical-green-bright), transparent);
+    opacity: 0.7;
+    animation: hologram-scan var(--animation-speed-slow) linear infinite;
+    z-index: 1; /* Por encima del contenido */
 }
-
-.mixed-panel:hover .panel-header::after,
-.mixed-panel:hover > h2:first-child::after,
-.mixed-panel:hover > h3:first-child::after {
-  width: 100%;
-}
-
-/* =================================== */
-/* Estilo: panel-style--tech-corners */
-/* =================================== */
-
-.panel-style--tech-corners {
-  border: 1px solid var(--tech-border-color);
-  background: linear-gradient(135deg, var(--tech-bg-start), var(--tech-bg-end));
-  position: relative;
-  box-shadow: 0 0 15px var(--tech-glow-color), inset 0 0 10px var(--tech-inner-glow);
-  color: var(--tech-text-color);
-  transition: all 0.3s ease;
-  padding: 15px;
-}
-
-.panel-style--tech-corners:hover {
-  box-shadow: var(--neon-blue-glow), inset 0 0 40px rgba(0, 60, 100, 0.4);
-  border-color: rgba(0, 195, 255, 0.7);
-}
-
-/* Esquinas tecnológicas SVG mejoradas */
-.panel-style--tech-corners::before,
-.panel-style--tech-corners::after {
-  content: '';
-  position: absolute;
-  width: 25px;
-  height: 25px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='25' viewBox='0 0 25 25'%3E%3Cpath d='M1,1 L10,1 M1,1 L1,10' stroke='%2300aaff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='5' cy='5' r='1.5' fill='%2300aaff'/%3E%3C/svg%3E");
-  background-size: contain;
-  transition: all 0.3s ease;
-  filter: drop-shadow(0 0 3px rgba(0, 170, 255, 0.7));
-}
-
-.panel-style--tech-corners::before {
-  top: -5px;
-  left: -5px;
-}
-
-.panel-style--tech-corners::after {
-  bottom: -5px;
-  right: -5px;
-  transform: rotate(180deg);
-}
-
-.panel-style--tech-corners:hover::before,
-.panel-style--tech-corners:hover::after {
-  filter: drop-shadow(0 0 5px rgba(0, 195, 255, 0.9));
-}
-
-/* Header con efecto de brillo */
-.panel-style--tech-corners > .panel-header,
-.panel-style--tech-corners > h2:first-child,
-.panel-style--tech-corners > h3:first-child {
-  font-family: var(--font-tech);
-  background: linear-gradient(90deg, rgba(0, 40, 80, 0.2), rgba(0, 60, 100, 0.4), rgba(0, 40, 80, 0.2));
-  padding: 10px 15px;
-  margin: -15px -15px 15px -15px;
-  border-bottom: 1px solid rgba(0, 170, 255, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Efecto de escaneo en el header */
-.panel-style--tech-corners > .panel-header::before,
-.panel-style--tech-corners > h2:first-child::before,
-.panel-style--tech-corners > h3:first-child::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(to right, transparent, rgba(0, 195, 255, 0.2), transparent);
-  animation: scan-line 3s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes scan-line {
-  0% { left: -100%; }
-  50% { left: 100%; }
-  100% { left: 100%; }
-}
-
-/* Mejoras en tablas dentro de tech-corners */
-.panel-style--tech-corners table {
-  border-collapse: separate;
-  border-spacing: 0;
-  border-radius: 3px;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 30, 60, 0.3);
-}
-
-.panel-style--tech-corners th {
-  background: linear-gradient(to bottom, rgba(0, 80, 120, 0.7), rgba(0, 50, 80, 0.7));
-  padding: 10px 15px;
-  font-family: var(--font-tech-alt);
-  font-weight: 600;
-  border: none;
-  border-bottom: 1px solid rgba(0, 170, 255, 0.5);
-}
-
-.panel-style--tech-corners td {
-  padding: 8px 15px;
-  border-color: rgba(0, 100, 170, 0.2);
-  transition: background-color 0.2s ease;
-}
-
-.panel-style--tech-corners tr:hover td {
-  background-color: rgba(0, 120, 200, 0.15);
-}
-
-/* =================================== */
-/* Estilo: panel-style--hologram */
-/* =================================== */
-
-.panel-style--hologram {
-  background: linear-gradient(135deg, rgba(0, 20, 40, 0.8), rgba(0, 10, 30, 0.8));
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(0, 195, 255, 0.3);
-  box-shadow: 0 0 15px rgba(0, 100, 200, 0.2), inset 0 0 20px rgba(0, 100, 200, 0.1);
-  position: relative;
-  overflow: hidden;
-  padding: 15px;
-  margin-bottom: 20px;
-}
-
-/* Efecto de línea de escaneo holográfico */
-.panel-style--hologram::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(to right, transparent, rgba(0, 195, 255, 0.8), transparent);
-  animation: hologram-scan 3s linear infinite;
-  z-index: 5;
-  pointer-events: none;
-}
-
 @keyframes hologram-scan {
-  0% { top: 0; opacity: 0; }
-  5% { opacity: 1; }
-  95% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+    0% { transform: translateY(5px); }
+    50% { transform: translateY(calc(100% - 5px)); }
+    100% { transform: translateY(5px); }
 }
-
-/* Líneas de ruido horizontal */
-.panel-style--hologram::after {
+.preview .panel-style--hologram::after { /* Patrón de grid sutil */
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 195, 255, 0.03) 2px,
-    rgba(0, 195, 255, 0.03) 4px
-  );
+     top: 0; left: 0; right: 0; bottom: 0;
+     background-image: linear-gradient(rgba(var(--tactical-green-medium-rgb), 0.05) 1px, transparent 1px),
+                       linear-gradient(90deg, rgba(var(--tactical-green-medium-rgb), 0.05) 1px, transparent 1px);
+     background-size: 20px 20px;
+     opacity: 0.5;
   pointer-events: none;
-  z-index: 2;
+}
+.preview .panel-style--hologram > .panel-title {
+    text-shadow: 0 0 8px var(--tactical-green-bright);
+    border-bottom-color: rgba(var(--tactical-green-medium-rgb), 0.3);
+}
+.preview .panel-style--hologram > .panel-title::before {
+    content: '\e905'; /* Icono Scan */
 }
 
-.panel-style--hologram > .panel-header,
-.panel-style--hologram > h2:first-child,
-.panel-style--hologram > h3:first-child {
-  font-family: var(--font-tech);
-  color: rgba(0, 225, 255, 0.9);
-  text-shadow: 0 0 5px rgba(0, 195, 255, 0.7);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  border-bottom: 1px solid rgba(0, 195, 255, 0.3);
-  padding-bottom: 8px;
-  margin-bottom: 15px;
-}
 
-/* =================================== */
-/* Estilo: panel-style--neo-frame */
-/* =================================== */
-
-.panel-style--neo-frame {
-  background-color: rgba(15, 20, 35, 0.9);
-  border: none;
-  border-radius: 2px;
+/* Estilo: Neo Frame (Borde animado con gradiente) */
+.preview .panel-style--neo-frame {
+    --panel-bg: var(--aegis-bg-deep);
+    border: 2px solid transparent; /* Borde base transparente */
   position: relative;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  padding: 15px;
-  margin-bottom: 20px;
+    z-index: 1; /* Para que el contenido esté sobre el borde animado */
+    background-clip: padding-box; /* Importante para que el fondo no tape el borde */
 }
-
-/* Marco de neón */
-.panel-style--neo-frame::before {
+.preview .panel-style--neo-frame::before { /* Elemento para el borde animado */
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border: 2px solid transparent;
-  border-image: linear-gradient(45deg, 
-    #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
-  ) 1;
-  animation: neo-border-flow 3s linear infinite;
-  pointer-events: none;
-  z-index: 2;
+    top: -2px; left: -2px; right: -2px; bottom: -2px; /* Cubrir área del borde */
+    background: linear-gradient(90deg, var(--cyber-blue-primary), var(--alert-yellow), var(--tactical-green-bright), var(--cyber-blue-primary));
+    background-size: 400% 100%; /* Tamaño para la animación */
+    border-radius: inherit; /* Heredar radio del panel */
+    animation: neo-border-flow calc(var(--animation-speed-slow) * 2) linear infinite;
+    z-index: -1; /* Detrás del contenido y fondo del panel */
 }
-
 @keyframes neo-border-flow {
-  0% {
-    border-image: linear-gradient(45deg, 
-      #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
-    ) 1;
-  }
-  25% {
-    border-image: linear-gradient(45deg, 
-      #00ffcc, #00aaff, #00ffcc, #00aaff, #00ffcc
-    ) 1;
-  }
-  50% {
-    border-image: linear-gradient(45deg, 
-      #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
-    ) 1;
-  }
-  75% {
-    border-image: linear-gradient(45deg, 
-      #00ffcc, #00aaff, #00ffcc, #00aaff, #00ffcc
-    ) 1;
-  }
-  100% {
-    border-image: linear-gradient(45deg, 
-      #00aaff, #00ffcc, #00aaff, #00ffcc, #00aaff
-    ) 1;
-  }
+    0% { background-position: 0% 50%; }
+    100% { background-position: 400% 50%; }
+}
+/* Ajustes para la cabecera */
+.preview .panel-style--neo-frame > .panel-title {
+    background: linear-gradient(to right, var(--aegis-bg-graphite), var(--aegis-bg-metal-dark));
+    border-bottom: 1px solid var(--aegis-border-subtle);
+    color: #fff; /* Blanco puro para destacar */
+    text-shadow: 0 0 3px #000;
+}
+.preview .panel-style--neo-frame > .panel-title::before {
+     content: '\e906'; /* Icono Circuito/Chip */
+     color: var(--alert-yellow);
+     text-shadow: 0 0 5px var(--alert-yellow);
 }
 
-.panel-style--neo-frame > .panel-header,
-.panel-style--neo-frame > h2:first-child,
-.panel-style--neo-frame > h3:first-child {
-  font-family: var(--font-tech);
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(0, 170, 255, 0.7), 0 0 15px rgba(0, 170, 255, 0.4);
-  border-bottom: 1px solid rgba(0, 195, 255, 0.3);
-  padding-bottom: 10px;
-  margin-top: 0;
-  margin-bottom: 15px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-weight: 400;
-}
 
-/* =================================== */
-/* Estilo: panel-style--circuit-nodes */
-/* =================================== */
-
-.panel-style--circuit-nodes {
-  background-color: rgba(10, 25, 40, 0.8);
-  border: 2px solid var(--cyber-blue-primary);
-  border-radius: var(--radius-small);
-  padding: 15px;
-  box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
+/* Estilo: Circuit Nodes (Nodos y líneas como fondo/borde) */
+.preview .panel-style--circuit-nodes {
+    --panel-border: transparent; /* Sin borde principal */
+    background-color: var(--panel-bg);
   position: relative;
-  overflow: visible;
+    padding: 0; /* Resetear padding base */
+    box-shadow: none;
 }
-
-/* Nodos en las esquinas */
-.panel-style--circuit-nodes::before,
-.panel-style--circuit-nodes::after {
+/* Contenedor interno para el contenido real */
+.preview .panel-style--circuit-nodes > div:not(.panel-title) { /* Asumiendo que el contenido está en un div */
+    padding: calc(var(--spacing-unit) * 2);
+    position: relative; /* Para estar sobre los ::before/::after */
+    z-index: 1;
+}
+/* Crear nodos y líneas con pseudo-elementos */
+.preview .panel-style--circuit-nodes::before,
+.preview .panel-style--circuit-nodes::after {
   content: '';
   position: absolute;
-  width: 12px;
-  height: 12px;
   border-radius: 50%;
-  background-color: var(--cyber-blue-primary);
-  box-shadow: 0 0 8px rgba(0, 170, 255, 0.8), inset 0 0 3px rgba(255, 255, 255, 0.8);
-  z-index: 3;
+    background-color: var(--cyber-blue-dark);
+    box-shadow: 0 0 8px var(--cyber-blue-glow);
+    z-index: 0;
 }
-
-.panel-style--circuit-nodes::before {
-  top: -6px;
-  left: -6px;
+.preview .panel-style--circuit-nodes::before { /* Nodo TL */
+    top: 10px; left: 10px;
+    width: 12px; height: 12px;
 }
-
-.panel-style--circuit-nodes::after {
-  bottom: -6px;
-  right: -6px;
+.preview .panel-style--circuit-nodes::after { /* Nodo BR */
+    bottom: 10px; right: 10px;
+    width: 12px; height: 12px;
 }
-
-/* Líneas de circuito */
-.panel-style--circuit-nodes .panel-header::before,
-.panel-style--circuit-nodes > h2:first-child::before,
-.panel-style--circuit-nodes > h3:first-child::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    linear-gradient(90deg, transparent 0%, transparent 45%, rgba(0, 170, 255, 0.2) 50%, transparent 55%, transparent 100%),
-    linear-gradient(0deg, transparent 0%, transparent 45%, rgba(0, 170, 255, 0.2) 50%, transparent 55%, transparent 100%);
-  background-size: 20px 20px;
-  pointer-events: none;
+/* Líneas simuladas (más complejo, podría requerir más pseudo-elementos o SVG) */
+/* Ejemplo simple con borde en el título */
+.preview .panel-style--circuit-nodes > .panel-title {
+    border: 1px solid var(--aegis-border-fine);
+    border-width: 0 0 1px 1px;
+    border-bottom-left-radius: var(--radius-large);
+    padding-left: 25px; /* Espacio para la línea simulada */
+    margin-bottom: 0;
+    position: relative;
   z-index: 1;
 }
-
-/* =================================== */
-/* Estilo: panel-style--cut-corner */
-/* =================================== */
-
-.panel-style--cut-corner {
-  background-color: rgba(20, 30, 50, 0.8);
-  border: 1px solid rgba(0, 170, 255, 0.5);
-  position: relative;
-  padding: 15px;
-  clip-path: polygon(
-    0% 10px, 
-    10px 0%, 
-    calc(100% - 10px) 0%, 
-    100% 10px, 
-    100% calc(100% - 10px), 
-    calc(100% - 10px) 100%, 
-    10px 100%, 
-    0% calc(100% - 10px)
-  );
+.preview .panel-style--circuit-nodes > .panel-title::before {
+     content: '\e907'; /* Icono Nodo */
+     color: var(--tactical-green-medium);
+     position: absolute; /* Posicionar sobre la línea/borde */
+     left: 5px; top: 50%;
+     transform: translateY(-50%);
 }
 
-.panel-style--cut-corner::before {
+
+/* Estilo: Cut Corner (Esquina superior izquierda cortada) */
+.preview .panel-style--cut-corner {
+    --panel-border: var(--aegis-border-medium);
+  position: relative;
+    padding-top: 30px; /* Espacio para el corte */
+}
+.preview .panel-style--cut-corner::before { /* El corte */
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(0, 170, 255, 0.2), transparent 40%);
-  z-index: 0;
-  pointer-events: none;
+    top: 0; left: 0;
+    border-style: solid;
+    border-width: 25px; /* Tamaño del corte */
+    border-color: transparent;
+    /* Colores que simulan el corte */
+    border-left-color: var(--aegis-bg-deep); /* Fondo del .preview */
+    border-top-color: var(--aegis-bg-deep);
+    /* Línea visual del corte */
+    box-shadow: -2px -2px 0 0 var(--cyber-blue-primary);
+    z-index: 1; /* Encima del fondo del panel */
+}
+/* Ajustar la cabecera para que no quede debajo del corte */
+.preview .panel-style--cut-corner > .panel-title {
+    margin-top: 0; /* Ya está separado por el padding del panel */
+    position: relative; /* Asegurar que esté sobre ::before si hay solapamiento */
+    z-index: 2;
 }
 
-.panel-style--cut-corner > .panel-header,
-.panel-style--cut-corner > h2:first-child,
-.panel-style--cut-corner > h3:first-child {
-  color: var(--cyber-blue-bright);
-  border-bottom: 1px solid rgba(0, 170, 255, 0.4);
-  position: relative;
-  z-index: 1;
+
+/* Estilo: Corner Bracket (Similar a tech-corners pero más sutil) */
+.preview .panel-style--corner-bracket {
+    --panel-border: transparent;
+    padding: calc(var(--spacing-unit) * 0.5); /* Padding mínimo */
 }
-
-/* =================================== */
-/* Estilo: panel-style--corner-bracket */
-/* =================================== */
-
-.panel-style--corner-bracket {
-  background-color: rgba(20, 30, 40, 0.7);
-  border: none;
-  padding: 15px;
-  position: relative;
-}
-
-.panel-style--corner-bracket::before,
-.panel-style--corner-bracket::after {
+.preview .panel-style--corner-bracket::before,
+.preview .panel-style--corner-bracket::after {
   content: '';
   position: absolute;
-  width: 20px;
-  height: 20px;
-  border-color: var(--cyber-blue-primary);
+    width: 15px; height: 15px;
   border-style: solid;
-  border-width: 0;
+    border-color: var(--aegis-border-medium);
+    opacity: 0.7;
+}
+.preview .panel-style--corner-bracket::before {
+    top: 3px; left: 3px;
+    border-width: 1px 0 0 1px;
+}
+.preview .panel-style--corner-bracket::after {
+    bottom: 3px; right: 3px;
+    border-width: 0 1px 1px 0;
 }
 
-.panel-style--corner-bracket::before {
-  top: 0;
-  left: 0;
-  border-top-width: 2px;
-  border-left-width: 2px;
+
+/* Estilo: Glass (Fondo translúcido con blur) */
+.preview .panel-style--glass {
+    --panel-bg: var(--aegis-bg-glass);
+    --panel-border: var(--aegis-border-fine);
+    background-color: var(--panel-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 10px rgba(0, 170, 255, 0.1);
 }
-
-.panel-style--corner-bracket::after {
-  bottom: 0;
-  right: 0;
-  border-bottom-width: 2px;
-  border-right-width: 2px;
-}
-
-/* =================================== */
-/* Estilo: panel-style--glass */
-/* =================================== */
-
-.panel-style--glass {
-  background-color: rgba(30, 40, 60, 0.3);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 5px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-}
-
-.panel-style--glass::before {
+.preview .panel-style--glass::before { /* Brillo sutil */
   content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 15px rgba(0, 170, 255, 0.15);
+    opacity: 0.5;
+    pointer-events: none;
+}
+.preview .panel-style--glass > .panel-title {
+    --panel-header-color: #fff; /* Blanco para contraste */
+    --panel-icon-color: #fff;
+    background-color: rgba(0,0,0,0.2); /* Fondo ligeramente más oscuro */
+    border-bottom-color: var(--aegis-border-subtle);
+    text-shadow: 0 0 3px rgba(0,0,0,0.8);
 }
 
-.panel-style--glass > .panel-header,
-.panel-style--glass > h2:first-child,
-.panel-style--glass > h3:first-child {
-  color: rgba(255, 255, 255, 0.9);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-}
 
-/* === Animaciones adicionales (V2.6) === */
-
+/* --- ANIMACIONES ADICIONALES --- */
 @keyframes soft-pulse {
-  0% { opacity: 0.7; }
-  50% { opacity: 1; }
-  100% { opacity: 0.7; }
+  0%, 100% { box-shadow: var(--outset-shadow-ui), var(--inset-shadow-ui), var(--glow-active-box); }
+  50% { box-shadow: var(--outset-shadow-ui), var(--inset-shadow-ui), 0 0 15px var(--cyber-blue-glow); }
 }
-
 @keyframes slow-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(359deg); }
+  from { transform: rotate(0deg); } to { transform: rotate(360deg); }
 }
 
-.animate-pulse {
-  animation: soft-pulse var(--animation-speed-medium) ease-in-out infinite;
+.preview .animate-pulse:hover {
+  animation: soft-pulse var(--animation-speed-medium) infinite ease-in-out;
+}
+.preview .animate-rotate .panel-title::before { /* Rotar icono */
+  animation: slow-rotate calc(var(--animation-speed-slow) * 3) linear infinite;
 }
 
-.animate-rotate {
-  animation: slow-rotate var(--animation-speed-slow) linear infinite;
-}
 
-/* === Clases de layout para paneles === */
-
-.layout--float-left {
+/* --- LAYOUTS (Usar con clases de panel) --- */
+.preview .layout--float-left {
   float: left;
-  margin-right: calc(var(--spacing-unit) * 3);
-  margin-bottom: calc(var(--spacing-unit) * 2);
-  width: 40%;
-  clear: left;
+    width: calc(50% - var(--spacing-unit));
+    margin-right: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 2); /* Espacio si hay algo debajo */
 }
-
-.layout--float-right {
+.preview .layout--float-right {
   float: right;
-  margin-left: calc(var(--spacing-unit) * 3);
+    width: calc(50% - var(--spacing-unit));
+    margin-left: calc(var(--spacing-unit) * 2);
   margin-bottom: calc(var(--spacing-unit) * 2);
-  width: 40%;
-  clear: right;
 }
-
-.layout--center {
+.preview .layout--center {
+    display: block; /* O usar flex en el contenedor padre */
+    width: 75%; /* Ancho deseado */
   margin-left: auto;
   margin-right: auto;
-  max-width: 80%;
+    float: none; /* Asegurar que no flote */
 }
-
-.clearfix::after {
+.preview .clearfix::after { /* Para contener floats */
   content: "";
   display: table;
   clear: both;
 }
 
-/* Responsive adjustments */
+/* --- RESPONSIVE (Ajustes básicos) --- */
 @media (max-width: 768px) {
-  .layout--float-left,
-  .layout--float-right,
-  .layout--center {
+  .preview .layout--float-left,
+  .preview .layout--float-right {
     float: none;
     width: 100%;
     margin-left: 0;
     margin-right: 0;
-    max-width: 100%;
+  }
+  .preview .layout--center {
+    width: 95%;
   }
 }
 
+/* === ESTILOS DE COMPONENTES LEGACY (Pre-Paneles V2.6) === */
+/* Mantener por compatibilidad o referencia, prefijar con .preview */
+
+.preview .panel-warning,
+.preview .panel-error {
+    /* ... estilos legacy ... */
+    border-left: 5px solid var(--alert-yellow);
+    background-color: rgba(var(--alert-yellow-rgb), 0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.preview .panel-warning > h2:first-child,
+.preview .panel-warning > h3:first-child {
+    color: var(--alert-yellow);
+    margin-top: 0;
+    border-bottom: 1px solid rgba(var(--alert-yellow-rgb), 0.3);
+}
+/* Iconos para legacy panels */
+.preview .panel-warning::before,
+.preview .panel-error::before {
+    /* ... estilos icono legacy ... */
+    content: '!';
+    display: inline-block;
+    /* ... más estilos ... */
+}
+
+/* ... otros estilos legacy como data-matrix, etc. ... */
+/* Asegúrate de prefijar todos con .preview */
+.preview .data-matrix-table td { /* Ejemplo */
+    /* ... */
+}
+
+/* === BOTONES (Estilos generales si no están en paneles) === */
+/* (Si se usan fuera de .panel, necesitan prefijo .preview) */
+.preview button {
+    /* ... estilos base para botones ... */
+}
+
+/* === OTROS ESTILOS (Asegurar prefijo .preview) === */
+.preview .panel-header { /* Clase de cabecera legacy */
+    /* ... */
+}
+.preview .panel-content { /* Clase de contenido legacy */
+    /* ... */
+}
+.preview .panel-info-box { /* Otra clase legacy */
+    /* ... */
+}
+
+/* ... y así sucesivamente para todas las reglas de nivel superior ... */
+
 /* --- Paneles Especiales --- */
-.panel-warning,
-.status-warning,
-.status-panel.status-warning {
+.preview .panel-warning,
+.preview .status-warning,
+.preview .status-panel.status-warning {
     border-color: var(--alert-yellow);
     background-color: rgba(255, 204, 0, 0.05);
 }
 
-.panel-warning > h2:first-child,
-.panel-warning > h3:first-child,
-.panel-warning > .panel-header,
-.status-warning > h2:first-child,
-.status-warning > h3:first-child,
-.status-warning > .panel-header,
-.status-panel.status-warning > h2:first-child,
-.status-panel.status-warning > h3:first-child,
-.status-panel.status-warning > .panel-header {
+.preview .panel-warning > h2:first-child,
+.preview .panel-warning > h3:first-child,
+.preview .panel-warning > .panel-header,
+.preview .status-warning > h2:first-child,
+.preview .status-warning > h3:first-child,
+.preview .status-warning > .panel-header,
+.preview .status-panel.status-warning > h2:first-child,
+.preview .status-panel.status-warning > h3:first-child,
+.preview .status-panel.status-warning > .panel-header {
     background: linear-gradient(to bottom, rgba(255, 204, 0, 0.15), rgba(0, 0, 0, 0));
     color: var(--alert-yellow);
     border-bottom-color: var(--alert-yellow);
 }
 
-.panel-warning::before,
-.status-warning::before,
-.status-panel.status-warning::before {
+.preview .panel-warning::before,
+.preview .status-warning::before,
+.preview .status-panel.status-warning::before {
     content: '⚠';
     position: absolute;
     top: 8px;
@@ -828,7 +784,7 @@ tr:nth-child(odd) {
 }
 
 /* Datamatrix (tablas) con colores de estado */
-.data-matrix-table td {
+.preview .data-matrix-table td {
     position: relative;
 }
 
@@ -847,8 +803,8 @@ td:contains("ERROR"), td:contains("Crítico"), td:contains("Fallo") {
 
 /* --- Media Queries --- */
 @media (max-width: 768px) {
-    .layout--float-left,
-    .layout--float-right {
+    .preview .layout--float-left,
+    .preview .layout--float-right {
         float: none;
         width: 100%;
         margin-left: 0;
@@ -869,7 +825,7 @@ td:contains("ERROR"), td:contains("Crítico"), td:contains("Fallo") {
 }
 
 /* --- ESTILOS PARA BOTONES --- */
-button {
+.preview button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -889,21 +845,21 @@ button {
     box-shadow: var(--outset-shadow-ui);
 }
 
-button:hover {
+.preview button:hover {
     background-color: var(--aegis-bg-metal-light);
     border-color: var(--cyber-blue-primary);
     color: #ffffff;
     box-shadow: var(--glow-active-box);
 }
 
-button:active {
+.preview button:active {
     background-color: var(--cyber-blue-dark);
     color: #ffffff;
     box-shadow: var(--inset-shadow-soft);
     transform: translateY(1px);
 }
 
-button:disabled {
+.preview button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: var(--aegis-bg-graphite);
@@ -912,33 +868,33 @@ button:disabled {
 }
 
 /* Estilos específicos para botones de acción */
-button[title="Load Master Demo"] {
+.preview button[title="Load Master Demo"] {
     background-color: var(--aegis-bg-metal-dark);
     border-color: var(--cyber-blue-dark);
 }
 
-button[title="Load Aetherium Codex Demo"] {
+.preview button[title="Load Aetherium Codex Demo"] {
     background-color: var(--aegis-bg-metal-dark);
     border-color: var(--cyber-blue-dark);
 }
 
-button[title="Load Infinity Command Demo"] {
+.preview button[title="Load Infinity Command Demo"] {
     background-color: var(--aegis-bg-metal-dark);
     border-color: var(--cyber-blue-dark);
 }
 
-button[title="Save File"] {
+.preview button[title="Save File"] {
     background-color: var(--aegis-bg-metal-dark);
     border-color: var(--cyber-blue-dark);
 }
 
-button[title="Export as PDF"] {
+.preview button[title="Export as PDF"] {
     background-color: var(--aegis-bg-metal-dark);
     border-color: var(--cyber-blue-dark);
 }
 
 /* Estilos para iconos dentro de botones */
-button svg {
+.preview button svg {
     width: 16px;
     height: 16px;
     stroke: currentColor;
@@ -947,7 +903,7 @@ button svg {
 }
 
 /* --- ESTILOS PARA BOTONES BLANCOS --- */
-button.white-button {
+.preview button.white-button {
     color: #ffffff !important;
     background-color: var(--aegis-bg-metal-dark) !important;
     border: 1px solid var(--cyber-blue-dark) !important;
@@ -961,20 +917,20 @@ button.white-button {
     min-width: 32px !important;
 }
 
-button.white-button:hover {
+.preview button.white-button:hover {
     background-color: var(--aegis-bg-metal-light) !important;
     border-color: var(--cyber-blue-primary) !important;
     color: #ffffff !important;
     box-shadow: var(--glow-active-box) !important;
 }
 
-button.white-button:active {
+.preview button.white-button:active {
     background-color: var(--cyber-blue-dark) !important;
     transform: translateY(1px) !important;
 }
 
 /* --- ESTILOS PARA TABLAS --- */
-.data-matrix-container {
+.preview .data-matrix-container {
     margin: 1.5rem 0;
     padding: 0;
     border: 1px solid var(--cyber-blue-dark);
@@ -983,13 +939,13 @@ button.white-button:active {
     overflow: hidden;
 }
 
-.data-matrix-table {
+.preview .data-matrix-table {
     width: 100%;
     border-collapse: collapse;
     background-color: transparent;
 }
 
-.data-matrix-table th {
+.preview .data-matrix-table th {
     background-color: var(--aegis-bg-metal-dark);
     color: var(--cyber-blue-bright);
     padding: 8px 12px;
@@ -1001,46 +957,46 @@ button.white-button:active {
     font-size: 0.9em;
 }
 
-.data-matrix-table td {
+.preview .data-matrix-table td {
     padding: 8px 12px;
     border-bottom: 1px solid rgba(50, 80, 120, 0.3);
     color: var(--text-primary);
 }
 
-.data-matrix-table tr:last-child td {
+.preview .data-matrix-table tr:last-child td {
     border-bottom: none;
 }
 
-.data-matrix-table tr:nth-child(even) {
+.preview .data-matrix-table tr:nth-child(even) {
     background-color: rgba(30, 40, 60, 0.4);
 }
 
-.data-matrix-table tr:hover {
+.preview .data-matrix-table tr:hover {
     background-color: rgba(40, 60, 80, 0.6);
 }
 
 /* Estados específicos para celdas */
-.data-matrix-table td.status-ok {
+.preview .data-matrix-table td.status-ok {
     color: var(--status-ok);
     font-weight: bold;
 }
 
-.data-matrix-table td.status-warn {
+.preview .data-matrix-table td.status-warn {
     color: var(--status-warn);
     font-weight: bold;
 }
 
-.data-matrix-table td.status-error {
+.preview .data-matrix-table td.status-error {
     color: var(--status-error);
     font-weight: bold;
 }
 
-.data-matrix-table td.status-neutral {
+.preview .data-matrix-table td.status-neutral {
     color: var(--status-neutral);
 }
 
 /* --- ESTILOS PARA PANELES --- */
-.panel-header {
+.preview .panel-header {
     padding: 8px 12px;
     background-color: var(--aegis-bg-metal-dark);
     color: var(--cyber-blue-bright);
@@ -1052,36 +1008,36 @@ button.white-button:active {
     font-size: 0.9em;
 }
 
-.panel-content {
+.preview .panel-content {
     padding: 12px;
     color: var(--text-primary);
 }
 
 /* Estilos para tipos de paneles */
-.panel-info-box {
+.preview .panel-info-box {
     border-color: var(--cyber-blue-medium);
 }
 
-.panel-warning {
+.preview .panel-warning {
     border-color: var(--status-warn);
 }
-.panel-warning .panel-header {
+.preview .panel-warning .panel-header {
     background-color: rgba(200, 150, 0, 0.2);
     color: var(--status-warn);
 }
 
-.panel-error {
+.preview .panel-error {
     border-color: var(--status-error);
 }
-.panel-error .panel-header {
+.preview .panel-error .panel-header {
     background-color: rgba(200, 50, 50, 0.2);
     color: var(--status-error);
 }
 
-.panel-objectives {
+.preview .panel-objectives {
     border-color: var(--status-ok);
 }
-.panel-objectives .panel-header {
+.preview .panel-objectives .panel-header {
     background-color: rgba(50, 200, 100, 0.2);
     color: var(--status-ok);
 }

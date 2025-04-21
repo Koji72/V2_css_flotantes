@@ -291,6 +291,16 @@ export class PreviewManager {
     }
 
     async updateContent(markdown: string): Promise<void> {
+        // --- NEW DEBUG LOGS (START OF FUNCTION) ---
+        console.log('[PreviewManager.updateContent] Function CALLED. Current isProcessing:', this.isProcessing);
+        console.log('[PreviewManager.updateContent] Comparing new markdown with lastKnownMarkdown:', markdown === this.lastKnownMarkdown);
+        if (markdown === this.lastKnownMarkdown) {
+            console.log('[PreviewManager.updateContent] Detailed comparison:');
+            console.log('New MD (first 100):', markdown.substring(0, 100));
+            console.log('Old MD (first 100):', this.lastKnownMarkdown.substring(0, 100));
+        }
+        // --- END NEW DEBUG LOGS ---
+
         if (!this.iframe || !this.isReady) {
             console.warn('[PreviewManager] Iframe not ready, queuing content update.');
             this.initialContentQueue = markdown;
@@ -315,6 +325,9 @@ export class PreviewManager {
             // 1. Process panel and button syntax FIRST using PanelManager
             console.log('[PreviewManager] Processing panels/buttons with PanelManager...');
             console.log('[PreviewManager] ---> Markdown BEFORE PanelManager:', markdown.substring(0, 500)); // DEBUG
+            console.log('[PreviewManager] --- RAW MARKDOWN PASSED TO panelManager.processPanelSyntax ---');
+            console.log(markdown); // Log the full markdown string being passed
+            console.log('[PreviewManager] --- END RAW MARKDOWN ---');
             let processedMarkdown = this.panelManager.processPanelSyntax(markdown);
             console.log('[PreviewManager] Panel processing complete.');
             console.log('[PreviewManager] ---> HTML/MD AFTER PanelManager:', processedMarkdown.substring(0, 500)); // DEBUG

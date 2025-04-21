@@ -5,6 +5,8 @@ import rehypeRaw from 'rehype-raw';
 import remarkDirective from 'remark-directive';
 import remarkGithubBetaBlockquoteAdmonitions from 'remark-github-beta-blockquote-admonitions';
 import remarkCustomPanels from './utils/remarkCustomPanels';
+import remarkEnsureDirectiveBrackets from './utils/remarkEnsureDirectiveBrackets';
+import remarkCornerDirectives from './utils/remarkCornerDirectives';
 // import remarkCollapse from 'remark-collapse'; // Incompatible, comentado
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -15,19 +17,77 @@ import {
   Moon, Sun,
   PanelTopOpen,
   Minus,
-  ListOrdered
+  ListOrdered,
+  Palette
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import './App.css';
 
 const AUTOSAVE_KEY = 'markdown-editor-content';
-const AUTOSAVE_DELAY = 1500; // Milisegundos (1.5 segundos)
+const THEME_CSS_KEY = 'markdown-editor-theme-css'; // Key para guardar el tema CSS
+const DEFAULT_THEME_CSS = 'aegis-theme.css'; // Tema por defecto ahora
+const AUTOSAVE_DELAY = 300000; // Milisegundos (5 minutos)
+
+// --- Definición de Plantillas de Panel ---
+const panelTemplates = [
+  {
+    label: "Básico",
+    template: '\n:::panel{title="Título"}\nContenido...\n:::\n',
+    cursorOffset: 17 // Posición después de title="
+  },
+  {
+    label: "Nota",
+    template: '\n:::panel{style=note title="Nota"}\nContenido...\n:::\n',
+    cursorOffset: 27 // Posición después de title="
+  },
+  {
+    label: "Advertencia",
+    template: '\n:::panel{style=warning title="Advertencia"}\nContenido...\n:::\n',
+    cursorOffset: 30
+  },
+  {
+    label: "Éxito",
+    template: '\n:::panel{style=success title="Éxito"}\nContenido...\n:::\n',
+    cursorOffset: 28
+  },
+  {
+    label: "Peligro",
+    template: '\n:::panel{style=danger title="Peligro"}\nContenido...\n:::\n',
+    cursorOffset: 28
+  },
+  {
+    label: "HUD Frame",
+    template: '\n:::panel{style=hud-frame title="HUD"}\nContenido...\n:::\n',
+    cursorOffset: 32
+  },
+  {
+    label: "Glass",
+    template: '\n:::panel{style=glass title="Glass"}\nContenido...\n:::\n',
+    cursorOffset: 28
+  }
+  // Añadir más plantillas aquí si se desea
+];
+
+const themeFiles = [
+  'aegis-theme.css',
+  'aetherium_codex.css',
+  'aegis-tactical-interface-v2.6.css',
+  'master_template.css',
+  'rpg_fantasy.css',
+  'halo_infini.css',
+  'grid_halo.css',
+  'michael_noir.css',
+  'purple_neon_grid.css',
+  'infinitycommand.css',
+  'default.css'
+];
 
 const App: React.FC = () => {
   const [leftWidth, setLeftWidth] = useState(50);
   const [isResizing, setIsResizing] = useState(false);
   const [content, setContent] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [activeTemplate, setActiveTemplate] = useState<string>(DEFAULT_THEME_CSS); // Estado para el archivo CSS del tema activo
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null); // Ref para el input de archivo
   const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -36,6 +96,8 @@ const App: React.FC = () => {
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Ref para timeout
   const scrollingPanel = useRef<'editor' | 'preview' | null>(null); // Para saber quién inició
   const animationFrameRef = useRef<number | null>(null); // Para throttling
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null); // Para manejar qué dropdown está abierto
+  const dropdownRef = useRef<HTMLDivElement>(null); // Ref para detectar clics fuera
 
   // Refs para funciones usadas en callbacks para evitar problemas de dependencia/orden
   const handleImageButtonClickRef = useRef<() => void>(() => {});
@@ -53,6 +115,14 @@ const App: React.FC = () => {
         console.log('[Initial Load] setContent called.');
       } else {
         console.log('[Initial Load] No saved content found in localStorage.');
+      }
+      // Cargar tema CSS guardado
+      const savedTheme = localStorage.getItem(THEME_CSS_KEY);
+      if (savedTheme) {
+          setActiveTemplate(savedTheme);
+          console.log(`[Initial Load] Loaded theme: ${savedTheme}`);
+      } else {
+          console.log(`[Initial Load] No saved theme found, using default: ${DEFAULT_THEME_CSS}`);
       }
       hasLoadedRef.current = true;
       console.log('[Initial Load] hasLoadedRef set to true.');
@@ -78,7 +148,7 @@ const App: React.FC = () => {
       localStorage.setItem(AUTOSAVE_KEY, content);
       toast.success('Contenido auto-guardado!');
     }, AUTOSAVE_DELAY);
-
+    
     return () => {
       if (autosaveTimeoutRef.current) {
         clearTimeout(autosaveTimeoutRef.current);
@@ -86,9 +156,63 @@ const App: React.FC = () => {
     };
   }, [content]);
 
+  // Efecto para CAMBIAR la hoja de estilos del tema y GUARDAR la selección
+  useEffect(() => {
+    console.log(`[Theme Effect] Running for activeTemplate: ${activeTemplate}`); // <-- NUEVO LOG
+    // Encontrar o crear la etiqueta link del tema
+    let themeLink = document.getElementById('theme-stylesheet') as HTMLLinkElement;
+    if (!themeLink) {
+      themeLink = document.createElement('link');
+      themeLink.id = 'theme-stylesheet';
+      themeLink.rel = 'stylesheet';
+      document.head.appendChild(themeLink);
+      console.log('[Theme Effect] Created theme <link> tag.'); // <-- NUEVO LOG
+    }
+    // Actualizar el href con la plantilla activa
+    // Asegurarse de que la ruta sea relativa a la carpeta public
+    const newHrefBase = `/templates/${activeTemplate}`;
+    const currentHref = themeLink.getAttribute('href');
+    
+    // Cache busting: Añadir timestamp para forzar recarga
+    const timestamp = Date.now();
+    const newHrefWithTimestamp = `${newHrefBase}?t=${timestamp}`;
+    
+    console.log(`[Theme Effect] Current href: ${currentHref}`); // <-- NUEVO LOG
+    console.log(`[Theme Effect] Attempting to set href to: ${newHrefWithTimestamp}`); // <-- NUEVO LOG
+
+    // Comparar solo la base del href, ignorando el timestamp anterior
+    if (!currentHref || !currentHref.startsWith(newHrefBase)) {
+        themeLink.href = newHrefWithTimestamp;
+        console.log(`[Theme Effect] Applied theme via href: ${newHrefWithTimestamp}`);
+    } else {
+        // Incluso si la base es la misma, forzar la recarga con nuevo timestamp
+        // si el href actual no es exactamente el nuevo CON timestamp (esto puede pasar
+        // si el efecto se dispara múltiples veces rápidamente)
+        if (currentHref !== newHrefWithTimestamp) {
+             themeLink.href = newHrefWithTimestamp;
+             console.log(`[Theme Effect] Force re-applied theme with new timestamp: ${newHrefWithTimestamp}`); // <-- NUEVO LOG
+        } else {
+             console.log(`[Theme Effect] Effect ran for ${activeTemplate}, base href is correct and timestamp seems current. No change made.`); // <-- NUEVO LOG
+        }
+    }
+
+    // Guardar la selección en localStorage, pero solo si no es la carga inicial
+    if (hasLoadedRef.current) {
+        localStorage.setItem(THEME_CSS_KEY, activeTemplate);
+        console.log(`[Theme Effect] Saved theme: ${activeTemplate} to localStorage`);
+    }
+
+  }, [activeTemplate]); // Se ejecuta cuando activeTemplate cambia
+
   const handleEditorChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(`[handleEditorChange] New content length: ${e.target.value.length}`);
+    // --- NEW DEBUG LOGS ---
+    console.log(`[handleEditorChange] CALLED. Event target value length: ${e.target.value.length}`);
+    // --- END NEW DEBUG LOG ---
+    console.log(`[handleEditorChange] New content length: ${e.target.value.length}`); // Existing log
     setContent(e.target.value);
+    // --- NEW DEBUG LOG ---
+    console.log(`[handleEditorChange] setContent has been called.`);
+    // --- END NEW DEBUG LOG ---
   };
 
   const toggleTheme = () => {
@@ -329,8 +453,36 @@ const App: React.FC = () => {
     insertText(textToInsert);
   }, [insertText]);
 
+  // Hook para cerrar dropdowns al hacer clic fuera
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null); // Cerrar cualquier dropdown abierto
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]); // Dependencia del ref
+
   // --- Toolbar Buttons Definition ---
-  const buttons = [
+  // Quitar tipos explícitos por ahora para evitar errores complejos del linter
+  /*
+  type PanelOption = { label: string; template: string; cursorOffset: number };
+  type ThemeOption = { label: string; fileName: string; action: () => void };
+
+  type ToolbarButton = 
+    | { isSeparator: true } 
+    | { title: string; icon: JSX.Element; action: () => void; isDropdown?: false } 
+    | { title: string; icon: JSX.Element; isDropdown: true; dropdownId: 'panel-inserter'; options: PanelOption[] }
+    | { title: string; icon: JSX.Element; isDropdown: true; dropdownId: 'theme-selector'; options: ThemeOption[] };
+  */
+
+  // Usar 'any' temporalmente para el tipo del array de botones
+  const buttons: any[] = [
     // Grupo Formato Básico
     { title: "Negrita (Ctrl+B)", icon: <Bold size={18} />, action: () => applyFormatRef.current('**', 'wrap') },
     { title: "Cursiva (Ctrl+I)", icon: <Italic size={18} />, action: () => applyFormatRef.current('*', 'wrap') },
@@ -350,9 +502,15 @@ const App: React.FC = () => {
     { isSeparator: true },
     // Grupo Bloques
     { title: "Cita (Ctrl+Q)", icon: <Quote size={18} />, action: () => insertBlock('> ') },
-    { title: "Código (Ctrl+`)", icon: <Code size={18} />, action: () => applyFormatRef.current('`', 'wrap') }, // O insertar bloque ```
+    { title: "Código (Ctrl+`)", icon: <Code size={18} />, action: () => applyFormatRef.current('`', 'wrap') },
     { title: "Bloque Colapsable (Ctrl+Shift+D)", icon: <ChevronsUpDown size={18} />, action: () => insertText('\n<details>\n  <summary>Título</summary>\n  \n  Contenido oculto...\n  \n</details>\n') },
-    { title: "Insertar Panel", icon: <PanelTopOpen size={18} />, action: () => insertText('\n:::panel{title="Título"}\n\n:::\n') }, // <-- NUEVO BOTÓN
+    {
+      title: "Insertar Panel",
+      icon: <PanelTopOpen size={18} />,
+      isDropdown: true, 
+      dropdownId: 'panel-inserter',
+      options: panelTemplates
+    },
     { isSeparator: true },
     // Grupo Inserciones
     { title: "Enlace (Ctrl+K)", icon: <Link2 size={18} />, action: () => applyFormatRef.current('[](url)', 'insert') },
@@ -361,7 +519,18 @@ const App: React.FC = () => {
     { title: "Línea Horizontal", icon: <Minus size={18} />, action: () => insertText('\n\n---\n\n') },
     { isSeparator: true },
     // Grupo Otros
-    { title: "Cambiar Tema", icon: isDarkMode ? <Sun size={18} /> : <Moon size={18} />, action: toggleTheme },
+    {
+      title: "Seleccionar Tema",
+      icon: <Palette size={18} />, 
+      isDropdown: true,
+      dropdownId: 'theme-selector',
+      options: themeFiles.map(fileName => ({
+        label: fileName.replace('.css', '').replace(/[-_]/g, ' '),
+        fileName: fileName,
+        action: () => setActiveTemplate(fileName)
+      }))
+    },
+    { title: "Cambiar Tema Claro/Oscuro", icon: isDarkMode ? <Sun size={18} /> : <Moon size={18} />, action: toggleTheme },
   ];
 
   return (
@@ -386,16 +555,74 @@ const App: React.FC = () => {
         style={{ display: 'none' }} 
       />
       <div className="toolbar">
-        {buttons.map((btn, index) => (
-          btn.isSeparator ? (
-            <div key={`sep-${index}`} className="toolbar-separator"></div>
-          ) : (
-            <button key={btn.title} title={btn.title} onClick={btn.action} className="toolbar-button">
-              {btn.icon}
-            </button>
-          )
-        ))}
-      </div>
+        {buttons.map((btn, index) => {
+          // Usar comprobaciones más simples y acceso directo a propiedades
+          if (btn.isSeparator) {
+            return <div key={`sep-${index}`} className="toolbar-separator"></div>;
+          } else if (btn.isDropdown && btn.dropdownId === 'panel-inserter') {
+            const isOpen = activeDropdown === btn.dropdownId;
+            return (
+              <div key={btn.title} className="toolbar-dropdown-container" ref={isOpen ? dropdownRef : null}>
+                 <button 
+                  title={btn.title} 
+                  onClick={() => setActiveDropdown(isOpen ? null : btn.dropdownId)}
+                  className={`toolbar-button ${isOpen ? 'active' : ''}`}
+                 >
+                   {btn.icon}
+                 </button>
+                {isOpen && (
+                  <ul className="toolbar-dropdown-menu">
+                    {btn.options.map((option: any) => ( // Usar any para la opción
+                      <li key={option.label} className="toolbar-dropdown-item">
+                        <button onClick={() => {
+                          insertText(option.template, option.cursorOffset); // Asumir que existen
+                          setActiveDropdown(null);
+                        }}>
+                          {option.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          } else if (btn.isDropdown && btn.dropdownId === 'theme-selector') {
+            const isOpen = activeDropdown === btn.dropdownId;
+            return (
+              <div key={btn.title} className="toolbar-dropdown-container" ref={isOpen ? dropdownRef : null}>
+                 <button 
+                  title={btn.title} 
+                  onClick={() => setActiveDropdown(isOpen ? null : btn.dropdownId)}
+                  className={`toolbar-button ${isOpen ? 'active' : ''}`}
+                 >
+                   {btn.icon}
+                 </button>
+                {isOpen && (
+                  <ul className="toolbar-dropdown-menu">
+                    {btn.options.map((option: any) => ( // Usar any para la opción
+                      <li key={option.label} className="toolbar-dropdown-item">
+                        <button onClick={() => {
+                          option.action(); // Asumir que existe
+                          setActiveDropdown(null);
+                        }} style={{ fontWeight: activeTemplate === option.fileName ? 'bold' : 'normal' }}> 
+                          {option.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          } else {
+             // Botón normal
+             return (
+              <button key={btn.title} title={btn.title} onClick={btn.action} className="toolbar-button">
+                {btn.icon}
+              </button>
+            );
+          }
+        })}
+            </div>
       <div className="flex flex-1 h-full">
         <div className="editor-container" style={{ width: `${leftWidth}%` }}>
           <textarea
@@ -409,61 +636,55 @@ const App: React.FC = () => {
           />
         </div>
 
-        <div
-          className="divider"
-          onMouseDown={startResizing}
-        />
+        <div className="resizer" onMouseDown={startResizing} />
 
-        <div
-          ref={previewRef}
-          className="preview"
-          style={{ width: `${100 - leftWidth - 1}%` }}
-          onScroll={handlePreviewScroll} // Listener sin cambios
-        >
-          <ReactMarkdown
-            key={content}
-            remarkPlugins={[remarkGfm, remarkDirective, remarkCustomPanels, remarkGithubBetaBlockquoteAdmonitions]}
-            rehypePlugins={[[rehypeRaw, { passThrough: ['element', 'text'] }]]}
-            components={{
-              code(props: any) {
-                const { node, inline, className, children, ...rest } = props;
-                // Log para depuración
-                // console.log('[Code Renderer RAW Props]', props); // Eliminado
-
-                const match = /language-(\w+)/.exec(className || '');
-                const language = match?.[1]; // Obtener el lenguaje si existe
-
-                // Usar SyntaxHighlighter SOLO si NO es inline Y hay un lenguaje detectado
-                if (!inline && language) {
-                  // Comprobar si el lenguaje es soportado (opcional, pero bueno para evitar errores)
-                  // Por ahora, asumimos que si hay 'language-xxx', intentamos resaltarlo.
-                  return (
-                    <SyntaxHighlighter
-                      style={vscDarkPlus} // Usar el tema importado
-                      language={language} // Usar el lenguaje detectado
-                      PreTag="div"
-                      // Pasar los children como string, eliminando saltos de línea finales
-                    >
-                      {String(children).replace(/\n$/, '')}
-                    </SyntaxHighlighter>
-                  );
-                } else {
-                  // Renderizar como <code> normal si es inline O si no se especificó lenguaje
-                  // Quitar la clase 'language-xxx' si es inline para evitar estilos no deseados
-                  const finalClassName = inline ? undefined : className;
-                  // Asegurar que renderizamos algo, incluso si children es undefined
-                  const contentToRender = children !== undefined && children !== null ? children : '';
-                  return (
-                    <code className={finalClassName} {...rest}>
-                      {contentToRender}
-                    </code>
-                  );
-                }
-              }
-            }}
+        <div className="preview-panel" style={{ width: `${100 - leftWidth - 1}%` }}>
+          <div 
+            ref={previewRef} 
+            className="preview markdown-body"
+            style={{ height: '100%', overflowY: 'auto', scrollPaddingTop: '20px' }}
+            onScroll={handlePreviewScroll}
           >
-            {content}
-          </ReactMarkdown>
+            <ReactMarkdown 
+              remarkPlugins={[
+                remarkGfm,
+                remarkEnsureDirectiveBrackets, 
+                remarkDirective, 
+                remarkCustomPanels, 
+                remarkCornerDirectives, 
+                remarkGithubBetaBlockquoteAdmonitions
+              ]}
+              rehypePlugins={[rehypeRaw]}
+              components={{
+                code(props: any) {
+                  const { node, inline, className, children, ...rest } = props;
+                  const match = /language-(\w+)/.exec(className || '');
+                  const language = match?.[1];
+                  if (!inline && language) {
+                    return (
+                      <SyntaxHighlighter
+                        style={vscDarkPlus}
+                        language={language}
+                        PreTag="div"
+                      >
+                        {String(children).replace(/\n$/, '')}
+                      </SyntaxHighlighter>
+                    );
+                  } else {
+                    const finalClassName = inline ? undefined : className;
+                    const contentToRender = children !== undefined && children !== null ? children : '';
+                    return (
+                      <code className={finalClassName} {...rest}>
+                        {contentToRender}
+                      </code>
+                    );
+                  }
+                }
+              }}
+            >
+              {content}
+            </ReactMarkdown>
+          </div>
         </div>
       </div>
     </div>

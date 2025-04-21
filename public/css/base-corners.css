@@ -1,0 +1,35 @@
+/* public/css/base-corners.css */
+/* Define la posición base de las decoraciones de esquina */
+
+/* Estilo base para todos los elementos de esquina */
+.preview .panel .panel-corner {
+  position: absolute; /* Posicionamiento relativo al .panel padre */
+  width: 50px;  /* Tamaño por defecto (los temas pueden ajustarlo) */
+  height: 50px; /* Tamaño por defecto */
+  pointer-events: none; /* No interferir con interacciones */
+  z-index: 1; /* Por defecto, encima del contenido base pero debajo de elementos con z-index mayor */
+  /* Los temas definirán el 'background', 'border', 'clip-path', etc. */
+  /* Añadir content: '' si se decide usar ::before/::after en el tema en lugar de estilos directos */
+  /* content: ''; */
+}
+
+/* Posiciones específicas */
+.preview .panel .corner-pos--top-left {
+  top: 0;
+  left: 0;
+}
+
+.preview .panel .corner-pos--top-right {
+  top: 0;
+  right: 0;
+}
+
+.preview .panel .corner-pos--bottom-left {
+  bottom: 0;
+  left: 0;
+}
+
+.preview .panel .corner-pos--bottom-right {
+  bottom: 0;
+  right: 0;
+} 

@@ -321,4 +321,41 @@
   @apply w-8 h-8 border-4 rounded-full animate-spin;
   border-color: var(--color-primary);
   border-top-color: transparent;
-} 
+}
+
+/* Estilos específicos para Directive Tester Preview */
+.directive-tester-preview {
+  background-color: #111111; /* Fondo oscuro general */
+  /* Texto base en el tester es blanco */
+  --theme-text-primary: #ffffff; 
+  color: var(--theme-text-primary);
+}
+
+/* Cambiar el fondo del panel DENTRO del tester a gris */
+.directive-tester-preview .panel {
+  background-color: #555555 !important; /* Fondo gris medio, ¡importante para anular tema! */
+  /* El color del texto será heredado (blanco) desde .directive-tester-preview */
+  position: relative; /* Asegurar contexto de posicionamiento */
+}
+
+/* Estilos de ESQUINA específicos para el TESTER (alta especificidad) */
+.directive-tester-preview .panel .panel-corner {
+    /* Dejar solo lo esencial para posicionamiento y tamaño base en el tester */
+    position: absolute;
+    width: 25px; /* Tamaño base, el tema puede sobrescribirlo */
+    height: 25px;/* Tamaño base, el tema puede sobrescribirlo */
+    /* background-color: rgba(255, 0, 0, 0.7); */ /* ELIMINADO */
+    /* border: 1px solid white; */ /* ELIMINADO */
+    z-index: 10; 
+    pointer-events: none; 
+}
+
+/* Posiciones específicas EN EL TESTER */
+.directive-tester-preview .panel .corner-pos--top-left    { top: -5px; left: -5px; }
+.directive-tester-preview .panel .corner-pos--top-right   { top: -5px; right: -5px; }
+.directive-tester-preview .panel .corner-pos--bottom-left { bottom: -5px; left: -5px; }
+.directive-tester-preview .panel .corner-pos--bottom-right{ bottom: -5px; right: -5px; }
+
+/* Estilos visuales de esquinas para el tester fueron MOVIDOS a los archivos de tema/base */
+
+/* Puedes necesitar reglas más específicas si otros estilos interfieren */ 
