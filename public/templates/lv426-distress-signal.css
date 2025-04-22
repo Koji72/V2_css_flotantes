@@ -1,0 +1,615 @@
+/* ================================================== */
+/*      THEME: LV-426 Distress Signal (V2.6 Adapted) */
+/*      (Adaptado para SagaWeaver V2.6 Plugins)      */
+/* ================================================== */
+
+/* 0. IMPORTAR FUENTES */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&family=Share+Tech+Mono&family=Teko:wght@500;600&display=swap');
+
+/* 1. VARIABLES FUNDAMENTALES */
+:root {
+    /* Paleta Principal */
+    --lv426-bg: #1a201c; /* Gris oscuro verdoso */
+    --lv426-bg-alt: #101512; /* Casi negro verdoso */
+    --lv426-text: #c8d8c0; /* Blanco hueso verdoso */
+    --lv426-text-secondary: #708070; /* Gris verdoso medio */
+    --lv426-border: #507080; /* Azul acero desgastado */
+    --lv426-border-dark: #304050;
+    --lv426-border-fine: rgba(80, 112, 128, 0.4); /* Borde fino translúcido */
+
+    /* Acentos */
+    --acid-green: #90ff70; /* Verde ácido brillante */
+    --acid-green-dark: #60cc60;
+    --amber-alert: #ffaf00; /* Ámbar advertencia */
+    --amber-alert-dark: #cc8c00;
+    --biohazard-red: #ff3030; /* Rojo biopeligro */
+    --biohazard-red-dark: #b00000;
+
+    /* Tipografía */
+    --font-heading: 'Teko', sans-serif;
+    --font-body: 'Exo 2', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-base-size: 16px;
+
+    /* Métricas */
+    --spacing-unit: 8px;
+    --radius: 2px; /* Bordes ligeramente suavizados */
+    --border-width-fine: 1px;
+    --border-width-medium: 2px;
+    --border-width-heavy: 3px;
+
+    /* Sombras y Brillos */
+    --shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+    --shadow-outset: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --glow-acid: 0 0 6px var(--acid-green);
+    --glow-amber: 0 0 6px var(--amber-alert);
+    --glow-red: 0 0 8px var(--biohazard-red);
+}
+
+/* 2. ESTILOS BASE (Aplicados a .preview) */
+.preview {
+    background-color: var(--lv426-bg);
+    color: var(--lv426-text);
+    font-family: var(--font-body);
+    font-size: var(--font-base-size);
+    line-height: 1.65;
+    padding: calc(var(--spacing-unit) * 2);
+    margin: 0;
+    /* Fondo con rejilla */
+    background-image:
+        linear-gradient(rgba(144, 255, 112, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(144, 255, 112, 0.02) 1px, transparent 1px);
+    background-size: 25px 25px;
+    /* Heredar estilos base de App.css */
+    overflow-y: auto;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+/* Scrollbars */
+.preview::-webkit-scrollbar { width: 8px; height: 8px; }
+.preview::-webkit-scrollbar-track { background: var(--lv426-bg-alt); }
+.preview::-webkit-scrollbar-thumb { background: var(--lv426-border-dark); }
+.preview::-webkit-scrollbar-thumb:hover { background: var(--lv426-border); }
+
+/* 3. ELEMENTOS COMUNES (Dentro de .preview) */
+.preview h1, .preview h2, .preview h3,
+.preview h4:not(.panel-title), /* Excluir títulos de panel */
+.preview h5, .preview h6 {
+    font-family: var(--font-heading);
+    color: var(--lv426-text);
+    margin: calc(var(--spacing-unit) * 2.5) 0 calc(var(--spacing-unit) * 1) 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--lv426-border-fine);
+    padding-bottom: calc(var(--spacing-unit) * 0.5);
+}
+.preview h1 { font-size: 2.2em; color: var(--amber-alert); text-shadow: var(--glow-amber); border-color: var(--amber-alert-dark); }
+.preview h2 { font-size: 1.8em; }
+.preview h3 { font-size: 1.5em; color: var(--lv426-text-secondary); border-bottom-style: dashed; }
+/* h4 sin borde inferior por defecto, gestionado por panel-title si aplica */
+/* h5, h6 ocultos */
+.preview h5, .preview h6 { display: none; }
+
+.preview p { margin-bottom: calc(var(--spacing-unit) * 1.5); text-align: justify; }
+.preview a { color: var(--acid-green); text-decoration: underline dotted 1px; transition: color 0.2s; }
+.preview a:hover { color: var(--amber-alert); }
+.preview strong { font-weight: 600; color: var(--lv426-text); }
+.preview em { font-style: italic; color: var(--lv426-text-secondary); }
+
+/* Código y Pre */
+.preview code { /* Estilo para código inline */
+    font-family: var(--font-mono);
+    background-color: var(--lv426-bg-alt);
+    color: var(--acid-green);
+    padding: 0.1em 0.3em;
+    border-radius: var(--radius);
+    border: 1px solid var(--lv426-border-fine);
+}
+.preview pre code { /* Resetear para código dentro de pre */
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+.preview pre { /* Contenedor Pre */
+    padding: 0; /* Sin padding directo */
+    margin: var(--spacing-unit) 0;
+    overflow: hidden; /* Para que el border-radius afecte al hijo */
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-inset);
+    font-family: var(--font-mono); /* Asegurar fuente mono */
+}
+/* Aplicar estilos al div interno de SyntaxHighlighter */
+.preview pre > div { /* Asume que el hijo directo es el div de la librería */
+    margin: 0 !important;
+    padding: var(--spacing-unit) !important;
+    border: 1px solid var(--lv426-border-fine) !important;
+    /* El fondo lo pondrá vscDarkPlus o el tema de la librería */
+}
+
+/* Tablas */
+.preview table { width: 100%; border-collapse: collapse; margin: var(--spacing-unit) 0; background-color: var(--lv426-bg-alt); border: 1px solid var(--lv426-border); }
+.preview th, .preview td { padding: var(--spacing-unit); text-align: left; border: 1px solid var(--lv426-border-dark); }
+.preview th { background-color: #252d28; color: var(--amber-alert); font-family: var(--font-heading); text-transform: uppercase; font-weight: 500; }
+.preview tbody tr:nth-child(even) { background-color: rgba(144, 255, 112, 0.03); }
+.preview tbody tr:hover { background-color: rgba(255, 175, 0, 0.1); }
+
+/* Citas */
+.preview blockquote { border-left: 3px solid var(--amber-alert); padding: var(--spacing-unit) calc(var(--spacing-unit)*1.5); margin: var(--spacing-unit) 0; background-color: var(--lv426-bg-alt); color: var(--lv426-text-secondary); }
+
+/* Admoniciones GitHub (Asegurarse de que .preview tenga precedencia) */
+.preview .markdown-alert { border-left-width: 4px; padding: 0.5rem 1rem; margin: 1rem 0; border-radius: var(--radius); }
+.preview .markdown-alert-title { font-weight: bold; font-family: var(--font-heading); margin-bottom: 0.3rem; display: flex; align-items: center; }
+.preview .markdown-alert-title .icon { margin-right: 0.5rem; }
+.preview .markdown-alert-note { border-left-color: var(--lv426-border); background-color: rgba(80, 112, 128, 0.1); }
+.preview .markdown-alert-tip { border-left-color: #2f81f7; background-color: rgba(47, 129, 247, 0.1); }
+.preview .markdown-alert-important { border-left-color: #a371f7; background-color: rgba(163, 113, 247, 0.1); }
+.preview .markdown-alert-warning { border-left-color: var(--amber-alert); background-color: rgba(255, 175, 0, 0.1); }
+.preview .markdown-alert-caution { border-left-color: var(--biohazard-red); background-color: rgba(255, 48, 48, 0.1); }
+
+
+/* --- 4. PANELES :::PANEL (Adaptados a remarkCustomPanels) --- */
+.preview .panel { /* Estilo base para div.panel */
+    margin: calc(var(--spacing-unit) * 2) 0;
+    border: var(--border-width-fine) solid var(--lv426-border);
+    background-color: var(--lv426-bg-alt);
+    box-shadow: var(--shadow-outset);
+    border-radius: var(--radius);
+    position: relative; /* Para decoraciones */
+    overflow: hidden; /* Para contener decoraciones y clip-path */
+    padding: calc(var(--spacing-unit) * 1.5); /* Padding general */
+}
+.preview .panel-title { /* Estilo para h4.panel-title */
+    margin-top: calc(-1 * var(--spacing-unit) * 1.5); /* Compensar padding padre */
+    margin-left: calc(-1 * var(--spacing-unit) * 1.5);
+    margin-right: calc(-1 * var(--spacing-unit) * 1.5);
+    margin-bottom: calc(var(--spacing-unit) * 1.5); /* Espacio antes del contenido */
+    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+    border-bottom: 1px solid var(--lv426-border-dark);
+    background: linear-gradient(to bottom, rgba(80, 112, 128, 0.2), rgba(80, 112, 128, 0.05));
+    font-family: var(--font-heading);
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--amber-alert);
+    text-shadow: 0 0 4px var(--amber-alert);
+    border-top: none; /* Asegurar que no herede */
+    border-left: none;
+    border-right: none;
+    text-transform: uppercase; /* Heredado de h4, pero asegurar */
+    letter-spacing: 0.5px; /* Heredado de h4, pero asegurar */
+}
+/* Ocultar icono de tema anterior si existe */
+.preview .panel-title::before { display: none; }
+
+/* Estilos Semánticos (Aplicados con style=note, etc.) */
+/* Aplican borde izquierdo y ajustan fondo/color del título */
+.preview .panel-style--note { border-left: var(--border-width-heavy) solid var(--lv426-border); background-color: rgba(80, 112, 128, 0.05); }
+.preview .panel-style--note > .panel-title { color: var(--lv426-border); background: rgba(80, 112, 128, 0.1); border-bottom-color: var(--lv426-border); text-shadow: none; }
+
+.preview .panel-style--warning { border-left: var(--border-width-heavy) solid var(--amber-alert); background-color: rgba(255, 175, 0, 0.05); }
+.preview .panel-style--warning > .panel-title { color: var(--amber-alert); background: rgba(255, 175, 0, 0.1); border-bottom-color: var(--amber-alert-dark); }
+
+.preview .panel-style--success { border-left: var(--border-width-heavy) solid var(--acid-green); background-color: rgba(144, 255, 112, 0.05); }
+.preview .panel-style--success > .panel-title { color: var(--acid-green); background: rgba(144, 255, 112, 0.1); border-bottom-color: var(--acid-green-dark); text-shadow: var(--glow-acid); }
+
+.preview .panel-style--danger { border-left: var(--border-width-heavy) solid var(--biohazard-red); background-color: rgba(255, 48, 48, 0.05); }
+.preview .panel-style--danger > .panel-title { color: var(--biohazard-red); background: rgba(255, 48, 48, 0.1); border-bottom-color: var(--biohazard-red-dark); text-shadow: var(--glow-red); }
+
+/* info y muted adaptados */
+.preview .panel-style--info { border-left: var(--border-width-heavy) solid #507080; background-color: rgba(80, 112, 128, 0.05); }
+.preview .panel-style--info > .panel-title { color: #7090a0; background: rgba(80, 112, 128, 0.1); border-bottom-color: #507080; text-shadow: none; }
+
+.preview .panel-style--muted { border-left: var(--border-width-heavy) solid var(--lv426-text-secondary); background-color: rgba(112, 128, 112, 0.05); opacity: 0.8; }
+.preview .panel-style--muted > .panel-title { color: var(--lv426-text-secondary); background: rgba(112, 128, 112, 0.1); border-bottom-color: #506050; text-shadow: none; }
+
+
+/* Estilos Visuales/Estructurales Adaptados */
+.preview .panel-style--weyland-terminal {
+    border-color: var(--lv426-border);
+    background: var(--lv426-bg-alt) linear-gradient(rgba(255, 255, 255, 0.01), transparent);
+    box-shadow: var(--shadow-inset);
+    /* El título ya hereda color ámbar por defecto */
+}
+
+.preview .panel-style--quarantine-zone {
+    border-color: var(--lv426-border);
+    box-shadow: inset 0 0 0 2px var(--biohazard-red), var(--shadow-inset);
+    background-color: rgba(42, 29, 28, 0.5);
+}
+.preview .panel-style--quarantine-zone > .panel-title {
+    color: var(--biohazard-red);
+    text-shadow: var(--glow-red);
+    background: rgba(255, 48, 48, 0.1);
+    border-bottom-color: var(--biohazard-red-dark);
+}
+/* Icono ::before no se aplica a h4, se podría añadir al span si se genera */
+
+.preview .panel-style--xenomorph-bio {
+    border: none;
+    background: radial-gradient(ellipse at center, var(--lv426-bg-alt) 0%, var(--lv426-bg) 80%);
+    box-shadow: inset 0 0 15px rgba(144, 255, 112, 0.15);
+    border-radius: var(--radius);
+}
+.preview .panel-style--xenomorph-bio > .panel-title {
+    color: var(--acid-green);
+    text-shadow: var(--glow-acid);
+    border-bottom-color: rgba(144, 255, 112, 0.2);
+    background: transparent; /* Sin fondo de cabecera */
+}
+
+.preview .panel-style--medbay-screen {
+    border-color: var(--acid-green-dark);
+    background-color: var(--lv426-bg);
+    background-image: linear-gradient(rgba(144, 255, 112, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(144, 255, 112, 0.05) 1px, transparent 1px);
+    background-size: 15px 15px;
+}
+.preview .panel-style--medbay-screen > .panel-title {
+    color: var(--lv426-text);
+    font-family: var(--font-mono);
+    font-size: 1.1em;
+    background: rgba(144, 255, 112, 0.1);
+    border-bottom-color: var(--acid-green-dark);
+    text-shadow: none;
+}
+
+.preview .panel-style--distress-log {
+    border: 1px dotted var(--amber-alert);
+    background-color: var(--lv426-bg);
+    box-shadow: none;
+    color: var(--amber-alert); /* Color del texto del contenido */
+}
+.preview .panel-style--distress-log > .panel-title {
+    font-family: var(--font-mono);
+    color: var(--amber-alert);
+    background: transparent;
+    border-bottom-color: var(--amber-alert-dark);
+}
+/* Contenido interno ya usa fuente mono si es <pre> o <code> */
+
+.preview .panel-style--glass {
+    background-color: rgba(26, 32, 28, 0.75);
+    backdrop-filter: blur(4px) grayscale(0.2);
+    border: 1px solid rgba(200, 216, 192, 0.3);
+    box-shadow: 0 0 8px 1px rgba(200, 216, 192, 0.2);
+}
+.preview .panel-style--glass > .panel-title {
+    color: var(--lv426-text);
+    background: rgba(200, 216, 192, 0.05);
+    border-bottom-color: rgba(200, 216, 192, 0.3);
+    text-shadow: none;
+}
+
+/* Estilos de Marquesina Adaptados */
+/* tech-corners ahora usa los ::before/::after definidos en el CSS original */
+.preview .panel-style--tech-corners {
+    border: 1px solid var(--lv426-border);
+    padding: calc(var(--spacing-unit) * 2);
+    position: relative; /* Necesario para pseudo-elementos */
+}
+.preview .panel-style--tech-corners::before,
+.preview .panel-style--tech-corners::after {
+    content: ''; position: absolute; width: 18px; height: 18px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Cpolyline points='0,18 0,0 18,0' style='fill:none; stroke:%2390ff70; stroke-width:2.5' /%3E%3C/svg%3E"); /* Verde Ácido */
+    background-repeat: no-repeat; background-size: contain; filter: drop-shadow(0 0 3px var(--acid-green));
+}
+.preview .panel-style--tech-corners::before { top: 4px; left: 4px; }
+.preview .panel-style--tech-corners::after { bottom: 4px; right: 4px; transform: rotate(180deg); }
+
+.preview .panel-style--cut-corners {
+    --corner-cut-size: 12px;
+    clip-path: polygon( var(--corner-cut-size) 0%, calc(100% - var(--corner-cut-size)) 0%, 100% var(--corner-cut-size), 100% calc(100% - var(--corner-cut-size)), calc(100% - var(--corner-cut-size)) 100%, var(--corner-cut-size) 100%, 0% calc(100% - var(--corner-cut-size)), 0% var(--corner-cut-size) );
+    border: 1px solid var(--lv426-border-dark);
+    border-radius: 0; /* Quitar radius si se usa clip-path */
+}
+
+.preview .panel-style--corner-brackets {
+    position: relative;
+    border: 1px solid var(--lv426-border-dark);
+    padding: calc(var(--spacing-unit) * 2);
+}
+.preview .panel-style--corner-brackets::before,
+.preview .panel-style--corner-brackets::after {
+    content: ''; position: absolute; width: 15px; height: 15px; border-style: solid; border-color: var(--amber-alert); border-width: 0; box-shadow: 0 0 4px var(--amber-alert);
+}
+.preview .panel-style--corner-brackets::before { top: 5px; left: 5px; border-top-width: 2px; border-left-width: 2px; }
+.preview .panel-style--corner-brackets::after { bottom: 5px; right: 5px; border-bottom-width: 2px; border-right-width: 2px; }
+
+/* --- 5. DECORACIONES ::CORNER Y ::X-EDGE (Adaptados) --- */
+.preview .panel-corner, .preview .panel-edge {
+    position: absolute !important; /* Mantener !important si es necesario */
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* Posicionamiento de Esquinas (Usa variables CSS) */
+.preview .corner-pos--top-left { top: calc(-1 * var(--corner-offset, 1px)); left: calc(-1 * var(--corner-offset, 1px)); }
+.preview .corner-pos--top-right { top: calc(-1 * var(--corner-offset, 1px)); right: calc(-1 * var(--corner-offset, 1px)); }
+.preview .corner-pos--bottom-left { bottom: calc(-1 * var(--corner-offset, 1px)); left: calc(-1 * var(--corner-offset, 1px)); }
+.preview .corner-pos--bottom-right { bottom: calc(-1 * var(--corner-offset, 1px)); right: calc(-1 * var(--corner-offset, 1px)); }
+
+/* Tipos de Esquina LV-426 */
+.preview .corner-type-1 { /* Escuadra Verde Ácido */
+    width: 15px; height: 15px;
+    border-style: solid;
+    border-color: var(--acid-green);
+    border-width: 0;
+    filter: drop-shadow(var(--glow-acid));
+}
+.preview .corner-pos--top-left.corner-type-1 { border-top-width: 2px; border-left-width: 2px; }
+.preview .corner-pos--top-right.corner-type-1 { border-top-width: 2px; border-right-width: 2px; }
+.preview .corner-pos--bottom-left.corner-type-1 { border-bottom-width: 2px; border-left-width: 2px; }
+.preview .corner-pos--bottom-right.corner-type-1 { border-bottom-width: 2px; border-right-width: 2px; }
+
+.preview .corner-type-2 { /* Bloque Ámbar */
+    width: 10px; height: 10px; background-color: var(--amber-alert); box-shadow: var(--glow-amber);
+}
+
+.preview .corner-type-3 { /* Bloque Rojo (Animado) */
+     width: 10px; height: 10px; background-color: var(--biohazard-red); box-shadow: var(--glow-red); animation: pulse-alert 1.5s infinite;
+}
+
+.preview .corner-type-4 { /* Forma SVG Biomecánica */
+    width: 20px; height: 20px;
+    background-color: var(--acid-green); /* Color base */
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C5,0 5,5 10,5 C10,10 5,10 0,10 C0,5 0,0 0,0 Z' fill='black'/%3E%3C/svg%3E");
+    mask-size: contain;
+    mask-repeat: no-repeat;
+     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C5,0 5,5 10,5 C10,10 5,10 0,10 C0,5 0,0 0,0 Z' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+}
+
+/* Flips (Se aplican bien a Type 4) */
+.preview .corner-shape-flipped-h { transform: scaleX(-1); }
+.preview .corner-shape-flipped-v { transform: scaleY(-1); }
+.preview .corner-shape-flipped-h.corner-shape-flipped-v { transform: scale(-1, -1); }
+
+
+/* Posicionamiento de Bordes (Usa variables CSS) */
+.preview .edge-pos--top { top: calc(-1 * var(--edge-offset, 1px)); left: 50%; transform: translateX(-50%); width: var(--edge-span-width, 50%); max-width: 100%; }
+.preview .edge-pos--bottom { bottom: calc(-1 * var(--edge-offset, 1px)); left: 50%; transform: translateX(-50%); width: var(--edge-span-width, 50%); max-width: 100%; }
+.preview .edge-pos--left { left: calc(-1 * var(--edge-offset, 1px)); top: 50%; transform: translateY(-50%); height: var(--edge-span-height, 50%); max-height: 100%; }
+.preview .edge-pos--right { right: calc(-1 * var(--edge-offset, 1px)); top: 50%; transform: translateY(-50%); height: var(--edge-span-height, 50%); max-height: 100%; }
+
+/* Tipos de Borde LV-426 */
+.preview .edge-type-1 { /* Línea discontinua Ámbar */
+    height: 1px; /* Altura base para T/B */
+    width: var(--edge-span-width, 50%); /* Span controla ancho */
+    background: repeating-linear-gradient(to right, var(--amber-alert) 0, var(--amber-alert) 3px, transparent 3px, transparent 6px);
+}
+.preview .edge-pos--left.edge-type-1, .preview .edge-pos--right.edge-type-1 { /* Adaptar para vertical */
+     width: 1px; /* Ancho base para L/R */
+     height: var(--edge-span-height, 50%); /* Span controla alto */
+     background: repeating-linear-gradient(to bottom, var(--amber-alert) 0, var(--amber-alert) 3px, transparent 3px, transparent 6px);
+}
+
+.preview .edge-type-2 { /* Barra Verde Ácido */
+    height: 4px; /* Altura base para T/B */
+    width: var(--edge-span-width, 50%); /* Span controla ancho */
+    background: linear-gradient(to right, transparent, var(--acid-green), transparent);
+    filter: drop-shadow(0 0 3px var(--acid-green));
+    border-radius: 1px;
+}
+.preview .edge-pos--left.edge-type-2, .preview .edge-pos--right.edge-type-2 { /* Adaptar para vertical */
+     width: 4px; /* Ancho base para L/R */
+     height: var(--edge-span-height, 50%); /* Span controla alto */
+     background: linear-gradient(to bottom, transparent, var(--acid-green), transparent);
+}
+
+
+/* --- 6. LAYOUTS (Adaptados) --- */
+.preview .layout--left { /* Reemplaza float-left */
+    float: left; width: 48%;
+    margin-right: 2%; margin-bottom: var(--spacing-unit); clear: left;
+}
+.preview .layout--right { /* Reemplaza float-right */
+    float: right; width: 48%;
+    margin-left: 2%; margin-bottom: var(--spacing-unit); clear: right;
+}
+.preview .layout--center {
+    display: block; width: 80%; /* O el ancho deseado */
+    margin-left: auto; margin-right: auto;
+    margin-bottom: var(--spacing-unit);
+    float: none; clear: both;
+}
+.preview .clearfix::after { content: ""; display: table; clear: both; }
+
+/* --- 7. RESPONSIVE DESIGN --- */
+@media (max-width: 768px) {
+    .preview .layout--left, .preview .layout--right, .preview .layout--center {
+        float: none;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .preview { --font-base-size: 15px; }
+}
+
+/* --- 8. ANIMACIONES --- */
+@keyframes pulse-alert {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+.preview .animation--pulse { animation: pulse-alert 1.5s infinite ease-in-out; }
+
+/* --- NUEVOS ESTILOS LV-426 --- */
+
+.preview .panel-style--holographic {
+    border: 1px solid var(--acid-green-dark);
+    background: radial-gradient(ellipse at center, rgba(26, 32, 28, 0.7) 0%, rgba(16, 21, 18, 0.85) 100%);
+    box-shadow: inset 0 0 8px rgba(144, 255, 112, 0.2), 0 0 5px var(--acid-green);
+    backdrop-filter: blur(2px) brightness(0.9);
+    /* Añadir efecto scanlines sutil */
+    position: relative; /* Para el pseudo-elemento */
+    overflow: hidden;
+}
+.preview .panel-style--holographic::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(144, 255, 112, 0.05) 0%,
+        rgba(144, 255, 112, 0.05) 50%,
+        transparent 50%,
+        transparent 100%
+    );
+    background-size: 100% 4px; /* Altura de las scanlines */
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 1; /* Asegurar que esté sobre el fondo pero bajo el contenido */
+}
+.preview .panel-style--holographic > .panel-title {
+    color: var(--acid-green);
+    text-shadow: var(--glow-acid);
+    background: rgba(144, 255, 112, 0.1);
+    border-bottom-color: var(--acid-green-dark);
+    z-index: 2; /* Encima de las scanlines */
+    position: relative;
+}
+/* Contenido también necesita estar encima de las scanlines */
+.preview .panel-style--holographic > *:not(.panel-title) {
+    position: relative;
+    z-index: 2;
+}
+
+.preview .panel-style--cut-corner-lg {
+    --corner-cut-size-lg: 25px; /* Tamaño del corte más grande */
+    clip-path: polygon(
+        var(--corner-cut-size-lg) 0%, /* Corte arriba-izquierda */
+        100% 0%,
+        100% calc(100% - var(--corner-cut-size-lg)), /* Corte abajo-derecha */
+        calc(100% - var(--corner-cut-size-lg)) 100%,
+        0% 100%,
+        0% var(--corner-cut-size-lg) /* NO corte abajo-izquierda ni arriba-derecha */
+    );
+    border: 1px solid var(--lv426-border-dark);
+    border-radius: 0;
+    background-color: var(--lv426-bg-alt);
+}
+.preview .panel-style--cut-corner-lg > .panel-title {
+    /* Usar estilo de título por defecto o uno específico si se desea */
+    color: var(--amber-alert); /* Mantener título ámbar por defecto */
+    background: linear-gradient(to bottom, rgba(80, 112, 128, 0.2), rgba(80, 112, 128, 0.05));
+    border-bottom-color: var(--lv426-border-dark);
+}
+
+/* ------------------------------ */
+
+/* --- 5. DECORACIONES ::CORNER Y ::X-EDGE (Adaptados) --- */
+.preview .panel-corner, .preview .panel-edge {
+    position: absolute !important; /* Mantener !important si es necesario */
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* Posicionamiento de Esquinas (Usa variables CSS) */
+.preview .corner-pos--top-left { top: calc(-1 * var(--corner-offset, 1px)); left: calc(-1 * var(--corner-offset, 1px)); }
+.preview .corner-pos--top-right { top: calc(-1 * var(--corner-offset, 1px)); right: calc(-1 * var(--corner-offset, 1px)); }
+.preview .corner-pos--bottom-left { bottom: calc(-1 * var(--corner-offset, 1px)); left: calc(-1 * var(--corner-offset, 1px)); }
+.preview .corner-pos--bottom-right { bottom: calc(-1 * var(--corner-offset, 1px)); right: calc(-1 * var(--corner-offset, 1px)); }
+
+/* Tipos de Esquina LV-426 */
+.preview .corner-type-1 { /* Escuadra Verde Ácido */
+    width: 15px; height: 15px;
+    border-style: solid;
+    border-color: var(--acid-green);
+    border-width: 0;
+    filter: drop-shadow(var(--glow-acid));
+}
+.preview .corner-pos--top-left.corner-type-1 { border-top-width: 2px; border-left-width: 2px; }
+.preview .corner-pos--top-right.corner-type-1 { border-top-width: 2px; border-right-width: 2px; }
+.preview .corner-pos--bottom-left.corner-type-1 { border-bottom-width: 2px; border-left-width: 2px; }
+.preview .corner-pos--bottom-right.corner-type-1 { border-bottom-width: 2px; border-right-width: 2px; }
+
+.preview .corner-type-2 { /* Bloque Ámbar */
+    width: 10px; height: 10px; background-color: var(--amber-alert); box-shadow: var(--glow-amber);
+}
+
+.preview .corner-type-3 { /* Bloque Rojo (Animado) */
+     width: 10px; height: 10px; background-color: var(--biohazard-red); box-shadow: var(--glow-red); animation: pulse-alert 1.5s infinite;
+}
+
+.preview .corner-type-4 { /* Forma SVG Biomecánica */
+    width: 20px; height: 20px;
+    background-color: var(--acid-green); /* Color base */
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C5,0 5,5 10,5 C10,10 5,10 0,10 C0,5 0,0 0,0 Z' fill='black'/%3E%3C/svg%3E");
+    mask-size: contain;
+    mask-repeat: no-repeat;
+     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C5,0 5,5 10,5 C10,10 5,10 0,10 C0,5 0,0 0,0 Z' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+}
+
+/* Flips (Se aplican bien a Type 4) */
+.preview .corner-shape-flipped-h { transform: scaleX(-1); }
+.preview .corner-shape-flipped-v { transform: scaleY(-1); }
+.preview .corner-shape-flipped-h.corner-shape-flipped-v { transform: scale(-1, -1); }
+
+
+/* Posicionamiento de Bordes (Usa variables CSS) */
+.preview .edge-pos--top { top: calc(-1 * var(--edge-offset, 1px)); left: 50%; transform: translateX(-50%); width: var(--edge-span-width, 50%); max-width: 100%; }
+.preview .edge-pos--bottom { bottom: calc(-1 * var(--edge-offset, 1px)); left: 50%; transform: translateX(-50%); width: var(--edge-span-width, 50%); max-width: 100%; }
+.preview .edge-pos--left { left: calc(-1 * var(--edge-offset, 1px)); top: 50%; transform: translateY(-50%); height: var(--edge-span-height, 50%); max-height: 100%; }
+.preview .edge-pos--right { right: calc(-1 * var(--edge-offset, 1px)); top: 50%; transform: translateY(-50%); height: var(--edge-span-height, 50%); max-height: 100%; }
+
+/* Tipos de Borde LV-426 */
+.preview .edge-type-1 { /* Línea discontinua Ámbar */
+    height: 1px; /* Altura base para T/B */
+    width: var(--edge-span-width, 50%); /* Span controla ancho */
+    background: repeating-linear-gradient(to right, var(--amber-alert) 0, var(--amber-alert) 3px, transparent 3px, transparent 6px);
+}
+.preview .edge-pos--left.edge-type-1, .preview .edge-pos--right.edge-type-1 { /* Adaptar para vertical */
+     width: 1px; /* Ancho base para L/R */
+     height: var(--edge-span-height, 50%); /* Span controla alto */
+     background: repeating-linear-gradient(to bottom, var(--amber-alert) 0, var(--amber-alert) 3px, transparent 3px, transparent 6px);
+}
+
+.preview .edge-type-2 { /* Barra Verde Ácido */
+    height: 4px; /* Altura base para T/B */
+    width: var(--edge-span-width, 50%); /* Span controla ancho */
+    background: linear-gradient(to right, transparent, var(--acid-green), transparent);
+    filter: drop-shadow(0 0 3px var(--acid-green));
+    border-radius: 1px;
+}
+.preview .edge-pos--left.edge-type-2, .preview .edge-pos--right.edge-type-2 { /* Adaptar para vertical */
+     width: 4px; /* Ancho base para L/R */
+     height: var(--edge-span-height, 50%); /* Span controla alto */
+     background: linear-gradient(to bottom, transparent, var(--acid-green), transparent);
+}
+
+
+/* --- 6. LAYOUTS (Adaptados) --- */
+.preview .layout--left { /* Reemplaza float-left */
+    float: left; width: 48%;
+    margin-right: 2%; margin-bottom: var(--spacing-unit); clear: left;
+}
+.preview .layout--right { /* Reemplaza float-right */
+    float: right; width: 48%;
+    margin-left: 2%; margin-bottom: var(--spacing-unit); clear: right;
+}
+.preview .layout--center {
+    display: block; width: 80%; /* O el ancho deseado */
+    margin-left: auto; margin-right: auto;
+    margin-bottom: var(--spacing-unit);
+    float: none; clear: both;
+}
+.preview .clearfix::after { content: ""; display: table; clear: both; }
+
+/* --- 7. RESPONSIVE DESIGN --- */
+@media (max-width: 768px) {
+    .preview .layout--left, .preview .layout--right, .preview .layout--center {
+        float: none;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .preview { --font-base-size: 15px; }
+}
+
+/* --- 8. ANIMACIONES --- */
+@keyframes pulse-alert {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+.preview .animation--pulse { animation: pulse-alert 1.5s infinite ease-in-out; } 

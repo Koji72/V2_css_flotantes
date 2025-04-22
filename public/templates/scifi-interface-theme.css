@@ -1,0 +1,281 @@
+/* public/templates/scifi-interface-theme.css */
+/* Estilos extraídos y adaptados del ejemplo Sci-Fi Interface */
+
+/* Estilos base para el contenedor de vista previa */
+.preview {
+  background: linear-gradient(180deg, #0a0f1a 0%, #1a2333 100%);
+  color: #e0e6ed;
+  font-family: 'Courier New', monospace;
+  /* min-height: 100vh; */ /* Quitado, la altura la gestiona el layout de App.tsx */
+  overflow-x: hidden;
+  /* Imagen de fondo con rejilla */
+  background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  /* Asegurar que otros estilos base de .preview (padding, etc.) se mantengan si es necesario */
+  padding: 16px; /* Re-añadir padding base de App.css si se sobrescribe */
+  overflow-y: auto;
+  box-sizing: border-box;
+  height: 100%; /* Heredado de App.css */
+  line-height: 1.6; /* Heredado de App.css */
+}
+
+/* Estilos de Panel */
+.preview .panel {
+  border: 1px solid #00ffcc33; /* Cyan translúcido */
+  border-radius: 8px;
+  padding: 1.5rem; /* 24px */
+  margin: 1rem auto; /* 16px vertical, centrado horizontal por defecto */
+  position: relative;
+  background: rgba(10, 15, 26, 0.8); /* Fondo oscuro semitransparente */
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); /* Brillo cyan */
+  max-width: 800px; /* Ancho máximo para paneles */
+  color: #e0e6ed; /* Asegurar color de texto dentro del panel */
+}
+
+.preview .panel-title {
+  color: #00ffcc; /* Cyan */
+  font-size: 1.5rem; /* 24px */
+  margin-top: 0; /* Quitar margen superior por defecto de h4 */
+  margin-bottom: 1rem; /* 16px */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-family: 'Courier New', monospace; /* Asegurar fuente */
+  /* Quitar estilos que podrían venir de aegis-theme si se mezclan */
+  border-bottom: none;
+  text-shadow: none;
+}
+.preview .panel-title::before {
+    display: none; /* Ocultar icono por defecto si viene de otro tema */
+}
+
+
+/* Estilos específicos de panel */
+.preview .panel-style--holographic {
+  background: linear-gradient(45deg, rgba(0, 255, 204, 0.1), rgba(0, 102, 255, 0.1));
+  border: 2px solid #00ffcc66; /* Borde cyan más fuerte */
+  box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+}
+
+.preview .panel-style--tech-corners {
+  /* Usa clip-path para cortar esquinas */
+  clip-path: polygon(20px 0%, calc(100% - 20px) 0%, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0% calc(100% - 20px), 0% 20px);
+  border: 1px solid #00ffcc33; /* Mantener borde o ajustar si es necesario */
+  border-radius: 0; /* Quitar border-radius si se usa clip-path */
+}
+
+.preview .panel-style--cut-corner-lg {
+  /* Otro estilo de corte de esquina */
+  clip-path: polygon(40px 0%, 100% 0%, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0% 100%, 0% 40px);
+  border: 1px solid #00ffcc33;
+  border-radius: 0;
+}
+
+/* Layouts (Adaptados para funcionar con .preview) */
+.preview .layout--center {
+  margin-left: auto;
+  margin-right: auto;
+  float: none; /* Asegurar que no flote */
+  clear: both; /* Limpiar floats anteriores */
+}
+
+.preview .layout--left {
+  float: left;
+  margin-right: 1rem;
+  max-width: 400px; /* O ajustar según necesidad */
+  margin-bottom: 1rem; /* Espacio inferior */
+  /* display: flow-root; opcional para contener contenido interno */
+}
+
+.preview .layout--right {
+  float: right;
+  margin-left: 1rem;
+  max-width: 400px;
+  margin-bottom: 1rem;
+  /* display: flow-root; opcional */
+}
+
+/* Clearfix si se necesita para contener floats */
+.preview .clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Estilos de Esquina */
+.preview .panel-corner {
+  position: absolute !important; /* Mantener !important de base */
+  width: 40px; /* Tamaño base */
+  height: 40px;
+  z-index: 10; /* Mantener z-index */
+  pointer-events: none;
+  /* Usar variable --corner-offset definida por el plugin */
+}
+
+.preview .corner-pos--top-left {
+  top: var(--corner-offset, -1px) !important;
+  left: var(--corner-offset, -1px) !important;
+}
+.preview .corner-pos--top-right {
+  top: var(--corner-offset, -1px) !important;
+  right: var(--corner-offset, -1px) !important;
+}
+.preview .corner-pos--bottom-left {
+  bottom: var(--corner-offset, -1px) !important;
+  left: var(--corner-offset, -1px) !important;
+}
+.preview .corner-pos--bottom-right {
+  bottom: var(--corner-offset, -1px) !important;
+  right: var(--corner-offset, -1px) !important;
+}
+
+/* Estilos de esquina por tipo */
+/* Nota: El ejemplo tenía type=1, 2, 3, 4 pero solo definió 2 y 3. */
+/* Usaremos los tipos 2 y 3 definidos en el ejemplo. */
+/* Puedes añadir más o remapear a los números que prefieras. */
+
+.preview .corner-type-2 { /* Estilo Azul del ejemplo */
+  background: linear-gradient(45deg, #0066ff, transparent);
+  clip-path: polygon(0 0, 100% 0, 0 100%); /* Triángulo sup-izq */
+  box-shadow: 0 0 10px #0066ff;
+  width: 40px; /* Redefinir si es necesario */
+  height: 40px;
+}
+/* Ajustar clip-path por posición si es necesario para el tipo 2 */
+.preview .corner-pos--top-right.corner-type-2 { clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.preview .corner-pos--bottom-left.corner-type-2 { clip-path: polygon(0 0, 0 100%, 100% 100%); }
+.preview .corner-pos--bottom-right.corner-type-2 { clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+
+
+.preview .corner-type-3 { /* Estilo Ámbar del ejemplo */
+  background: #ffaa00;
+  clip-path: polygon(0 0, 80% 0, 0 80%); /* Triángulo diferente */
+  box-shadow: 0 0 10px #ffaa00;
+  width: 40px;
+  height: 40px;
+}
+/* Ajustar clip-path por posición si es necesario para el tipo 3 */
+.preview .corner-pos--top-right.corner-type-3 { clip-path: polygon(20% 0, 100% 0, 100% 80%); }
+.preview .corner-pos--bottom-left.corner-type-3 { clip-path: polygon(0 20%, 80% 100%, 0 100%); }
+.preview .corner-pos--bottom-right.corner-type-3 { clip-path: polygon(100% 20%, 100% 100%, 20% 100%); }
+
+
+/* Estilos de Borde */
+.preview .panel-edge {
+  position: absolute !important; /* Mantener !important */
+  z-index: 10; /* Mantener z-index */
+  pointer-events: none;
+  /* Usar variables --edge-offset, --edge-span-width/height definidas por el plugin */
+}
+
+/* Posicionamiento (Mantiene la lógica con transform y max-width/height) */
+.preview .edge-pos--top {
+  top: var(--edge-offset, -1px) !important;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 100%;
+}
+.preview .edge-pos--bottom {
+  bottom: var(--edge-offset, -1px) !important;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 100%;
+}
+.preview .edge-pos--left {
+  left: var(--edge-offset, -1px) !important;
+  top: 50%;
+  transform: translateY(-50%);
+  max-height: 100%;
+}
+.preview .edge-pos--right {
+  right: var(--edge-offset, -1px) !important;
+  top: 50%;
+  transform: translateY(-50%);
+  max-height: 100%;
+}
+
+/* Estilos de borde por tipo */
+/* El ejemplo definía type=1 */
+.preview .edge-type-1 {
+  /* Usar variables de span para width/height */
+  width: var(--edge-span-width, 60px); /* Fallback a 60px si no hay span */
+  height: var(--edge-span-height, 20px);/* Fallback a 20px si no hay span */
+  background: #0066ff; /* Azul */
+  clip-path: polygon(20% 0, 80% 0, 100% 100%, 0% 100%); /* Forma trapezoidal */
+  box-shadow: 0 0 8px #0066ff;
+}
+/* Ajustes para L/R edges si type=1 debe ser vertical */
+.preview .edge-pos--left.edge-type-1,
+.preview .edge-pos--right.edge-type-1 {
+  /* Si span controla height, definir width fijo y viceversa */
+   width: var(--edge-span-width, 20px); /* O un ancho fijo deseado */
+   height: var(--edge-span-height, 60px);
+   /* Ajustar clip-path si es necesario para vertical */
+   clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%);
+}
+
+/* Nuevo: Estilos para edge-type-2 (Ámbar para Alertas) */
+.preview .edge-type-2 {
+  /* Usar variables de span para width/height */
+  width: var(--edge-span-width, 50px); /* Fallback a 50px (barra) */
+  height: var(--edge-span-height, 5px);/* Fallback a 5px (barra) */
+  background: var(--amber-alert, #ffaa00); /* Usar variable si existe, fallback */
+  box-shadow: 0 0 6px var(--amber-alert, #ffaa00);
+  border-radius: 2px;
+  clip-path: none; /* Asegurar que no herede clip-path */
+}
+/* Ajustes para L/R edges type 2 */
+.preview .edge-pos--left.edge-type-2,
+.preview .edge-pos--right.edge-type-2 {
+   width: var(--edge-span-width, 5px); /* Ancho fijo vertical */
+   height: var(--edge-span-height, 50px); /* Span controla alto */
+   /* El background y shadow ya están definidos arriba */
+}
+
+/* Estilos generales Markdown dentro del preview */
+.preview h1, .preview h2, .preview h3,
+.preview h4:not(.panel-title), /* Evitar aplicar a títulos de panel */
+.preview h5, .preview h6 {
+  color: #00ffcc; /* Títulos en Cyan */
+   /* Puedes añadir otros estilos base de aegis-theme si los quieres mantener */
+   margin-top: 1.5em;
+   margin-bottom: 0.5em;
+   font-weight: 600;
+   border-bottom: 1px solid #00ffcc33;
+   padding-bottom: 0.3em;
+   font-family: 'Courier New', monospace;
+}
+.preview p, .preview li, .preview blockquote /* Estilos para otros elementos */ {
+   color: #e0e6ed;
+   font-family: 'Courier New', monospace;
+}
+/* Añadir aquí otros estilos base deseados para listas, enlaces, código, etc. */
+.preview a { color: #00aaff; }
+.preview code { background-color: rgba(0, 255, 204, 0.1); padding: 0.2em 0.4em; border-radius: 3px; font-family: monospace; }
+/* Resetear estilo para código que esté DENTRO de un pre (manejado por SyntaxHighlighter) */
+.preview pre code {
+    background-color: transparent;
+    padding: 0;
+}
+/* Modificar estilo de pre para no interferir con SyntaxHighlighter */
+.preview pre {
+  padding: 0; 
+  margin-bottom: 1em; 
+  border-radius: 4px; /* Mantener redondez en el contenedor */
+  overflow: hidden; /* Importante para que el border-radius afecte al hijo */
+  /* border: none; */ /* Asegurarse de que pre no tenga borde */
+}
+
+/* Nuevo: Estilo para el DIV envoltorio que hemos añadido */
+.preview pre > .code-block-wrapper {
+  border: 1px solid #00ffcc33; /* Borde cyan */
+  padding: 1em; /* Padding interior */
+  /* Heredará visualmente el border-radius del <pre> gracias a overflow: hidden */
+  background: transparent; /* Sin fondo propio */
+}
+
+/* Estilo para el div interno del SyntaxHighlighter (solo por si acaso) */
+.preview pre > .code-block-wrapper > div {
+   margin: 0 !important; /* Quitar márgenes internos de la librería */
+   /* No añadir borde ni padding aquí */
+} 

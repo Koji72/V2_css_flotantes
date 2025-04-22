@@ -313,12 +313,14 @@
   width: 48%; /* Ajustar ancho según necesidad */
   margin-right: 2%;
   margin-bottom: 20px; /* Espacio debajo si hay elementos después */
+  display: flow-root; /* Para contener el float */
 }
 .preview .layout--right {
   float: right;
   width: 48%;
   margin-left: 2%;
   margin-bottom: 20px;
+  display: flow-root; /* Para contener el float */
 }
 .preview .layout--center {
   display: block; /* O flex si se usa en contenedor flex */
@@ -326,6 +328,7 @@
   margin-right: auto;
   width: 70%; /* Ajustar ancho */
   float: none; /* Asegurar que no flote */
+  clear: both; /* Añadido para evitar solapamiento con floats anteriores */
 }
 
 /* Clearfix para contenedores con floats */
@@ -603,6 +606,22 @@
   pointer-events: none;
 }
 
+/* --- Ajuste Posicionamiento para Esquinas/Edges dentro de <details> --- */
+/* Empujar hacia abajo elementos superiores para compensar <summary> */
+/* Usar variable JS --summary-actual-height si está definida, fallback a 46px */
+.preview details[open].panel > .panel-corner[class*="corner-pos--top-"], 
+.preview details.panel > .panel-corner[class*="corner-pos--top-"] {
+  top: calc(var(--summary-actual-height, 46px) + var(--corner-offset, -1px)) !important; 
+}
+.preview details[open].panel > .panel-edge.edge-pos--top, 
+.preview details.panel > .panel-edge.edge-pos--top {
+  top: calc(var(--summary-actual-height, 46px) + var(--edge-offset, -1px)) !important; 
+}
+
+/* Los elementos inferiores (bottom) no deberían necesitar ajuste vertical */
+/* Los elementos laterales (left/right) pueden necesitar ajustes más complejos */
+/* si el % de altura se calcula mal, pero lo dejamos por ahora */
+
 /* --- Tipo 1: Stripes (Verde Aegis) --- */
 .preview .panel .corner-type-1 {
   background: repeating-linear-gradient(
@@ -793,36 +812,44 @@
 .preview .panel .edge-pos--top {
   top: var(--edge-offset, -1px) !important;
   left: 50%;
-  transform: translateX(-50%); /* Centrado H */
+  transform: translateX(-50%); /* Restaurado para centrar */
+  max-width: 100%; /* Limitar ancho */
 }
 .preview .panel .edge-pos--bottom {
   bottom: var(--edge-offset, -1px) !important;
   left: 50%;
-  transform: translateX(-50%); /* Centrado H */
+  transform: translateX(-50%); /* Restaurado para centrar */
+  max-width: 100%; /* Limitar ancho */
 }
 .preview .panel .edge-pos--left {
   left: var(--edge-offset, -1px) !important;
   top: 50%;
-  transform: translateY(-50%); /* Centrado V */
+  transform: translateY(-50%); /* Restaurado para centrar */
+  max-height: 100%; /* Limitar alto */
 }
 .preview .panel .edge-pos--right {
   right: var(--edge-offset, -1px) !important;
   top: 50%;
-  transform: translateY(-50%); /* Centrado V */
+  transform: translateY(-50%); /* Restaurado para centrar */
+  max-height: 100%; /* Limitar alto */
+}
+/* --- Ajuste Transform solo para Diamante en Top/Bottom --- */
+.preview .panel .edge-pos--top.edge-type-1,
+.preview .panel .edge-pos--bottom.edge-type-1 {
+   /* Combinar transformaciones: centrar y luego rotar */
+   transform: translateX(-50%) rotate(45deg); 
+   transform-origin: 50% 50%; /* Asegurar que rote sobre su centro */
 }
 
 /* --- Tipo 1 Edge: Diamante Azul (Estilo Base) --- */
 .preview .panel .edge-type-1 {
   /* Usar variables con fallback al tamaño fijo original */
-  width: var(--edge-span-width, 16px);
-  height: var(--edge-span-height, 16px);
+  /* width: var(--edge-span-width, 16px); */ /* Comentado - Reemplazado abajo */
+  /* height: var(--edge-span-height, 16px); */ /* Comentado - Reemplazado abajo */
+  width: var(--edge-span-width, 16px) !important;  /* Usar variable para ancho */
+  height: var(--edge-span-height, 16px) !important; /* Usar variable para alto */
   background-color: var(--aegis-accent-blue);
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-}
-/* Ajuste Transform solo para Diamante en Top/Bottom */
-.preview .panel .edge-pos--top.edge-type-1,
-.preview .panel .edge-pos--bottom.edge-type-1 {
-   transform: translateX(-50%) rotate(45deg); /* Mantener centrado H + Rotar */
 }
 /* No se necesita ajuste Transform extra para Diamante en Left/Right */
 /* .preview .panel .edge-pos--left.edge-type-1, */
@@ -837,20 +864,21 @@
 /* Barra Horizontal (Top/Bottom) */
 .preview .panel .edge-pos--top.edge-type-2,
 .preview .panel .edge-pos--bottom.edge-type-2 {
-  /* Usar variables con fallback al tamaño fijo original */
-  width: var(--edge-span-width, 50px); 
-  height: var(--edge-span-height, 4px);  
+  width: var(--edge-span-width, 50px) !important; /* Añadir !important */
+  height: var(--edge-span-height, 4px) !important;  /* Añadir !important */
   border-radius: 2px; 
+  background-color: var(--aegis-accent-green); /* Asegurar color de fondo */
+  clip-path: none !important; /* Resetear clip-path */
   /* Hereda transform: translateX(-50%) de la posición */
 }
 /* Doble Barra Vertical (Left/Right) */
 .preview .panel .edge-pos--left.edge-type-2,
 .preview .panel .edge-pos--right.edge-type-2 {
-  /* Usar variables con fallback al tamaño fijo original */
-  width: var(--edge-span-width, 4px);
-  height: var(--edge-span-height, 25px);
+  width: var(--edge-span-width, 4px) !important; /* Añadir !important */
+  height: var(--edge-span-height, 25px) !important; /* Añadir !important */
   background-color: transparent; /* El fondo lo ponen before/after */
   position: relative;
+  clip-path: none !important; /* Resetear clip-path */
   /* Hereda transform: translateY(-50%) de la posición */
 }
 .preview .panel .edge-pos--left.edge-type-2::before,

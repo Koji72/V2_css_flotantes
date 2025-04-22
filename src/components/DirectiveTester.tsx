@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -7,6 +7,7 @@ import remarkDirective from 'remark-directive';
 import remarkCustomPanels from '../utils/remarkCustomPanels'; 
 import remarkCornerDirectives from '../utils/remarkCornerDirectives';
 import remarkEnsureDirectiveBrackets from '../utils/remarkEnsureDirectiveBrackets';
+import remarkGithubBetaBlockquoteAdmonitions from 'remark-github-beta-blockquote-admonitions';
 // Podríamos necesitar importar otros si son dependencias, pero empezamos simple
 
 // Estilos básicos inline para separación
@@ -58,6 +59,7 @@ Más contenido.
 
 const DirectiveTester: React.FC = () => {
   const [testContent, setTestContent] = useState<string>(initialTestMarkdown);
+  const previewRef = useRef<HTMLDivElement>(null); // Ref para el div de preview
 
   // --- Configuración Experimental de Plugins --- 
   // Aquí combinamos los plugins como queremos que funcionen
@@ -65,9 +67,9 @@ const DirectiveTester: React.FC = () => {
     remarkGfm,
     remarkEnsureDirectiveBrackets,
     remarkDirective,
-    remarkCustomPanels,     // Procesar paneles PRIMERO
-    remarkCornerDirectives, // Procesar esquinas DESPUÉS
-    // Añadir otros si es necesario, ej. remarkGithubBetaBlockquoteAdmonitions
+    remarkCornerDirectives, // Procesar esquinas/bordes PRIMERO
+    remarkCustomPanels,     // Procesar paneles DESPUÉS
+    remarkGithubBetaBlockquoteAdmonitions
   ];
 
   const experimentalRehypePlugins = [
@@ -78,6 +80,35 @@ const DirectiveTester: React.FC = () => {
     // o espera un formato específico. Vamos a probar solo con rehypeRaw por simplicidad inicial.
     // Si necesitamos passThrough, lo añadiremos como [rehypeRaw, { passThrough: ... }] 
   ];
+
+  // Efecto para calcular y aplicar altura del summary
+  useEffect(() => {
+    if (previewRef.current) {
+      // QuerySelectorAll devuelve Element[], necesitamos indicar que son HTMLElement
+      const detailsElements: NodeListOf<Element> = previewRef.current.querySelectorAll('details.panel');
+      
+      detailsElements.forEach(detailsEl => {
+        // Asegurar que detailsEl es un HTMLElement antes de usar .style
+        if (!(detailsEl instanceof HTMLElement)) return;
+
+        // Asegurar que el elemento encontrado es HTMLElement para acceder a offsetHeight/style
+        const summaryEl = detailsEl.querySelector(':scope > summary'); // Buscar summary directo
+        // Asegurar que summaryEl es HTMLElement para acceder a .offsetHeight
+        if (summaryEl instanceof HTMLElement) { 
+          const summaryHeight = summaryEl.offsetHeight;
+          // Aplicar la altura como variable CSS al elemento <details>
+          // detailsEl ya sabemos que es HTMLElement
+          detailsEl.style.setProperty('--summary-actual-height', `${summaryHeight}px`);
+           // console.log(`Applied --summary-actual-height: ${summaryHeight}px to`, detailsEl);
+        } else {
+            // Limpiar variable si no hay summary (raro, pero por si acaso)
+             // detailsEl ya sabemos que es HTMLElement
+             detailsEl.style.removeProperty('--summary-actual-height');
+        }
+      });
+    }
+    // Ejecutar cada vez que el contenido del preview cambie
+  }, [testContent]);
 
   return (
     <div style={styles.container}>
@@ -90,7 +121,7 @@ const DirectiveTester: React.FC = () => {
         placeholder="Escribe Markdown aquí..."
       />
       <h2>Vista Previa (Configuración Experimental):</h2>
-      <div style={styles.preview} className="directive-tester-preview">
+      <div ref={previewRef} style={styles.preview} className="directive-tester-preview">
         <ReactMarkdown
           remarkPlugins={experimentalRemarkPlugins}
           rehypePlugins={experimentalRehypePlugins}

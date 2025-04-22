@@ -3,7 +3,6 @@ import { visit } from 'unist-util-visit';
 import type { Root, Parent, Content, Text, Paragraph } from 'mdast';
 import type { ContainerDirective } from 'mdast-util-directive';
 import type { Plugin } from 'unified';
-// Ya no necesitamos h
 
 const remarkCustomPanels: Plugin<[], Root> = () => {
   return (tree) => {
@@ -42,10 +41,11 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
             },
             children: [{ type: 'text', value: title }]
           };
-          node.children = node.children ? [titleMdastNode, ...node.children] : [titleMdastNode];
+           const currentChildren: Content[] = node.children || [];
+           node.children = [titleMdastNode, ...currentChildren];
         } 
 
-        // Limpieza del ::: final 
+        // Limpieza del ::: final (Versión original)
         if (node.children && node.children.length > 0) {
           const numChildren = node.children.length;
           const startIndex = Math.max(0, numChildren - 3);

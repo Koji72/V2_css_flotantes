@@ -68,3 +68,33 @@ Para añadir estilos a un nuevo componente:
 ## Consideraciones para el desarrollador
 
 El archivo `App.css` original se ha mantenido como respaldo en `App.css.bak`, pero ya no se utiliza en la aplicación. Todos los estilos ahora se cargan desde el sistema modular. 
+
+.preview a { color: #00aaff; }
+/* Estilo para código inline (fuera de pre) */
+.preview code {
+    background-color: rgba(0, 255, 204, 0.1);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: monospace;
+}
+/* Resetear estilo para código que esté DENTRO de un pre (manejado por SyntaxHighlighter) */
+.preview pre code {
+    background-color: transparent;
+    padding: 0;
+}
+/* Modificar estilo de pre para no interferir con SyntaxHighlighter */
+.preview pre {
+  padding: 0;
+  margin-bottom: 1em;
+  border-radius: 4px; /* Mantener redondez en el contenedor */
+  overflow: hidden; /* Importante para que el border-radius afecte al hijo */
+}
+/* Estilo específico para el div DIRECTAMENTE dentro del pre */
+/* .preview pre > div[data-language] { */ /* Selector anterior incorrecto */
+.preview pre > div { /* Selector corregido */
+    margin: 0 !important; /* Sobrescribir márgenes por defecto */
+    /* border-radius: 4px; */ /* No es necesario aquí si pre tiene overflow:hidden y border-radius */
+    border: 1px solid #00ffcc33 !important; /* Aplicar borde aquí, !important */
+    padding: 1em !important; /* Aplicar nuestro padding deseado, !important */
+    /* El fondo (background-color) lo pondrá vscDarkPlus */
+} 

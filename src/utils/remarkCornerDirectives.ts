@@ -29,28 +29,36 @@ function isDirective(node: Node): node is DirectiveNode {
  */
 export default function remarkCornerDirectives() {
   return (tree: Root) => {
-    // console.log("AST ANTES de remarkCornerDirectives:", JSON.stringify(tree, null, 2));
+    // console.log("AST entrando a remarkCornerDirectives:", JSON.stringify(tree, null, 2)); 
 
     visit(tree, (node, index, parent: Parent | undefined) => {
       // Lista de directivas que procesamos
       const directiveNames = ['corner', 'T-edge', 'B-edge', 'L-edge', 'R-edge'];
       
       if (isDirective(node) && directiveNames.includes(node.name)) {
+        // console.log(`[remarkCornerDirectives] Procesando directiva: ${node.name}`, node); 
         const directiveNode = node;
         const attributes = directiveNode.attributes || {};
 
         // --- Lógica Común: Leer y Validar Atributos --- 
         let typeValue = attributes.type || '1';
         let offsetValue = 1; // Default offset for edge compensation
-        const flip = attributes.flip === 'true';
+        // No flip support (obsolete)
         const flipH = attributes.flipH === 'true';
         const flipV = attributes.flipV === 'true';
-        let spanValue: number | null = null;
+        // No span support in this reverted version
 
-        // Validar typeValue
-        if (!/^[1-9]\d*$/.test(typeValue)) {
-          console.warn(`[${directiveNode.name}] Tipo inválido '${typeValue}'. Se usará tipo '1'. Atributos:`, attributes);
-          typeValue = '1';
+        let spanValue: string | null = null; // Ahora guardamos el string con unidad
+
+        // Validar typeValue - Usar parseInt para una validación numérica más robusta
+        let parsedTypeValue = parseInt(typeValue, 10);
+        if (isNaN(parsedTypeValue) || parsedTypeValue <= 0) {
+          console.warn(`[${directiveNode.name}] Tipo inválido '${typeValue}'. Se usará tipo '1'. Debe ser un entero positivo. Atributos:`, attributes);
+          typeValue = '1'; // Mantener typeValue como string para la clase CSS
+          // Podríamos querer resetear parsedTypeValue aquí también si se usa después
+        } else {
+           // Si es válido, mantenemos el typeValue original (como string)
+           // No necesitamos hacer nada aquí, typeValue ya tiene el valor correcto.
         }
 
         // Leer y validar offset
@@ -64,13 +72,23 @@ export default function remarkCornerDirectives() {
           }
         }
 
-        // Leer y validar span (para Edges)
-        if (attributes.span && ['T-edge', 'B-edge', 'L-edge', 'R-edge'].includes(directiveNode.name)) {
-          const parsedSpan = parseFloat(attributes.span);
-          if (!isNaN(parsedSpan) && parsedSpan >= 0 && parsedSpan <= 100) {
-            spanValue = parsedSpan;
+        // Leer y validar span (solo para edges) - Ahora acepta px o %
+        if (['T-edge', 'B-edge', 'L-edge', 'R-edge'].includes(directiveNode.name) && attributes.span) {
+          const rawSpan = attributes.span.trim();
+          if (rawSpan.endsWith('%')) {
+            const percentValue = parseFloat(rawSpan.substring(0, rawSpan.length - 1));
+            if (!isNaN(percentValue) && percentValue > 0 && percentValue <= 100) {
+              spanValue = rawSpan; // Guardar como string con %
+            } else {
+              console.warn(`[${directiveNode.name}] Span inválido '${attributes.span}'. Debe ser un porcentaje válido (0-100%). Se ignorará.`, attributes);
+            }
           } else {
-            console.warn(`[${directiveNode.name}] Span inválido '${attributes.span}'. Se usará tamaño por defecto. Debe ser número entre 0 y 100. Atributos:`, attributes);
+            const pixelValue = parseInt(rawSpan, 10);
+            if (!isNaN(pixelValue) && pixelValue > 0) {
+              spanValue = `${pixelValue}px`; // Guardar como string con px
+            } else {
+              console.warn(`[${directiveNode.name}] Span inválido '${attributes.span}'. Debe ser un entero positivo (px) o un porcentaje (%). Se ignorará.`, attributes);
+            }
           }
         }
 
@@ -83,7 +101,7 @@ export default function remarkCornerDirectives() {
 
         if (directiveNode.name === 'corner') {
           const position = attributes.pos || 'top-left';
-          offsetVarName = '--corner-offset'; // Confirm variable name
+          offsetVarName = '--corner-offset'; 
           classNames = `panel-corner corner-pos--${position} corner-type-${typeValue}`;
           if (flipH) {
             classNames += ' corner-shape-flipped-h';
@@ -106,28 +124,29 @@ export default function remarkCornerDirectives() {
         }
 
         hProperties.className = classNames;
-        // Establecer variable de offset (siempre negativa)
-        hProperties.style = `${offsetVarName}: ${-offsetValue}px;`; 
-
-        // Añadir variable de span si existe y es válida
+        // Construir el string de estilo
+        let styleString = `${offsetVarName}: ${-offsetValue}px;`;
+        // if (spanValue !== null && ['T-edge', 'B-edge', 'L-edge', 'R-edge'].includes(directiveNode.name)) {
+        //   styleString += ` --edge-span-width: ${spanValue}px; --edge-span-height: ${spanValue}px;`;
+        // }
+        // --- Asignar Span correctamente --- 
         if (spanValue !== null) {
           if (['T-edge', 'B-edge'].includes(directiveNode.name)) {
-            hProperties.style += ` --edge-span-width: ${spanValue}%;`;
+            // Bordes Horizontales: span controla el width
+            styleString += ` --edge-span-width: ${spanValue};`; // Usar spanValue (que ya tiene px o %)
           } else if (['L-edge', 'R-edge'].includes(directiveNode.name)) {
-            hProperties.style += ` --edge-span-height: ${spanValue}%;`;
+            // Bordes Verticales: span controla el height
+            styleString += ` --edge-span-height: ${spanValue};`; // Usar spanValue (que ya tiene px o %)
           }
+          // Nota: Si un tipo de borde específico necesita controlar ambos, 
+          // se podría añadir lógica adicional aquí o manejarlo puramente en CSS.
         }
+        hProperties.style = styleString;
 
-        // Limpiar hijos (importante para leaf/text directives)
+        // Limpiar hijos 
         directiveNode.children = [];
-
-        // Prevenir visitar los hijos de esta directiva (ya procesada)
-        // return SKIP; // <-- Descomentar si se usa sintaxis de contenedor :::edge::: 
-                     //     Comentado si se usa sintaxis ::edge 
       }
     });
-
-    // console.log("AST DESPUÉS de remarkCornerDirectives:", JSON.stringify(tree, null, 2));
   };
 }
 

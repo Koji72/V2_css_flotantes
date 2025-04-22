@@ -624,4 +624,98 @@
     /* background-color: rgba(var(--aegis-accent-blue-rgb, 0, 160, 255), 0.3); /* Fondo ligeramente más destacado */
     /* color: var(--aegis-accent-blue); */ /* Color de acento si se prefiere */
     /* No es necesario estilo adicional si ya está en negrita */
+}
+
+/* === Estilos para Paneles Colapsables (<details>) === */
+/* Aplicados dentro de .preview para especificidad */
+
+.preview details.panel {
+  display: block; /* Asegurar comportamiento de bloque */
+  margin-bottom: 1em; /* Mantener margen inferior como los divs */
+  /* Los estilos base de .panel (borde, fondo, padding) se aplican igual */
+  padding: 0; /* Resetear padding para que solo afecte al contenido, no al summary */
+}
+
+.preview details.panel > summary {
+  display: block; /* Necesario para controlar el marcador */
+  cursor: pointer;
+  user-select: none;
+  padding: 10px 20px; /* Padding para el área clickeable del título */
+  /* Aplicar aquí estilos que antes iban al .panel-title si es necesario */
+  /* Por ejemplo, si el .panel-title tenía un borde inferior: */
+   border-bottom: 1px solid var(--border-color); 
+  margin-bottom: 0; /* Evitar doble margen si el título tenía margen */
+  list-style: none; /* Ocultar marcador por defecto si se prefiere */
+}
+
+/* Estilo opcional para el marcador (triángulo) */
+.preview details.panel > summary::before {
+  content: '▶'; /* Marcador simple */
+  display: inline-block;
+  margin-right: 0.5em;
+  font-size: 0.8em;
+  transition: transform 0.2s ease-in-out;
+}
+
+.preview details[open].panel > summary::before {
+  transform: rotate(90deg);
+}
+
+/* Para el contenido dentro de <details> */
+.preview details.panel > *:not(summary) {
+   padding: 20px; /* Aplicar padding al contenido, no al details */
+}
+
+/* Ajuste para que el .panel-title (h4) dentro de summary ocupe todo */
+.preview details.panel > summary > .panel-title {
+    display: inline; /* O block si se quiere que ocupe toda la línea */
+    margin: 0; /* Resetear márgenes del h4 */
+    padding: 0; /* Resetear padding del h4 */
+    border: none; /* Quitar borde si lo tenía el h4 */
+    text-shadow: none; /* Quitar sombra si la tenía */
+}
+
+/* --- Fin Estilos Colapsables --- */
+
+/* Utilidades */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.resizer {
+  width: 5px; /* Ancho mínimo para poder clickear */
+  background-color: var(--aegis-border-medium, #555); /* Usar variable si existe, fallback a gris */
+  cursor: col-resize; /* Cursor para indicar que se puede arrastrar */
+  flex-shrink: 0; /* Evitar que se encoja en el layout flex */
+  z-index: 10; /* Asegurar que esté por encima de los paneles */
+  transition: background-color 0.2s ease;
+}
+
+.resizer:hover {
+  background-color: var(--aegis-accent-blue, #888); /* Usar variable si existe, fallback a gris claro */
+}
+
+/* Asegurar que el contenedor flex funcione */
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+.h-full {
+  height: 100%;
 } 

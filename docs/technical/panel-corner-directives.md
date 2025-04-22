@@ -1,35 +1,57 @@
-# Documento Técnico: Interacción Panel/Corner Directives (v1.1 - 2023-11-XX)
+# Notas Técnicas: Implementación de Directivas Panel/Corner
 
-## 1. Objetivo
+Este documento detalla el proceso de desarrollo, los desafíos encontrados y las soluciones implementadas para el sistema de directivas `::panel` y `::corner` en Universal Scribe V2.6, específicamente en lo referente a las decoraciones de esquina.
 
-Implementar y depurar la interacción entre las directivas `:::panel` y `::corner` para añadir decoraciones visuales en las esquinas de los paneles.
+## Objetivo Inicial
 
-## 2. Entorno de Pruebas
+El objetivo era permitir a los usuarios añadir decoraciones visuales (esquinas) a los paneles (`::panel`) mediante una sintaxis Markdown simple (`::corner`), permitiendo configurar la posición y el tipo de decoración.
 
-Se utilizó un componente dedicado (`src/components/DirectiveTester.tsx`) con `react-markdown`, los plugins relevantes (`remarkDirective`, `remarkCustomPanels`, `remarkCornerDirectives`, `rehypeRaw`, etc.) y estilos específicos en `src/index.css` para aislamiento y visibilidad.
+## Desarrollo y Desafíos
 
-## 3. Proceso y Hallazgos
+### 1. Procesamiento Básico de Directivas
 
-1.  **Generación HTML:** Confirmado que `remarkCornerDirectives` generaba `<div>` con clases correctas.
-2.  **Conflicto CSS Inicial:** Estilos base en `public/css/base-corners.css` (con selector `.preview .panel .panel-corner`) impedían la aplicación de estilos de depuración menos específicos.
-3.  **Solución CSS (Tester):** Se usó un selector más específico (`.directive-tester-preview .panel .panel-corner`) en `src/index.css` para aplicar estilos de posicionamiento y depuración (cuadrados rojos) dentro del tester.
-4.  **Problema Renderizado Múltiple/Plugin:** Se detectaron problemas donde solo se renderizaba una esquina o aparecía texto residual (`::`/`:::`), además de errores con `rehype-raw` al intentar *reemplazar* nodos.
-5.  **Solución Plugin:** Se refactorizó `remarkCornerDirectives` para *modificar el nodo directiva existente in-place* (estableciendo `node.data.hName`, `node.data.hProperties`, `node.children = []`) en lugar de reemplazarlo. El orden de ejecución (`remarkCustomPanels` antes que `remarkCornerDirectives`) también se probó, aunque la modificación in-place fue la solución clave.
-6.  **Solución Sintaxis:** Se descubrió que la combinación funcional es:
-    *   Panel: `:::panel{title="..."} ... :::` (Contenedor)
-    *   Esquina: `::corner{pos="..." type="..."}` (Hoja, sin contenido ni cierre explícito).
-7.  **Implementación Estilo Visual:** Se implementó el estilo para `corner-type--stripes` (rayas diagonales) directamente en `src/index.css` usando el selector específico del tester (`.directive-tester-preview .panel .panel-corner.corner-type--stripes`) para asegurar su aplicación sobre los estilos base.
+*   Se crearon plugins de `remark` (`remarkCustomPanels.ts`, `remarkCornerDirectives.ts`) para transformar las directivas Markdown en elementos HTML (`<div>`) con clases CSS apropiadas.
+*   Se usó `unist-util-visit` para recorrer el AST y `hastscript` (implícitamente a través de `data.hName` y `data.hProperties`) para definir las propiedades del HTML resultante.
 
-## 4. Estado Funcional (en DirectiveTester)
+### 2. Problemas de Posicionamiento (`position: absolute`)
 
-- **Sintaxis:** `:::panel` (contenedor) y `::corner` (hoja) funcionan.
-- **Plugins:** La configuración actual (modificación in-place, orden `Panels`->`Corners`) es correcta.
-- **CSS:** Los estilos de posicionamiento y visuales (`stripes`) están definidos en `src/index.css` con especificidad para el tester.
-- **Resultado:** Las cuatro esquinas `stripes` se visualizan correctamente en el panel dentro del `DirectiveTester`.
+*   **Problema:** Las esquinas generadas (`.panel-corner`) con `position: absolute` aparecían fuera de lugar o apiladas.
+*   **Diagnóstico:** El elemento padre (`.panel`) no tenía establecido `position: relative`, por lo que las esquinas se posicionaban relativas a un ancestro superior.
+*   **Solución:** Se aseguró que la regla CSS `.preview .panel` incluyera `position: relative;`.
 
-## 5. Próximos Pasos
+### 3. Desalineación con Bordes (`offset`)
 
-- **Refactorizar/Mover Estilos Visuales:** Decidir la ubicación final de los estilos `.corner-type--...` (¿`base-corners.css` o archivos de tema como `michael_noir.css`?) y ajustar los selectores (ej., usando `.preview` si se mueven a temas).
-- **Implementar Otros Tipos:** Crear estilos para otros `corner-type` (ej., `dots`, `solid`).
-- **Pruebas de Integración:** Desactivar `DirectiveTester` y probar la funcionalidad en la `App` principal usando un tema (ej., `michael_noir`).
-- **Documentación Usuario:** Crear guía sobre cómo usar las directivas `::corner`.
+*   **Problema:** Incluso con el posicionamiento absoluto correcto, las esquinas (`top: 0`, `left: 0`, etc.) se alineaban con el borde *interior* del padding del panel, quedando visualmente *dentro* del borde del panel (ej: `border: 1px solid ...`).
+*   **Solución:**
+    1.  Se intentó ajustar manually con valores fijos (`top: -1px`).
+    2.  Se implementó un atributo `offset` en la directiva `::corner{offset=N}`.
+    3.  El plugin `remarkCornerDirectives` lee `offset`, calcula el valor negativo (`-Npx` o `-1px` por defecto) y lo pasa al elemento HTML como una variable CSS (`style="--corner-offset: -Npx;"`).
+    4.  El CSS utiliza `var(--corner-offset, -1px)` para las propiedades `top`, `left`, `bottom`, `right`, empujando la esquina hacia afuera.
+
+### 4. Problemas de Orientación (`clip-path` y Gradientes)
+
+*   **Problema:** Al definir formas con `clip-path` para las esquinas (ej: `type=stripes`), las esquinas izquierdas no eran un espejo visual correcto de las derechas. Las rayas diagonales del `background` (gradiente) aparecían invertidas.
+*   **Soluciones Iterativas:**
+    1.  Se intentó usar `transform: scaleX(-1)` en el CSS, pero no dio el resultado esperado con `clip-path`.
+    2.  Se intentó ajustar manualmente los polígonos `clip-path` para crear espejos, lo cual resultó complejo y propenso a errores visuales.
+    3.  **Solución Final:** Se introdujeron controles explícitos en la directiva:
+        *   `flip=true`: Controla la inversión del *estilo visual* (ej: la dirección del gradiente). El plugin añade la clase `.corner-flipped`. El CSS define una regla `.corner-type-N.corner-flipped` que sobreescribe solo las propiedades visuales (ej: `background`).
+        *   `flipH=true`: Controla la inversión *horizontal* de la *forma*. El plugin añade `.corner-shape-flipped-h`. El CSS define reglas `.corner-pos-....corner-type-N.corner-shape-flipped-h` con el `clip-path` invertido horizontalmente.
+        *   `flipV=true`: Controla la inversión *vertical* de la *forma*. El plugin añade `.corner-shape-flipped-v`. El CSS define reglas `.corner-pos-....corner-type-N.corner-shape-flipped-v` con el `clip-path` invertido verticalmente.
+
+### 5. Especificidad CSS (`!important`)
+
+*   **Problema:** Las reglas CSS para las formas invertidas (`.corner-shape-flipped-h`, `.corner-shape-flipped-v`) no sobreescribían la regla base del `clip-path` debido a insuficiente especificidad.
+*   **Solución:** Se añadió `!important` a las declaraciones `clip-path` dentro de las reglas de inversión de forma (`.corner-shape-flipped-h`, `.corner-shape-flipped-v`, y la combinación H+V) para asegurar que tuvieran prioridad. También se usó `!important` en el posicionamiento (`top`, `left`, etc.) para asegurar la consistencia del offset.
+
+### 6. Tipos Numéricos
+
+*   Se refactorizó el atributo `type` para aceptar números (`type=1`, `type=2`...) en lugar de strings (`type=stripes`). El plugin añade la clase `corner-type-N`. El CSS define los estilos para cada `.corner-type-N`.
+
+### 7. Depuración Aislada
+
+*   Se creó el componente `DirectiveTester.tsx` para probar las directivas y plugins en un entorno aislado, evitando romper la aplicación principal durante la experimentación con la lógica compleja de AST y CSS.
+
+## Estado Actual
+
+El sistema actual permite definir tipos de esquina numéricos, controlar su posición, añadir un offset para empujarlas fuera del borde, invertir su estilo visual (ej: gradiente) e invertir su forma geométrica (`clip-path`) horizontal y/o verticalmente mediante atributos en la directiva Markdown.

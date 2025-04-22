@@ -79,7 +79,9 @@ const themeFiles = [
   'michael_noir.css',
   'purple_neon_grid.css',
   'infinitycommand.css',
-  'default.css'
+  'default.css',
+  'scifi-interface-theme.css',
+  'lv426-distress-signal.css'
 ];
 
 const App: React.FC = () => {
@@ -662,13 +664,18 @@ const App: React.FC = () => {
                   const language = match?.[1];
                   if (!inline && language) {
                     return (
-                      <SyntaxHighlighter
-                        style={vscDarkPlus}
-                        language={language}
-                        PreTag="div"
-                      >
-                        {String(children).replace(/\n$/, '')}
-                      </SyntaxHighlighter>
+                      <div className="code-block-wrapper">
+                        <SyntaxHighlighter
+                          style={vscDarkPlus}
+                          language={language}
+                          PreTag="div"
+                          customStyle={{
+                            margin: '0',
+                          }}
+                        >
+                          {String(children).replace(/\n$/, '')}
+                        </SyntaxHighlighter>
+                      </div>
                     );
                   } else {
                     const finalClassName = inline ? undefined : className;
