@@ -644,7 +644,7 @@
 
 /* --- Formas INVERTIDAS V (MÁS ESPECÍFICO) --- */
 .preview .panel .corner-pos--top-left.corner-type-1.corner-shape-flipped-v {
-  clip-path: polygon(0 0, 100% 0, 0 100%) !important; /* Ajustado a 100% */
+  clip-path: polygon(0 100%, 40% 100%, 100% 0, 0 0) !important; 
 }
 .preview .panel .corner-pos--bottom-left.corner-type-1.corner-shape-flipped-v {
   clip-path: polygon(0 0, 40% 0, 100% 100%, 0% 100%) !important; /* Espejo V de TL (Base TL) */
@@ -775,4 +775,100 @@
   bottom: var(--corner-offset, -1px) !important;
   right: var(--corner-offset, -1px) !important;
   clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
-} 
+}
+
+/* === Estilos para Edges (T-edge, B-edge, L-edge, R-edge) === */
+
+/* --- Base para Edges --- */
+.preview .panel .panel-edge {
+  position: absolute !important;
+  width: 20px; 
+  height: 20px;
+  z-index: 1;
+  pointer-events: none;
+  transform-origin: center center;
+}
+
+/* --- Posicionamiento Edges (Separado de Tipo) --- */
+.preview .panel .edge-pos--top {
+  top: var(--edge-offset, -1px) !important;
+  left: 50%;
+  transform: translateX(-50%); /* Centrado H */
+}
+.preview .panel .edge-pos--bottom {
+  bottom: var(--edge-offset, -1px) !important;
+  left: 50%;
+  transform: translateX(-50%); /* Centrado H */
+}
+.preview .panel .edge-pos--left {
+  left: var(--edge-offset, -1px) !important;
+  top: 50%;
+  transform: translateY(-50%); /* Centrado V */
+}
+.preview .panel .edge-pos--right {
+  right: var(--edge-offset, -1px) !important;
+  top: 50%;
+  transform: translateY(-50%); /* Centrado V */
+}
+
+/* --- Tipo 1 Edge: Diamante Azul (Estilo Base) --- */
+.preview .panel .edge-type-1 {
+  width: 16px;
+  height: 16px;
+  background-color: var(--aegis-accent-blue);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+/* Ajuste Transform solo para Diamante en Top/Bottom */
+.preview .panel .edge-pos--top.edge-type-1,
+.preview .panel .edge-pos--bottom.edge-type-1 {
+   transform: translateX(-50%) rotate(45deg); /* Mantener centrado H + Rotar */
+}
+/* No se necesita ajuste Transform extra para Diamante en Left/Right */
+/* .preview .panel .edge-pos--left.edge-type-1, */
+/* .preview .panel .edge-pos--right.edge-type-1 { */
+   /* Hereda transform: translateY(-50%) de la posición */
+/* } */
+
+/* --- Tipo 2 Edge: Barras Verdes (Color Base) --- */
+.preview .panel .edge-type-2 {
+  background-color: var(--aegis-accent-green);
+}
+/* Barra Horizontal (Top/Bottom) */
+.preview .panel .edge-pos--top.edge-type-2,
+.preview .panel .edge-pos--bottom.edge-type-2 {
+  width: 50px; 
+  height: 4px;  
+  border-radius: 2px; 
+  /* Hereda transform: translateX(-50%) de la posición */
+}
+/* Doble Barra Vertical (Left/Right) */
+.preview .panel .edge-pos--left.edge-type-2,
+.preview .panel .edge-pos--right.edge-type-2 {
+  width: 4px;
+  height: 25px;
+  background-color: transparent;
+  position: relative;
+  /* Hereda transform: translateY(-50%) de la posición */
+}
+.preview .panel .edge-pos--left.edge-type-2::before,
+.preview .panel .edge-pos--left.edge-type-2::after,
+.preview .panel .edge-pos--right.edge-type-2::before,
+.preview .panel .edge-pos--right.edge-type-2::after {
+  content: '';
+  position: absolute;
+  width: 100%; /* Ocupa el ancho del contenedor (4px) */
+  height: 45%; /* Altura de cada barra */
+  background-color: var(--aegis-accent-green); /* Hereda color */
+  border-radius: 2px;
+  left: 0;
+}
+.preview .panel .edge-pos--left.edge-type-2::before,
+.preview .panel .edge-pos--right.edge-type-2::before {
+  top: 0; /* Barra superior */
+}
+.preview .panel .edge-pos--left.edge-type-2::after,
+.preview .panel .edge-pos--right.edge-type-2::after {
+  bottom: 0; /* Barra inferior */
+}
+
+/* Resto de tipos de Edge (si los hubiera)... */ 

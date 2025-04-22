@@ -14,40 +14,43 @@ interface DirectiveNode extends Node {
   };
 }
 
-// Función para verificar si un nodo es una directiva específica
-function isDirectiveNode(node: Node, name: string): node is DirectiveNode {
-  // Ajustar la comprobación de tipo según la estructura real de tus nodos directiva
-  // A menudo son 'leafDirective', 'containerDirective', o 'textDirective'
+// Función para verificar si un nodo es un tipo de directiva
+function isDirective(node: Node): node is DirectiveNode {
   return (
-    (node.type === 'leafDirective' || 
-     node.type === 'containerDirective' || 
-     node.type === 'textDirective') && 
-    (node as DirectiveNode).name === name
+    node.type === 'leafDirective' ||
+    node.type === 'containerDirective' ||
+    node.type === 'textDirective'
   );
 }
 
 /**
- * Remark plugin to transform :::corner directives (CONTAINER SYNTAX)
- * into styled <div> elements for decorative corners inside panels.
- *
- * Expects directives like: :::corner{pos=top-left type=stripes} :::
- * Transforms them into: <div class="panel-corner corner-pos--top-left corner-type--stripes"></div>
+ * Remark plugin to transform :::corner, ::T-edge, ::B-edge directives
+ * into styled <div> elements for decorative elements on panels.
  */
 export default function remarkCornerDirectives() {
   return (tree: Root) => {
     // console.log("AST ANTES de remarkCornerDirectives:", JSON.stringify(tree, null, 2));
 
     visit(tree, (node, index, parent: Parent | undefined) => {
-      // Solo procesamos directivas con nombre 'corner'
-      if (isDirectiveNode(node, 'corner')) {
-        const directiveNode = node; // Ya sabemos que es DirectiveNode por la comprobación
+      // Lista de directivas que procesamos
+      const directiveNames = ['corner', 'T-edge', 'B-edge', 'L-edge', 'R-edge'];
+      
+      if (isDirective(node) && directiveNames.includes(node.name)) {
+        const directiveNode = node;
         const attributes = directiveNode.attributes || {};
-        const position = attributes.pos || 'top-left'; // Valor por defecto
-        let typeValue = attributes.type || '1';     // Valor por defecto, numérico
-        let offsetValue = 1; // Valor por defecto para el offset (compensa borde de 1px)
-        const flip = attributes.flip === 'true'; // Comprobar si se debe invertir estilo
-        const flipH = attributes.flipH === 'true'; // Comprobar si se debe invertir forma H
-        const flipV = attributes.flipV === 'true'; // Comprobar si se debe invertir forma V
+
+        // --- Lógica Común: Leer y Validar Atributos --- 
+        let typeValue = attributes.type || '1';
+        let offsetValue = 1; // Default offset for edge compensation
+        const flip = attributes.flip === 'true'; 
+        const flipH = attributes.flipH === 'true';
+        const flipV = attributes.flipV === 'true';
+
+        // Validar typeValue
+        if (!/^[1-9]\d*$/.test(typeValue)) {
+          console.warn(`[${directiveNode.name}] Tipo inválido '${typeValue}'. Se usará tipo '1'. Atributos:`, attributes);
+          typeValue = '1';
+        }
 
         // Leer y validar offset
         if (attributes.offset) {
@@ -55,52 +58,52 @@ export default function remarkCornerDirectives() {
           if (!isNaN(parsedOffset) && parsedOffset >= 0) {
             offsetValue = parsedOffset;
           } else {
-            console.warn(`[corner] Offset inválido '${attributes.offset}'. Se usará offset por defecto '1'. Atributos:`, attributes);
-            offsetValue = 1; // Reset to default 1 if invalid before negating
+            console.warn(`[${directiveNode.name}] Offset inválido '${attributes.offset}'. Se usará offset por defecto '1'. Atributos:`, attributes);
+            offsetValue = 1;
           }
         }
-        
-        // Calcular el valor negativo para la variable CSS
-        const negativeOffsetValue = -offsetValue;
 
-        // Validar si typeValue es realmente un número
-        if (!/^[1-9]\d*$/.test(typeValue)) {
-          console.warn(`[corner] Tipo inválido '${typeValue}'. Se usará tipo '1'. Atributos:`, attributes);
-          typeValue = '1'; // Usar '1' como fallback si no es un número válido
-        }
-
-        console.log(`[corner] Encontrada directiva corner:`, JSON.stringify(directiveNode));
-        console.log(`[corner] Índice: ${index}, Nodo Padre:`, parent?.type);
-        if (parent) {
-          // Log más seguro: solo mostrar tipos de hijos
-          console.log(`[corner] Tipos de hijos del padre ANTES:`, JSON.stringify(parent.children.map(c => c.type), null, 2));
-        }
-
-        // Asegurarse de que el objeto data exista
+        // --- Lógica Específica por Directiva --- 
         const data = directiveNode.data || (directiveNode.data = {});
-        // Asegurarse de que hProperties exista dentro de data
         const hProperties = data.hProperties || (data.hProperties = {});
-
-        // Construir clases CSS
-        let classNames = `panel-corner corner-pos--${position} corner-type-${typeValue}`;
-        if (flip) {
-          classNames += ' corner-flipped'; // Para invertir estilo (e.g., gradiente)
-        }
-        if (flipH) {
-          classNames += ' corner-shape-flipped-h'; // Para invertir forma H (clip-path)
-        }
-        if (flipV) {
-          classNames += ' corner-shape-flipped-v'; // Para invertir forma V (clip-path)
-        }
-
-        // Establecer las propiedades HAST para que se renderice como <div>
         data.hName = 'div';
-        hProperties.className = classNames; // Asignar clases construidas
-        // Añadir el estilo inline con la variable CSS para el offset (ya negativo)
-        hProperties.style = `--corner-offset: ${negativeOffsetValue}px;`;
+        let classNames = '';
+        let offsetVarName = '--corner-offset'; // Default for corner
 
-        // REINSERTAR: Eliminar cualquier hijo que la directiva pudiera tener (importante para leafDirective)
+        if (directiveNode.name === 'corner') {
+          const position = attributes.pos || 'top-left';
+          offsetVarName = '--corner-offset'; // Confirm variable name
+          classNames = `panel-corner corner-pos--${position} corner-type-${typeValue}`;
+          if (flipH) {
+            classNames += ' corner-shape-flipped-h';
+          }
+          if (flipV) {
+            classNames += ' corner-shape-flipped-v';
+          }
+        } else if (directiveNode.name === 'T-edge') {
+          offsetVarName = '--edge-offset'; 
+          classNames = `panel-edge edge-pos--top edge-type-${typeValue}`;
+        } else if (directiveNode.name === 'B-edge') {
+          offsetVarName = '--edge-offset';
+          classNames = `panel-edge edge-pos--bottom edge-type-${typeValue}`;
+        } else if (directiveNode.name === 'L-edge') {
+          offsetVarName = '--edge-offset';
+          classNames = `panel-edge edge-pos--left edge-type-${typeValue}`;
+        } else if (directiveNode.name === 'R-edge') {
+          offsetVarName = '--edge-offset';
+          classNames = `panel-edge edge-pos--right edge-type-${typeValue}`;
+        }
+
+        hProperties.className = classNames;
+        // Establecer variable de offset (siempre negativa)
+        hProperties.style = `${offsetVarName}: ${-offsetValue}px;`; 
+
+        // Limpiar hijos (importante para leaf/text directives)
         directiveNode.children = [];
+
+        // Prevenir visitar los hijos de esta directiva (ya procesada)
+        // return SKIP; // <-- Descomentar si se usa sintaxis de contenedor :::edge::: 
+                     //     Comentado si se usa sintaxis ::edge 
       }
     });
 
