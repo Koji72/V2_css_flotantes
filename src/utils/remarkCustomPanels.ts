@@ -3,9 +3,7 @@ import { visit } from 'unist-util-visit';
 import type { Root, Parent, Content, Text, Paragraph } from 'mdast';
 import type { ContainerDirective } from 'mdast-util-directive';
 import type { Plugin } from 'unified';
-import { h } from 'hastscript';
-
-// Ya no necesitamos nuestras interfaces Node/DirectiveNode
+// Ya no necesitamos h
 
 const remarkCustomPanels: Plugin<[], Root> = () => {
   return (tree) => {
@@ -33,13 +31,8 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
         }
         hProperties.className = Array.from(finalClasses);
 
+        // Insertar título como primer hijo si existe
         if (title && typeof title === 'string') {
-          if (!node.children) {
-            node.children = [];
-          } else if (!Array.isArray(node.children)) {
-            console.warn("[remarkCustomPanels] Panel directive children was not an array, converting...");
-            node.children = [node.children];
-          }
           const titleMdastNode: Content = {
             type: 'heading',
             depth: 4,
@@ -49,12 +42,10 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
             },
             children: [{ type: 'text', value: title }]
           };
-          node.children.unshift(titleMdastNode);
-        } else if (attributes.hasOwnProperty('title')) {
-            // Podríamos querer manejar el caso de title="" explícitamente si es necesario
-            // console.log("[remarkCustomPanels] Panel has empty title attribute.");
-        }
+          node.children = node.children ? [titleMdastNode, ...node.children] : [titleMdastNode];
+        } 
 
+        // Limpieza del ::: final 
         if (node.children && node.children.length > 0) {
           const numChildren = node.children.length;
           const startIndex = Math.max(0, numChildren - 3);
@@ -66,22 +57,30 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
                 if (inlineNode.type === 'text') {
                   const textNode = inlineNode as Text;
                   if (typeof textNode.value === 'string') {
-                    const trimmedText = textNode.value.trimEnd();
-                    if (trimmedText === ':::' || trimmedText.endsWith('\n:::') || trimmedText.endsWith(' :::')) {
+                    const originalValue = textNode.value;
+                    const trimmedEndValue = originalValue.trimEnd();
+                    let valueChanged = false;
+
+                    if (trimmedEndValue.endsWith(':::')) {
+                        const lastIndex = originalValue.lastIndexOf(':::');
+                        textNode.value = originalValue.slice(0, lastIndex);
+                        valueChanged = true;
+                    } else if (trimmedEndValue === ':::') {
+                        textNode.value = '';
+                        valueChanged = true;
+                    }
+                    
+                    if (valueChanged && !textNode.value.trim()) {
                       childNode.children.splice(j, 1);
                       if (childNode.children.length === 0) {
-                        node.children.splice(i, 1);
-                      }
-                      break;
-                    } else if (trimmedText.endsWith(':::')) {
-                      textNode.value = textNode.value.slice(0, textNode.value.lastIndexOf(':::'));
-                      if (!textNode.value.trim()) {
-                        childNode.children.splice(j, 1);
-                        if (childNode.children.length === 0) {
-                          node.children.splice(i, 1);
+                        if (node.children) {
+                            node.children.splice(i, 1);
+                            i--; 
                         }
                       }
-                      break;
+                    }
+                    if (valueChanged) {
+                        break; 
                     }
                   }
                 }
@@ -90,7 +89,7 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
           }
         }
 
-        data.hName = 'div';
+        data.hName = 'div'; // Siempre es div en esta versión
       }
     });
   };
