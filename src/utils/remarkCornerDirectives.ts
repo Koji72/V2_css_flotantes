@@ -42,9 +42,10 @@ export default function remarkCornerDirectives() {
         // --- Lógica Común: Leer y Validar Atributos --- 
         let typeValue = attributes.type || '1';
         let offsetValue = 1; // Default offset for edge compensation
-        const flip = attributes.flip === 'true'; 
+        const flip = attributes.flip === 'true';
         const flipH = attributes.flipH === 'true';
         const flipV = attributes.flipV === 'true';
+        let spanValue: number | null = null;
 
         // Validar typeValue
         if (!/^[1-9]\d*$/.test(typeValue)) {
@@ -60,6 +61,16 @@ export default function remarkCornerDirectives() {
           } else {
             console.warn(`[${directiveNode.name}] Offset inválido '${attributes.offset}'. Se usará offset por defecto '1'. Atributos:`, attributes);
             offsetValue = 1;
+          }
+        }
+
+        // Leer y validar span (para Edges)
+        if (attributes.span && ['T-edge', 'B-edge', 'L-edge', 'R-edge'].includes(directiveNode.name)) {
+          const parsedSpan = parseFloat(attributes.span);
+          if (!isNaN(parsedSpan) && parsedSpan >= 0 && parsedSpan <= 100) {
+            spanValue = parsedSpan;
+          } else {
+            console.warn(`[${directiveNode.name}] Span inválido '${attributes.span}'. Se usará tamaño por defecto. Debe ser número entre 0 y 100. Atributos:`, attributes);
           }
         }
 
@@ -97,6 +108,15 @@ export default function remarkCornerDirectives() {
         hProperties.className = classNames;
         // Establecer variable de offset (siempre negativa)
         hProperties.style = `${offsetVarName}: ${-offsetValue}px;`; 
+
+        // Añadir variable de span si existe y es válida
+        if (spanValue !== null) {
+          if (['T-edge', 'B-edge'].includes(directiveNode.name)) {
+            hProperties.style += ` --edge-span-width: ${spanValue}%;`;
+          } else if (['L-edge', 'R-edge'].includes(directiveNode.name)) {
+            hProperties.style += ` --edge-span-height: ${spanValue}%;`;
+          }
+        }
 
         // Limpiar hijos (importante para leaf/text directives)
         directiveNode.children = [];

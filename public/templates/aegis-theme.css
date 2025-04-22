@@ -813,8 +813,9 @@
 
 /* --- Tipo 1 Edge: Diamante Azul (Estilo Base) --- */
 .preview .panel .edge-type-1 {
-  width: 16px;
-  height: 16px;
+  /* Usar variables con fallback al tamaño fijo original */
+  width: var(--edge-span-width, 16px);
+  height: var(--edge-span-height, 16px);
   background-color: var(--aegis-accent-blue);
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
@@ -836,17 +837,19 @@
 /* Barra Horizontal (Top/Bottom) */
 .preview .panel .edge-pos--top.edge-type-2,
 .preview .panel .edge-pos--bottom.edge-type-2 {
-  width: 50px; 
-  height: 4px;  
+  /* Usar variables con fallback al tamaño fijo original */
+  width: var(--edge-span-width, 50px); 
+  height: var(--edge-span-height, 4px);  
   border-radius: 2px; 
   /* Hereda transform: translateX(-50%) de la posición */
 }
 /* Doble Barra Vertical (Left/Right) */
 .preview .panel .edge-pos--left.edge-type-2,
 .preview .panel .edge-pos--right.edge-type-2 {
-  width: 4px;
-  height: 25px;
-  background-color: transparent;
+  /* Usar variables con fallback al tamaño fijo original */
+  width: var(--edge-span-width, 4px);
+  height: var(--edge-span-height, 25px);
+  background-color: transparent; /* El fondo lo ponen before/after */
   position: relative;
   /* Hereda transform: translateY(-50%) de la posición */
 }
