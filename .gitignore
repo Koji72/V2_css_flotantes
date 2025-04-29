@@ -172,6 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+<<<<<<< HEAD
 
 # Dependencias
 /node_modules
@@ -235,3 +236,5 @@ coverage
 
 # Cursor editor directory
 cursor/
+=======
+>>>>>>> 97b2343eb6e2ddb9d2ce4e80e4d0c28ee853ff0e
