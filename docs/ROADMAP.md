@@ -140,60 +140,99 @@ Crear un editor Markdown avanzado (Universal Scribe) centrado en el texto plano 
 
 ## 📅 Fases de Desarrollo
 
-### 🎯 V2.6 (Actual - Base y Bloques Semánticos)
-- [x] Layout base con editor/preview (`react-resizable-panels`).
-- [x] Integración de `react-codemirror`.
-- [x] Soporte inicial para plantillas CSS.
-- [x] Funcionalidades markdown básicas (GFM via `remark-gfm`).
-- [x] Resaltado de sintaxis (`react-syntax-highlighter`).
-- [x] Soporte HTML básico (`rehype-raw` para `<sup>`, `<sub>`, `<mark>`, `<details>`).
-- [x] Bloques semánticos:
-    - [x] Admoniciones (via `remark-github-beta-blockquote-admonitions` o similar).
-    - [x] Secciones colapsables (via `<details>`/`<summary>`).
-    - [x] Paneles configurables (via `remark-directive` y `remarkCustomPanels`).
-- [x] Barra de herramientas mejorada (interacción, botones de formato).
-- [x] Sistema de notificaciones (feedback usuario).
-- [x] Mejoras UI/UX generales y estabilidad del redimensionado.
-- [x] Persistencia básica (`localStorage`).
+**Estado General Actual (Estimado):** ~75-80%
 
-### 🚀 V3.0 (Futuro - Expansión y Profesionalización)
-- [ ] **Exportación Avanzada**: PDF y HTML de alta fidelidad.
-- [ ] **Modo Offline Completo**: Evaluar IndexedDB para gestión avanzada de documentos.
-- [ ] **Extensibilidad y Bloques Personalizados**: Desarrollar más plugins `remark`/`rehype` para sintaxis únicas y bloques interactivos.
-- [ ] **Gestor de Assets**: Manejo integrado de imágenes y otros archivos.
-- [ ] **Panel de Análisis**: Información sobre estructura y contenido del documento.
-- [ ] **Previsualización Inline**: Mejoras WYSIWYM.
-- [ ] **Mejoras de Editor Avanzadas**: Considerar alternativas si `CodeMirror` no es suficiente (ej. Slate.js).
-- [ ] **Gestión de Imágenes Avanzada**: Opciones de almacenamiento en nube.
-- [ ] **Prácticas de Desarrollo Robustas**: Testing (Jest, RTL), linting (ESLint, Prettier), Storybook.
-- [ ] **Colaboración en tiempo real** (Opcional, muy largo plazo).
+**Foco Actual:** Depuración y estabilización del sistema de directivas personalizadas (Fase 2), específicamente la interacción entre `:::panel` y `:::corner` y la correcta renderización visual.
 
-## 🎯 Objetivos Clave
+### Fase 1: Fundación y Editor Central (Completa: ~95%) ✅
 
-1. **Eficiencia**
-   - Reducir fricción en el flujo de trabajo
-   - Optimizar rendimiento
-   - Minimizar distracciones
+*   [x] Interfaz de Doble Panel (Editor/Preview) + Divisor Ajustable (`react-resizable-panels`)
+*   [x] Integración de Editor (`react-codemirror`)
+*   [x] Renderizado Markdown Básico (`react-markdown`, GFM)
+*   [x] Resaltado de Sintaxis para Bloques de Código (`react-syntax-highlighter`)
+*   [x] Soporte HTML básico (`rehype-raw` para `<sup>`, `<sub>`, `<mark>`, `<details>`)
+*   [x] Barra de Herramientas Funcional (Iconos Lucide, acciones de formato)
+*   [x] Sistema de Atajos de Teclado
+*   [x] Sistema de Temas CSS (Carga dinámica desde `/public/templates`, selector)
+*   [x] Modo Claro/Oscuro Básico
+*   [x] Utilidades Esenciales (Autoguardado en `localStorage`, Sincronización de Scroll)
+*   [x] Carga de Imágenes Locales (Base64)
+*   [x] Sistema de notificaciones (feedback usuario via `react-hot-toast`).
+*   [x] Mejoras UI/UX generales y estabilidad del redimensionado.
 
-2. **Flexibilidad**
-   - Personalización extensa
-   - Soporte para múltiples flujos de trabajo
-   - Extensibilidad (plugins, bloques personalizados)
+### Fase 2: Sistema de Directivas Personalizadas (En Progreso: ~60%) 🚧
 
-3. **Profesionalidad**
-   - UI/UX de alta calidad
-   - Estabilidad y confiabilidad
-   - Documentación completa
+*El objetivo es tener un sistema robusto y fiable para extender Markdown con sintaxis `:::`.*
 
-4. **Escalabilidad**
-   - Arquitectura modular
-   - Base para futuras características
-   - Soporte para plugins
+*   [x] Integración Base de `remark-directive`.
+*   [x] Plugin `remarkEnsureDirectiveBrackets` (Ayudante).
+*   [x] Plugin `remarkGithubBetaBlockquoteAdmonitions` (Admoniciones estándar).
+*   **Plugin `remarkCustomPanels` (`:::panel{...}`):**
+    *   [x] Parseo de atributos básicos (`title`, `style`, `layout`, `class`).
+    *   [x] Generación de `<div>` base con clases CSS correspondientes.
+    *   [x] Inserción de título `<h4>` estilizado.
+    *   [x] **Mecanismo de Estilos Semánticos:** Funcional (`panel-style--note`, etc.), pero requiere definiciones CSS en cada tema. *(Validado)*
+    *   [ ] **BUG CRÍTICO:** Eliminación inconsistente del marcador de cierre `:::` cuando interactúa con contenido complejo o directivas anidadas. *(Necesita revisión y corrección definitiva)*.
+*   **Plugin `remarkCornerDirectives` (`:::corner{...}`):**
+    *   [x] Reconocimiento y procesamiento básico de la directiva `:::corner` (usando sintaxis `:::`).
+    *   [x] Parseo de atributos (`pos`, `type`).
+    *   [ ] **Generación HTML/CSS:** Se generan los `<div>`, pero la visualización es incorrecta/incompleta (solo 1 esquina visible, posicionamiento?). *(Necesita revisión CSS y potencialmente del HTML generado)*.
+*   **Interacción Panel/Corner:**
+    *   [ ] **BUG CRÍTICO:** Las directivas `:::corner` dentro de `:::panel` causan artefactos visuales (esquinas mal posicionadas o faltantes) y contribuyen al bug del `:::` residual del panel. *(Bloqueador principal actual)*.
 
-### ✨ Diferenciación Clave
+### Fase 3: Diferenciación Avanzada (Pendiente: 0%) ⏳
+
+*Objetivo: Implementar las características únicas que posicionarán a SagaWeaver.*
+
+*   **Sistema de "Componentes Inteligentes":**
+    *   [ ] Definir Arquitectura y API (Cómo las directivas acceden a datos/estado, interactúan, usan plantillas JS/CSS).
+    *   [ ] Componente `:::character-sheet`: Vinculación a datos externos/estado, renderizado basado en plantillas.
+    *   [ ] Componente `:::encounter-tracker`: Interactividad en preview, gestión de estado simple (HP, turnos).
+    *   [ ] Componente `:::loot-generator`: Conexión a tablas de datos (Markdown/JSON), lógica de aleatoriedad (ej. `1d4`).
+    *   [ ] Componente `:::dialogue-tree`: Parseo de sintaxis anidada, renderizado interactivo.
+*   **Integración Visual Profunda con Assets:**
+    *   [ ] Extracción de Paleta de Colores desde imagen para temas dinámicos.
+    *   [ ] Soporte para `border-image` en estilos de panel vía directiva.
+    *   [ ] Componente `:::map`: Renderizado de imagen, pines interactivos (datos en atributos/hijos), estado básico (revelar/ocultar pines).
+*   **Motor de "Reglas Ligeras" Incorporado:**
+    *   [ ] Definición de Sintaxis (`:::ruleset`, `[[rule]]`, `[[variable]]`, `[[choice]]`, funciones `mod()`, `getVar()`).
+    *   [ ] Motor de Parseo y Ejecución simple (intérprete básico dentro del entorno de preview).
+    *   [ ] Integración con Componentes Inteligentes (ej. `[[choice]]` en `:::dialogue-tree`).
+*   **Exportación Optimizada:**
+    *   [ ] Diseño de Arquitectura de Exportación Modular.
+    *   [ ] Módulo de Exportación a Formato VTT (JSON genérico o específico para Foundry/Roll20).
+    *   [ ] Módulo de Exportación a Lector Offline (Paquete autocontenido, ¿ePub3+JS?).
+    *   [ ] Módulo de Exportación a Web Component.
+
+### Fase 4: Pulido, Pruebas y Ecosistema (Pendiente: 0%) ⏳
+
+*   [ ] Pruebas Unitarias y de Integración para Plugins y Componentes (Jest, RTL).
+*   [ ] Pruebas End-to-End del Flujo de Trabajo (Cypress/Playwright).
+*   [ ] Optimización del Rendimiento (Renderizado, carga de temas, plugins, Web Vitals).
+*   [ ] Revisión y Mejora de la Experiencia de Usuario (UI/UX).
+*   [ ] Documentación Completa (Guía de Usuario, Referencia de Directivas, API de Plugins/Temas).
+*   [ ] Modo Offline Completo (Evaluar IndexedDB).
+*   [ ] Gestor de Assets Básico (Manejo integrado de imágenes).
+*   [ ] Testing, Linting y Formato (ESLint, Prettier, Storybook).
+*   **Hub Comunitario Integrado:**
+    *   [ ] Diseño de sistema para compartir/descubrir (¿Basado en GitHub/JSON manifest?).
+    *   [ ] Navegador/Instalador en la App para Temas CSS.
+    *   [ ] Navegador/Instalador en la App para "Packs de Componentes" (Directivas `:::` predefinidas).
+    *   [ ] Navegador/Instalador en la App para "Conjuntos de Reglas Ligeras".
+
+## 🎯 Objetivos Clave (Revisados)
+
+1.  **Funcionalidad del Nicho:** Implementar y estabilizar el sistema de directivas personalizadas (`:::panel`, `:::corner`) como base para componentes RPG/Narrativos.
+2.  **Personalización Profunda:** Potenciar el sistema de temas CSS y la integración de assets de usuario.
+3.  **Experiencia de Autoría Fluida:** Mantener la eficiencia y claridad del editor/preview, minimizando bugs y fricción.
+4.  **Estabilidad y Rendimiento:** Asegurar que la aplicación sea robusta y rápida, incluso con contenido complejo.
+5.  **Extensibilidad Controlada:** Crear una base sólida para futuras directivas y funcionalidades (Fase 3) sin sacrificar la estabilidad.
+
+### ✨ Diferenciación Clave (Mantenida)
 *   **Offline First:** Superar la dependencia online de Notion mediante un robusto almacenamiento local.
-*   **Exportación Profesional:** Ofrecer más control y calidad en las exportaciones que Obsidian.
-*   **Extensibilidad Semántica:** Proveer un sistema de bloques más flexible y personalizable que las alternativas generalistas.
+*   **Componentes Visuales/Funcionales desde Texto:** Crear experiencias interactivas y temáticas que van más allá del estilizado Markdown estándar (superando a Obsidian/Typora en este nicho específico).
+*   **Alta Personalización Estética y Temática:** Ofrecer un nivel de personalización visual más allá de los temas habituales.
+*   **Enfoque en RPG/Narrativa (Futuro):** Desarrollar componentes y herramientas específicas para este dominio (Fase 3).
 
 ## 📈 Métricas de Éxito
 
@@ -222,3 +261,13 @@ Crear un editor Markdown avanzado (Universal Scribe) centrado en el texto plano 
 ---
 
 *Este documento es una guía viva y será actualizado según evolucione el proyecto.* 
+
+:::panel{title="Plano de Seguridad" style="blueprint" animation="pulse"}
+::corner{pos=top-left type=2 offset=2}
+::corner{pos=bottom-right type=2 offset=2}
+::B-edge{type=1 span="90%" offset=0}
+
+- Puerta principal: Cerrada  
+- Cámaras: Activas  
+- Alarmas: <span style="color:#ff3030">Desactivadas</span>
+::: 
