@@ -4,6 +4,20 @@
  */
 import { SecureStorage } from './secureStorage';
 import { Template, templates } from '../types/templates';
+import panelStyleThemes from '../data/panelStyleThemes.json';
+
+interface PanelStyleDetail {
+  id: string;
+  name: string;
+}
+
+interface PanelStyleThemesData {
+  themes: Record<string, string[]>;
+  styleDetails: PanelStyleDetail[];
+}
+
+// Type assertion for the imported JSON
+const styleThemesData = panelStyleThemes as PanelStyleThemesData;
 
 export class TemplateManager {
   private static instance: TemplateManager;
@@ -99,15 +113,74 @@ export class TemplateManager {
     
     // Actualizar el CSS
     styleElement.textContent = css;
+    
+    // Añadir fix para visibilidad de texto
+    let visibilityFixStyle = iframeDoc.getElementById('text-visibility-fix');
+    if (!visibilityFixStyle) {
+      visibilityFixStyle = iframeDoc.createElement('style');
+      visibilityFixStyle.id = 'text-visibility-fix';
+      iframeDoc.head.appendChild(visibilityFixStyle);
+      
+      // Añadir reglas específicas para forzar la visibilidad del texto
+      visibilityFixStyle.textContent = `
+        /* Fix de emergencia para garantizar visibilidad del texto */
+        .panel *, .mixed-panel * {
+          position: relative !important;
+          z-index: 99 !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+        }
+        
+        .panel p, .panel li, .panel a, .panel h3, .panel h4, .panel div,
+        .mixed-panel p, .mixed-panel li, .mixed-panel a, .mixed-panel h3, .mixed-panel h4, .mixed-panel div {
+          color: inherit !important;
+          visibility: visible !important;
+          position: relative !important;
+          z-index: 100 !important;
+        }
+        
+        .panel::before, .panel::after,
+        .mixed-panel::before, .mixed-panel::after {
+          z-index: -1 !important;
+          pointer-events: none !important;
+        }
+        
+        /* Tipos de panel específicos con problemas */
+        .panel-style--reality-glitch *, 
+        .panel-style--void-touched *,
+        .panel-style--crystal-matrix *,
+        .panel-style--nanite-construct *,
+        .panel-style--scanline-terminal * {
+          color: inherit !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          z-index: 999 !important;
+        }
+      `;
+    }
   }
 
   /**
-   * Gets all available template options
+   * Gets all available template options dynamically by reading the public/templates directory
    */
   public getAvailableTemplates(): { id: string, name: string }[] {
-    return [
-      { id: 'purple_neon_grid', name: 'Purple Neon Grid' }
-    ];
+    // Use import.meta.glob to get all .css files in the templates directory
+    // Use type assertion to bypass TypeScript linter error if vite types are not recognized
+    const templateFiles = (import.meta as any).glob('/public/templates/*.css', { eager: false });
+
+    const templateOptions = Object.keys(templateFiles).map(path => {
+      const filename = path.split('/').pop() || '';
+      const id = filename.replace('.css', '');
+      const name = id
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+      return { id, name };
+    });
+
+    templateOptions.sort((a, b) => a.name.localeCompare(b.name));
+    console.log("Dynamically loaded templates:", templateOptions);
+    return templateOptions;
   }
 
   /**
@@ -587,5 +660,37 @@ export class TemplateManager {
   public destroy(): void {
     this.removeTemplateStyles();
     this.currentTemplate = null;
+  }
+
+  // --- New methods for visual styles ---
+
+  /**
+   * Gets the details (id, name) for a specific visual style id.
+   */
+  public getVisualStyleDetail(styleId: string): PanelStyleDetail | undefined {
+    return styleThemesData.styleDetails.find(style => style.id === styleId);
+  }
+
+  /**
+   * Gets the list of available visual styles filtered for the given template ID.
+   * Includes theme-specific styles and 'other' styles.
+   * @param templateId The ID of the currently active template (e.g., 'lv426-distress-signal').
+   * @returns An array of {id, name} for the available visual styles.
+   */
+  public getVisualStylesForTemplate(templateId: string): PanelStyleDetail[] {
+    const themeStyles = styleThemesData.themes[templateId] || [];
+    const otherStyles = styleThemesData.themes['other'] || [];
+    const combinedStyleIds = new Set([...themeStyles, ...otherStyles]);
+
+    // Get the full details (id, name) for the combined list
+    const availableStyles = styleThemesData.styleDetails.filter(style =>
+      combinedStyleIds.has(style.id)
+    );
+
+    // Optional: Sort alphabetically by name?
+    availableStyles.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Add a default/none option
+    return [{ id: '', name: 'None' }, ...availableStyles]; 
   }
 } 

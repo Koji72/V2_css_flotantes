@@ -1,0 +1,90 @@
+/* 
+   SOLUCIÓN DE EMERGENCIA PARA VISIBILIDAD DE TEXTO
+   Este archivo debe ser incluido después de cualquier otro CSS
+   para garantizar que sus reglas tengan la máxima prioridad
+*/
+
+/* Selección universal para garantizar texto visible */
+.panel *,
+.mixed-panel *,
+.preview .panel *,
+.preview .mixed-panel * {
+    position: relative !important;
+    z-index: 99 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: inherit !important;
+}
+
+/* Específicos para los elementos más comunes del contenido */
+.panel p, .panel li, .panel a, .panel h3, .panel h4, .panel div,
+.mixed-panel p, .mixed-panel li, .mixed-panel a, .mixed-panel h3, .mixed-panel h4, .mixed-panel div,
+.panel-content p, .panel-content li, .panel-content a, .panel-content div {
+    color: inherit !important;
+    visibility: visible !important;
+    display: block !important;
+    position: relative !important;
+    z-index: 100 !important;
+}
+
+/* Asegurar que los pseudo-elementos nunca cubran el contenido */
+.panel::before, .panel::after,
+.mixed-panel::before, .mixed-panel::after,
+.panel-content::before, .panel-content::after,
+.panel-content-wrapper::before, .panel-content-wrapper::after {
+    z-index: -1 !important;
+    pointer-events: none !important;
+}
+
+/* Ajuste específico para los tipos de panel con problemas conocidos */
+.panel-style--reality-glitch *,
+.panel-style--void-touched *,
+.panel-style--crystal-matrix *,
+.panel-style--nanite-construct *,
+.panel-style--scanline-terminal * {
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 999 !important;
+    position: relative !important;
+}
+
+/* Estilos específicos para el color del texto por tipo de panel */
+.panel-style--reality-glitch {
+    color: #f0e8ff !important;
+}
+.panel-style--reality-glitch * {
+    color: #f0e8ff !important;
+    text-shadow: 0 0 2px #f0e8ff !important;
+}
+
+.panel-style--void-touched {
+    color: #c8b8e0 !important;
+}
+.panel-style--void-touched * {
+    color: #c8b8e0 !important;
+    text-shadow: 0 0 2px rgba(200, 184, 224, 0.8) !important;
+}
+
+.panel-style--crystal-matrix {
+    color: #e0f0ff !important;
+}
+.panel-style--crystal-matrix * {
+    color: #e0f0ff !important;
+    text-shadow: 0 0 3px rgba(224, 240, 255, 0.8) !important;
+}
+
+.panel-style--nanite-construct {
+    color: #3aefb6 !important;
+}
+.panel-style--nanite-construct * {
+    color: #3aefb6 !important;
+    text-shadow: 0 0 3px rgba(58, 239, 182, 0.8) !important;
+}
+
+.panel-style--scanline-terminal {
+    color: #c0d080 !important;
+}
+.panel-style--scanline-terminal * {
+    color: #c0d080 !important;
+    text-shadow: 0 0 3px rgba(192, 208, 128, 0.8) !important;
+} 

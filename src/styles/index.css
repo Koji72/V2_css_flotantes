@@ -1,13 +1,13 @@
-/* Base Styles */
+/* Base Styles (Mínimos necesarios) */
 @import './base/variables.css';
 @import './base/reset.css';
 @import './base/typography.css';
 @import './base/animations.css';
 
-/* Layout */
+/* Layout (Mínimos necesarios) */
 @import './layout/Layout.css';
 
-/* Components */
+/* Components (Comentados temporalmente) */
 @import './components/buttons.css';
 @import './components/panels.css';
 @import './components/toolbar.css';
@@ -15,13 +15,21 @@
 @import './components/Preview.css';
 @import './components/ResizablePanels.css';
 @import './components/MarkdownToolbar.css';
-@import './floating-blocks.css';
+@import './components/all-panel-styles.css';
 
-/* Utilities */
+/* Utilities (Comentados temporalmente) */
 @import './utilities/spacing.css';
 @import './utilities/colors.css';
 @import './utilities/general.css';
 
-/* Themes */
+/* Themes (Comentados temporalmente) */
 @import './themes/light.css';
 @import './themes/dark.css'; 
+
+/* Template Styles (Comentados temporalmente) */
+/* @import '../../public/templates/default.css'; */ /* Este podría seguir comentado si no es necesario globalmente */
+
+/* IMPORTANTE: Flotantes siempre al FINAL para máxima prioridad */
+/* @import './floating-blocks.css'; */ /* Comentado - Contenido movido a floating-layout.css e importado en App.tsx */
+
+/* --- NO DEBE HABER NADA MÁS AQUÍ --- */ 

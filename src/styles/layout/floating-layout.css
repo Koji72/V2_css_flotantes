@@ -1,0 +1,62 @@
+/* --- INICIO CONTENIDO DE floating-blocks.css --- */
+/* REINICIO: Reglas de flotación directas y específicas */
+
+/* 1. Configuración del Contenedor Principal */
+.preview.markdown-body {
+  display: block; /* Forzar display block estándar para floats */
+  overflow: hidden; /* BFC simple para contener floats */
+}
+
+/* Añadir clearfix al contenedor */
+.preview.markdown-body::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* 2. Estilos de Flotación/Layout Específicos */
+
+/* Flotar a la Derecha */
+.preview.markdown-body section.panel.panel--layout-float-right,
+.preview.markdown-body div.panel.panel--layout-float-right {
+  float: right !important;
+  width: 35% !important;
+  margin-left: 1.5em !important;
+  margin-bottom: 1em !important;
+  clear: both !important;
+  display: block !important; /* Asegurar que sea bloque */
+  box-sizing: border-box !important; /* Asegurar cálculo de ancho */
+}
+
+/* Flotar a la Izquierda */
+.preview.markdown-body section.panel.panel--layout-float-left,
+.preview.markdown-body div.panel.panel--layout-float-left {
+  float: left !important;
+  width: 35% !important;
+  margin-right: 1.5em !important;
+  margin-bottom: 1em !important;
+  clear: both !important;
+  display: block !important;
+  box-sizing: border-box !important;
+}
+
+/* Centrado */
+.preview.markdown-body section.panel.panel--layout-centered,
+.preview.markdown-body div.panel.panel--layout-centered {
+  float: none;
+  width: 80%;
+  margin-left: 10%;
+  margin-bottom: 1em;
+  clear: both;
+  display: block;
+  box-sizing: border-box;
+  /* border: 5px solid red ; */ /* <-- Quitar borde de debug */
+}
+
+/* --- FIN CONTENIDO DE floating-blocks.css --- */
+
+/* NUEVO: Forzar clear en paneles sin layout específico */
+.preview.markdown-body > .panel:not(.panel--layout-float-left):not(.panel--layout-float-right):not(.panel--layout-centered) {
+  clear: both;
+  margin-top: 1em; /* Añadir margen superior para separar de los flotantes */
+} 

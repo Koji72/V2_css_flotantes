@@ -1,0 +1,52 @@
+{
+  "themes": {
+    "lv426-distress-signal": [
+      "data-stream",
+      "blueprint",
+      "alien-tech",
+      "reality-glitch",
+      "nanite-construct",
+      "scanline-terminal",
+      "gridlink",
+      "hacker-terminal",
+      "glitch-panel",
+      "neon-frame",
+      "crystal-matrix"
+    ],
+    "arkham-investigators-journal": [
+      "grimoire-page",
+      "steampunk-gauge",
+      "paper-cutout",
+      "void-touched",
+      "retro-cassette"
+    ],
+    "other": [
+      "elven-scroll",
+      "dwarven-stone",
+      "minimalist-card",
+      "brutalist-web"
+    ]
+  },
+  "styleDetails": [
+    { "id": "data-stream", "name": "Data Stream" },
+    { "id": "blueprint", "name": "Blueprint" },
+    { "id": "alien-tech", "name": "Alien Tech" },
+    { "id": "reality-glitch", "name": "Reality Glitch" },
+    { "id": "nanite-construct", "name": "Nanite Construct" },
+    { "id": "scanline-terminal", "name": "Scanline Terminal" },
+    { "id": "gridlink", "name": "Gridlink" },
+    { "id": "hacker-terminal", "name": "Hacker Terminal" },
+    { "id": "glitch-panel", "name": "Glitch Panel" },
+    { "id": "neon-frame", "name": "Neon Frame" },
+    { "id": "crystal-matrix", "name": "Crystal Matrix" },
+    { "id": "grimoire-page", "name": "Grimoire Page" },
+    { "id": "steampunk-gauge", "name": "Steampunk Gauge" },
+    { "id": "paper-cutout", "name": "Paper Cutout" },
+    { "id": "void-touched", "name": "Void Touched" },
+    { "id": "retro-cassette", "name": "Retro Cassette" },
+    { "id": "elven-scroll", "name": "Elven Scroll" },
+    { "id": "dwarven-stone", "name": "Dwarven Stone" },
+    { "id": "minimalist-card", "name": "Minimalist Card" },
+    { "id": "brutalist-web", "name": "Brutalist Web" }
+  ]
+} 
