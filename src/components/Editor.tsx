@@ -5,12 +5,10 @@ import KeyboardShortcutsHelp from './KeyboardShortcutsHelp';
 
 interface EditorProps {
   onChange?: (value: string) => void;
-  showPreview?: boolean;
 }
 
 export const Editor: React.FC<EditorProps> = ({
-  onChange,
-  showPreview = true
+  onChange
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { content, setContent, showNotification } = useStore();

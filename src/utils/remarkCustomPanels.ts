@@ -1,6 +1,6 @@
 import { visit } from 'unist-util-visit';
 // Importar tipos correctos de mdast y mdast-util-directive
-import type { Root, Parent, Content, Text, Paragraph } from 'mdast';
+import type { Root, Content, Text } from 'mdast';
 import type { ContainerDirective } from 'mdast-util-directive';
 import type { Plugin } from 'unified';
 
@@ -42,49 +42,62 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
             children: [{ type: 'text', value: title }]
           };
            const currentChildren: Content[] = node.children || [];
-           node.children = [titleMdastNode, ...currentChildren];
+           node.children = [titleMdastNode, ...currentChildren] as any;
         } 
 
-        // Limpieza del ::: final (Versión original)
+        // Limpieza del ::: final (Versión mejorada)
         if (node.children && node.children.length > 0) {
           const numChildren = node.children.length;
           const startIndex = Math.max(0, numChildren - 3);
+          
+          // Función auxiliar para limpiar el marcador ::: de un nodo de texto
+          const cleanClosingMarker = (textNode: Text) => {
+            if (typeof textNode.value === 'string') {
+              const originalValue = textNode.value;
+              const trimmedEndValue = originalValue.trimEnd();
+              
+              if (trimmedEndValue.endsWith(':::')) {
+                const lastIndex = originalValue.lastIndexOf(':::');
+                textNode.value = originalValue.slice(0, lastIndex);
+                return true;
+              } else if (trimmedEndValue === ':::') {
+                textNode.value = '';
+                return true;
+              }
+            }
+            return false;
+          };
+
+          // Recorrer los hijos desde el final
           for (let i = numChildren - 1; i >= startIndex; i--) {
             const childNode = node.children[i];
+            
             if (childNode.type === 'paragraph' && childNode.children) {
+              let markerFound = false;
+              
+              // Recorrer los hijos del párrafo desde el final
               for (let j = childNode.children.length - 1; j >= 0; j--) {
                 const inlineNode = childNode.children[j];
+                
                 if (inlineNode.type === 'text') {
-                  const textNode = inlineNode as Text;
-                  if (typeof textNode.value === 'string') {
-                    const originalValue = textNode.value;
-                    const trimmedEndValue = originalValue.trimEnd();
-                    let valueChanged = false;
-
-                    if (trimmedEndValue.endsWith(':::')) {
-                        const lastIndex = originalValue.lastIndexOf(':::');
-                        textNode.value = originalValue.slice(0, lastIndex);
-                        valueChanged = true;
-                    } else if (trimmedEndValue === ':::') {
-                        textNode.value = '';
-                        valueChanged = true;
-                    }
-                    
-                    if (valueChanged && !textNode.value.trim()) {
-                      childNode.children.splice(j, 1);
-                      if (childNode.children.length === 0) {
-                        if (node.children) {
-                            node.children.splice(i, 1);
-                            i--; 
-                        }
-                      }
-                    }
-                    if (valueChanged) {
-                        break; 
-                    }
+                  markerFound = cleanClosingMarker(inlineNode as Text);
+                  
+                  // Si el nodo quedó vacío, eliminarlo
+                  if (markerFound && !(inlineNode as Text).value.trim()) {
+                    childNode.children.splice(j, 1);
                   }
+                  
+                  if (markerFound) break;
                 }
               }
+              
+              // Si el párrafo quedó vacío, eliminarlo
+              if (markerFound && childNode.children.length === 0) {
+                node.children.splice(i, 1);
+                i--;
+              }
+              
+              if (markerFound) break;
             }
           }
         }

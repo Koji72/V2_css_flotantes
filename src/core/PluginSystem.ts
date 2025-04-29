@@ -1,6 +1,12 @@
 import { StateManager } from './StateManager';
 import { SceneGraph } from './SceneGraph';
 
+// Stub temporal para WebGLObject si no está definido
+// Elimina esto si tienes el tipo real
+// @ts-ignore
+// eslint-disable-next-line
+type WebGLObject = any;
+
 export interface PluginManifest {
   name: string;
   version: string;

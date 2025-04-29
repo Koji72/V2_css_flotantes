@@ -2,937 +2,395 @@
 /*   SagaWeaver - Estilos de Paneles Consolidados     */
 /* ================================================== */
 
-/* --- Propiedades personalizadas globales para animaciones --- */
-@property --gradient-angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
+/* --- Variables CSS Globales --- */
+:root {
+    /* Colores Base */
+    --neon-cyan: #00FFFF;
+    --neon-green: #00FF41;
+    --neon-magenta: #FF00FF;
+    --neon-yellow: #FFFF00;
+    
+    /* Fondos */
+    --nexus-bg-deep: #05080f;
+    --nexus-bg-dark: #0a0a14;
+    --nexus-bg-light: #1a1a2e;
+    
+    /* Textos */
+    --nexus-text-primary: #e0e8ff;
+    --nexus-text-secondary: #a0a8c0;
+    
+    /* Espaciado */
+    --spacing-unit: 8px;
+    --spacing-sm: calc(var(--spacing-unit) * 0.5);
+    --spacing-md: calc(var(--spacing-unit) * 1);
+    --spacing-lg: calc(var(--spacing-unit) * 2);
+    
+    /* Bordes */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 8px rgba(0,0,0,0.2);
+    --shadow-lg: 0 8px 16px rgba(0,0,0,0.3);
+    
+    /* Transiciones */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
 }
-@property --hue-rotate {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
+
+/* --- Estructura Base Mejorada --- */
+.panel {
+    position: relative;
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md);
+    background-color: var(--panel-bg, var(--bg-secondary));
+    border: 1px solid var(--panel-border, var(--border-color));
+    border-radius: var(--radius-lg);
+    box-shadow: var(--panel-shadow, var(--shadow-sm));
+    transition: all var(--transition-normal) var(--ease-in-out);
+    overflow: hidden;
 }
-@property --scanner-pos {
-  syntax: '<percentage>';
-  initial-value: -10%;
-  inherits: false;
+
+/* Estructura Interna */
+.panel-header-container {
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--panel-border);
+    background: var(--panel-header-bg);
+}
+
+.panel-content-wrapper {
+    padding: var(--spacing-md);
+    position: relative;
+    z-index: 1;
+}
+
+.panel-content {
+    color: inherit;
+    line-height: var(--line-height-relaxed);
 }
 
 /* --- Estilos Sci-Fi / Tecnológicos --- */
 
-/* 1. Data Stream */
+/* 1. Data Stream (Mejorado para visibilidad interna) */
 .panel.panel-style--data-stream {
-    background-color: var(--nexus-bg-deep, #05080f); /* Fallback */
+    /* ... (Estilos anteriores de fondo, borde, padding, posición, overflow, box-shadow, animación data-fall) ... */
+    background-color: #000000; /* Fondo oscuro */
     border: none;
-    color: var(--acid-green, #90ff70); /* Fallback */
+    color: var(--neon-cyan, #00FFFF); /* <-- Color de texto principal del panel */
     font-family: var(--font-mono, monospace);
-    padding: var(--spacing-unit, 8px); /* Fallback */
-    position: relative;
-    overflow: hidden;
-}
-.panel.panel-style--data-stream > h2 { display: none; } /* Hide title */
-.panel.panel-style--data-stream > *:not(h2) { padding: 0; } /* Apply to content */
-.panel.panel-style--data-stream p,
-.panel.panel-style--data-stream li,
-.panel.panel-style--data-stream code {
-    color: var(--acid-green, #90ff70);
-    font-family: var(--font-mono, monospace);
-    text-shadow: 0 0 4px var(--acid-green, #90ff70);
-    line-height: 1.4;
-    word-break: break-all;
-}
-/* <<< TEMPORALMENTE COMENTADO para depurar texto >>> */
-/*
-.panel.panel-style--data-stream::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(144, 255, 112, 0) 0%,
-        rgba(144, 255, 112, 0.4) 5%,
-        rgba(144, 255, 112, 0) 10%
-    );
-    background-size: 100% 20px;
-    opacity: 0.3;
-    animation: data-fall 1s infinite linear;
-    pointer-events: none;
-}
-*/
-@keyframes data-fall {
-    0% { background-position: 0 0; }
-    100% { background-position: 0 100px; }
+    padding: calc(var(--spacing-unit) * 1.5);
+    position: relative; overflow: hidden;
+    text-shadow: 0 0 3px var(--neon-cyan, #00FFFF);
 }
 
-/* 2. Blueprint */
+.panel.panel-style--data-stream .panel-header {
+    /* Estilo de cabecera para este tema */
+     color: var(--neon-cyan, #00FFFF); /* <-- Asegurar color de cabecera */
+     /* ... otros estilos ... */
+}
+
+.panel.panel-style--data-stream .panel-content-wrapper { /* Wrapper interno */
+    padding: 0; /* Remueve padding wrapper si no se necesita */
+}
+.panel.panel-style--data-stream .panel-content { /* Contenido real */
+    padding: 0; /* Remueve padding contenido si no se necesita */
+    /* Asegurar que los elementos dentro hereden o tengan color correcto */
+    color: var(--neon-cyan, #00FFFF); /* <-- Forzar color del contenido */
+}
+
+/* Asegurar que los elementos internos comunes hereden o tengan color */
+.panel.panel-style--data-stream h1,
+.panel.panel-style--data-stream h2,
+.panel.panel-style--data-stream h3,
+.panel.panel-style--data-stream p,
+.panel.panel-style--data-stream ul,
+.panel.panel-style--data-stream ol,
+.panel.panel-style--data-stream li,
+.panel.panel-style--data-stream table,
+.panel.panel-style--data-stream th,
+.panel.panel-style--data-stream td,
+.panel.panel-style--data-stream code,
+.panel.panel-style--data-stream pre,
+.panel.panel-style--data-stream strong,
+.panel.panel-style--data-stream em,
+.panel.panel-style--data-stream blockquote {
+    color: inherit; /* <-- Hacer que hereden el color del panel */
+     /* O forzar un color si es necesario, ej: color: var(--neon-green, #00FF00); */
+     /* Text-shadow para el glow */
+     text-shadow: inherit; /* Heredar brillo del panel */
+}
+
+/* Estilos para Admonitions dentro de este panel */
+.panel.panel-style--data-stream .markdown-alert-title { color: inherit; }
+.panel.panel-style--data-stream .markdown-alert-note { border-left-color: currentColor; background-color: rgba(0,255,255,0.1); color: currentColor; } /* Usar currentColor */
+/* ... y adaptar otros estados semánticos dentro de este panel ... */
+
+
+/* 2. Blueprint (Mejorado para visibilidad interna) */
 .panel.panel-style--blueprint {
+    /* ... (Estilos anteriores de background, border, padding, font-family, background-image, box-shadow) ... */
     background-color: #e0f0ff;
     border: 1px solid #80b0ff;
-    color: #102a4d;
-    padding: calc(var(--spacing-unit, 8px) * 1.5);
+    color: #102a4d; /* <-- Color de texto principal del panel */
     font-family: var(--font-mono, monospace);
+    padding: calc(var(--spacing-unit) * 1.5);
     background-image:
         linear-gradient(rgba(0, 100, 200, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 100, 200, 0.1) 1px, transparent 1px);
-    background-size: 15px 15px;
+        linear-gradient(90deg, rgba(0, 100, 200, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(0, 100, 200, 0.05) 0%, transparent 50%);
+    background-size: 15px 15px, 15px 15px, 100% 100%;
+    box-shadow:
+        inset 0 0 20px rgba(0, 100, 200, 0.1),
+        0 0 10px rgba(0, 100, 200, 0.2);
 }
-.panel.panel-style--blueprint > h2 {
-    border-bottom-color: #80b0ff;
-    color: #0056b3;
-    font-family: var(--font-heading, sans-serif);
-    font-weight: 600;
-    text-transform: uppercase;
-    text-shadow: none;
-    font-size: 1.2em;
-    background: transparent;
-    /* Reset base .panel h2 styles if needed */
-    margin: 0;
-    padding: 0;
-    padding-bottom: 0.5em; /* Space below text */
-    margin-bottom: 0.75em; /* Space below border */
+/* Asegurar visibilidad elementos internos */
+.panel.panel-style--blueprint .panel-header { color: #0056b3; } /* Color específico cabecera */
+.panel.panel-style--blueprint .panel-content { color: #102a4d; } /* <-- Forzar color contenido */
+/* Heredar color o forzar para elementos internos */
+.panel.panel-style--blueprint h1, .panel.panel-style--blueprint h2, /* etc. */
+.panel.panel-style--blueprint p, .panel.panel-style--blueprint li, /* etc. */
+.panel.panel-style--blueprint table, .panel.panel-style--blueprint th, /* etc. */
+.panel.panel-style--blueprint code, .panel.panel-style--blueprint pre, /* etc. */
+.panel.panel-style--blueprint strong, .panel.panel-style--blueprint em, /* etc. */
+.panel.panel-style--blueprint blockquote {
+    color: inherit; /* <-- Heredar el color del panel-content */
+    text-shadow: none; /* Sin brillo si no se quiere */
 }
-.panel.panel-style--blueprint code { background: rgba(0, 100, 200, 0.1); border-color: rgba(0, 100, 200, 0.3); color: #0056b3; }
+/* ... adaptar otros estilos ... */
 
-/* 3. Alien Tech */
+
+/* 3. Alien Tech (Mejorado para visibilidad interna) */
 .panel.panel-style--alien-tech {
+    /* ... (Estilos anteriores de background, border, padding, border-radius, box-shadow, posición, overflow, animación alien-energy-flow) ... */
     --alien-color1: #9a3ffc;
     --alien-color2: #32cd32;
     border: none;
-    background: radial-gradient(ellipse at top left, var(--alien-color1), transparent 70%),
-                radial-gradient(ellipse at bottom right, var(--alien-color2), transparent 70%),
-                var(--nexus-bg-deep, #0a0a14);
+    background:
+        radial-gradient(ellipse at top left, var(--alien-color1), transparent 70%),
+        radial-gradient(ellipse at bottom right, var(--alien-color2), transparent 70%),
+        var(--nexus-bg-deep, #0a0a14);
     border-radius: 15px 0px 15px 0px;
-    padding: calc(var(--spacing-unit, 8px) * 2);
-    box-shadow: inset 0 0 15px rgba(154, 63, 252, 0.3), 0 0 10px rgba(50, 205, 50, 0.3);
-    color: var(--nexus-text-primary, #e0e8ff);
-}
-.panel.panel-style--alien-tech > h2 {
-    border-bottom: 1px solid var(--alien-color1);
-    background: transparent;
-    color: var(--alien-color2);
-    font-family: var(--font-heading, sans-serif);
-    text-shadow: 0 0 5px var(--alien-color2);
-    text-align: center;
-    font-weight: 700;
-    margin: 0; /* Reset base */
-    padding: 0; /* Reset base */
-    padding-bottom: 0.5em;
-    margin-bottom: 0.75em;
-}
-
-/* 4. Retro Cassette */
-.panel.panel-style--retro-cassette {
-    background-color: #e0d8c0;
-    border: 3px solid #333;
-    border-radius: 5px;
-    padding: var(--spacing-unit, 8px);
-    color: #333;
-    box-shadow: 4px 4px 0px #888;
-}
-.panel.panel-style--retro-cassette > h2 {
-    background-color: #c0b8a0;
-    padding: 4px 8px;
-    border-bottom: 2px solid #333;
-    font-family: var(--font-mono, monospace);
-    font-size: 1em;
-    color: #333;
-    text-transform: uppercase;
-    text-shadow: none;
-    margin: 0;
-    margin-bottom: var(--spacing-unit, 8px);
-}
-.panel.panel-style--retro-cassette > *:not(h2) { padding-top: 0; }
-.panel.panel-style--retro-cassette > h2::after {
-    content: ''; display: block; height: 10px; background: #f5f5f5; border: 1px solid #aaa; width: 60%; margin: 4px auto -4px auto;
-}
-
-/* --- Estilos Fantasía / Históricos --- */
-
-/* 5. Grimoire Page */
-.panel.panel-style--grimoire-page {
-    background-color: var(--spawn-bg-alt, #242424);
-    border: 1px solid #000;
-    color: var(--spawn-text-primary, #e8e8e8);
-    padding: calc(var(--spacing-unit, 8px) * 1.5);
-    box-shadow: var(--shadow-hard-inset, inset 0 0 5px #000), var(--shadow-hard-outset, 2px 2px 3px #000);
-    border-radius: 2px;
+    padding: calc(var(--spacing-unit) * 2);
+    box-shadow:
+        inset 0 0 15px rgba(154, 63, 252, 0.3),
+        0 0 10px rgba(50, 205, 50, 0.3),
+        0 0 20px rgba(154, 63, 252, 0.2);
+    color: var(--nexus-text-primary, #e0e8ff); /* <-- Color de texto principal del panel */
     position: relative;
+    overflow: hidden;
 }
-.panel.panel-style--grimoire-page > h2 {
-    background: transparent;
-    border-bottom: 2px solid var(--spawn-border-dark, #000);
-    padding: 0; /* Reset base */
-    padding-bottom: 4px;
-    margin: 0; /* Reset base */
-    margin-bottom: calc(var(--spacing-unit, 8px)*1.5);
-    font-family: var(--font-headings, cursive);
-    color: var(--accent-blood-red, #8a0303);
-    text-align: center;
-    font-size: 1.6em;
-    text-shadow: 1px 1px 1px #000;
-}
+/* Asegurar visibilidad elementos internos */
+.panel.panel-style--alien-tech .panel-header { color: var(--alien-color2); } /* Color específico cabecera */
+.panel.panel-style--alien-tech .panel-content { color: var(--nexus-text-primary, #e0e8ff); } /* <-- Forzar color contenido */
+/* Heredar color o forzar para elementos internos */
+.panel.panel-style--alien-tech h1, .panel.panel-style--alien-tech h2, /* etc. */
+.panel.panel-style--alien-tech p, .panel.panel-style--alien-tech li, /* etc. */
+.panel.panel-style--alien-tech table, .panel.panel-style--alien-tech th, /* etc. */
+/* ... adaptar otros estilos, asegurando que hereden o fuercen el color ... */
 
-/* 6. Elven Scroll */
-.panel.panel-style--elven-scroll {
-    background-color: #f0f8f0;
-    border: 1px solid #3cb371;
-    color: #2e8b57;
-    padding: var(--spacing-unit, 8px);
-    border-radius: 5px;
-    position: relative;
-}
-/* <<< TEMPORALMENTE COMENTADO para depurar texto >>> */
-/*
-.panel.panel-style--elven-scroll::before, .panel.panel-style--elven-scroll::after {
-    content: ''; position: absolute; width: 100px; height: 20px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20'%3E%3Cpath d='M0,10 C20,-5 30,25 50,10 S70,-5 80,15 S90,5 100,10' fill='none' stroke='%23daa520' stroke-width='1.5'/%3E%3C/svg%3E");
-    background-size: contain; background-repeat: no-repeat; opacity: 0.7;
-}
-.panel.panel-style--elven-scroll::before { top: -10px; left: 10px; }
-.panel.panel-style--elven-scroll::after { bottom: -10px; right: 10px; transform: scaleY(-1); }
-*/
-.panel.panel-style--elven-scroll > h2 {
-    border-bottom-color: rgba(60, 179, 113, 0.4);
-    font-family: 'Georgia', serif;
-    color: #228b22;
-    font-style: italic;
-    text-align: center;
-    background: transparent;
-    margin: 0; /* Reset base */
-    padding: 0; /* Reset base */
-    padding-bottom: 0.5em;
-    margin-bottom: 0.75em;
-}
-
-/* 7. Dwarven Stone */
-.panel.panel-style--dwarven-stone {
-    background: linear-gradient(135deg, #708090, #506070);
-    border: 3px solid #405060;
-    color: #f0f8ff;
-    text-shadow: 1px 1px 2px #203040;
-    padding: calc(var(--spacing-unit, 8px) * 1.5);
-    border-radius: 4px;
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
-    font-family: 'Times New Roman', serif;
-}
-.panel.panel-style--dwarven-stone > h2 {
-    border-bottom-color: #a0b0c0;
-    color: #f0f8ff;
-    text-align: center;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    background: rgba(255,255,255,0.1);
-    padding: 0.2em;
-    border-radius: 2px;
-    margin: 0; /* Reset base */
-    margin-bottom: 0.75em;
-}
-
-/* 8. Steampunk Gauge */
-.panel.panel-style--steampunk-gauge {
-    --gauge-bg: #8B4513; /* Marrón cuero */
-    --gauge-border: #DAA520; /* Dorado */
-    --gauge-face: #F5F5DC; /* Beige */
-    --gauge-needle: #B22222; /* Rojo fuego */
-    background-color: var(--gauge-bg);
-    border: 5px double var(--gauge-border);
-    border-radius: 50%;
-    width: 200px; /* Ejemplo fijo */
-    height: 200px; /* Ejemplo fijo */
-    padding: 10px;
-    position: relative;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-    color: #333;
-    margin: 1em auto; /* Centrar */
-}
-.panel.panel-style--steampunk-gauge > h2 { display: none; } /* Hide real title */
-.panel.panel-style--steampunk-gauge > *:not(h2)::before { /* Simular cara del medidor */
-    content: '';
-    position: absolute;
-    inset: 15px;
-    background-color: var(--gauge-face);
-    border-radius: 50%;
-    border: 2px solid #aaa;
-    background-image: 
-        radial-gradient(circle at center, transparent 95%, #ccc 95%),
-        repeating-conic-gradient(from 0deg, #ddd 0% 1%, transparent 1% 10%);
-    z-index: 0;
-}
-.panel.panel-style--steampunk-gauge > *:not(h2) { /* Contenido */
-    position: relative; 
-    z-index: 1;
-    text-align: center;
-    padding: 30px 10px;
-    color: #555;
-}
-.panel.panel-style--steampunk-gauge::after { /* Simular aguja */
-    content: '';
-    position: absolute;
-    width: 3px;
-    height: 45%;
-    background-color: var(--gauge-needle);
-    top: 5%;
-    left: 50%;
-    transform-origin: 50% 100%;
-    transform: translateX(-50%) rotate(135deg);
-    border-radius: 2px 2px 0 0;
-    box-shadow: 0 0 3px #500;
-    z-index: 5;
-}
-
-/* --- Estilos Modernos / Minimalistas --- */
-
-/* 9. Minimalist Card */
-.panel.panel-style--minimalist-card {
-    background-color: var(--bg-primary, #fff); /* Fallback */
-    border: 1px solid var(--border-color-light, #e0e0e0); /* Fallback */
-    color: var(--text-primary, #333); /* Fallback */
-    padding: var(--spacing-lg, 24px); /* Fallback */
-    border-radius: var(--radius-md, 8px); /* Fallback */
-    box-shadow: var(--shadow-sm, 0 2px 4px rgba(0,0,0,0.05));
-}
-.panel.panel-style--minimalist-card > h2 {
-    border-bottom: none;
-    color: var(--text-primary, #333);
-    font-size: 1.25em;
-    font-weight: 600;
-    margin-bottom: var(--spacing-md, 16px);
-    padding: 0;
-    background: transparent;
-}
-
-/* 10. Brutalist Web */
-.panel.panel-style--brutalist-web {
-    background-color: #ffff00; /* Amarillo brillante */
-    border: 3px solid #0000ff; /* Azul */
-    color: #0000ff;
-    padding: 10px;
-    font-family: 'Arial', sans-serif;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-.panel.panel-style--brutalist-web > h2 {
-    background-color: #0000ff;
-    color: #ffff00;
-    padding: 5px;
-    margin: -10px -10px 10px -10px;
-    text-align: center;
-    border-bottom: 3px solid #0000ff;
-    font-size: 1.1em;
-}
-.panel.panel-style--brutalist-web > *:not(h2) { padding-top: 0; }
-
-/* 11. Paper Cutout */
-.panel.panel-style--paper-cutout {
-    background-color: #f8f8f8;
-    border: none;
-    border-radius: 4px;
-    padding: calc(var(--spacing-unit, 8px) * 2);
-    box-shadow: 
-        0px 0px 0px 1px #ddd, /* Borde sutil */
-        4px 4px 0px 0px #eee; /* Sombra sólida */
-    position: relative;
-    color: #444;
-}
-.panel.panel-style--paper-cutout > h2 {
-    border-bottom: 1px dashed #ccc;
-    color: #555;
-    font-family: var(--font-sans, sans-serif);
-    font-weight: 600;
-    text-align: left;
-    background: transparent;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 0.5em;
-    margin-bottom: 0.75em;
-}
 
 /* --- Estilos Cósmicos / Abstractos --- */
 
-/* 12. Reality Glitch */
+/* 12. Reality Glitch (Mejorado para visibilidad interna) */
 .panel.panel-style--reality-glitch {
-    position: relative;
-    border: 1px solid rgba(255, 0, 255, 0.5);
+    /* ... (Estilos anteriores de background, border, color, font-family, padding, posición, overflow, animación glitch-pos, filter) ... */
     background-color: rgba(0, 0, 15, 0.8);
-    color: #00ffff;
-    font-family: var(--font-mono, monospace);
-    padding: var(--spacing-unit, 8px);
-    overflow: hidden;
+    border: 1px solid #ff00ff;
+    color: #00ffff; /* <-- Color de texto principal del panel */
+    font-family: var(--font-mono);
+    padding: var(--spacing-unit);
+    position: relative; overflow: hidden;
     animation: glitch-pos 0.1s infinite alternate;
     filter: url(#reality-glitch-filter);
-    box-shadow: 0 0 16px 4px #00ffff88, 0 0 32px 8px #ff00ff44;
+    box-shadow:
+        0 0 16px 4px rgba(0, 255, 255, 0.3),
+        0 0 32px 8px rgba(255, 0, 255, 0.2),
+        inset 0 0 20px rgba(0, 255, 255, 0.2);
+    background-image:
+        linear-gradient(45deg, rgba(0, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 255, 255, 0.1) 75%, rgba(0, 255, 255, 0.1)),
+        linear-gradient(45deg, rgba(255, 0, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 0, 255, 0.1) 75%, rgba(255, 0, 255, 0.1));
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
 }
-.panel.panel-style--reality-glitch > h2 {
-    color: #ff00ff;
-    text-shadow: 0 0 8px #ff00ff, 0 0 16px #fff;
-    text-align: center;
-    border-bottom: none;
-    background: transparent;
-    margin: 0 0 0.5em 0;
-    padding: 0;
-    animation: glitch-text 1.5s infinite steps(1);
+/* Asegurar visibilidad elementos internos */
+.panel.panel-style--reality-glitch .panel-header { color: var(--neon-magenta, #ff00ff); text-shadow: var(--glow-magenta); } /* Color específico cabecera */
+.panel.panel-style--reality-glitch .panel-content { color: #00ffff; } /* <-- Forzar color contenido */
+/* Heredar color o forzar para elementos internos */
+.panel.panel-style--reality-glitch h1, .panel.panel-style--reality-glitch h2, /* etc. */
+.panel.panel-style--reality-glitch p, .panel.panel-style--reality-glitch li, /* etc. */
+.panel.panel-style--reality-glitch table, .panel.panel-style--reality-glitch th, /* etc. */
+.panel.panel-style--reality-glitch code, .panel.panel-style--reality-glitch pre, /* etc. */
+.panel.panel-style--reality-glitch strong, .panel.panel-style--reality-glitch em, /* etc. */
+.panel.panel-style--reality-glitch blockquote {
+    color: inherit; /* <-- Heredar el color del panel-content */
+    text-shadow: none; /* Sin brillo si no se quiere */
 }
-.panel.panel-style--reality-glitch::before,
-.panel.panel-style--reality-glitch::after {
-    content: '';
-    position: absolute;
-    background: inherit;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: -1; /* Detrás del contenido */
-}
-.panel.panel-style--reality-glitch::before {
-    animation: glitch-effect-1 1s infinite alternate step-end;
-}
-.panel.panel-style--reality-glitch::after {
-    animation: glitch-effect-2 0.5s infinite alternate step-end;
-}
-/* Asegura que el contenido esté por encima de los pseudo-elementos */
-.panel.panel-style--reality-glitch > * {
-    position: relative;
-    z-index: 1;
-}
-@keyframes glitch-pos { 0% { transform: translate(0); } 100% { transform: translate(1px, 1px); } }
-@keyframes glitch-text { 
-    0% { clip-path: inset(50% 0 0 0); } 
-    25% { clip-path: inset(0 50% 0 0); } 
-    50% { clip-path: inset(0 0 50% 0); }
-    75% { clip-path: inset(0 0 0 50%); }
-    100% { clip-path: inset(50% 0 0 0); } 
-}
-@keyframes glitch-effect-1 {
-    0% { clip-path: polygon(0 0, 100% 0, 100% 30%, 0 30%); transform: translateX(-5px); }
-    100% { clip-path: polygon(0 70%, 100% 70%, 100% 100%, 0 100%); transform: translateX(5px); }
-}
-@keyframes glitch-effect-2 {
-    0% { clip-path: polygon(0 0, 30% 0, 30% 100%, 0 100%); transform: translateY(-5px); }
-    100% { clip-path: polygon(70% 0, 100% 0, 100% 100%, 70% 100%); transform: translateY(5px); }
-}
+/* ... adaptar otros estilos ... */
 
-/* 13. Nanite Construct */
-.panel.panel-style--nanite-construct {
-    --nanite-color-primary: #00f0e0;
-    --nanite-color-secondary: #8080ff;
-    --nanite-bg: #080018;
-    background-color: var(--nanite-bg);
-    border: 1px solid var(--nanite-color-secondary);
-    border-radius: 6px;
-    padding: var(--spacing-unit, 8px);
-    color: var(--nanite-color-primary);
-    position: relative;
-    overflow: hidden;
-    box-shadow: inset 0 0 10px rgba(0, 240, 224, 0.2), 0 0 8px rgba(128, 128, 255, 0.3);
-}
-.panel.panel-style--nanite-construct > h2 {
-    color: var(--nanite-color-secondary);
-    font-family: var(--font-mono, monospace);
-    border-bottom: 1px dashed var(--nanite-color-secondary);
-    text-align: center;
-    font-weight: normal;
-    letter-spacing: 2px;
-    text-shadow: 0 0 3px var(--nanite-color-secondary);
-    background: transparent;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 0.5em;
-    margin-bottom: 0.75em;
-}
-/* --- Comentarios Temporales para Depuración --- */
-/*
-.panel.panel-style--nanite-construct::before { /* Pattern layer */
-/*  content: ''; */
-/*  position: absolute; */
-/*  inset: 0; */
-/*  background-image:  */
-/*      linear-gradient(45deg, var(--nanite-color-primary) 25%, transparent 25%, transparent 75%, var(--nanite-color-primary) 75%, var(--nanite-color-primary)), */
-/*      linear-gradient(45deg, var(--nanite-color-primary) 25%, transparent 25%, transparent 75%, var(--nanite-color-primary) 75%, var(--nanite-color-primary)); */
-/*  background-size: 10px 10px; */
-/*  background-position: 0 0, 5px 5px; */
-/*  opacity: 0.05; */
-/*  animation: nanite-pattern-flow 20s infinite linear; */
-/*  z-index: 0; */
-/*} */
-/*
-.panel.panel-style--nanite-construct::after { /* Energy flow effect */
-/*  content: ''; */
-/*  position: absolute; */
-/*  inset: -1px; */
-/*  border-radius: inherit; */
-/*  background: linear-gradient(var(--gradient-angle, 0deg), transparent, var(--nanite-color-primary), transparent); */
-/*  animation: nanite-energy-flow 4s infinite linear; */
-/*  opacity: 0.6; */
-/*  z-index: 5; */
-/*  pointer-events: none; */
-/*} */
-/*
-.panel.panel-style--nanite-construct:hover::after {
-    opacity: 0.9;
-    animation-duration: 2s;
-}
-*/
-/* --- Fin Comentarios Temporales --- */
-
-.panel.panel-style--nanite-construct > *:not(h2) { /* Contenido */
-    position: relative;
-    z-index: 10;
-}
-
-@keyframes nanite-pattern-flow {
-    0% { background-position: 0 0, 5px 5px; }
-    100% { background-position: 100px 100px, 105px 105px; }
-}
-@keyframes nanite-energy-flow {
-    0% { --gradient-angle: 0deg; }
-    100% { --gradient-angle: 360deg; }
-}
-
-/* 14. Crystal Matrix */
-.panel.panel-style--crystal-matrix {
-    --crystal-color1: #a0f0ff;
-    --crystal-color2: #f0a0ff;
-    --crystal-bg: radial-gradient(ellipse at center, rgba(10, 10, 40, 0.9) 0%, rgba(5, 5, 20, 0.95) 100%);
-    background: var(--crystal-bg);
-    border: 1px solid var(--crystal-color1);
-    border-radius: 10px;
-    color: #e0e8ff;
-    padding: calc(var(--spacing-unit, 8px) * 1.5);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 
-        inset 0 0 20px rgba(160, 240, 255, 0.2),
-        0 0 15px rgba(240, 160, 255, 0.3);
-    transition: box-shadow 0.5s ease-in-out;
-}
-.panel.panel-style--crystal-matrix:hover {
-    box-shadow: 
-        inset 0 0 30px rgba(160, 240, 255, 0.4),
-        0 0 25px rgba(240, 160, 255, 0.5);
-}
-.panel.panel-style--crystal-matrix > h2 {
-    color: var(--crystal-color2);
-    text-align: center;
-    font-family: var(--font-heading, sans-serif);
-    font-weight: 300;
-    letter-spacing: 1px;
-    text-shadow: 0 0 8px var(--crystal-color2);
-    border-bottom: 1px solid rgba(240, 160, 255, 0.5);
-    background: transparent;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 0.5em;
-    margin-bottom: 0.75em;
-}
-/* --- Comentarios Temporales para Depuración --- */
-/*
-.panel.panel-style--crystal-matrix::before { /* Animated gradient border */
-/*  content: ''; */
-/*  position: absolute; */
-/*  inset: -2px; */
-/*  border-radius: inherit; */
-/*  background: conic-gradient(from var(--hue-rotate, 0deg), var(--crystal-color1), var(--crystal-color2), var(--crystal-color1)); */
-/*  z-index: -1; */
-/*  filter: blur(3px); */
-/*  animation: crystal-rotate 6s infinite linear; */
-/*} */
-/* --- Fin Comentarios Temporales --- */
-
-@keyframes crystal-rotate {
-    0% { --hue-rotate: 0deg; }
-    100% { --hue-rotate: 360deg; }
-}
-
-/* 15. Void Touched */
-.panel.panel-style--void-touched {
-    --void-primary: #480080; /* Purple */
-    --void-secondary: #001040; /* Deep Blue */
-    --void-accent: #f0f0f0; /* Off-white text */
-    background: radial-gradient(circle at center, var(--void-secondary) 0%, #000 80%);
-    border: 1px solid var(--void-primary);
-    color: var(--void-accent);
-    padding: calc(var(--spacing-unit, 8px) * 1.5);
-    border-radius: 5px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: inset 0 0 15px #000;
-    transition: border-color 0.4s ease, box-shadow 0.4s ease;
-}
-.panel.panel-style--void-touched:hover {
-    border-color: lighten(var(--void-primary), 15%);
-    box-shadow: inset 0 0 25px #000, 0 0 10px var(--void-primary);
-}
-.panel.panel-style--void-touched > h2 {
-    color: var(--void-accent);
-    font-family: serif;
-    font-style: italic;
-    text-align: center;
-    border-bottom: 1px solid var(--void-primary);
-    text-shadow: 1px 1px 3px #000;
-    background: transparent;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 0.5em;
-    margin-bottom: 0.75em;
-}
-.panel.panel-style--void-touched::before,
-.panel.panel-style--void-touched::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(72, 0, 128, 0.1) 0%, transparent 70%);
-    animation: void-ripple 5s infinite ease-out;
-    pointer-events: none;
-}
-.panel.panel-style--void-touched::before { width: 200%; padding-bottom: 200%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-.panel.panel-style--void-touched::after { width: 150%; padding-bottom: 150%; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 1.5s; }
-
-@keyframes void-ripple {
-    0% { transform: translate(-50%, -50%) scale(0); opacity: 0.5; }
-    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-}
-
-/* 16. Scanline Terminal */
-.panel.panel-style--scanline-terminal {
-    --terminal-bg: #050a05;
-    --terminal-fg: #00ff41;
-    --terminal-border: #00ff41;
-    background-color: var(--terminal-bg);
-    border: 3px solid var(--terminal-border);
-    color: var(--terminal-fg);
-    padding: var(--spacing-unit, 12px);
-    font-family: var(--font-mono, monospace);
-    border-radius: 6px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 0 24px 6px #00ff41aa, 0 0 48px 12px #00ff4144;
-}
-.panel.panel-style--scanline-terminal > h2 {
-    color: #00ff41;
-    text-shadow: 0 0 8px #00ff41, 0 0 16px #fff;
-    border-bottom: 2px solid #00ff41;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 1.2em;
-    letter-spacing: 2px;
-    background: transparent;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 0.4em;
-    margin-bottom: 0.8em;
-}
-.panel.panel-style--scanline-terminal::before {
-    content: '';
-    position: absolute;
-    top: var(--scanner-pos, -10%);
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(to bottom, rgba(0, 255, 65, 0), #00ff41 80%, rgba(0, 255, 65, 0));
-    opacity: 1;
-    animation: scanline-move 2.5s infinite linear alternate;
-    z-index: 5;
-    pointer-events: none;
-    filter: blur(1px);
-}
-.panel.panel-style--scanline-terminal::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: 
-        linear-gradient(rgba(0, 255, 65, 0.18) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 65, 0.18) 1px, transparent 1px);
-    background-size: 12px 12px;
-    opacity: 0.5;
-    pointer-events: none;
-    z-index: 0;
-}
-.panel.panel-style--scanline-terminal > *:not(h2) { /* Target content specifically */
-    position: relative; /* Ensure content is above grid */
-    z-index: 1;
-}
-
-@keyframes scanline-move {
-    0% { --scanner-pos: -10%; }
-    100% { --scanner-pos: 110%; }
-}
 
 /* --- RPG / TTRPG Specific Styles --- */
 
-/* 17. Evidence Tag (Arkham Style) - Usa mixed-panel como base */
-/* No necesita `.panel` si usa su propia directiva */
-.mixed-panel.evidence-tag {
-    --tag-bg: #fdf5e6; /* Pergamino claro */
-    --tag-border: #8b4513; /* Marrón */
-    --tag-text: #4a2c0b;
-    --tag-header-bg: #eaddc5;
-    --tag-hole-color: #6b3a1a;
+/* 17. Evidence Tag (Mejorado para visibilidad interna) */
+.mixed-panel.evidence-tag { /* Usa mixed-panel.evidence-tag si esa es la clase base */
+    /* ... (Estilos anteriores de background, border, color, font-family, padding, margin, width, max-width, border-radius, box-shadow, posición, overflow, background-image) ... */
+    --tag-bg: #fdf5e6; --tag-border: #8b4513; --tag-text: #4a2c0b;
+    background-color: var(--tag-bg); border: 1px solid var(--tag-border);
+    color: var(--tag-text); /* <-- Color de texto principal del panel */
+    font-family: 'Courier New', monospace; /* Forzar fuente */
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px); padding-left: calc(var(--spacing-md, 16px) * 2.5);
+    margin: var(--spacing-md, 16px) auto; width: fit-content; max-width: 300px; border-radius: 3px 15px 15px 3px;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.2); position: relative; overflow: visible;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%238b4513' fill-opacity='0.05'/%3E%3C/svg%3E");
+    background-size: 100px 100px;
+}
+/* Asegurar visibilidad elementos internos */
+.mixed-panel.evidence-tag .panel-header { color: var(--tag-text); font-family: 'Courier New', monospace; } /* Color específico cabecera */
+.mixed-panel.evidence-tag .panel-content { color: var(--tag-text); font-family: 'Courier New', monospace; font-size: 0.9em; } /* <-- Forzar color contenido */
+/* Heredar color o forzar para elementos internos */
+.mixed-panel.evidence-tag p, .mixed-panel.evidence-tag li, /* etc. */
+.mixed-panel.evidence-tag strong, .mixed-panel.evidence-tag em, /* etc. */
+.mixed-panel.evidence-tag blockquote {
+    color: inherit; /* <-- Heredar el color del panel-content */
+    text-shadow: none; /* Sin brillo si no se quiere */
+}
+/* ... adaptar otros estilos ... */
 
-    background-color: var(--tag-bg);
-    border: 1px solid var(--tag-border);
-    border-radius: 3px 15px 15px 3px;
-    padding: var(--spacing-sm) var(--spacing-md);
-    padding-left: calc(var(--spacing-md) * 2.5); /* Espacio para el agujero */
-    color: var(--tag-text);
-    font-family: 'Courier New', monospace;
-    font-size: 0.9em;
-    position: relative;
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    margin: var(--spacing-sm) 0;
-}
-.mixed-panel.evidence-tag::before { /* Agujero reforzado */
-    content: '';
-    position: absolute;
-    left: var(--spacing-md);
-    top: 50%;
-    transform: translateY(-50%);
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid var(--tag-hole-color);
-    background-color: var(--tag-bg);
-    box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
-}
-.mixed-panel.evidence-tag h2 { /* Título de la etiqueta (opcional) */
-    font-weight: bold;
-    margin-bottom: var(--spacing-xs);
-    border-bottom: 1px dashed var(--tag-border);
-    padding-bottom: var(--spacing-xs);
-    color: var(--tag-text);
-}
-.mixed-panel.evidence-tag p {
-    margin: var(--spacing-xs) 0;
-    line-height: 1.3;
-}
 
-/* 18. Statblock (Monster Manual Style) - Usa mixed-panel */
+/* 18. Statblock (Mejorado para visibilidad interna) */
 .mixed-panel.statblock {
-    border: 2px solid var(--monster-border, #a52a2a); /* Rojo ladrillo */
-    background-color: var(--monster-bg, #fdf5e6); /* Pergamino */
-    color: var(--monster-text, #3b1e05);
-    padding: 0; /* Padding se maneja internamente */
+    /* ... (Estilos anteriores de border, background-color, color, padding, margin, font-family, background-image, box-shadow) ... */
+    border: 2px solid var(--monster-border, #a52a2a);
+    background-color: var(--monster-bg, #fdf5e6);
+    color: var(--monster-text, #3b1e05); /* <-- Color de texto principal del panel */
+    padding: 0; /* Padding va en wrappers internos */
     font-family: 'Georgia', serif;
-    margin: var(--spacing-md) 0;
+    margin: var(--spacing-md, 16px) 0;
+    background-image:
+        url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%23a52a2a' fill-opacity='0.05'/%3E%3C/svg%3E");
+    background-size: 100px 100px;
+    box-shadow:
+        0 2px 4px rgba(0,0,0,0.1),
+        inset 0 0 10px rgba(165, 42, 42, 0.1);
 }
-.mixed-panel.statblock h2 { /* Nombre del monstruo */
-    background-color: var(--monster-header-bg, #d2b48c); /* Tan */
-    border-bottom: 2px solid var(--monster-border, #a52a2a);
-    color: var(--monster-header-text, #5b3e25);
-    padding: var(--spacing-sm) var(--spacing-md);
-    margin: 0;
-    font-size: 1.4em;
-    font-variant: small-caps;
-    letter-spacing: 1px;
+/* Asegurar visibilidad elementos internos */
+.mixed-panel.statblock .panel-header {
+    color: var(--monster-text, #3b1e05); /* Color específico cabecera */
+    /* ... otros estilos ... */
 }
-/* Estilos específicos para monster-manual-dark */
-.mixed-panel.statblock.panel-style--monster-manual-dark {
-    --monster-border: #5c1f1f;
-    --monster-bg: #1e1e1e;
-    --monster-text: #d4c2a9;
-    --monster-header-bg: #3c2f2f;
-    --monster-header-text: #e4d2b9;
+.mixed-panel.statblock .panel-content { color: var(--monster-text, #3b1e05); } /* <-- Forzar color contenido */
+/* Heredar color o forzar para elementos internos */
+.mixed-panel.statblock h1, .mixed-panel.statblock h2, /* etc. */
+.mixed-panel.statblock p, .mixed-panel.statblock li, /* etc. */
+.mixed-panel.statblock table, .mixed-panel.statblock th, /* etc. */
+.mixed-panel.statblock code, .mixed-panel.statblock pre, /* etc. */
+.mixed-panel.statblock strong, .mixed-panel.statblock em, /* etc. */
+.mixed-panel.statblock blockquote {
+    color: inherit; /* <-- Heredar el color del panel-content */
+    text-shadow: none; /* Sin brillo si no se quiere */
 }
-.mixed-panel.statblock .stat-line {
-    padding: var(--spacing-xs) var(--spacing-md);
-    border-bottom: 1px solid var(--monster-border, #a52a2a);
+/* ... adaptar otros estilos ... */
+
+/* --- Ajustes para la estructura interna (si se usan estos wrappers) --- */
+.panel-header-container {
+    /* Background, padding, border-bottom, margin-bottom */
+     padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 1.5);
+     margin-bottom: var(--spacing-unit);
+     border-bottom: 1px solid rgba(255,255,255,0.1);
+     background: rgba(255,255,255,0.05);
 }
-.mixed-panel.statblock .stat-line strong { /* AC, HP, Speed labels */
-    color: var(--monster-header-text, #5b3e25);
+.panel-content-wrapper {
+    /* Padding interno del contenido */
+    padding: calc(var(--spacing-unit) * 1.5);
 }
-.mixed-panel.statblock .ability-scores {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    text-align: center;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-bottom: 2px solid var(--monster-border, #a52a2a);
+.panel-content {
+    /* Espacio para tablas y listas internas */
+    padding: 0; /* Remueve padding */
 }
-.mixed-panel.statblock .ability-score > strong { /* STR, DEX, etc. */
+
+/* --- Estados Mejorados --- */
+/* Regla base para el estado de error */
+.state--error {
+    --panel-border-error: #ff3030;
+    --panel-bg-error: rgba(255, 48, 48, 0.1);
+    --panel-text-error-base: #ff5050; /* Rojo un poco menos brillante */
+    --panel-shadow-error: 0 0 6px rgba(255, 80, 80, 0.6); /* Sombra más suave */
+    animation: error-pulse 2s infinite;
+}
+
+/* Combinación MUY específica para Scanline Terminal en estado de error */
+.panel.panel-style--scanline-terminal.state--error {
+    --panel-text-error-base: #ff5050; /* Rojo un poco menos brillante */
+    --panel-border-error: #ff3030;
+    --panel-bg-internal-error: rgba(255, 80, 80, 0.05);
+    --panel-shadow-error: 0 0 6px rgba(255, 80, 80, 0.6);
+
+    /* Aplicar estilos de error base al panel */
+    color: var(--panel-text-error-base) !important; /* Forzar color base */
+    border-color: var(--panel-border-error) !important;
+    text-shadow: var(--panel-shadow-error) !important;
+    background-color: var(--terminal-bg, #050a05) !important; 
+}
+
+/* SOBREESCRIBIR LA REGLA CONFLICTIVA: Forzar color y fondo en *TODOS* los elementos internos */
+.panel.panel-style--scanline-terminal.state--error * {
+    color: var(--panel-text-error-base) !important; /* Forzar color rojo */
+    text-shadow: var(--panel-shadow-error) !important; /* Forzar sombra roja */
+    background: transparent !important; /* Forzar fondo transparente por defecto */
+    border-color: transparent !important; /* Forzar borde transparente por defecto */
+}
+
+/* Re-aplicar estilos específicos para el header (si existe) con !important */
+.panel.panel-style--scanline-terminal.state--error .panel-header {
+    color: var(--panel-text-error-base) !important;
+    background-color: var(--panel-bg-error) !important;
+    border-bottom-color: var(--panel-border-error) !important;
+    text-shadow: inherit !important;
+}
+
+/* Re-aplicar estilos específicos para Admonition Warning con !important */
+.panel.panel-style--scanline-terminal.state--error .markdown-alert.markdown-alert-warning {
+    background-color: var(--panel-bg-internal-error) !important;
+    border-left-color: var(--panel-border-error) !important;
+    border-width: 0 0 0 4px !important;
+    border-style: solid !important;
+    padding: var(--spacing-md) !important;
+    margin: var(--spacing-md) 0 !important;
+    color: var(--panel-text-error-base) !important;
+    text-shadow: inherit !important;
+    border-radius: var(--border-radius-sm);
+}
+/* Título y contenido dentro del Admonition */
+.panel.panel-style--scanline-terminal.state--error .markdown-alert.markdown-alert-warning *,
+.panel.panel-style--scanline-terminal.state--error .markdown-alert.markdown-alert-warning .markdown-alert-title {
+    color: var(--panel-text-error-base) !important;
+    text-shadow: inherit !important;
+    background: transparent !important;
+}
+
+/* Re-aplicar estilos específicos para pre/code con !important */
+.panel.panel-style--scanline-terminal.state--error pre,
+.panel.panel-style--scanline-terminal.state--error code {
+    color: var(--panel-text-error-base) !important;
+    background-color: var(--panel-bg-internal-error) !important;
+    text-shadow: inherit !important;
+    border: 1px solid rgba(255, 80, 80, 0.2) !important;
+    padding: var(--spacing-sm) var(--spacing-md) !important;
     display: block;
-    color: var(--monster-header-text, #5b3e25);
-    font-weight: bold;
-}
-.mixed-panel.statblock hr {
-    border: none;
-    border-top: 2px solid var(--monster-border, #a52a2a);
-    margin: 0;
-}
-.mixed-panel.statblock h4 { /* Actions, Traits headers */
-    color: var(--monster-header-text, #5b3e25);
-    font-size: 1.1em;
-    font-weight: bold;
-    margin: var(--spacing-sm) var(--spacing-md);
-    font-style: italic;
-}
-.mixed-panel.statblock .action-description,
-.mixed-panel.statblock .trait-description {
-    padding: 0 var(--spacing-md) var(--spacing-sm) var(--spacing-md);
+    margin: var(--spacing-md) 0 !important;
+    border-radius: var(--border-radius-sm);
 }
 
-/* 19. Character Sheet (Data Stream Style) - Usa mixed-panel */
-.mixed-panel.character-sheet {
-    border: 1px solid var(--data-stream-border, #00ffff); /* Cian */
-    background-color: var(--data-stream-bg, #05080f); /* Azul oscuro */
-    color: var(--data-stream-text, #00ff41); /* Verde brillante */
-    padding: var(--spacing-md);
-    font-family: var(--font-mono, monospace);
-    margin: var(--spacing-md) 0;
-    box-shadow: inset 0 0 8px rgba(0, 255, 255, 0.3);
-}
-.mixed-panel.character-sheet h2 { /* Nombre del personaje */
-    color: var(--data-stream-header, #ffff00); /* Amarillo */
-    text-align: center;
-    border-bottom: 1px dashed var(--data-stream-border, #00ffff);
-    padding-bottom: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
-    font-size: 1.3em;
-    letter-spacing: 2px;
-}
-/* Aplicar estilos data-stream si se especifica */
-.mixed-panel.character-sheet.panel-style--data-stream {
-    /* Hereda o redefine variables si es necesario */
-}
-.mixed-panel.character-sheet h4 { /* Section headers */
-    color: var(--data-stream-subheader, #ff80ff); /* Magenta */
-    border-bottom: 1px solid var(--data-stream-subheader, #ff80ff);
-    margin-top: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
-    padding-bottom: var(--spacing-xs);
-    font-size: 1.1em;
-}
-.mixed-panel.character-sheet .stat-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: var(--spacing-xs);
-}
-.mixed-panel.character-sheet .stat-key {
-    color: var(--data-stream-text, #00ff41);
-}
-.mixed-panel.character-sheet .stat-value {
-    color: var(--data-stream-value, #ffffff); /* Blanco */
-    font-weight: bold;
-}
-.mixed-panel.character-sheet .skills-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.mixed-panel.character-sheet .skills-list li {
-    margin-bottom: var(--spacing-xs);
-}
-.mixed-panel.character-sheet .inventory-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-    gap: var(--spacing-xs);
-    margin-top: var(--spacing-sm);
-}
-.mixed-panel.character-sheet .item-slot {
-    border: 1px dashed var(--data-stream-border, #00ffff);
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8em;
-    opacity: 0.7;
-    padding: var(--spacing-xs);
-    overflow: hidden;
-    text-align: center;
+.state--success {
+    --panel-border: #90ff70;
+    --panel-header-bg: rgba(144, 255, 112, 0.1);
+    --panel-header-text: #90ff70;
+    animation: success-pulse 2s infinite;
 }
 
-/* 20. Magic Item Card (Arcane Relic Style) - Usa mixed-panel */
-.mixed-panel.magic-item {
-    --item-bg: linear-gradient(145deg, #2a0a4a, #1a002a);
-    --item-border: #d4af37; /* Oro */
-    --item-text: #e0d8c0; /* Pergamino claro */
-    --item-rarity-common: #ffffff;
-    --item-rarity-uncommon: #1eff00;
-    --item-rarity-rare: #0070dd;
-    --item-rarity-veryrare: #a335ee;
-    --item-rarity-legendary: #ff8000;
-    
-    border: 1px solid var(--item-border);
-    background: var(--item-bg);
-    color: var(--item-text);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-md);
-    margin: var(--spacing-md) 0;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-}
-.mixed-panel.magic-item.panel-style--arcane-relic {
-    /* Puede heredar o redefinir variables */
-}
-.mixed-panel.magic-item h2 { /* Nombre del objeto */
-    color: var(--item-border);
-    text-align: center;
-    font-family: 'Trajan Pro', serif; /* Fuente tipo fantasía */
-    font-size: 1.2em;
-    border-bottom: 1px solid var(--item-border);
-    padding-bottom: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
-    text-shadow: 1px 1px 2px #000;
-}
-.mixed-panel.magic-item .item-description {
-    font-style: italic;
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
-    border-bottom: 1px dashed rgba(212, 175, 55, 0.4);
-    line-height: 1.5;
-}
-.mixed-panel.magic-item .item-rarity {
-    text-align: right;
-    font-weight: bold;
-    text-transform: capitalize;
-    font-size: 0.9em;
-}
-/* Colores de Rareza */
-.item-rarity--common    { color: var(--item-rarity-common); }
-.item-rarity--uncommon  { color: var(--item-rarity-uncommon); }
-.item-rarity--rare      { color: var(--item-rarity-rare); }
-.item-rarity--veryrare { color: var(--item-rarity-veryrare); }
-.item-rarity--legendary { color: var(--item-rarity-legendary); }
+/* ... (resto de animaciones y estilos) ... */
 
-
-/* --- Fallbacks o Estilos Adicionales --- */
-
-/* Esquinas y Bordes Genéricos (Si se usa corners=* o edge=*) */
-/* Estos selectores necesitarán ajustarse si las clases son diferentes */
-.panel .panel-corner {
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    border: 2px solid var(--panel-border, currentColor);
-    z-index: 3; /* Asegurar que estén sobre el fondo */
-}
-.panel .panel-corner.corner-pos--top-left   { top: 0px; left: 0px; border-right: none; border-bottom: none; }
-.panel .panel-corner.corner-pos--top-right  { top: 0px; right: 0px; border-left: none; border-bottom: none; }
-.panel .panel-corner.corner-pos--bottom-left { bottom: 0px; left: 0px; border-right: none; border-top: none; }
-.panel .panel-corner.corner-pos--bottom-right{ bottom: 0px; right: 0px; border-left: none; border-top: none; }
-
-/* (Los estilos de edge y tipos específicos de esquina/borde se mantienen como estaban antes) */
-.preview .panel.corner-type-1, .preview.markdown-body .panel.corner-type-1 { 
-    /* ... */
-}
-/* ... otros corner-type-* y edge-type-* ... */
-
-/* Utilidades de Contenido */
-.panel-content--columns-2 {
-    column-count: 2;
-    column-gap: var(--spacing-lg);
-}
-.panel-content--columns-3 {
-    column-count: 3;
-    column-gap: var(--spacing-lg);
-}
-.preserve-linebreaks {
-    white-space: pre-wrap; /* Conserva saltos de línea y espacios */
-}
-
-
-/* --- Ajustes Finales y Posibles Conflictos --- */
-
-/* Asegurarse de que el contenido del panel esté por encima de ::before y ::after generales si los hubiera */
-/* ELIMINADO: Ya se maneja en panels.css con z-index: 10 por defecto */
-/* .panel > *:not(h2) { 
-    position: relative; 
-    z-index: 2; 
-} */ 
+/* --- END OF FILE src/styles/components/all-panel-styles.css --- */ 

@@ -60,38 +60,7 @@
     .floating-block .block-header h3 {
         font-size: var(--font-size-md);
     }
-} 
-
-/* Variables CSS */
-/* Estas variables aquí podrían ser redundantes si ya están en variables.css */
-/* Considerar eliminarlas si no son necesarias específicamente aquí */
-:root {
-    /* Colores base */
-    --color-primary: #007bff;
-    --color-primary-dark: #0056b3;
-    --color-secondary: #6c757d;
-    --color-secondary-dark: #545b62;
-    
-    /* Estados */
-    --color-success: #28a745;
-    --color-warning: #ffc107;
-    --color-danger: #dc3545;
-    --color-info: #17a2b8;
-    
-    /* Texto */
-    --color-text: #212529;
-    --color-text-light: #ffffff;
-    --color-text-muted: #6c757d;
-    
-    /* Tamaños de corte */
-    --cut-size-sm: 1rem;
-    --cut-size-md: 2rem;
-    --cut-size-lg: 3rem;
 }
-
-/* === SECCIÓN DE BOTONES ELIMINADA === */
-/* Los estilos de .panel-button ahora se manejan exclusivamente */
-/* en src/styles/components/buttons.css */
 
 /* Grupo de botones */
 .button-group {
@@ -146,101 +115,8 @@
         right: 0;
         width: var(--cut-size);
         height: var(--cut-size);
-        background: linear-gradient(45deg, transparent 50%, var(--color-background) 50%); /* var(--color-background) debe existir */
+        background: linear-gradient(45deg, transparent 50%, var(--color-background, var(--bg-primary)) 50%);
     }
-}
-
-/* Estilos de Panel */
-.panel {
-    background-color: var(--panel-bg);
-    border: 1px solid var(--panel-border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    transition: all var(--transition-normal) var(--ease-in-out);
-}
-
-.panel.glass {
-    /* Estilos específicos para glass */
-    background-color: rgba(var(--bg-rgb), 0.7);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(var(--border-rgb), 0.2);
-}
-
-.panel.floating {
-    box-shadow: var(--shadow-lg);
-}
-
-.panel.hoverable:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
-}
-
-.panel.small {
-    padding: var(--spacing-sm);
-}
-
-.panel.large {
-    padding: var(--spacing-lg);
-}
-
-.panel.float-left {
-    float: left;
-    margin-right: var(--spacing-md);
-}
-
-.panel.float-right {
-    float: right;
-    margin-left: var(--spacing-md);
-}
-
-/* Estilos específicos para paneles añadidos por components/panels.css */
-/* Estos pueden ser redundantes si ya están en components/panels.css */
-.panel.border-accent {
-    border-left: 4px solid var(--accent-color);
-}
-.panel.border-primary {
-    border-left: 4px solid var(--primary-color);
-}
-/* ... otros bordes ... */
-
-.panel.shadow-md {
-    box-shadow: var(--shadow-md);
-}
-/* ... otras sombras ... */
-
-.panel.pattern-grid {
-    background-image: 
-        linear-gradient(var(--panel-border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--panel-border) 1px, transparent 1px);
-    background-size: 20px 20px;
-}
-/* ... otros patrones ... */
-
-/* Estilo para texto dentro de paneles */
-.panel > p,
-.panel > ul,
-.panel > ol,
-.panel .panel-content > p,
-.panel .panel-content > ul,
-.panel .panel-content > ol {
-  color: var(--text-secondary);
-  font-size: var(--font-size-md);
-  line-height: var(--line-height-relaxed);
-}
-
-.panel h1, .panel h2, .panel h3, .panel h4, .panel h5, .panel h6 {
-    color: var(--text-primary);
-}
-
-/* Estilos para el tema oscuro - Pueden ser redundantes si están en components/panels.css */
-[data-theme="dark"] .panel {
-    background-color: var(--bg-secondary-dark);
-    border-color: var(--border-color-dark);
-}
-
-[data-theme="dark"] .panel.glass {
-    background-color: rgba(var(--bg-rgb-dark, 31, 31, 31), 0.7);
-    border-color: rgba(var(--border-rgb-dark, 61, 61, 61), 0.3);
 }
 
 /* Utilidad para limpiar flotantes */
@@ -259,31 +135,6 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
-}
-
-/* Asegurar que las variables base estén definidas */
-/* Estas podrían estar mejor en variables.css */
-:root {
-    --panel-bg: var(--bg-secondary, #f9f9f9);
-    --panel-border: var(--border-color, #e1e1e1);
-    --text-primary: var(--color-text, #212529);
-    --text-secondary: var(--color-text-muted, #6c757d);
-    --radius-lg: 0.5rem;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-    --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
-    --transition-normal: 0.2s;
-    --ease-in-out: ease-in-out;
-    --cut-size: 15px;
-    --font-size-lg: 1.25rem;
-    --font-size-md: 1rem;
-    --line-height-relaxed: 1.6;
-    --bg-highlight: #eef;
-    --accent1: #ffcc80;
-    --accent2: #80d8ff;
 }
 
 /* Estilos para el layout principal de la aplicación */

@@ -14,20 +14,19 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { TemplateManager } from './utils/templateManager';
 // Importar iconos de Lucide
 import {
-  Bold, Italic, Heading1, Heading2, List, Quote, Code, Link2, Image as ImageIcon,
+  Bold, Italic, List, Quote, Code, Link2, Image,
   Table, Strikethrough, ListTodo, Superscript, Subscript, Highlighter, ChevronsUpDown,
   Moon, Sun,
   PanelTopOpen,
   Minus,
   ListOrdered,
   Palette,
-  Square,
-  LayoutGrid,
   FileText,
-  Scroll,
   Gem,
   Skull,
-  Tag
+  Tag,
+  Heading1,
+  Heading2
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import './App.css';
@@ -436,7 +435,7 @@ const App: React.FC = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  const startResizing = (e: React.MouseEvent) => {
+  const startResizing = () => {
     setIsResizing(true);
   };
 
@@ -601,13 +600,6 @@ const App: React.FC = () => {
     }
   }, [insertText]); // <- Añadir insertText como dependencia
 
-  // Función para insertar la plantilla <details>
-  const insertDetailsTemplate = useCallback(() => {
-    const template = '\n<details>\n  <summary>Título</summary>\n  \n  Contenido oculto...\n  \n</details>\n';
-    // Colocar el cursor justo después de <summary>
-    insertText(template, template.indexOf('</summary>'));
-  }, [insertText]);
-
   // Función THROTTLED para sincronizar scroll
   const syncScroll = useCallback((source: 'editor' | 'preview') => {
     if (!textareaRef.current || !previewRef.current) return;
@@ -732,7 +724,7 @@ const App: React.FC = () => {
     { isSeparator: true },
     // Grupo Inserciones
     { title: "Enlace (Ctrl+K)", icon: <Link2 size={18} />, action: () => applyFormatRef.current('[](url)', 'insert') },
-    { title: "Imagen (Ctrl+G)", icon: <ImageIcon size={18} />, action: () => handleImageButtonClickRef.current() },
+    { title: "Imagen (Ctrl+G)", icon: <Image size={18} />, action: () => handleImageButtonClickRef.current() },
     {
       title: "Insertar Tabla",
       icon: <Table size={18} />,
@@ -867,7 +859,6 @@ const App: React.FC = () => {
     // Optional: Restore cursor position intelligently
      setTimeout(() => {
         if (textareaRef.current) {
-            const lengthDifference = newDefinitionLine.length - originalDefinitionLine.length;
             // Place cursor at the end of the modified definition line
             const newCursorPosition = panelStartIndex + newDefinitionLine.length; 
             textareaRef.current.focus();
@@ -941,36 +932,11 @@ const App: React.FC = () => {
           </select>
 
           {buttons.map((btn, index) => {
-            // Usar comprobaciones más simples y acceso directo a propiedades
             if (btn.isSeparator) {
               return <div key={`sep-${index}`} className="toolbar-separator"></div>;
             } else if (btn.isDropdown && btn.dropdownId === 'panel-inserter') {
-              const isOpen = activeDropdown === btn.dropdownId;
-              return (
-                <div key={btn.title} className="toolbar-dropdown-container" ref={isOpen ? dropdownRef : null}>
-                   <button 
-                    title={btn.title} 
-                    onClick={() => setActiveDropdown(isOpen ? null : btn.dropdownId)}
-                    className={`toolbar-button ${isOpen ? 'active' : ''}`}
-                   >
-                     {btn.icon}
-                   </button>
-                  {isOpen && (
-                    <ul className="toolbar-dropdown-menu">
-                      {btn.options.map((option: any) => ( // Usar any para la opción
-                        <li key={option.label} className="toolbar-dropdown-item">
-                          <button onClick={() => {
-                            insertText(option.template, option.cursorOffset); // Asumir que existen
-                            setActiveDropdown(null);
-                          }}>
-                            {option.label}{option.dependency ? ` (Dep: ${option.dependency})` : ''}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              );
+              // ELIMINAR: No renderizar el menú de paneles
+              return null;
             } else if (btn.isDropdown && btn.dropdownId === 'theme-selector') {
               return null; // Avoid rendering the theme dropdown button from the map if we added the <select> manually
             } else if (btn.isDropdown && btn.dropdownId === 'table-inserter') { // Handle Table Dropdown
@@ -986,10 +952,10 @@ const App: React.FC = () => {
                    </button>
                   {isOpen && (
                     <ul className="toolbar-dropdown-menu">
-                      {btn.options.map((option: any) => ( // Usar any para la opción
+                      {btn.options.map((option: any) => (
                         <li key={option.label} className="toolbar-dropdown-item">
                           <button onClick={() => {
-                            insertText(option.template, option.cursorOffset); // Insert the styled table template
+                            insertText(option.template, option.cursorOffset);
                             setActiveDropdown(null);
                           }}>
                             {option.label}

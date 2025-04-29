@@ -20,5 +20,18 @@
     "esModuleInterop": true
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": [
+    "node_modules",
+    "src/utils/previewManager.temp.ts",
+    "src/utils/previewManager.new.ts",
+    "src/utils/debug/**",
+    "src/setupTests.ts",
+    "src/app/page.tsx",
+    "src/components/TestEsquinas.tsx",
+    "src/components/NotificationCenter.tsx",
+    "src/components/PreviewPanel.tsx",
+    "src/components/MarkdownEditor.tsx",
+    "src/store.ts"
+  ]
 } 

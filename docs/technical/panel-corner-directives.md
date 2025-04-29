@@ -52,6 +52,18 @@ El objetivo era permitir a los usuarios añadir decoraciones visuales (esquinas)
 
 *   Se creó el componente `DirectiveTester.tsx` para probar las directivas y plugins en un entorno aislado, evitando romper la aplicación principal durante la experimentación con la lógica compleja de AST y CSS.
 
+## 4. Corrección de Estilos Internos y Especificidad (Debug)
+
+*   **Problema:** Se detectó que al aplicar estilos de panel complejos (ej. `panel-style--scanline-terminal`) combinados con clases de estado (ej. `state--error`), los elementos internos del panel (como `pre`, `blockquote`, admonitions `[!WARNING]`) no heredaban correctamente los colores definidos por el estado. En su lugar, mantenían los colores del estilo base del panel (ej. texto verde en `scanline-terminal` en lugar de rojo en `state--error`) o mostraban fondos claros inesperados (ej. fondo blanco en admonitions).
+*   **Diagnóstico:**
+    1.  Se identificó mediante la inspección de elementos que reglas CSS con alta especificidad o el uso de `!important` en los estilos base del panel (ej. `.panel-style--scanline-terminal * { color: green !important; }`) estaban sobreescribiendo los estilos que se intentaban aplicar para el estado específico.
+    2.  Los estilos predeterminados de los admonitions (posiblemente de la librería `remark-github-beta-blockquote-admonitions` o CSS base) aplicaban fondos y colores que no eran sobreescritos por las reglas iniciales para la combinación de panel + estado.
+*   **Solución Implementada:**
+    1.  Se crearon reglas CSS **altamente específicas** para la combinación exacta de estilo y estado (ej. `.panel.panel-style--scanline-terminal.state--error`).
+    2.  Dentro de estas reglas específicas, se **forzaron** los estilos deseados (color de texto, sombra de texto, color de borde, color de fondo para elementos internos específicos) usando `!important` para garantizar que sobreescriban cualquier regla conflictiva.
+    3.  Se utilizó un selector genérico con `!important` (`.panel.panel-style--scanline-terminal.state--error *`) para establecer un estado base (color de error, fondo transparente) para todos los elementos internos, y luego se reaplicaron estilos más específicos (también con `!important`) para elementos particulares como `pre`, `code`, `.markdown-alert-warning`, etc., para darles su apariencia final deseada dentro de ese estado.
+    4.  Se definieron variables CSS específicas para los colores y sombras del estado de error (`--panel-text-error-base`, `--panel-border-error`, etc.) para mejorar la mantenibilidad.
+
 ## Estado Actual
 
 El sistema actual permite definir tipos de esquina numéricos, controlar su posición, añadir un offset para empujarlas fuera del borde, invertir su estilo visual (ej: gradiente) e invertir su forma geométrica (`clip-path`) horizontal y/o verticalmente mediante atributos en la directiva Markdown.

@@ -7,7 +7,7 @@
 /* Layout (Mínimos necesarios) */
 @import './layout/Layout.css';
 
-/* Components (Comentados temporalmente) */
+/* Components */
 @import './components/buttons.css';
 @import './components/panels.css';
 @import './components/toolbar.css';
@@ -17,19 +17,19 @@
 @import './components/MarkdownToolbar.css';
 @import './components/all-panel-styles.css';
 
-/* Utilities (Comentados temporalmente) */
+/* Utilities */
 @import './utilities/spacing.css';
 @import './utilities/colors.css';
 @import './utilities/general.css';
 
-/* Themes (Comentados temporalmente) */
+/* Themes */
 @import './themes/light.css';
-@import './themes/dark.css'; 
+@import './themes/dark.css';
 
-/* Template Styles (Comentados temporalmente) */
-/* @import '../../public/templates/default.css'; */ /* Este podría seguir comentado si no es necesario globalmente */
+/* Template Styles (Opcional, mantener comentado si no se usa globalmente) */
+/* @import '../../public/templates/default.css'; */
 
 /* IMPORTANTE: Flotantes siempre al FINAL para máxima prioridad */
-/* @import './floating-blocks.css'; */ /* Comentado - Contenido movido a floating-layout.css e importado en App.tsx */
+/* @import './floating-blocks.css'; */ /* Sigue comentado - Asumiendo que se importa en otro lugar */
 
 /* --- NO DEBE HABER NADA MÁS AQUÍ --- */ 

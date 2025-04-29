@@ -1,15 +1,6 @@
 import { visit } from 'unist-util-visit';
 import { h } from 'hastscript';
 import type { Transformer } from 'unified';
-import type { Root } from 'hast';
-
-// Definición de tipos
-interface DirectiveNode {
-  type: 'textDirective' | 'leafDirective' | 'containerDirective';
-  name: string;
-  attributes: Record<string, string>;
-  children: any[];
-}
 
 // Procesador de la directiva de botón
 export function remarkDirectiveButton(): Transformer {

@@ -103,11 +103,14 @@ export default function remarkCornerDirectives() {
           const position = attributes.pos || 'top-left';
           offsetVarName = '--corner-offset'; 
           classNames = `panel-corner corner-pos--${position} corner-type-${typeValue}`;
-          if (flipH) {
-            classNames += ' corner-shape-flipped-h';
-          }
-          if (flipV) {
-            classNames += ' corner-shape-flipped-v';
+          
+          // Añadir clases de flip si están presentes
+          if (flipH) classNames += ' corner-shape-flipped-h';
+          if (flipV) classNames += ' corner-shape-flipped-v';
+          
+          // Añadir clase de offset para posicionamiento preciso
+          if (offsetValue !== 0) {
+            classNames += ` corner-offset-${offsetValue}`;
           }
         } else if (directiveNode.name === 'T-edge') {
           offsetVarName = '--edge-offset'; 
@@ -124,24 +127,21 @@ export default function remarkCornerDirectives() {
         }
 
         hProperties.className = classNames;
-        // Construir el string de estilo
+        
+        // Construir el string de estilo con variables CSS
         let styleString = `${offsetVarName}: ${-offsetValue}px;`;
-        // if (spanValue !== null && ['T-edge', 'B-edge', 'L-edge', 'R-edge'].includes(directiveNode.name)) {
-        //   styleString += ` --edge-span-width: ${spanValue}px; --edge-span-height: ${spanValue}px;`;
-        // }
-        // --- Asignar Span correctamente --- 
+        
+        // Añadir span para edges si está presente
         if (spanValue !== null) {
           if (['T-edge', 'B-edge'].includes(directiveNode.name)) {
-            // Bordes Horizontales: span controla el width
-            styleString += ` --edge-span-width: ${spanValue};`; // Usar spanValue (que ya tiene px o %)
+            styleString += ` --edge-span-width: ${spanValue};`;
           } else if (['L-edge', 'R-edge'].includes(directiveNode.name)) {
-            // Bordes Verticales: span controla el height
-            styleString += ` --edge-span-height: ${spanValue};`; // Usar spanValue (que ya tiene px o %)
+            styleString += ` --edge-span-height: ${spanValue};`;
           }
-          // Nota: Si un tipo de borde específico necesita controlar ambos, 
-          // se podría añadir lógica adicional aquí o manejarlo puramente en CSS.
         }
+        
         hProperties.style = styleString;
+        hProperties['aria-hidden'] = 'true'; // Añadir aria-hidden para accesibilidad
 
         // Limpiar hijos 
         directiveNode.children = [];
