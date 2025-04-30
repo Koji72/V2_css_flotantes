@@ -149,15 +149,15 @@
 
 
 /* --- 4. PANELES :::PANEL (Adaptados a remarkCustomPanels) --- */
-.preview .panel { /* Estilo base para div.panel */
-    margin: calc(var(--spacing-unit) * 2) 0;
-    border: var(--border-width-fine) solid var(--lv426-border);
-    background-color: var(--lv426-bg-alt);
-    box-shadow: var(--shadow-outset);
+.preview .panel {
+    position: relative;
+    overflow: visible !important; /* Asegurar que las esquinas sean visibles */
+    padding: var(--spacing-unit);
+    margin: var(--spacing-unit) 0;
+    border: 1px solid var(--lv426-border);
     border-radius: var(--radius);
-    position: relative; /* Para decoraciones */
-    overflow: hidden; /* Para contener decoraciones y clip-path */
-    padding: calc(var(--spacing-unit) * 1.5); /* Padding general */
+    background-color: var(--lv426-bg-alt);
+    box-shadow: var(--shadow-inset);
 }
 .preview .panel-title { /* Estilo para h4.panel-title */
     margin-top: calc(-1 * var(--spacing-unit) * 1.5); /* Compensar padding padre */
@@ -316,16 +316,16 @@
 
 /* --- 5. DECORACIONES ::CORNER Y ::X-EDGE (Adaptados) --- */
 .preview .panel-corner, .preview .panel-edge {
-    position: absolute !important; /* Mantener !important si es necesario */
-    z-index: 5;
+    position: absolute !important;
+    z-index: 10; /* Aumentado para asegurar visibilidad */
     pointer-events: none;
 }
 
 /* Posicionamiento de Esquinas (Usa variables CSS) */
-.preview .corner-pos--top-left { top: calc(-1 * var(--corner-offset, 1px)); left: calc(-1 * var(--corner-offset, 1px)); }
-.preview .corner-pos--top-right { top: calc(-1 * var(--corner-offset, 1px)); right: calc(-1 * var(--corner-offset, 1px)); }
-.preview .corner-pos--bottom-left { bottom: calc(-1 * var(--corner-offset, 1px)); left: calc(-1 * var(--corner-offset, 1px)); }
-.preview .corner-pos--bottom-right { bottom: calc(-1 * var(--corner-offset, 1px)); right: calc(-1 * var(--corner-offset, 1px)); }
+.preview .corner-pos--top-left { top: calc(-2px - var(--corner-offset, 1px)); left: calc(-2px - var(--corner-offset, 1px)); }
+.preview .corner-pos--top-right { top: calc(-2px - var(--corner-offset, 1px)); right: calc(-2px - var(--corner-offset, 1px)); }
+.preview .corner-pos--bottom-left { bottom: calc(-2px - var(--corner-offset, 1px)); left: calc(-2px - var(--corner-offset, 1px)); }
+.preview .corner-pos--bottom-right { bottom: calc(-2px - var(--corner-offset, 1px)); right: calc(-2px - var(--corner-offset, 1px)); }
 
 /* Tipos de Esquina LV-426 */
 .preview .corner-type-1 { /* Escuadra Verde Ácido */
@@ -498,8 +498,8 @@
 
 /* --- 5. DECORACIONES ::CORNER Y ::X-EDGE (Adaptados) --- */
 .preview .panel-corner, .preview .panel-edge {
-    position: absolute !important; /* Mantener !important si es necesario */
-    z-index: 5;
+    position: absolute !important;
+    z-index: 10; /* Aumentado para asegurar visibilidad */
     pointer-events: none;
 }
 

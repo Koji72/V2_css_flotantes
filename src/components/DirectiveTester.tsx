@@ -41,17 +41,16 @@ const styles = {
   }
 };
 
-// Plantilla inicial de prueba (Sintaxis funcional encontrada)
-const initialTestMarkdown = `# Panel con Esquinas (Tester)
+// Plantilla inicial de prueba (Caso mínimo para reproducir el bug)
+const initialTestMarkdown = `# Test Panel-Corner Bug
 
-:::panel{title="Panel de Prueba"}
+:::panel{title="Panel con Esquinas"}
 Contenido del panel.
 
-::corner{pos=bottom-right type=stripes}
-
-
-::corner{pos=top-left type=stripes}
-
+::corner{pos=top-left type=1}
+::corner{pos=top-right type=1}
+::corner{pos=bottom-left type=1}
+::corner{pos=bottom-right type=1}
 
 Más contenido.
 :::

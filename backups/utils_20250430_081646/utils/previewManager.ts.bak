@@ -1,0 +1,939 @@
+import { marked } from 'marked';
+import { MarkdownProcessor } from './markdownProcessor';
+import { useStore } from '../store';
+import { setupButtonInteractions, cleanupButtonInteractions } from './markdownDirectives';
+
+// Helper local para escapar HTML si es necesario dentro de esta clase
+const escapeHtmlPreview = (unsafe: string): string => {
+    // Simple escape function for logging/error messages
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ };
+
+interface PanelStyles {
+    styles: string[];
+    layout: string;
+    classes: string[];
+    animation: string;
+    title?: string;
+}
+
+// Define interface for PanelAttributes
+interface PanelAttributes {
+    id?: string;
+    class?: string;
+    layout?: string;
+    width?: string;
+    animation?: string;
+    title?: string;
+    type?: string;
+}
+
+interface ButtonAttributes {
+    style?: string;
+    action?: string;
+}
+
+/**
+ * Gestor de la previsualización en iframe V2.6 (Pre-procesamiento de Paneles).
+ * PRE-PROCESA bloques ::: a HTML.
+ * Llama a MarkdownProcessor para el resto.
+ * Aplica CSS y mejoras JS.
+ */
+export class PreviewManager {
+    private static instance: PreviewManager | null = null;
+    private iframe: HTMLIFrameElement | null = null;
+    public isReady: boolean = false;
+    private currentCSSText: string = '';
+    private loadedFonts: Set<string> = new Set();
+    private scrollSyncTimeout: number | null = null;
+    private lastScrollSource: 'editor' | 'preview' | null = null;
+    private lastKnownMarkdown: string = '';
+    private interactionListenersAttached: boolean = false;
+    private isProcessing: boolean = false; // Flag para evitar updates concurrentes
+    private buttonListeners: Map<string, (event: Event) => void> = new Map();
+    private panelCache: Map<string, string> = new Map();
+    private iframeLoadListener: (() => void) | null = null;
+    private initialContentQueue: string | null = null;
+    private initialCSSQueue: string | null = null;
+
+    constructor() {
+        if (PreviewManager.instance) {
+            throw new Error("Use PreviewManager.getInstance() instead of new.");
+        }
+        PreviewManager.instance = this;
+    }
+
+    static getInstance(): PreviewManager {
+        if (!PreviewManager.instance) {
+            throw new Error("PreviewManager instance not initialized.");
+        }
+        return PreviewManager.instance;
+    }
+
+    initialize(iframe: HTMLIFrameElement): void {
+        console.log('[PreviewManager] Inicializando...');
+        if (this.iframe) {
+            console.warn('[PreviewManager] Ya inicializado. Destruyendo instancia previa.');
+            this.destroy(); // Ensure clean state if re-initialized
+        }
+        this.iframe = iframe;
+        this.isReady = false; // Explicitly set to false on init
+
+        // Clear queues
+        this.initialContentQueue = null;
+        this.initialCSSQueue = null;
+
+        // Listener for iframe load event
+        this.iframeLoadListener = () => {
+            console.log('[PreviewManager] Evento LOAD del iframe recibido.');
+            if (!this.iframe || !this.iframe.contentWindow || !this.iframe.contentDocument) {
+                console.error('[PreviewManager] Iframe o su contenido no disponible en el evento LOAD.');
+                this.isReady = false; 
+                return;
+            }
+
+            // Basic check to see if contentWindow is accessible
+            try {
+                // Accessing contentDocument implies readiness
+                const doc = this.iframe.contentDocument;
+                
+                // Create basic HTML structure if needed
+                if (!doc.getElementById('content')) {
+                    console.log('[PreviewManager] Creando estructura HTML básica en iframe...');
+                    
+                    // Write basic HTML structure with a content div
+                    doc.open();
+                    doc.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Markdown Preview</title>
+                            <style id="base-styles">
+                                body { 
+                                    margin: 0; 
+                                    padding: 15px; 
+                                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
+                                    line-height: 1.6; 
+                                    color: var(--text-primary, #1f2937);
+                                    background-color: var(--bg-primary, #ffffff);
+                                }
+                                #content { 
+                                    min-height: 100%;
+                                    width: 100%;
+                                }
+                            </style>
+                            <style id="custom-theme-style"></style>
+                        </head>
+                        <body>
+                            <div id="content"></div>
+                        </body>
+                        </html>
+                    `);
+                    doc.close();
+                    
+                    console.log('[PreviewManager] Estructura HTML básica creada.');
+                }
+                
+                console.log('[PreviewManager] Iframe document accesible. Marcando como LISTO.');
+                this.isReady = true;
+                this.setupDefaultListeners(); // Setup listeners after iframe is ready
+                this.applyStyles(); // Apply any queued or current CSS
+
+                // Process queued content if any
+                if (this.initialContentQueue !== null) {
+                    console.log('[PreviewManager] Procesando contenido inicial encolado...');
+                    this.updateContent(this.initialContentQueue)
+                        .catch(e => console.error("Error processing queued initial content:", e));
+                    this.initialContentQueue = null; // Clear queue
+                }
+            } catch (error) {
+                console.error('[PreviewManager] Error accediendo al contentDocument en LOAD:', error);
+                this.isReady = false; // Stay not ready if access failed
+            }
+        };
+
+        // Attach the load listener
+        this.iframe.addEventListener('load', this.iframeLoadListener);
+
+        // Set src to trigger load event (important for some browsers/setups)
+        // Using 'about:blank' initially is a common practice
+        if (!this.iframe.src || this.iframe.src === 'about:blank') {
+            console.log('[PreviewManager] Estableciendo iframe.src a about:blank para asegurar evento load.');
+            this.iframe.src = 'about:blank';
+        } else {
+            // If src is already set, manually check/trigger if needed, 
+            // though 'load' should fire if content is loading.
+            console.log('[PreviewManager] Iframe ya tiene src. Esperando evento load existente.');
+        }
+    }
+
+    private setupDefaultListeners() {
+        // Moved listener setup to be called *after* iframe load
+        if (!this.isReady || !this.iframe?.contentWindow) {
+            console.warn('[PreviewManager] Intento de configurar listeners antes de estar listo.');
+            return;
+        }
+        
+        console.log('[PreviewManager] Configurando listeners por defecto (post-load)');
+        
+        this.iframe.contentWindow.addEventListener('click', (event) => {
+            const target = event.target as HTMLElement;
+            if (target.matches('.panel-button')) {
+                const action = target.getAttribute('data-action');
+                const style = target.getAttribute('data-button-style');
+                const text = target.textContent;
+                
+                console.log('[PreviewManager] Botón clickeado:', { action, style, text });
+                
+                const customEvent = new CustomEvent('panel-button-action', {
+                    detail: {
+                        action,
+                        buttonStyle: style,
+                        buttonText: text,
+                        buttonId: target.id
+                    }
+                });
+                window.dispatchEvent(customEvent);
+            }
+        });
+        // Potentially add scroll listener setup here too if needed post-load
+        // this.setupScrollListener(); 
+    }
+
+    destroy(): void {
+        console.log('[PreviewManager] Destruyendo instancia...');
+        if (this.iframe) {
+            if (this.iframeLoadListener) {
+                this.iframe.removeEventListener('load', this.iframeLoadListener);
+                this.iframeLoadListener = null;
+                console.log('[PreviewManager] Listener de load eliminado.');
+            }
+            if (this.iframe.contentWindow) {
+                // Remove other listeners like scroll, click etc.
+                this.iframe.contentWindow.removeEventListener('scroll', this.handleIframeScroll);
+                // Ensure click listeners are also removed if added dynamically
+                // Note: Button listeners are handled by removeInteractionListeners
+                 console.log('[PreviewManager] Listeners de scroll eliminados.');
+                 try {
+                     this.removeInteractionListeners(this.iframe.contentWindow.document);
+                     console.log('[PreviewManager] Listeners de interacción eliminados.');
+                 } catch (e) {
+                    console.warn('[PreviewManager] Error al eliminar listeners de interacción en destroy:', e);
+                 }
+            }
+        }
+        this.iframe = null;
+        this.isReady = false;
+        this.currentCSSText = '';
+        this.loadedFonts.clear();
+        if (this.scrollSyncTimeout) clearTimeout(this.scrollSyncTimeout);
+        this.lastScrollSource = null;
+        this.interactionListenersAttached = false;
+        this.isProcessing = false;
+        this.initialContentQueue = null;
+        this.initialCSSQueue = null;
+        console.log('[PreviewManager] Instancia destruida y estado reseteado.');
+    }
+
+    // Método de logging para debug
+    private logDebug(message: string): void {
+        console.log(`[PreviewManager Debug] ${message}`);
+    }
+
+    // --- PRE-PROCESAMIENTO (VERSIÓN PLACEHOLDERS V3) ---
+    // Mapa temporal para almacenar HTML de paneles
+    private panelHtmlMap: Map<string, string> = new Map();
+
+    // Función para generar UUID simple (o usar librería)
+    private generateUUID(): string {
+        return Math.random().toString(36).substring(2, 15);
+    }
+
+    private async preprocessPanels(markdown: string): Promise<{ markdownWithPlaceholders: string; panelMap: Map<string, string> }> {
+        console.log('[PM V4Lite-Fix] [PreProc V3] Processing panels...');
+        
+        // Regex mejorado para detectar todos los formatos de panel
+        const panelRegex = /(?::{3}|:{2})(?:panel)(?:\s*{([^}]*)}|\s*\[([^\]]*)])\s*([\s\S]*?)(?::{3}|:{2}panel\s*:{2})/gm;
+        const panelMap = new Map<string, string>();
+        let processedMarkdown = markdown;
+        let panelCount = 0;
+        
+        let match;
+        while ((match = panelRegex.exec(markdown)) !== null) {
+            panelCount++;
+            const [fullMatch, curlyAttrs, squareAttrs, content] = match;
+            const attrs = curlyAttrs || squareAttrs || '';
+            
+            // Generar placeholder único
+            const placeholderId = `PANEL_PLACEHOLDER_${this.generateUUID()}`;
+            const placeholderComment = `<!-- ${placeholderId} -->`;
+            
+            try {
+                // Renderizar el panel
+                const panelHtml = await this.renderSinglePanelHtml('panel', attrs, content.trim());
+                panelMap.set(placeholderComment, panelHtml);
+                
+                // Reemplazar el panel original con el placeholder
+                processedMarkdown = processedMarkdown.replace(fullMatch, placeholderComment);
+            } catch (error) {
+                console.error(`[PreProc V3] Error processing panel #${panelCount}:`, error);
+                // En caso de error, mantener el contenido original
+                processedMarkdown = processedMarkdown.replace(fullMatch, `<div class="error panel-error">Error processing panel: ${error}</div>`);
+            }
+        }
+        
+        console.log(`[PM V4Lite-Fix] [PreProc V3] Processed ${panelCount} panels`);
+        return { markdownWithPlaceholders: processedMarkdown, panelMap };
+    }
+
+    // --- Helper parseAttributes (CON LOGS MEJORADOS) ---
+    private parseAttributes(headerLine: string): PanelStyles {
+        const result: PanelStyles = {
+            styles: [],
+            layout: '',
+            classes: [],
+            animation: '',
+            title: ''
+        };
+
+        if (!headerLine) return result;
+
+        const attributeSections = headerLine.split(/\s+(?=\w+=|\.)/);
+        
+        for (const section of attributeSections) {
+            const trimmedSection = section.trim();
+            if (!trimmedSection) continue;
+
+            if (!trimmedSection.includes('=') && !trimmedSection.includes(' ')) {
+                if (!result.styles.includes(trimmedSection.toLowerCase())) {
+                    result.styles.push(trimmedSection.toLowerCase());
+                }
+                continue;
+            }
+
+            const attributeRegex = /([a-zA-Z0-9_-]+)=([^"\s}]+|"[^"]*")/g;
+            let foundInRegex = false;
+            let match;
+            
+            while ((match = attributeRegex.exec(trimmedSection)) !== null) {
+                foundInRegex = true;
+                const key = match[1].toLowerCase();
+                const value = match[2].replace(/^"|"$/g, '');
+                
+                switch (key) {
+                    case 'layout':
+                    case 'l':
+                        result.layout = value.toLowerCase();
+                        break;
+                    case 'animation':
+                    case 'a':
+                        result.animation = value.toLowerCase();
+                        break;
+                    case 'title':
+                    case 't':
+                        result.title = value;
+                        break;
+                    default:
+                        if (!result.styles.includes(value.toLowerCase())) {
+                            result.styles.push(value.toLowerCase());
+                        }
+                }
+            }
+            
+            if (!foundInRegex && trimmedSection) {
+                if (!trimmedSection.includes('=')) {
+                    if (!result.styles.includes(trimmedSection.toLowerCase())) {
+                        result.styles.push(trimmedSection.toLowerCase());
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // --- Helper applyAttribute (CON LOGS) ---
+    private applyAttribute(result: PanelStyles, key: string, value: string): void {
+        if (!value) { console.log(`      [applyAttr DEBUG] Ignored key "${key}" due to empty value.`); return; }
+        const lowerKey = key.toLowerCase();
+        console.log(`      [applyAttr DIAGNOSTIC] Applying Key: "${lowerKey}", Value: "${value}"`);
+        console.log(`[DIAGNOSTIC] Aplicando atributo: key='${lowerKey}', value='${value}'`);
+        
+        if (lowerKey === 'style' || lowerKey === 's') { 
+            // CORRECCIÓN: Si el valor no tiene el prefijo "panel-style--" y no es "primary", "secondary", etc., 
+            // añadirlo automáticamente para facilitar el uso
+            let cleanValue = value;
+            if (cleanValue.startsWith('"') && cleanValue.endsWith('"')) {
+                cleanValue = cleanValue.substring(1, cleanValue.length - 1);
+            }
+            if (cleanValue.startsWith("'") && cleanValue.endsWith("'")) {
+                cleanValue = cleanValue.substring(1, cleanValue.length - 1);
+            }
+            
+            const styleValues = cleanValue.split(',').map(s => s.trim().toLowerCase()).filter(s => s);
+            
+            // Procesamos cada valor de estilo
+            const processedStyles: string[] = [];
+            for (let style of styleValues) {
+                // No modificar estilos básicos predefinidos
+                const basicStyles = ["primary", "secondary", "success", "warning", "danger", "info"];
+                if (!style.startsWith("panel-style--") && !basicStyles.includes(style)) {
+                    // Es un estilo personalizado, añadir el prefijo
+                    style = `panel-style--${style}`;
+                    console.log(`[DIAGNOSTIC] Transformando estilo a: "${style}"`);
+                }
+                
+                if (!result.styles.includes(style)) {
+                    processedStyles.push(style);
+                }
+            }
+            
+            // Añadir los estilos procesados
+            if (processedStyles.length > 0) {
+                result.styles.push(...processedStyles);
+                console.log(`[DIAGNOSTIC] Estilos añadidos al resultado: ${JSON.stringify(processedStyles)}`);
+            }
+        }
+        else if (lowerKey === 'layout' || lowerKey === 'l') { 
+            result.layout = value.trim().toLowerCase(); 
+            console.log(`      [applyAttr DIAGNOSTIC] Set layout to result: "${result.layout}"`); 
+            console.log(`[DIAGNOSTIC] Layout establecido: "${result.layout}"`);
+        }
+        else if (lowerKey === 'class' || lowerKey === 'c') { 
+            // DIAGNÓSTICO DETALLADO PARA CLASES
+            console.log(`[DIAGNOSTIC] Procesando clases: "${value}"`);
+            
+            // Primero limpiar las comillas si existen
+            let cleanValue = value;
+            if (cleanValue.startsWith('"') && cleanValue.endsWith('"')) {
+                cleanValue = cleanValue.substring(1, cleanValue.length - 1);
+            }
+            if (cleanValue.startsWith("'") && cleanValue.endsWith("'")) {
+                cleanValue = cleanValue.substring(1, cleanValue.length - 1);
+            }
+            
+            console.log(`[DIAGNOSTIC] Valor limpio de clases: "${cleanValue}"`);
+            
+            // CORRECCIÓN: Verificar si alguna clase es un estilo conocido y moverlo a styles
+            const classes = cleanValue.split(/\s+/).map(c => c.trim()).filter(c => c);
+            const knownStyles = ["tech-corners", "neo-frame", "cut-corner", "cut-corners", "glass", "hologram", "circuit-nodes", "corner-bracket"];
+            
+            const regularClasses: string[] = [];
+            const styleClasses: string[] = [];
+            
+            for (const cls of classes) {
+                if (knownStyles.includes(cls)) {
+                    // Es un estilo conocido, moverlo a styles con el prefijo adecuado
+                    const styleWithPrefix = `panel-style--${cls}`;
+                    if (!result.styles.includes(styleWithPrefix)) {
+                        styleClasses.push(styleWithPrefix);
+                        console.log(`[DIAGNOSTIC] Clase "${cls}" movida a estilo: "${styleWithPrefix}"`);
+                    }
+                } else if (cls.startsWith("panel-style--")) {
+                    // Ya tiene el prefijo, moverlo directamente a styles
+                    if (!result.styles.includes(cls)) {
+                        styleClasses.push(cls);
+                        console.log(`[DIAGNOSTIC] Clase con prefijo "${cls}" movida a estilo`);
+                    }
+                } else {
+                    // Clase regular, mantenerla
+                    regularClasses.push(cls);
+                }
+            }
+            
+            // Añadir las clases regulares a classes
+            const newClasses = regularClasses.filter(c => !result.classes.includes(c));
+            console.log(`[DIAGNOSTIC] Nuevas clases a añadir: ${JSON.stringify(newClasses)}`);
+            
+            if (newClasses.length > 0) {
+                result.classes.push(...newClasses);
+                console.log(`[DIAGNOSTIC] Clases finales en result: ${JSON.stringify(result.classes)}`);
+            }
+            
+            // Añadir los estilos encontrados a styles
+            if (styleClasses.length > 0) {
+                result.styles.push(...styleClasses);
+                console.log(`[DIAGNOSTIC] Estilos añadidos desde clases: ${JSON.stringify(styleClasses)}`);
+            }
+        }
+        else if (lowerKey === 'animation' || lowerKey === 'a') { 
+            result.animation = value.trim().toLowerCase(); 
+            console.log(`[DIAGNOSTIC] Animación establecida: "${result.animation}"`);
+        }
+        else { 
+            console.log(`[DIAGNOSTIC] ALERTA: Atributo desconocido: "${lowerKey}"`);
+        }
+    }
+
+    // Generar ID único para botones
+    private generateButtonId(): string {
+        return `panel-btn-${Math.random().toString(36).substring(2, 11)}`;
+    }
+
+    // Método para renderizar el contenido de un panel
+    private renderSinglePanelHtml(panelType: string, headerLine: string, innerContent: string): Promise<string> {
+        try {
+            const attributes = this.parseAttributes(headerLine);
+            const processedContent = this.processButtons(innerContent);
+
+            const baseClasses = ['panel', `panel-${panelType}`];
+            const styleClasses = attributes.styles.map((style: string) => `panel-${style}`);
+            const layoutClass = attributes.layout ? `panel-layout-${attributes.layout}` : '';
+            const animationClass = attributes.animation ? `panel-animation-${attributes.animation}` : '';
+
+            const combinedClasses = [...baseClasses, ...styleClasses, layoutClass, animationClass, ...attributes.classes]
+                .filter(Boolean)
+                .join(' ');
+
+            const dataAttrs = Object.entries(attributes)
+                .filter(([key]) => !['styles', 'layout', 'classes', 'animation'].includes(key))
+                .map(([key, value]) => `data-${key}="${value}"`)
+                .join(' ');
+
+            const headerHtml = headerLine ? `<div class="panel-header">${headerLine}</div>` : '';
+            const ariaLabel = attributes.title ? ` aria-label="${attributes.title}"` : '';
+
+            const outputHtml = `<section class="${combinedClasses}" ${dataAttrs}${ariaLabel}>
+<div class="corner-decoration top-left"></div>
+<div class="corner-decoration top-right"></div>
+<div class="corner-decoration bottom-left"></div>
+<div class="corner-decoration bottom-right"></div>
+${headerHtml}
+<div class="panel-content-wrapper">
+    <div class="panel-content">
+${processedContent}
+    </div>
+</div>
+${animationClass ? `<div class="animation-overlay ${attributes.animation}-effect"></div>` : ''}
+</section>\n`;
+
+            return Promise.resolve(outputHtml);
+        } catch (error) {
+            console.error('[PreviewManager] Error al renderizar panel:', error);
+            return Promise.resolve(`<div class="panel panel-error">Error al renderizar panel: ${escapeHtmlPreview(String(error))}</div>`);
+        }
+    }
+
+    // Método para configurar los listeners de interacción
+    private setupInteractionListeners(doc: Document): void {
+        if (!doc) return;
+
+        const buttons = doc.querySelectorAll('.panel-button');
+        buttons.forEach(button => {
+            const action = button.getAttribute('data-action');
+            if (action) {
+                const handler = (event: Event) => {
+                    event.preventDefault();
+                    const customEvent = new CustomEvent('panelButtonClick', {
+                        detail: { action, button }
+                    });
+                    doc.dispatchEvent(customEvent);
+                };
+                button.addEventListener('click', handler);
+                this.buttonListeners.set(button.id, handler);
+            }
+        });
+
+        this.interactionListenersAttached = true;
+    }
+
+    // Método para eliminar los listeners de interacción
+    private removeInteractionListeners(doc: Document): void {
+        if (!doc) return;
+
+        const buttons = doc.querySelectorAll('.panel-button');
+        buttons.forEach(button => {
+            const handler = this.buttonListeners.get(button.id);
+            if (handler) {
+                button.removeEventListener('click', handler);
+                this.buttonListeners.delete(button.id);
+            }
+        });
+
+        this.interactionListenersAttached = false;
+    }
+
+    // --- Método updateContent (adaptado para Placeholders y colas) --- 
+    async updateContent(markdown: string): Promise<void> {
+        console.log('>>>>>>>>>> [updateContent START V3] >>>>>>>>>>'); 
+        this.lastKnownMarkdown = markdown; // Store latest markdown regardless of readiness
+
+        if (!this.isReady) {
+            console.warn('[updateContent] Iframe not ready. Enqueueing content update.');
+            this.initialContentQueue = markdown; // Overwrite queue with the latest content
+            return; // Stop processing if not ready
+        }
+
+        // If ready, proceed but protect against concurrent execution
+        if (this.isProcessing) { 
+            console.warn("[updateContent] Update skipped: Already processing."); 
+            return; 
+        } 
+        this.isProcessing = true; 
+
+        // --- Rest of the updateContent logic --- 
+        if (!this.iframe?.contentWindow?.document) { 
+            console.error('[updateContent] CRITICAL: Iframe became invalid after readiness check?'); 
+            this.isProcessing = false; return; 
+        } 
+
+        const doc = this.iframe.contentWindow.document; 
+        
+        // Ensure content div exists
+        let contentDiv = doc.getElementById('content');
+        if (!contentDiv) { 
+            console.warn('[updateContent] Content div #content not found! Creating it...'); 
+            // Create content div if it doesn't exist
+            contentDiv = doc.createElement('div');
+            contentDiv.id = 'content';
+            if (doc.body) {
+                doc.body.appendChild(contentDiv);
+                console.log('[updateContent] Created #content div in iframe body.');
+            } else {
+                console.error('[updateContent] Cannot create #content: document body not available');
+                this.isProcessing = false; 
+                return;
+            }
+        }
+        
+        const scrollable = doc.scrollingElement || doc.body; 
+        const currentScroll = scrollable.scrollTop;
+
+        try {
+            console.log('[updateContent] Processing markdown (length: ', markdown.length, ')');
+            // PASO 1: Pre-procesar
+            const { markdownWithPlaceholders, panelMap } = await this.preprocessPanels(markdown);
+
+            // PASO 2: Procesar con MarkdownProcessor
+            const processor = MarkdownProcessor.getInstance();
+            const result = await processor.process(markdownWithPlaceholders);
+
+            if (result.html.includes("markdown-error")) { 
+                console.error("MarkdownProcessor failed.");
+                contentDiv.innerHTML = `<div class="error">Error al procesar el markdown</div>`; 
+                this.isProcessing = false; return;
+            } 
+
+            // PASO 3: Reemplazar Placeholders
+            let finalHtml = result.html;
+            panelMap.forEach((panelHtml, placeholder) => {
+                finalHtml = finalHtml.replace(placeholder, panelHtml);
+            });
+
+            // PASO 4: Actualizar iframe
+            try {
+                contentDiv.innerHTML = finalHtml;
+                this.logDebug('[updateContent] Iframe updated (innerHTML).');
+            } catch (updateError) {
+                console.error('[updateContent] Error innerHTML, trying alternative approach:', updateError);
+                try {
+                    // Try to recreate a complete HTML structure with our content
+                    doc.open();
+                    doc.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Markdown Preview</title>
+                            <style id="base-styles">
+                                body { margin: 0; padding: 15px; font-family: sans-serif; line-height: 1.6; }
+                                #content { min-height: 100%; }
+                            </style>
+                            <style id="custom-theme-style">${this.currentCSSText || ''}</style>
+                        </head>
+                        <body>
+                            <div id="content">${finalHtml}</div>
+                        </body>
+                        </html>
+                    `);
+                    doc.close();
+                    this.logDebug('[updateContent] Iframe updated (doc.write).');
+                    
+                    // We need to reapply listeners since document was rewritten
+                    setTimeout(() => {
+                        this.setupDefaultListeners();
+                        this.setupInteractionListeners(doc);
+                    }, 100);
+                } catch (writeError) {
+                    console.error('[CRITICAL] Both update methods failed:', writeError);
+                    try { contentDiv.innerHTML = '<div class="error">Error al actualizar la vista previa</div>'; } catch (e) {}
+                }
+            }
+            
+            // PASO 5: Mejoras JS
+            this.renderProgressBars(doc);
+            this.removeInteractionListeners(doc); // Remove old before adding new
+            this.setupInteractionListeners(doc); // Setup for new content
+
+            // PASO 6: Restaurar scroll
+            requestAnimationFrame(() => { scrollable.scrollTop = currentScroll; });
+
+            this.logDebug('[updateContent] Process completed successfully.');
+
+        } catch (error) {
+            console.error('[updateContent] CRITICAL ERROR during processing:', error);
+            try { 
+                contentDiv.innerHTML = `<div class="error">Error: ${error instanceof Error ? error.message : 'Desconocido'}</div>`; 
+            } catch (displayError) { 
+                console.error("Failed to display critical error:", displayError);
+            }
+        } finally {
+             this.isProcessing = false;
+             this.logDebug('<<<<<<<<<< [updateContent END V3] <<<<<<<<<<');
+        }
+    }
+    // --- Fin updateContent ---
+
+    applyCustomCSS(cssContent: string): void { 
+         console.log('[applyCustomCSS] Called. CSS length:', cssContent?.length ?? 0);
+         if (typeof cssContent !== 'string') { 
+             console.error("Invalid CSS content type"); 
+             return; 
+         }
+         this.currentCSSText = cssContent; // Store latest CSS
+         this.loadedFonts.clear(); // Clear fonts when CSS changes
+
+         if (!this.isReady) {
+            console.warn('[applyCustomCSS] Iframe not ready. CSS will be applied on load.');
+            // No need to queue separately, applyStyles() called on load will use this.currentCSSText
+            return;
+         }
+         
+         // If ready, apply styles immediately
+         this.applyStyles();
+         
+         // Optional: Trigger content update if CSS change might affect rendering significantly
+         // Be cautious as this can cause loops if not managed carefully
+         // console.log('[applyCustomCSS] Triggering content update after CSS change.');
+         // this.updateContent(this.lastKnownMarkdown).catch(e => console.error("Error during updateContent triggered by CSS change:", e));
+      }
+      
+    private applyStyles(): void { 
+         if (!this.isReady || !this.iframe?.contentWindow?.document) {
+             console.warn('PM: Cannot apply styles - iframe not ready or invalid.');
+             return;
+         }
+         const doc = this.iframe.contentWindow.document;
+         const head = doc.head;
+         try {
+             let styleElement = doc.getElementById('custom-theme-style') as HTMLStyleElement | null;
+             if (!styleElement) {
+                 styleElement = doc.createElement('style');
+                 styleElement.id = 'custom-theme-style';
+                 head.appendChild(styleElement);
+             }
+             if (styleElement.textContent !== this.currentCSSText) {
+                 styleElement.textContent = this.currentCSSText;
+                 console.log('[applyStyles] Custom CSS updated in iframe.');
+             }
+             // Theme application logic...
+             let themeName = "default-theme";
+             const themeMatch = this.currentCSSText?.match(/\/\*\s*Theme:\s*([^*]*?)\s*\*\//);
+             if (themeMatch?.[1]) {
+                 themeName = themeMatch[1].trim().toLowerCase().replace(/\s+/g, '-');
+             }
+             doc.documentElement.setAttribute('data-theme', themeName);
+             this.injectFontsFromCSS(doc, this.currentCSSText);
+             // Force repaint trick
+             doc.body.style.opacity = '0.99'; 
+             setTimeout(() => { if(doc.body) doc.body.style.opacity = '1'; }, 10);
+         } catch (error) {
+             console.error('PM: Error applying styles:', error);
+         }
+     }
+    private injectFontsFromCSS(doc: Document, cssText: string): void { 
+         if (!doc?.head || !cssText) return;
+         const head = doc.head; const importRegex = /@import\s+url\(['"]?(.+?)['"]?\);?/g; let match;
+         while ((match = importRegex.exec(cssText)) !== null) {
+             const fontUrl = match[1];
+             if (fontUrl.includes('fonts.googleapis.com') && !this.loadedFonts.has(fontUrl)) {
+                 const link = doc.createElement('link'); link.href = fontUrl; link.rel = 'stylesheet';
+                 head.appendChild(link); this.loadedFonts.add(fontUrl);
+             }
+         }
+      }
+    private renderProgressBars(doc: Document): void { 
+         console.log('Rendering progress bars...');
+         let count = 0;
+         const elements = doc.querySelectorAll('[data-value][data-max]');
+         elements.forEach((el, index) => {
+             if (!(el instanceof HTMLElement)) return;
+             el.querySelectorAll('.dynamic-progress-bar').forEach(oldBar => oldBar.remove());
+              try {
+                 const valueStr = el.dataset.value; const maxStr = el.dataset.max; const stat = el.dataset.stat || 'value';
+                 if (valueStr === undefined || maxStr === undefined) return;
+                 const value = parseFloat(valueStr); const max = parseFloat(maxStr);
+                 if (isNaN(value) || isNaN(max) || max <= 0) return;
+                 const percentage = Math.max(0, Math.min(100, (value / max) * 100));
+                 const progressBarContainer = doc.createElement('div'); progressBarContainer.className = 'dynamic-progress-bar'; 
+                 progressBarContainer.setAttribute('data-stat', stat); progressBarContainer.setAttribute('role', 'progressbar');
+                 progressBarContainer.setAttribute('aria-valuenow', value.toString()); progressBarContainer.setAttribute('aria-valuemin', '0');
+                 progressBarContainer.setAttribute('aria-valuemax', max.toString()); progressBarContainer.title = `${stat}: ${value} / ${max}`;
+                 const barFill = doc.createElement('div'); barFill.className = 'bar-fill'; barFill.style.width = `${percentage}%`;
+                 let statusClass = 'ok';
+                 if (percentage < 30) statusClass = 'error'; else if (percentage < 60) statusClass = 'warn';
+                 barFill.classList.add(statusClass);
+                 progressBarContainer.appendChild(barFill);
+                 el.appendChild(progressBarContainer); count++;
+             } catch (error) { console.error(`Error rendering progress bar for element ${index}:`, el, error); }
+         });
+         console.log(`Finished rendering progress bars. ${count} bars added/updated.`);
+      }
+    private handleMouseOver = (event: MouseEvent): void => { 
+        if (!(event.target instanceof Element)) return;
+        const interactiveContainer = (event.target as Element).closest('[data-interactive-container="true"]');
+        if (interactiveContainer) { interactiveContainer.classList.add('is-hovered'); }
+    };
+    private handleMouseOut = (event: MouseEvent): void => { 
+        if (!(event.target instanceof Element)) return;
+        const interactiveContainer = (event.target as Element).closest('[data-interactive-container="true"]');
+        const hoverClass = 'is-hovered';
+        if (interactiveContainer) {
+            const relatedTarget = event.relatedTarget as Node | null;
+            if (!relatedTarget || !interactiveContainer.contains(relatedTarget)) {
+                interactiveContainer.classList.remove(hoverClass);
+            }
+        } else if (!event.relatedTarget && this.iframe?.contentWindow?.document) {
+            this.iframe.contentWindow.document.querySelectorAll('.' + hoverClass).forEach(el => el.classList.remove(hoverClass));
+        }
+    };
+    private setupScrollListener(): void { 
+        if (!this.iframe?.contentWindow?.document) return;
+        this.iframe.contentWindow.document.addEventListener('scroll', this.handleIframeScroll);
+    }
+    private handleIframeScroll = (): void => { 
+        if (this.lastScrollSource === 'editor' || !this.iframe?.contentWindow?.document) return;
+        this.lastScrollSource = 'preview';
+        const scrollable = this.iframe.contentWindow.document.scrollingElement || this.iframe.contentWindow.document.body;
+        const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
+        if (maxScroll <= 0) return;
+        const scrollPercentage = (scrollable.scrollTop / maxScroll) * 100;
+        if (this.scrollSyncTimeout) clearTimeout(this.scrollSyncTimeout);
+        this.scrollSyncTimeout = setTimeout(() => { this.lastScrollSource = null; }, 150);
+    };
+    syncScroll(scrollPercentage: number): void { 
+        if (!this.isReady || !this.iframe?.contentWindow?.document) return;
+        const doc = this.iframe.contentWindow.document;
+        const scrollable = doc.scrollingElement || doc.body;
+        const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
+        if (maxScroll <= 0) return;
+        this.lastScrollSource = 'editor';
+        const targetY = (scrollPercentage / 100) * maxScroll;
+        scrollable.scrollTop = targetY;
+        if (this.scrollSyncTimeout) clearTimeout(this.scrollSyncTimeout);
+        this.scrollSyncTimeout = setTimeout(() => { this.lastScrollSource = null; }, 150);
+    }
+
+    regexPanelMathLaTeX = (inner = false) => {
+        const pattern = inner
+          ? /\$\$((?:[^$]|\$(?!\$))+)\$\$/g
+          : /```math\s+\$\$((?:[^$]|\$(?!\$))+)\$\$\s+```/g;
+        return pattern;
+    };
+
+    // Panel detection
+    regexPanel = (inner = false) => {
+        const pattern = inner
+          ? /^:::([\w-]+)(?:{([^}]*)})\s+([\s\S]+?):::$/gm
+          : /^:::([\w-]+)(?:{([^}]*)})\s+([\s\S]+?)^:::$/gm;
+        return pattern;
+    };
+
+    parseEmoji(content: string): string {
+        // Regex para detectar emojis como :smile:
+        const emojiRegex = /:([a-zA-Z0-9_+-]+):/g;
+        
+        // Reemplazar emojis con imágenes o Unicode
+        return content.replace(emojiRegex, (match: string, emojiName: string) => {
+          // Implement getEmojiByName or replace with actual implementation
+          return emojiName; // Temporary implementation to fix linter error
+        });
+    }
+
+    // Extrae los atributos del panel
+    private extractPanelAttributes(panelTag: string): PanelAttributes {
+        const attributes: PanelAttributes = {};
+        
+        // Buscar atributos con comillas simples o dobles
+        const titleMatch = panelTag.match(/title\s*=\s*("[^"]*"|'[^']*')/i);
+        if (titleMatch) {
+            attributes.title = titleMatch[1].slice(1, -1);
+        }
+
+        const widthMatch = panelTag.match(/width\s*=\s*("[^"]*"|'[^']*')/i);
+        if (widthMatch) {
+            const width = widthMatch[1].slice(1, -1);
+            const widthWithUnit = /^\d+$/.test(width) ? `${width}%` : width;
+            attributes.width = widthWithUnit;
+        }
+
+        // Limpiar atributos procesados del string
+        const cleanedTag = panelTag
+            .replace(/layout\s*=\s*"floating-left"/gi, '')
+            .replace(/layout\s*=\s*"floating-right"/gi, '')
+            .replace(/layout\s*=\s*"centered"/gi, '')
+            .replace(/layout\s*=\s*"float-left"/gi, '')
+            .replace(/layout\s*=\s*"float-right"/gi, '')
+            .replace(/style\s*=\s*"[^"]*"/gi, '')
+            .replace(/animation\s*=\s*"[^"]*"/gi, '')
+            .replace(/class\s*=\s*"[^"]*"/gi, '');
+
+        return attributes;
+    }
+
+    private processAltButtons(content: string): string {
+        // Procesar sintaxis alternativa de botones
+        const altButtonRegex = /\[([^\]]+)]\{\.panel-button([^}]*)\}/g;
+        return content.replace(altButtonRegex, (match, text, classesStr) => {
+            const classMatch = classesStr.match(/\.panel-button([^}]*)/);
+            const extraClasses = classMatch?.[1]?.replace(/\./g, ' ').trim() || '';
+            return `<button class="panel-button ${extraClasses}">${text}</button>`;
+        });
+    }
+
+    // Método para renderizar el contenido de un panel
+    renderSinglePanelHtml(content: string, type: string, attrsStr: string): string {
+        try {
+            // ... existing code ...
+            
+            // Pre-procesar botones en el contenido antes de pasarlo a marked
+            // content = this.processButtons(content);
+            
+            // ... existing code ...
+        } catch (error) {
+            console.error('[PreviewManager] Error al renderizar panel:', error);
+            return `<div class="panel panel-error">Error al renderizar panel: ${escapeHtmlPreview(String(error))}</div>`;
+        }
+    }
+
+    // Método para configurar los listeners de interacción en el contenido del panel
+    setupInteractionListeners(iframe: HTMLIFrameElement): void {
+        if (!iframe.contentDocument) return;
+        
+        // Configurar listeners para botones en paneles
+        setupButtonInteractions(iframe.contentDocument.body);
+        
+        // ... existing code ...
+    }
+
+    // Método para eliminar los listeners de interacción
+    removeInteractionListeners(iframe: HTMLIFrameElement): void {
+        if (!iframe.contentDocument) return;
+        
+        // Limpiar listeners de botones en paneles
+        cleanupButtonInteractions(iframe.contentDocument.body);
+        
+        // ... existing code ...
+    }
+}
+
+const previewManager = new PreviewManager();
+export default previewManager; 

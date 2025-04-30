@@ -172,13 +172,13 @@ Crear un editor Markdown avanzado (Universal Scribe) centrado en el texto plano 
     *   [x] Generación de `<div>` base con clases CSS correspondientes.
     *   [x] Inserción de título `<h4>` estilizado.
     *   [x] **Mecanismo de Estilos Semánticos:** Funcional (`panel-style--note`, etc.), pero requiere definiciones CSS en cada tema. *(Validado)*
-    *   [ ] **BUG CRÍTICO:** Eliminación inconsistente del marcador de cierre `:::` cuando interactúa con contenido complejo o directivas anidadas. *(Necesita revisión y corrección definitiva)*.
+    *   [x] **BUG CRÍTICO:** Eliminación inconsistente del marcador de cierre `:::` cuando interactúa con contenido complejo o directivas anidadas. *(FIXED: Lógica de limpieza mejorada implementada)*.
 *   **Plugin `remarkCornerDirectives` (`:::corner{...}`):**
     *   [x] Reconocimiento y procesamiento básico de la directiva `:::corner` (usando sintaxis `:::`).
     *   [x] Parseo de atributos (`pos`, `type`).
     *   [ ] **Generación HTML/CSS:** Se generan los `<div>`, pero la visualización es incorrecta/incompleta (solo 1 esquina visible, posicionamiento?). *(Necesita revisión CSS y potencialmente del HTML generado)*.
 *   **Interacción Panel/Corner:**
-    *   [ ] **BUG CRÍTICO:** Las directivas `:::corner` dentro de `:::panel` causan artefactos visuales (esquinas mal posicionadas o faltantes) y contribuyen al bug del `:::` residual del panel. *(Bloqueador principal actual)*.
+    *   [ ] **BUG CRÍTICO:** Las directivas `:::corner` dentro de `:::panel` causan artefactos visuales (esquinas mal posicionadas o faltantes) y contribuyen al bug del `:::` residual del panel. *(Bloqueador principal actual - RELACIONADO CON VISUALIZACIÓN CSS, HTML PARECE CORRECTO)*.
 
 ### Fase 3: Diferenciación Avanzada (Pendiente: 0%) ⏳
 

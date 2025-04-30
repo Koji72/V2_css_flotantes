@@ -1,7 +1,7 @@
 import { visit } from 'unist-util-visit';
 // Importar tipos correctos de mdast y mdast-util-directive
-import type { Root, Content, Text } from 'mdast';
-import type { ContainerDirective } from 'mdast-util-directive';
+import type { Root, Content, Text, Paragraph } from 'mdast';
+import type { ContainerDirective, LeafDirective } from 'mdast-util-directive';
 import type { Plugin } from 'unified';
 
 const remarkCustomPanels: Plugin<[], Root> = () => {
@@ -30,6 +30,9 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
         }
         hProperties.className = Array.from(finalClasses);
 
+        // Copiar los hijos para modificarlos de forma segura
+        let currentChildren: Content[] = [...(node.children || [])];
+
         // Insertar título como primer hijo si existe
         if (title && typeof title === 'string') {
           const titleMdastNode: Content = {
@@ -41,66 +44,83 @@ const remarkCustomPanels: Plugin<[], Root> = () => {
             },
             children: [{ type: 'text', value: title }]
           };
-           const currentChildren: Content[] = node.children || [];
-           node.children = [titleMdastNode, ...currentChildren] as any;
-        } 
+           // @ts-ignore - Unshift es seguro aquí, TS se queja de tipos complejos
+           currentChildren.unshift(titleMdastNode);
+        }
 
-        // Limpieza del ::: final (Versión mejorada)
-        if (node.children && node.children.length > 0) {
-          const numChildren = node.children.length;
-          const startIndex = Math.max(0, numChildren - 3);
-          
-          // Función auxiliar para limpiar el marcador ::: de un nodo de texto
-          const cleanClosingMarker = (textNode: Text) => {
-            if (typeof textNode.value === 'string') {
-              const originalValue = textNode.value;
-              const trimmedEndValue = originalValue.trimEnd();
-              
-              if (trimmedEndValue.endsWith(':::')) {
-                const lastIndex = originalValue.lastIndexOf(':::');
-                textNode.value = originalValue.slice(0, lastIndex);
-                return true;
-              } else if (trimmedEndValue === ':::') {
-                textNode.value = '';
-                return true;
-              }
+        // --- NUEVA Lógica de Limpieza del ::: final --- 
+        if (currentChildren.length > 0) {
+          let lastContentNodeIndex = -1;
+          let markerFound = false;
+
+          // 1. Buscar hacia atrás el último nodo que PUEDE contener el marcador
+          for (let i = currentChildren.length - 1; i >= 0; i--) {
+            const child = currentChildren[i];
+            // @ts-ignore - Acceso seguro a type, aunque TS infiera tipos complejos
+            if (child.type === 'paragraph' || child.type === 'text') {
+              lastContentNodeIndex = i;
+              break;
+            // @ts-ignore - Acceso seguro a type
+            } else if (child.type === 'leafDirective') {
+              continue;
+            } else {
+              break;
             }
-            return false;
-          };
+          }
 
-          // Recorrer los hijos desde el final
-          for (let i = numChildren - 1; i >= startIndex; i--) {
-            const childNode = node.children[i];
-            
-            if (childNode.type === 'paragraph' && childNode.children) {
-              let markerFound = false;
-              
-              // Recorrer los hijos del párrafo desde el final
-              for (let j = childNode.children.length - 1; j >= 0; j--) {
-                const inlineNode = childNode.children[j];
-                
+          // 2. Si encontramos un nodo candidato, intentar limpiar el marcador
+          if (lastContentNodeIndex !== -1) {
+            const targetNode = currentChildren[lastContentNodeIndex] as Paragraph | Text;
+
+            const cleanClosingMarkerFromText = (textNode: any): boolean => {
+              if (textNode && typeof textNode.value === 'string') {
+                const originalValue = textNode.value;
+                const trimmedEndValue = originalValue.trimEnd();
+                if (trimmedEndValue.endsWith(':::')) {
+                  const lastIndex = originalValue.lastIndexOf(':::');
+                  textNode.value = originalValue.slice(0, lastIndex);
+                  return true;
+                } else if (trimmedEndValue === ':::') {
+                  textNode.value = '';
+                  return true;
+                }
+              }
+              return false;
+            };
+
+            if (targetNode.type === 'paragraph' && targetNode.children) {
+              const paragraphChildren: any[] = targetNode.children;
+              for (let j = paragraphChildren.length - 1; j >= 0; j--) {
+                const inlineNode = paragraphChildren[j];
+                // @ts-ignore - Acceso seguro a type y value después de la verificación
                 if (inlineNode.type === 'text') {
-                  markerFound = cleanClosingMarker(inlineNode as Text);
-                  
-                  // Si el nodo quedó vacío, eliminarlo
-                  if (markerFound && !(inlineNode as Text).value.trim()) {
-                    childNode.children.splice(j, 1);
+                  markerFound = cleanClosingMarkerFromText(inlineNode);
+                  // @ts-ignore - Acceso seguro a value
+                  if (markerFound && !inlineNode.value.trim()) {
+                    paragraphChildren.splice(j, 1);
                   }
-                  
                   if (markerFound) break;
                 }
               }
-              
-              // Si el párrafo quedó vacío, eliminarlo
-              if (markerFound && childNode.children.length === 0) {
-                node.children.splice(i, 1);
-                i--;
+              if (markerFound && paragraphChildren.length === 0) {
+                currentChildren.splice(lastContentNodeIndex, 1);
               }
-              
-              if (markerFound) break;
+            } 
+            // @ts-ignore - Acceso seguro a type y value después de la verificación
+            else if (targetNode.type === 'text') {
+              markerFound = cleanClosingMarkerFromText(targetNode);
+              // @ts-ignore - Acceso seguro a value
+              if (markerFound && !targetNode.value.trim()) {
+                currentChildren.splice(lastContentNodeIndex, 1);
+              }
             }
           }
         }
+        // --- FIN NUEVA Lógica de Limpieza ---
+        
+        // Reasignar los hijos modificados al nodo original
+        // @ts-ignore - La asignación es compleja para TS pero lógicamente correcta
+        node.children = currentChildren;
 
         data.hName = 'div'; // Siempre es div en esta versión
       }
