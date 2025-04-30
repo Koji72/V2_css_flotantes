@@ -62,16 +62,6 @@
     }
 }
 
-/* Grupo de botones */
-.button-group {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.button-group.vertical {
-    flex-direction: column;
-}
-
 /* Esquinas cortadas */
 .cut-corner {
     position: relative;

@@ -72,33 +72,29 @@
     color: var(--color-tertiary);
   }
 
-  /* Panel Button Styles */
+  /* Button Base Styles */
   .panel-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
-    margin: 5px 0;
-    font-family: var(--font-body, system-ui, sans-serif);
-    font-size: 0.9em;
-    font-weight: 500;
-    line-height: 1.5;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal) var(--ease-in-out);
     cursor: pointer;
     user-select: none;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    transition: all 0.2s ease-in-out;
-    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
   }
 
   /* Button Variants */
   .panel-button.primary {
     background-color: var(--btn-primary-bg);
     color: var(--btn-primary-text);
-    border-color: var(--btn-primary-border);
+    border: 1px solid var(--btn-primary-border);
   }
 
   .panel-button.primary:hover {
@@ -109,7 +105,7 @@
   .panel-button.secondary {
     background-color: var(--btn-secondary-bg);
     color: var(--btn-secondary-text);
-    border-color: var(--btn-secondary-border);
+    border: 1px solid var(--btn-secondary-border);
   }
 
   .panel-button.secondary:hover {
@@ -120,7 +116,7 @@
   .panel-button.success {
     background-color: var(--btn-success-bg);
     color: var(--btn-success-text);
-    border-color: var(--btn-success-border);
+    border: 1px solid var(--btn-success-border);
   }
 
   .panel-button.success:hover {
@@ -131,7 +127,7 @@
   .panel-button.warning {
     background-color: var(--btn-warning-bg);
     color: var(--btn-warning-text);
-    border-color: var(--btn-warning-border);
+    border: 1px solid var(--btn-warning-border);
   }
 
   .panel-button.warning:hover {
@@ -142,7 +138,7 @@
   .panel-button.danger {
     background-color: var(--btn-danger-bg);
     color: var(--btn-danger-text);
-    border-color: var(--btn-danger-border);
+    border: 1px solid var(--btn-danger-border);
   }
 
   .panel-button.danger:hover {
@@ -256,6 +252,77 @@
   .note-block {
     @apply pl-4 italic;
     border-left: 4px solid var(--color-accent1);
+  }
+
+  /* --- Estilos Base Globales para Directivas Panel/Corner/Edge --- */
+
+  /* Base para elementos decorativos (esquinas y bordes) */
+  .panel-corner, 
+  .panel-edge {
+    position: absolute; /* Posicionamiento absoluto respecto al panel */
+    pointer-events: none; /* No interferir con clics */
+    z-index: 1; /* Por defecto bajo el contenido (z-index > 1), pero sobre fondo */
+    /* Sin estilos visuales por defecto (tamaño, color, etc.) - responsabilidad del tema */
+  }
+
+  /* Posicionamiento Base para Esquinas */
+  /* Usa la variable --corner-offset, con fallback a 1px */
+  .corner-pos--top-left { 
+    top: calc(-1 * var(--corner-offset, 1px)); 
+    left: calc(-1 * var(--corner-offset, 1px)); 
+  }
+  .corner-pos--top-right { 
+    top: calc(-1 * var(--corner-offset, 1px)); 
+    right: calc(-1 * var(--corner-offset, 1px)); 
+  }
+  .corner-pos--bottom-left { 
+    bottom: calc(-1 * var(--corner-offset, 1px)); 
+    left: calc(-1 * var(--corner-offset, 1px)); 
+  }
+  .corner-pos--bottom-right { 
+    bottom: calc(-1 * var(--corner-offset, 1px)); 
+    right: calc(-1 * var(--corner-offset, 1px)); 
+  }
+
+  /* Posicionamiento Base para Bordes */
+  /* Usa --edge-offset (fallback 1px) y --edge-span-width/height (fallback 50%) */
+  .edge-pos--top { 
+    top: calc(-1 * var(--edge-offset, 1px)); 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: var(--edge-span-width, 50%); /* Ancho por defecto */
+    height: auto; /* El tema define la altura visual */
+    max-width: 100%; 
+  }
+  .edge-pos--bottom { 
+    bottom: calc(-1 * var(--edge-offset, 1px)); 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: var(--edge-span-width, 50%); 
+    height: auto;
+    max-width: 100%; 
+  }
+  .edge-pos--left { 
+    left: calc(-1 * var(--edge-offset, 1px)); 
+    top: 50%; 
+    transform: translateY(-50%); 
+    height: var(--edge-span-height, 50%); /* Alto por defecto */
+    width: auto; /* El tema define el ancho visual */
+    max-height: 100%; 
+  }
+  .edge-pos--right { 
+    right: calc(-1 * var(--edge-offset, 1px)); 
+    top: 50%; 
+    transform: translateY(-50%); 
+    height: var(--edge-span-height, 50%); 
+    width: auto;
+    max-height: 100%; 
+  }
+
+  /* Asegurar que el panel sea el contexto de posicionamiento */
+  .panel {
+      position: relative;
+      /* overflow: visible; Ya no es necesario globalmente si cada tema lo gestiona */
   }
 }
 

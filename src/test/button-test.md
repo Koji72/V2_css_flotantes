@@ -20,13 +20,6 @@
 ::button[Botón Deshabilitado]{.panel-button.primary disabled}
 ::button[Botón Cargando]{.panel-button.primary data-loading="true"}
 
-## Grupo de Botones
-
-:div{.button-group}
-::button[Cancelar]{.panel-button.secondary}
-::button[Guardar]{.panel-button.primary}
-::/div
-
 ## Grupo Vertical
 
 :div{.button-group.vertical}

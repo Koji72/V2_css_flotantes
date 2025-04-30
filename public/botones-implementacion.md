@@ -125,28 +125,6 @@ Los botones pueden mostrar diferentes estados.
 
 4. **Feedback visual**: Proporciona feedback visual cuando un botón está siendo presionado o está realizando una acción (como mostrar un estado de carga).
 
-## Grupos de botones
-
-Los botones pueden agruparse utilizando un contenedor con la clase `.button-group`:
-
-:::panel{style="secondary"}
-### Grupo de botones horizontal
-
-:div{.button-group}
-::button{action="opcion1" style="secondary"}Opción 1::
-::button{action="opcion2" style="secondary"}Opción 2::
-::button{action="opcion3" style="primary"}Opción 3::
-::/div
-
-### Grupo de botones vertical
-
-:div{.button-group.vertical}
-::button{action="opcion1" style="secondary"}Opción 1::
-::button{action="opcion2" style="secondary"}Opción 2::
-::button{action="opcion3" style="primary"}Opción 3::
-::/div
-:::
-
 ## Conclusión
 
 La implementación mejorada de botones en paneles flotantes permite crear interfaces interactivas más ricas y dinámicas dentro de documentos markdown. Aprovecha estas capacidades para transformar tus documentos estáticos en experiencias interactivas que guíen a los usuarios a través de flujos de trabajo y tareas complejas. 

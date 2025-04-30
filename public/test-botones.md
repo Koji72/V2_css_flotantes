@@ -20,21 +20,6 @@
 ::button{style="primary" disabled="true"}Botón Deshabilitado::
 ::button{style="primary" data-loading="true"}Botón Cargando::
 
-## Grupo de Botones
-
-:div{.button-group}
-::button{style="secondary" action="cancelar"}Cancelar::
-::button{style="primary" action="guardar"}Guardar::
-::/div
-
-## Grupo Vertical
-
-:div{.button-group.vertical}
-::button{style="secondary"}Opción 1::
-::button{style="secondary"}Opción 2::
-::button{style="primary"}Opción 3::
-::/div
-
 ## Botones con Esquinas Técnicas
 
 :::panel class="tech-corners":::

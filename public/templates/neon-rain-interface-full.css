@@ -1,0 +1,570 @@
+/* ================================================== */
+/*    THEME: Neon Rain Interface - Full Chrome Edition */
+/*      (Blade Runner Inspired - Manifestación Final) */
+/* ================================================== */
+/*
+ * Plantilla CSS ultra-completa para SagaWeaver, cubriendo todos los elementos
+ * interactivos, visuales y de estado para una experiencia cyberpunk/neón definitiva.
+ * Incluye estilos para paneles, tablas, elementos interactivos, decoraciones y estados.
+ */
+
+/* -------------------------------------------------- */
+/*               0. IMPORTAR FUENTES                  */
+/* -------------------------------------------------- */
+/* Las fuentes están definidas en variables.css y deberían importarse globalmente en la aplicación,
+   pero las incluimos aquí como respaldo si no se hace globalmente. */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Roboto+Condensed:wght@400;700&family=Teko:wght@400;500;600&display=swap');
+
+/* --- Animaciones Únicas del Tema (Definidas si no están globalmente) --- */
+/* @property --scanline-pos { syntax: '<percentage>'; initial-value: 0%; inherits: false; } */ /* Si se usa @property */
+/* @property --flicker-opacity { syntax: '<number>'; initial-value: 1; inherits: false; } */
+
+@keyframes scanline-anim { /* Movimiento vertical de scanline */
+    0% { background-position-y: 0; }
+    100% { background-position-y: 100px; } /* Ajusta la velocidad aquí */
+}
+
+@keyframes neon-pulse-subtle { /* Pulso de brillo sutil */
+    0%, 100% { text-shadow: 0 0 4px currentColor, 0 0 8px currentColor; }
+    50% { text-shadow: 0 0 6px currentColor, 0 0 12px currentColor; }
+}
+
+@keyframes border-flicker { /* Parpadeo de borde */
+    0%, 100% { border-color: currentColor; box-shadow: 0 0 8px currentColor; }
+    50% { border-color: transparent; box-shadow: none; }
+}
+
+@keyframes text-glitch { /* Pequeño glitch de texto */
+  0% { transform: translate(0); opacity: 1; }
+  25% { transform: translate(1px, 1px); opacity: 0.9; }
+  50% { transform: translate(-1px, -1px); opacity: 1; }
+  75% { transform: translate(1px, -1px); opacity: 0.9; }
+  100% { transform: translate(0); opacity: 1; }
+}
+
+/* -------------------------------------------------- */
+/*           1. VARIABLES FUNDAMENTALES (:root)       */
+/* -------------------------------------------------- */
+:root {
+    /* --- Paleta de Colores (Oscuridad y Neón) --- */
+    /* Estas variables sobrescriben las de src/styles/base/variables.css */
+    --theme-bg-primary: #080a0f;       /* Fondo principal: Casi negro, tinte azulado */
+    --theme-bg-secondary: #151a20;     /* Fondo para elementos como code blocks, tablas */
+    --theme-bg-tertiary: #202830;      /* Fondo para cabeceras de panel, etc. (menos común) */
+    --theme-bg-glass: rgba(25, 35, 45, 0.85); /* Fondo translúcido (más opaco) */
+    --theme-bg-overlay: rgba(10, 15, 20, 0.95); /* Fondo para overlays */
+
+    --theme-text-primary: #e0f0ff;     /* Color de texto principal: Blanco hielo */
+    --theme-text-secondary: #a0b0c0;   /* Color de texto secundario: Gris azulado */
+    --theme-text-accent: var(--neon-magenta); /* Color para enlaces, cabeceras H1: Magenta */
+    --theme-text-inverted: var(--theme-bg-primary); /* Color de texto sobre fondos de acento */
+
+    --theme-border-primary: #304050;   /* Borde principal: Azul acero oscuro */
+    --theme-border-secondary: #405060; /* Borde secundario o divisores: Gris azul acero */
+    --theme-border-accent: var(--neon-cyan); /* Borde para elementos acentuados: Cian */
+
+    /* --- Colores Neón (Mantener o redefinir si no están en variables.css) --- */
+    --neon-magenta: #FF00FF;
+    --neon-cyan: #00FFFF;
+    --neon-amber: #FFA500;
+    --neon-red: #FF3030;
+    --neon-green: #30FF30;
+    --neon-blue: #40a0ff; /* Azul RIG */
+
+    /* --- Colores Semánticos (Basados en Neón) --- */
+    --theme-color-note: var(--neon-cyan);       /* Azul Info/Note: Cian */
+    --theme-color-success: var(--neon-green);    /* Verde Éxito: Verde */
+    --theme-color-warning: var(--neon-amber);    /* Amarillo/Ámbar Advertencia: Ámbar */
+    --theme-color-danger: var(--neon-red);     /* Rojo Peligro/Error: Rojo */
+    --theme-color-info: var(--neon-magenta);       /* Azul claro Info (alternativo): Magenta */
+    --theme-color-muted: var(--theme-text-secondary);     /* Gris para muted */
+
+
+    /* --- Tipografía --- */
+    --theme-font-body: 'Roboto Condensed', sans-serif;
+    --theme-font-heading: 'Teko', sans-serif;
+    --theme-font-mono: 'Share Tech Mono', monospace; /* Fuente mecanografiada/terminal */
+    --theme-font-base-size: 16px;
+    --theme-body-line-height: 1.6;
+    --theme-heading-line-height: 1.2; /* Más ajustado */
+    --theme-heading-weight: 500; /* Teko es grueso por defecto */
+    --theme-bold-weight: 700;
+
+    /* --- Métricas --- */
+    --theme-spacing-unit: 8px;
+    --theme-radius-sm: 2px;
+    --theme-radius-md: 4px;
+    --theme-radius-lg: 8px;
+    --theme-border-width-fine: 1px;
+    --theme-border-width-medium: 2px;
+    --theme-border-width-heavy: 3px; /* Bordes principales */
+    --theme-border-width-heavyer: 4px; /* Bordes muy principales */
+
+    /* --- Sombras y Efectos --- */
+    --theme-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombras más oscuras */
+    --theme-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.6);
+    --theme-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.7);
+    --theme-shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.8); /* Inset oscuro */
+    --theme-glow-accent: 0 0 8px var(--neon-cyan);
+    --theme-glow-magenta: 0 0 8px var(--neon-magenta);
+    --theme-glow-cyan: 0 0 8px var(--neon-cyan);
+    --theme-glow-amber: 0 0 8px var(--neon-amber);
+    --theme-glow-red: 0 0 8px var(--neon-red);
+    --theme-glow-green: 0 0 8px var(--neon-green);
+    --theme-glow-base: 0 0 5px rgba(255,255,255,0.3); /* Brillo blanco base */
+    --theme-glow-pulse: 0 0 5px currentColor; /* Pulso basado en color */
+
+
+}
+
+
+/* -------------------------------------------------- */
+/*      2. ESTILOS BASE DEL TEMA (.preview-html)      */
+/* -------------------------------------------------- */
+/*
+ * Aplicar estilos globales al contenedor y elementos generales
+ * Usar selectores de alta especificidad si es necesario (ej: .preview-html *)
+ * Estos estilos sobrescriben los del navegador y base CSS (si los hay)
+ */
+.preview-html {
+    background-color: var(--theme-bg-primary);
+    color: var(--theme-text-primary);
+    font-family: var(--theme-font-body);
+    font-size: var(--theme-font-base-size);
+    line-height: var(--theme-body-line-height);
+    margin: 0;
+    padding: calc(var(--theme-spacing-unit) * 2.5);
+    /* Fondo con rejilla sutil */
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    /* Animación de fondo si se define en all-panel-styles.css */
+    /* animation: background-scan 20s infinite linear; */
+
+    /* Efecto de lluvia/niebla sutil (Capas de pseudo-elementos) */
+    position: relative; /* Necesario para pseudo-elementos posicionados */
+    overflow: hidden; /* Para contener efectos */
+}
+
+.preview-html::before, .preview-html::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: -1; /* Detrás de todo */
+    opacity: 0.1;
+}
+
+/* Capa de niebla/humedad */
+.preview-html::before {
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 60%),
+                radial-gradient(ellipse at top left, rgba(255,255,255,0.08) 0%, transparent 60%);
+}
+
+/* Capa de lluvia (simulada con líneas) */
+.preview-html::after {
+    background: repeating-linear-gradient(0deg, rgba(0,255,255,0.05), rgba(0,255,255,0.05) 1px, transparent 1px, transparent 20px);
+    animation: rain-anim 10s linear infinite;
+}
+@keyframes rain-anim {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 500px; } /* Simula caída diagonal */
+}
+
+
+/* Scrollbars (Adaptados al tema) */
+.preview-html ::-webkit-scrollbar { width: 8px; height: 8px; }
+.preview-html ::-webkit-scrollbar-track { background: var(--theme-bg-secondary); }
+.preview-html ::-webkit-scrollbar-thumb { background: var(--theme-border-accent); border-radius: 1px; }
+.preview-html ::-webkit-scrollbar-thumb:hover { background: var(--theme-text-accent); }
+
+
+/* Tipografía y elementos comunes */
+.preview-html h1, .preview-html h2, .preview-html h3, .preview-html h4, .preview-html h5, .preview-html h6 {
+    font-family: var(--theme-font-heading);
+    color: var(--theme-text-accent);
+    margin-top: calc(var(--theme-spacing-unit) * 2);
+    margin-bottom: calc(var(--theme-spacing-unit) * 1);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: var(--theme-heading-weight);
+    text-shadow: var(--theme-glow-accent);
+}
+.preview-html h1 { font-size: 2em; border-bottom: var(--theme-border-width-medium) solid var(--neon-cyan); padding-bottom: 0.3em; color: var(--neon-cyan); text-shadow: var(--theme-glow-cyan); }
+.preview-html h2 { font-size: 1.6em; border-bottom: 1px solid rgba(0,255,255,0.3); color: var(--neon-cyan); text-shadow: var(--theme-glow-cyan); } /* H2 Cian */
+.preview-html h3 { font-size: 1.3em; border-bottom: 1px dashed rgba(255,0,255,0.3); color: var(--neon-magenta); text-shadow: var(--theme-glow-magenta); } /* H3 Magenta */
+.preview-html h4 { font-size: 1.1em; border-bottom: none; color: var(--theme-text-primary); text-shadow: none; text-transform: none; } /* H4 Blanco */
+.preview-html h5, .preview-html h6 { display: none; }
+
+
+.preview-html p { margin-bottom: var(--theme-spacing-unit); text-align: justify; color: var(--theme-text-primary); }
+
+.preview-html a {
+    color: var(--neon-cyan);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(0,255,255,0.5);
+    transition: color 0.2s ease, border-bottom-color 0.2s ease;
+    text-shadow: 0 0 3px rgba(0,255,255,0.5);
+}
+.preview-html a:hover {
+    color: var(--neon-magenta);
+    border-bottom-color: var(--neon-magenta);
+    text-shadow: var(--theme-glow-magenta);
+}
+
+.preview-html strong, .preview-html b { font-weight: var(--theme-bold-weight); color: var(--theme-text-primary); text-shadow: var(--theme-glow-base); }
+.preview-html em, .preview-html i { font-style: italic; color: var(--theme-text-secondary); }
+
+.preview-html code, .preview-html pre {
+    font-family: var(--theme-font-mono);
+    background-color: var(--theme-bg-secondary);
+    padding: 0.1em 0.4em; border-radius: var(--theme-radius-sm);
+    border: 1px solid var(--theme-border-secondary);
+    color: var(--neon-green);
+    text-shadow: 0 0 3px rgba(0,255,0,0.5);
+}
+.preview-html pre { padding: var(--theme-spacing-unit); margin: var(--theme-spacing-unit) 0; overflow-x: auto; box-shadow: var(--theme-shadow-sm); }
+
+.preview-html table {
+    width: 100%; border-collapse: collapse; margin: var(--theme-spacing-unit) 0;
+    background-color: var(--theme-bg-secondary); border: 1px solid var(--theme-border-secondary); box-shadow: var(--theme-shadow-sm);
+}
+.preview-html th, .preview-html td { padding: var(--theme-spacing-unit); text-align: left; border: 1px solid rgba(255,255,255,0.05); }
+.preview-html th { background-color: var(--theme-bg-tertiary); color: var(--neon-cyan); font-family: var(--theme-font-body); font-weight: var(--theme-bold-weight); text-transform: uppercase; }
+.preview-html td { color: var(--theme-text-primary); }
+.preview-html tr:nth-child(odd) { background-color: rgba(255,255,255,0.01); }
+.preview-html tr:hover { background-color: rgba(0,255,255,0.05); }
+
+.preview-html blockquote {
+    border-left: var(--theme-border-width-medium) solid var(--neon-magenta);
+    padding: var(--theme-spacing-unit) calc(var(--theme-spacing-unit)*1.5);
+    margin: var(--theme-spacing-unit) 0;
+    background-color: rgba(255,0,255,0.05); color: var(--theme-text-secondary);
+}
+
+/* -------------------------------------------------- */
+/*      3. ESTILOS DE PANELES Y CONTENEDORES         */
+/* -------------------------------------------------- */
+/* Estilo Base para Paneles (Aplica a .panel Y .mixed-panel) */
+.preview-html .panel,
+.preview-html .mixed-panel {
+    position: relative;
+    background-color: var(--theme-bg-secondary);
+    border: var(--theme-border-width-fine) solid var(--theme-border-accent); /* Borde Cian tenue */
+    border-radius: var(--theme-radius-md);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 1.5); /* Padding Interno */
+    box-shadow: var(--theme-shadow-sm), var(--theme-shadow-inset);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px); /* Efecto Cristal Base */
+    -webkit-backdrop-filter: blur(4px);
+    isolation: isolate; /* Crea un nuevo contexto de apilamiento para z-index */
+}
+
+.preview-html .panel:hover,
+.preview-html .mixed-panel:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: var(--theme-shadow-md), var(--theme-shadow-inset), var(--theme-glow-cyan);
+}
+
+/* Cabecera del Panel (Estilo Base) */
+.preview-html .panel-title,
+.preview-html .panel-header {
+    /* Reiniciar márgenes y padding para controlar en el contenedor */
+    margin: calc(-1 * var(--theme-spacing-unit) * 1.5) calc(-1 * var(--theme-spacing-unit) * 1.5) var(--theme-spacing-unit) calc(-1 * var(--theme-spacing-unit) * 1.5);
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    /* Estilos visuales */
+    background: linear-gradient(to right, var(--theme-bg-tertiary), rgba(32, 40, 48, 0.8));
+    border-bottom: var(--theme-border-width-fine) solid var(--theme-border-accent);
+    font-family: var(--theme-font-heading);
+    font-size: 1.4em; /* Tamaño estándar cabecera panel */
+    font-weight: 500;
+    color: var(--neon-cyan);
+    text-shadow: var(--theme-glow-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Contenido del Panel Wrapper (Estilo Base) */
+.preview-html .panel-content-wrapper {
+    padding: 0; /* Padding ya en el .panel */
+}
+
+/* Contenido del Panel (Estilo Base) */
+.preview-html .panel-content {
+    padding: 0; /* Padding ya en el .panel */
+    /* Color y fuente heredados del body por defecto */
+}
+
+
+/* Estilos Semánticos de Paneles (Usando variables semánticas) */
+/* Estas reglas aplican colores y bordes basados en las variables del tema */
+.preview-html .panel-style--note { border-left: var(--theme-border-width-heavy) solid var(--theme-color-note); background-color: rgba(0,255,255,0.05); }
+.preview-html .panel-style--note > .panel-title {
+    color: var(--theme-color-note);
+    background: rgba(0, 255, 255, 0.1);
+    border-bottom-color: var(--theme-color-note);
+    text-shadow: var(--theme-glow-cyan);
+}
+
+.preview-html .panel-style--warning { border-left: var(--theme-border-width-heavy) solid var(--theme-color-warning); background-color: rgba(255,165,0,0.05); }
+.preview-html .panel-style--warning > .panel-title {
+    color: var(--theme-color-warning);
+    background: rgba(255, 165, 0, 0.1);
+    border-bottom-color: var(--theme-color-warning);
+    text-shadow: var(--theme-glow-amber);
+}
+
+.preview-html .panel-style--danger { border-left: var(--theme-border-width-heavy) solid var(--theme-color-danger); background-color: rgba(255,0,0,0.05); }
+.preview-html .panel-style--danger > .panel-title {
+    color: var(--theme-color-danger);
+    background: rgba(255, 48, 48, 0.1);
+    border-bottom-color: var(--theme-color-danger);
+    text-shadow: var(--theme-glow-red);
+}
+
+.preview-html .panel-style--success { border-left: var(--theme-border-width-heavy) solid var(--theme-color-success); background-color: rgba(48, 255, 48, 0.05); }
+.preview-html .panel-style--success > .panel-title {
+    color: var(--theme-color-success);
+    background: rgba(48, 255, 48, 0.1);
+    border-bottom-color: var(--theme-color-success);
+    text-shadow: var(--theme-glow-green);
+}
+
+.preview-html .panel-style--info { border-left: var(--theme-border-width-heavy) solid var(--theme-color-info); background-color: rgba(255,0,255,0.05); }
+.preview-html .panel-style--info > .panel-title {
+    color: var(--theme-color-info);
+    background: rgba(255, 0, 255, 0.1);
+    border-bottom-color: var(--theme-color-info);
+    text-shadow: var(--theme-glow-magenta);
+}
+
+.preview-html .panel-style--muted { border-left: var(--theme-border-width-heavy) solid var(--theme-color-muted); background-color: rgba(160,160,160,0.05); opacity: 0.8; }
+.preview-html .panel-style--muted > .panel-title {
+    color: var(--theme-color-muted);
+    background: rgba(160,160,160,0.1);
+    border-bottom-color: var(--theme-color-muted);
+    text-shadow: none;
+}
+
+
+/* --- Estilos Visuales Complejos (panel-style--*) --- */
+/* Estas reglas aplican estilos visuales únicos, definidos en all-panel-styles.css */
+/* Aquí sobrescriben o complementan los estilos base del panel */
+
+/* Ejemplo: Estilo de Panel Específico (Definido en all-panel-styles.css) */
+/* .preview-html .panel-style--gridlink { Visual gridlink ... } */
+
+/* Estilos para Decoraciones (corner-type-*, edge-type-*) */
+/* Se definen en all-panel-styles.css */
+
+
+/* --- 4. BARRAS DE ESTADO --- */
+/* Se definen en all-panel-styles.css */
+.preview-html .dynamic-progress-bar {
+    background: var(--theme-bg-tertiary); border-radius: var(--theme-radius-md); overflow: hidden;
+    height: 1.2em; margin: var(--theme-spacing-unit) 0; box-shadow: 0 0 8px var(--theme-border-accent);
+    border: 1px solid var(--theme-border-accent); position: relative;
+}
+.preview-html .dynamic-progress-bar .bar-fill {
+    display: block; height: 100%; transition: width 0.3s cubic-bezier(.4,2,.6,1), background 0.2s;
+    background: var(--neon-cyan); position: relative;
+}
+.preview-html .dynamic-progress-bar .bar-fill.ok { background: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+.preview-html .dynamic-progress-bar .bar-fill.warn { background: var(--neon-amber); box-shadow: 0 0 5px var(--neon-amber); }
+.preview-html .dynamic-progress-bar .bar-fill.error { background: var(--neon-red); box-shadow: 0 0 8px var(--neon-red); }
+.preview-html .dynamic-progress-bar .bar-label {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    color: var(--theme-text-primary); font-family: var(--theme-font-mono); font-size: 0.95em;
+    text-shadow: 0 0 3px #000, 0 0 6px var(--theme-bg-primary); pointer-events: none; z-index: 1;
+}
+.preview-html .dynamic-progress-bar .bar-fill::after {
+    content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.4));
+    border-radius: 0 var(--theme-radius-md) var(--theme-radius-md) 0;
+}
+
+/* -------------------------------------------------- */
+/*      5. ELEMENTOS INTERACTIVOS AVANZADOS           */
+/* -------------------------------------------------- */
+/* Estilos para botones, tiradas de dados, elementos vinculados, etc. */
+.preview-html .panel .panel-button {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: calc(var(--theme-spacing-unit) * 0.8) calc(var(--theme-spacing-unit) * 1.5);
+    font-size: 0.95em; font-family: var(--theme-font-body); font-weight: 500;
+    line-height: 1.4; border-radius: var(--theme-radius-md);
+    border: 1px solid var(--theme-border-accent);
+    background-color: var(--theme-bg-tertiary);
+    color: var(--theme-text-primary);
+    cursor: pointer; user-select: none; text-decoration: none;
+    transition: all 0.2s cubic-bezier(.4,2,.6,1);
+    margin: calc(var(--theme-spacing-unit) * 0.5);
+    box-shadow: 0 0 8px var(--theme-border-accent);
+}
+.preview-html .panel .panel-button:hover:not(:disabled) {
+    background-color: var(--neon-cyan); color: #000; border-color: var(--neon-cyan);
+    box-shadow: 0 0 12px var(--neon-cyan), 0 0 8px var(--theme-border-accent);
+}
+.preview-html .panel .panel-button:focus {
+    outline: 2px solid var(--neon-magenta); outline-offset: 2px;
+    box-shadow: 0 0 8px var(--neon-magenta);
+}
+.preview-html .panel .panel-button:disabled {
+    opacity: 0.5; cursor: not-allowed; background-color: var(--theme-bg-secondary); color: var(--theme-text-secondary); border-color: var(--theme-border-secondary);
+}
+.preview-html .panel .panel-button.loading {
+    pointer-events: none; opacity: 0.7; position: relative;
+}
+.preview-html .panel .panel-button.loading::after {
+    content: ''; position: absolute; right: 8px; top: 50%; width: 1em; height: 1em;
+    border: 2px solid var(--neon-cyan); border-top: 2px solid transparent; border-radius: 50%;
+    animation: neon-spin 0.8s linear infinite; transform: translateY(-50%);
+}
+@keyframes neon-spin { 100% { transform: translateY(-50%) rotate(360deg); } }
+.preview-html .panel .panel-button.primary { background-color: var(--neon-cyan); border-color: var(--neon-cyan); color: #000; }
+.preview-html .panel .panel-button.danger { background-color: var(--neon-red); border-color: var(--neon-red); color: #fff; }
+.preview-html .panel .panel-button.success { background-color: var(--neon-green); border-color: var(--neon-green); color: #000; }
+.preview-html .panel .panel-button.warning { background-color: var(--neon-amber); border-color: var(--neon-amber); color: #000; }
+.preview-html .panel .panel-button.info { background-color: var(--neon-magenta); border-color: var(--neon-magenta); color: #fff; }
+.preview-html .panel .panel-button.small { font-size: 0.8em; padding: calc(var(--theme-spacing-unit)*0.5) var(--theme-spacing-unit); }
+.preview-html .panel .panel-button.large { font-size: 1.1em; padding: var(--theme-spacing-unit) calc(var(--theme-spacing-unit)*2); }
+.preview-html .panel .panel-button.full-width { display: flex; width: 100%; margin-left: 0; margin-right: 0; }
+
+
+.preview-html .choice {
+    display: block; margin: var(--theme-spacing-unit) 0; padding: var(--theme-spacing-unit);
+    width: 100%; text-align: left; cursor: pointer; font-family: var(--theme-font-body); font-size: 1em;
+    border: 1px solid var(--theme-border-secondary); border-left: var(--theme-border-width-heavy) solid var(--theme-border-accent); /* Borde Cian */
+    background-color: var(--theme-bg-secondary); color: var(--theme-text-primary); transition: all 0.2s ease;
+    box-shadow: var(--theme-shadow-sm);
+}
+.preview-html .choice:hover {
+    background-color: rgba(0,255,255,0.1);
+    border-left-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    box-shadow: var(--theme-shadow-md), var(--theme-glow-cyan);
+}
+.preview-html .choice:disabled {
+    opacity: 0.5; cursor: not-allowed;
+    background-color: var(--theme-bg-tertiary);
+    border-left-color: var(--theme-border-secondary);
+    color: var(--theme-text-secondary);
+    box-shadow: none;
+}
+/* Estilos para diferentes tipos de Choice (si tu JS añade clases como .choice.danger) */
+.preview-html .choice.danger { border-left-color: var(--neon-red); color: var(--neon-red); }
+.preview-html .choice.investigate { border-left-color: var(--neon-amber); color: var(--neon-amber); }
+
+
+.preview-html span.dice-roll {
+    font-family: var(--theme-font-mono); color: var(--neon-amber); border: 1px dotted var(--neon-amber);
+    padding: 0.1em 0.4em; border-radius: var(--theme-radius-sm); cursor: pointer; transition: all 0.2s ease;
+    text-shadow: 0 0 3px rgba(255,165,0,0.5);
+    background-color: rgba(255,165,0,0.1);
+}
+.preview-html span.dice-roll:hover {
+    background-color: rgba(255,165,0,0.2);
+    text-shadow: var(--theme-glow-amber);
+    border-color: var(--neon-amber);
+}
+/* Estilo para resultado después de tirar */
+.preview-html span.dice-roll.rolled {
+    animation: neon-pulse 0.5s ease-out; /* Animación de pulso rápido */
+    background-color: rgba(0,255,0,0.2); /* Verde si es éxito (si tu JS lo controla) */
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+    text-shadow: var(--theme-glow-green);
+}
+
+
+.preview-html span[data-bind] {
+    font-weight: var(--theme-bold-weight); color: var(--neon-green); text-shadow: var(--theme-glow-green);
+    font-family: var(--theme-font-mono); /* Datos suelen ser mono */
+    padding: 0.1em 0.2em;
+    background-color: rgba(0,255,0,0.1);
+    border-bottom: 1px dotted var(--neon-green);
+}
+/* Estilos para data-bind en estado de advertencia o error */
+.preview-html span[data-bind][data-state="warn"] { color: var(--neon-amber); text-shadow: var(--theme-glow-amber); background-color: rgba(255,165,0,0.1); border-bottom-color: var(--neon-amber); }
+.preview-html span[data-bind][data-state="error"] { color: var(--neon-red); text-shadow: var(--theme-glow-red); background-color: rgba(255,0,0,0.1); border-bottom-color: var(--neon-red); animation: neon-pulse 0.8s infinite alternate; }
+
+
+/* --- Resto de elementos del informe si es necesario --- */
+/* Estos ya están estilizados en la sección 2 o 3, pero puedes sobrescribir finos detalles */
+
+/* -------------------------------------------------- */
+/*      6. ESTADOS Y CLASES DINÁMICAS                 */
+/* -------------------------------------------------- */
+/* Estas clases se aplican al contenedor principal del panel (.panel o .mixed-panel) por JS */
+.preview-html .panel.state--loading,
+.preview-html .mixed-panel.state--loading {
+    opacity: 0.8; /* Reducir opacidad */
+    cursor: progress;
+    border-color: var(--neon-amber);
+    box-shadow: var(--theme-shadow-md), var(--theme-glow-amber);
+    position: relative; /* Necesario para el pseudo-elemento */
+}
+
+/* Animación de carga visual (ej: overlay animado) */
+.preview-html .panel.state--loading::before, /* Aplicar a pseudo-elemento */
+.preview-html .mixed-panel.state--loading::before {
+    content: ''; position: absolute; inset: 0; z-index: 10;
+    background: linear-gradient(90deg, transparent, rgba(255,165,0,0.3), transparent);
+    background-size: 20% 100%;
+    animation: loading-shine 1.5s infinite linear;
+    pointer-events: none;
+}
+
+@keyframes loading-shine { 0% { background-position: -20% 0; } 100% { background-position: 120% 0; } }
+
+.preview-html .panel.state--error,
+.preview-html .mixed-panel.state--error {
+    border-color: var(--neon-red) !important; /* Forzar borde */
+    box-shadow: var(--theme-shadow-md), var(--theme-glow-red) !important; /* Forzar sombra */
+    color: var(--neon-red) !important; /* Forzar color texto base */
+    /* Animación de alerta visual */
+    animation: error-pulse 1s infinite steps(2); /* Animación brusca */
+}
+@keyframes error-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.95; transform: scale(0.99); filter: brightness(1.1); } }
+
+.preview-html .panel.is-hovered,
+.preview-html .mixed-panel.is-hovered {
+    outline: 2px solid var(--neon-cyan); /* Borde Cian */
+    outline-offset: 2px;
+    box-shadow: var(--theme-shadow-md), var(--theme-glow-cyan); /* Sombra Cian */
+    cursor: pointer;
+    /* Quitar brillo base al hover */
+}
+
+.preview-html .panel.is-hovered::before, /* Aplicar a pseudo-elemento */
+.preview-html .mixed-panel.is-hovered::before {
+    opacity: 0; /* Si ::before es brillo base */
+}
+
+
+/* -------------------------------------------------- */
+/*      7. DECORACIONES Y BORDES                      */
+/* -------------------------------------------------- */
+/* Estilos de .panel-corner, .corner-pos--*, .panel-edge, .edge-pos--*
+   Estilos de .corner-type-*, .edge-type-* y @keyframes para ellos
+   DEFINIDOS en all-panel-styles.css */
+
+
+/* -------------------------------------------------- */
+/*      8. ANIMACIONES ÚNICAS DEL TEMA                */
+/* -------------------------------------------------- */
+/* @keyframes específicos solo de este tema */
+/* scanline (si se usa en body), neon-pulse (si no está global), etc. */
+@keyframes neon-pulse {
+    0%, 100% { box-shadow: 0 0 8px var(--neon-cyan); }
+    50% { box-shadow: 0 0 20px var(--neon-cyan); }
+}
+
+
+/* -------------------------------------------------- */
+/*      9. ACCESIBILIDAD Y FOCUS                      */
+/* -------------------------------------------------- */
+.preview-html a:focus, .preview-html button:focus, .preview-html .panel-button:focus,
+.preview-html .choice:focus, .preview-html span.dice-roll:focus {
+    outline: 2px solid var(--neon-magenta); outline-offset: 2px;
+    box-shadow: 0 0 8px var(--neon-magenta);
+}
+
+/* --- FIN Neon Rain Interface - Full Chrome Edition --- */

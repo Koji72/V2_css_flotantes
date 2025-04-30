@@ -6,11 +6,13 @@ Los botones son elementos interactivos que permiten a los usuarios realizar acci
 
 ## Sintaxis Básica
 
-Para agregar un botón a un panel, use la siguiente sintaxis:
+Para agregar un botón a un panel, use la siguiente sintaxis de **Leaf Directive**:
 
 ```markdown
-::button{action="nombre-accion" style="estilo"}Texto del Botón::
+::button[Texto del Botón]{action="nombre-accion" style="estilo"}
 ```
+
+**Nota Importante:** Asegúrese de que el texto del botón esté entre corchetes `[]` y los atributos entre llaves `{}` después del texto. La sintaxis `::button{...}Texto::` (Text Directive) *no* es la forma correcta para este plugin.
 
 ## Estilos Disponibles
 
@@ -133,38 +135,28 @@ Use `custom-style` para agregar estilos CSS inline:
 
 ### Formulario Básico
 ```markdown
-::panel{style="glass"}
+:::panel{style="glass"}
 # Formulario
-::button{action="submit" style="primary"}Enviar::
-::button{action="cancel" style="secondary"}Cancelar::
-::
+::button[Enviar]{action="submit" style="primary"}
+::button[Cancelar]{action="cancel" style="secondary"}
+:::
 ```
 
 ### Confirmación de Acción
 ```markdown
-::panel{style="glass"}
+:::panel{style="glass"}
 # Confirmar Eliminación
-::button{action="delete" style="danger" aria-label="Eliminar item"}Eliminar::
-::button{action="cancel" style="secondary"}Cancelar::
-::
+::button[Eliminar]{action="delete" style="danger" aria-label="Eliminar item"}
+::button[Cancelar]{action="cancel" style="secondary"}
+:::
 ```
 
 ### Botón de Carga
 ```markdown
-::panel{style="glass"}
+:::panel{style="glass"}
 # Procesando
-::button{action="process" style="primary" loading="true"}Procesando::
-::
-```
-
-### Grupo de Botones
-```markdown
-::panel{style="glass"}
-# Opciones
-::button{action="option1" style="primary" class="small"}Opción 1::
-::button{action="option2" style="primary" class="small"}Opción 2::
-::button{action="option3" style="primary" class="small"}Opción 3::
-::
+::button[Procesando]{action="process" style="primary" loading="true"}
+:::
 ```
 
 ## Solución de Problemas

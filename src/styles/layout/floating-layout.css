@@ -59,4 +59,10 @@
 .preview.markdown-body > .panel:not(.panel--layout-float-left):not(.panel--layout-float-right):not(.panel--layout-centered) {
   clear: both;
   margin-top: 1em; /* Añadir margen superior para separar de los flotantes */
+}
+
+.main-panel {
+  display: flex;
+  height: 100%;
+  width: 100%;
 } 

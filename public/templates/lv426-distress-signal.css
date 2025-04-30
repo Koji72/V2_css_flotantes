@@ -30,6 +30,8 @@
     --font-body: 'Exo 2', sans-serif;
     --font-mono: 'Share Tech Mono', monospace;
     --font-base-size: 16px;
+    --body-line-height: 1.6;
+    --heading-line-height: 1.3;
 
     /* Métricas */
     --spacing-unit: 8px;
@@ -44,572 +46,495 @@
     --glow-acid: 0 0 6px var(--acid-green);
     --glow-amber: 0 0 6px var(--amber-alert);
     --glow-red: 0 0 8px var(--biohazard-red);
+    --text-glow-acid: 0 0 3px rgba(144, 255, 112, 0.6);
 }
 
-/* 2. ESTILOS BASE (Aplicados a .preview) */
-.preview {
+/* === 2. BASE STYLES (Scoped to .preview-html) === */
+.preview-html {
     background-color: var(--lv426-bg);
     color: var(--lv426-text);
     font-family: var(--font-body);
     font-size: var(--font-base-size);
-    line-height: 1.65;
-    padding: calc(var(--spacing-unit) * 2);
+    line-height: var(--body-line-height);
+    padding: calc(var(--spacing-unit) * 3);
     margin: 0;
-    /* Fondo con rejilla */
-    background-image:
-        linear-gradient(rgba(144, 255, 112, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(144, 255, 112, 0.02) 1px, transparent 1px);
-    background-size: 25px 25px;
-    /* Heredar estilos base de App.css */
+    /* Fondo sutil con textura */
+    background-image: linear-gradient(45deg, rgba(112, 128, 112, 0.02) 25%, transparent 25%),
+                      linear-gradient(-45deg, rgba(112, 128, 112, 0.02) 25%, transparent 25%),
+                      linear-gradient(45deg, transparent 75%, rgba(112, 128, 112, 0.02) 75%),
+                      linear-gradient(-45deg, transparent 75%, rgba(112, 128, 112, 0.02) 75%);
+    background-size: 24px 24px;
+    background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
     overflow-y: auto;
     box-sizing: border-box;
     height: 100%;
 }
 
-/* Scrollbars */
-.preview::-webkit-scrollbar { width: 8px; height: 8px; }
-.preview::-webkit-scrollbar-track { background: var(--lv426-bg-alt); }
-.preview::-webkit-scrollbar-thumb { background: var(--lv426-border-dark); }
-.preview::-webkit-scrollbar-thumb:hover { background: var(--lv426-border); }
+/* Scrollbars inside .preview-html */
+.preview-html::-webkit-scrollbar { width: 10px; height: 10px; }
+.preview-html::-webkit-scrollbar-track { background: var(--lv426-bg-alt); }
+.preview-html::-webkit-scrollbar-thumb { background: var(--lv426-border-dark); border: 1px solid var(--lv426-border); }
+.preview-html::-webkit-scrollbar-thumb:hover { background: var(--lv426-border); }
 
-/* 3. ELEMENTOS COMUNES (Dentro de .preview) */
-.preview h1, .preview h2, .preview h3,
-.preview h4:not(.panel-title), /* Excluir títulos de panel */
-.preview h5, .preview h6 {
+/* === 3. COMMON ELEMENTS (Scoped to .preview-html) === */
+.preview-html h1, .preview-html h2, .preview-html h3,
+.preview-html h4:not(.panel-title), /* Exclude panel titles */
+.preview-html h5, .preview-html h6 {
     font-family: var(--font-heading);
-    color: var(--lv426-text);
-    margin: calc(var(--spacing-unit) * 2.5) 0 calc(var(--spacing-unit) * 1) 0;
-    letter-spacing: 0.5px;
+    color: var(--acid-green);
+    margin: calc(var(--spacing-unit) * 2.5) 0 var(--spacing-unit) 0;
+    letter-spacing: 1px;
     text-transform: uppercase;
     border-bottom: 1px solid var(--lv426-border-fine);
     padding-bottom: calc(var(--spacing-unit) * 0.5);
+    line-height: var(--heading-line-height);
+    font-weight: 600; /* Teko necesita peso */
+    text-shadow: var(--text-glow-acid);
 }
-.preview h1 { font-size: 2.2em; color: var(--amber-alert); text-shadow: var(--glow-amber); border-color: var(--amber-alert-dark); }
-.preview h2 { font-size: 1.8em; }
-.preview h3 { font-size: 1.5em; color: var(--lv426-text-secondary); border-bottom-style: dashed; }
-/* h4 sin borde inferior por defecto, gestionado por panel-title si aplica */
-/* h5, h6 ocultos */
-.preview h5, .preview h6 { display: none; }
+.preview-html h1 { font-size: 2.2em; border-color: var(--acid-green-dark); }
+.preview-html h2 { font-size: 1.8em; color: var(--lv426-text); text-shadow: none; border-bottom-style: dashed;}
+.preview-html h3 { font-size: 1.5em; color: var(--lv426-text-secondary); border-bottom: none; }
+.preview-html h4:not(.panel-title) { font-size: 1.3em; color: var(--acid-green); border-bottom: none; text-shadow: none; }
+.preview-html h5, .preview-html h6 { display: none; } /* Ocultos por defecto */
 
-.preview p { margin-bottom: calc(var(--spacing-unit) * 1.5); text-align: justify; }
-.preview a { color: var(--acid-green); text-decoration: underline dotted 1px; transition: color 0.2s; }
-.preview a:hover { color: var(--amber-alert); }
-.preview strong { font-weight: 600; color: var(--lv426-text); }
-.preview em { font-style: italic; color: var(--lv426-text-secondary); }
+.preview-html p { margin-bottom: calc(var(--spacing-unit) * 1.5); }
+.preview-html a { color: var(--acid-green); text-decoration: none; border-bottom: 1px dotted var(--acid-green-dark); transition: color 0.2s, border-color 0.2s, text-shadow 0.2s; }
+.preview-html a:hover { color: #fff; border-bottom-color: #fff; text-shadow: var(--glow-acid); }
+.preview-html strong { font-weight: 700; color: #fff; }
+.preview-html em { font-style: normal; color: var(--amber-alert); } /* Exo 2 no tiene itálica real */
 
-/* Código y Pre */
-.preview code { /* Estilo para código inline */
+/* Code & Pre inside .preview-html */
+.preview-html code {
     font-family: var(--font-mono);
     background-color: var(--lv426-bg-alt);
     color: var(--acid-green);
-    padding: 0.1em 0.3em;
+    padding: 0.2em 0.5em;
     border-radius: var(--radius);
-    border: 1px solid var(--lv426-border-fine);
+    border: 1px solid var(--lv426-border-dark);
+    font-size: 0.9em;
+    text-shadow: var(--text-glow-acid);
 }
-.preview pre code { /* Resetear para código dentro de pre */
+.preview-html pre code {
     background-color: transparent;
     border: none;
     padding: 0;
+    color: inherit;
+    font-size: 1em;
+    text-shadow: none;
 }
-.preview pre { /* Contenedor Pre */
-    padding: 0; /* Sin padding directo */
-    margin: var(--spacing-unit) 0;
-    overflow: hidden; /* Para que el border-radius afecte al hijo */
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-inset);
-    font-family: var(--font-mono); /* Asegurar fuente mono */
-}
-/* Aplicar estilos al div interno de SyntaxHighlighter */
-.preview pre > div { /* Asume que el hijo directo es el div de la librería */
-    margin: 0 !important;
-    padding: var(--spacing-unit) !important;
-    border: 1px solid var(--lv426-border-fine) !important;
-    /* El fondo lo pondrá vscDarkPlus o el tema de la librería */
-}
-
-/* Tablas */
-.preview table { width: 100%; border-collapse: collapse; margin: var(--spacing-unit) 0; background-color: var(--lv426-bg-alt); border: 1px solid var(--lv426-border); }
-.preview th, .preview td { padding: var(--spacing-unit); text-align: left; border: 1px solid var(--lv426-border-dark); }
-.preview th { background-color: #252d28; color: var(--amber-alert); font-family: var(--font-heading); text-transform: uppercase; font-weight: 500; }
-.preview tbody tr:nth-child(even) { background-color: rgba(144, 255, 112, 0.03); }
-.preview tbody tr:hover { background-color: rgba(255, 175, 0, 0.1); }
-
-/* Citas */
-.preview blockquote { border-left: 3px solid var(--amber-alert); padding: var(--spacing-unit) calc(var(--spacing-unit)*1.5); margin: var(--spacing-unit) 0; background-color: var(--lv426-bg-alt); color: var(--lv426-text-secondary); }
-
-/* Admoniciones GitHub (Asegurarse de que .preview tenga precedencia) */
-.preview .markdown-alert { border-left-width: 4px; padding: 0.5rem 1rem; margin: 1rem 0; border-radius: var(--radius); }
-.preview .markdown-alert-title { font-weight: bold; font-family: var(--font-heading); margin-bottom: 0.3rem; display: flex; align-items: center; }
-.preview .markdown-alert-title .icon { margin-right: 0.5rem; }
-.preview .markdown-alert-note { border-left-color: var(--lv426-border); background-color: rgba(80, 112, 128, 0.1); }
-.preview .markdown-alert-tip { border-left-color: #2f81f7; background-color: rgba(47, 129, 247, 0.1); }
-.preview .markdown-alert-important { border-left-color: #a371f7; background-color: rgba(163, 113, 247, 0.1); }
-.preview .markdown-alert-warning { border-left-color: var(--amber-alert); background-color: rgba(255, 175, 0, 0.1); }
-.preview .markdown-alert-caution { border-left-color: var(--biohazard-red); background-color: rgba(255, 48, 48, 0.1); }
-
-
-/* --- 4. PANELES :::PANEL (Adaptados a remarkCustomPanels) --- */
-.preview .panel {
-    position: relative;
-    overflow: visible !important; /* Asegurar que las esquinas sean visibles */
-    padding: var(--spacing-unit);
-    margin: var(--spacing-unit) 0;
+.preview-html pre {
+    background-color: var(--lv426-bg-alt);
     border: 1px solid var(--lv426-border);
     border-radius: var(--radius);
+    padding: var(--spacing-unit);
+    margin: calc(var(--spacing-unit) * 1.5) 0;
+    overflow-x: auto;
+    box-shadow: var(--shadow-inset);
+    font-family: var(--font-mono);
+    font-size: 0.95em;
+    line-height: 1.5;
+    color: var(--lv426-text); /* Color base para el texto */
+}
+/* Syntax highlighter styles inside .preview-html pre */
+.preview-html pre .token.comment { color: #6A9955; font-style: italic; }
+.preview-html pre .token.prolog { color: #6A9955; }
+.preview-html pre .token.doctype { color: #6A9955; }
+.preview-html pre .token.cdata { color: #6A9955; }
+.preview-html pre .token.punctuation { color: #808080; } /* Gris */
+.preview-html pre .token.namespace { opacity: .7; }
+.preview-html pre .token.property { color: #9CDCFE; } /* Azul claro (atributos) */
+.preview-html pre .token.tag { color: #569CD6; } /* Azul (etiquetas HTML) */
+.preview-html pre .token.boolean { color: #569CD6; } /* Azul */
+.preview-html pre .token.number { color: #B5CEA8; } /* Verde claro */
+.preview-html pre .token.constant { color: #9CDCFE; }
+.preview-html pre .token.symbol { color: #B5CEA8; }
+.preview-html pre .token.deleted { color: #D16969; }
+.preview-html pre .token.selector { color: #D7BA7D; } /* Amarillo oscuro */
+.preview-html pre .token.attr-name { color: #9CDCFE; }
+.preview-html pre .token.string { color: #CE9178; } /* Naranja */
+.preview-html pre .token.char { color: #CE9178; }
+.preview-html pre .token.builtin { color: #4EC9B0; } /* Turquesa */
+.preview-html pre .token.inserted { color: #6A9955; }
+.preview-html pre .token.operator { color: #D4D4D4; } /* Blanco */
+.preview-html pre .token.entity { color: #4EC9B0; cursor: help; }
+.preview-html pre .token.url { color: #9CDCFE; }
+.preview-html pre .language-css .token.string,
+.preview-html pre .style .token.string { color: #CE9178; }
+.preview-html pre .token.atrule { color: #C586C0; } /* Púrpura */
+.preview-html pre .token.attr-value { color: #CE9178; }
+.preview-html pre .token.function { color: #DCDCAA; } /* Amarillo */
+.preview-html pre .token.class-name { color: #4EC9B0; }
+.preview-html pre .token.keyword { color: #C586C0; } /* Púrpura */
+.preview-html pre .token.regex { color: #D16969; } /* Rojo oscuro */
+.preview-html pre .token.important { color: #569CD6; font-weight: bold; }
+.preview-html pre .token.variable { color: #9CDCFE; }
+.preview-html pre .token.bold { font-weight: bold; }
+.preview-html pre .token.italic { font-style: italic; }
+
+/* Tables inside .preview-html */
+.preview-html table {
+    width: 100%;
+    border-collapse: separate; /* Para usar border-spacing */
+    border-spacing: 0;
+    margin: calc(var(--spacing-unit) * 2) 0;
     background-color: var(--lv426-bg-alt);
-    box-shadow: var(--shadow-inset);
+    border: var(--border-width-medium) solid var(--lv426-border-dark);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-outset);
 }
-.preview .panel-title { /* Estilo para h4.panel-title */
-    margin-top: calc(-1 * var(--spacing-unit) * 1.5); /* Compensar padding padre */
-    margin-left: calc(-1 * var(--spacing-unit) * 1.5);
-    margin-right: calc(-1 * var(--spacing-unit) * 1.5);
-    margin-bottom: calc(var(--spacing-unit) * 1.5); /* Espacio antes del contenido */
-    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+.preview-html th, .preview-html td {
+    padding: calc(var(--spacing-unit) * 1.2) var(--spacing-unit);
+    text-align: left;
     border-bottom: 1px solid var(--lv426-border-dark);
-    background: linear-gradient(to bottom, rgba(80, 112, 128, 0.2), rgba(80, 112, 128, 0.05));
+    font-family: var(--font-body);
+}
+.preview-html th {
+    background-color: var(--lv426-border-dark);
+    color: var(--acid-green);
     font-family: var(--font-heading);
-    font-size: 1.3em;
+    text-transform: uppercase;
     font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom-width: var(--border-width-medium);
+    border-bottom-color: var(--lv426-border);
+}
+.preview-html tbody tr:nth-child(even) { background-color: rgba(80, 112, 128, 0.05); }
+.preview-html tbody tr:hover { background-color: rgba(144, 255, 112, 0.08); }
+.preview-html td:first-child, .preview-html th:first-child { border-left: none; }
+.preview-html td:last-child, .preview-html th:last-child { border-right: none; }
+.preview-html tr:last-child td { border-bottom: none; }
+
+/* Blockquotes inside .preview-html */
+.preview-html blockquote {
+    border-left: var(--border-width-heavy) solid var(--amber-alert-dark);
+    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+    margin: calc(var(--spacing-unit) * 1.5) 0;
+    background-color: rgba(255, 175, 0, 0.05);
+    color: var(--lv426-text-secondary);
+    font-style: italic;
+    border-radius: var(--radius);
+}
+.preview-html blockquote p { margin-bottom: var(--spacing-unit); }
+.preview-html blockquote p:last-child { margin-bottom: 0; }
+
+/* Admonitions inside .preview-html */
+.preview-html .markdown-alert {
+    border-left-width: var(--border-width-heavy);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: var(--radius);
+    position: relative;
+    background-color: var(--lv426-bg-alt); /* Fondo base */
+}
+.preview-html .markdown-alert-title {
+    font-weight: 700; /* Más peso */
+    font-family: var(--font-heading);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+}
+.preview-html .markdown-alert-title .icon { margin-right: 0.8rem; width: 1.2em; height: 1.2em;} /* Icono más grande */
+
+.preview-html .markdown-alert-note { border-left-color: var(--acid-green); background-color: rgba(144, 255, 112, 0.08); color: var(--lv426-text); }
+.preview-html .markdown-alert-note .markdown-alert-title { color: var(--acid-green); }
+.preview-html .markdown-alert-tip { border-left-color: #3fb950; background-color: rgba(63, 185, 80, 0.08); color: var(--lv426-text); }
+.preview-html .markdown-alert-tip .markdown-alert-title { color: #3fb950; }
+.preview-html .markdown-alert-important { border-left-color: #a371f7; background-color: rgba(163, 113, 247, 0.08); color: var(--lv426-text); }
+.preview-html .markdown-alert-important .markdown-alert-title { color: #a371f7; }
+.preview-html .markdown-alert-warning { border-left-color: var(--amber-alert); background-color: rgba(255, 175, 0, 0.08); color: var(--lv426-text); }
+.preview-html .markdown-alert-warning .markdown-alert-title { color: var(--amber-alert); }
+.preview-html .markdown-alert-caution { border-left-color: var(--biohazard-red); background-color: rgba(255, 48, 48, 0.08); color: var(--lv426-text); }
+.preview-html .markdown-alert-caution .markdown-alert-title { color: var(--biohazard-red); text-shadow: var(--glow-red); }
+
+/* --- 4. PANELS :::PANEL (Scoped to .preview-html) --- */
+.preview-html .panel {
+    position: relative;
+    padding: calc(var(--spacing-unit) * 2);
+    margin: calc(var(--spacing-unit) * 2) 0;
+    border: var(--border-width-fine) solid var(--lv426-border);
+    border-radius: var(--radius);
+    background-color: var(--lv426-bg-alt);
+    box-shadow: var(--shadow-inset), 0 0 10px rgba(80, 112, 128, 0.1); /* Añadir brillo sutil */
+    overflow: hidden; /* Importante para esquinas, clip-path, etc. */
+}
+.preview-html .panel-title {
+    margin: calc(-1 * var(--spacing-unit) * 2); /* Compensar padding padre */
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 2);
+    border-bottom: var(--border-width-medium) solid var(--lv426-border-dark);
+    background: linear-gradient(to bottom, var(--lv426-border-dark), rgba(48, 64, 80, 0.5)); /* Fondo degradado para título */
+    font-family: var(--font-heading);
+    font-size: 1.6em;
+    font-weight: 600;
+    color: var(--lv426-text);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.preview-html .panel-title::before { display: none; } /* Ocultar iconos por defecto */
+
+/* Panel Styles scoped to .preview-html */
+.preview-html .panel-style--note {
+    border-left: var(--border-width-heavy) solid var(--acid-green-dark);
+    background-color: rgba(144, 255, 112, 0.05);
+    box-shadow: inset 3px 0 5px -2px rgba(144, 255, 112, 0.2), var(--shadow-inset);
+}
+.preview-html .panel-style--note > .panel-title {
+    color: var(--acid-green);
+    background: rgba(144, 255, 112, 0.1);
+    border-bottom-color: var(--acid-green-dark);
+    text-shadow: var(--glow-acid);
+}
+
+.preview-html .panel-style--warning {
+    border-left: var(--border-width-heavy) solid var(--amber-alert-dark);
+    background-color: rgba(255, 175, 0, 0.05);
+    box-shadow: inset 3px 0 5px -2px rgba(255, 175, 0, 0.2), var(--shadow-inset);
+}
+.preview-html .panel-style--warning > .panel-title {
     color: var(--amber-alert);
-    text-shadow: 0 0 4px var(--amber-alert);
-    border-top: none; /* Asegurar que no herede */
-    border-left: none;
-    border-right: none;
-    text-transform: uppercase; /* Heredado de h4, pero asegurar */
-    letter-spacing: 0.5px; /* Heredado de h4, pero asegurar */
-}
-/* Ocultar icono de tema anterior si existe */
-.preview .panel-title::before { display: none; }
-
-/* Estilos Semánticos (Aplicados con style=note, etc.) */
-/* Aplican borde izquierdo y ajustan fondo/color del título */
-.preview .panel-style--note { border-left: var(--border-width-heavy) solid var(--lv426-border); background-color: rgba(80, 112, 128, 0.05); }
-.preview .panel-style--note > .panel-title { color: var(--lv426-border); background: rgba(80, 112, 128, 0.1); border-bottom-color: var(--lv426-border); text-shadow: none; }
-
-.preview .panel-style--warning { border-left: var(--border-width-heavy) solid var(--amber-alert); background-color: rgba(255, 175, 0, 0.05); }
-.preview .panel-style--warning > .panel-title { color: var(--amber-alert); background: rgba(255, 175, 0, 0.1); border-bottom-color: var(--amber-alert-dark); }
-
-.preview .panel-style--success { border-left: var(--border-width-heavy) solid var(--acid-green); background-color: rgba(144, 255, 112, 0.05); }
-.preview .panel-style--success > .panel-title { color: var(--acid-green); background: rgba(144, 255, 112, 0.1); border-bottom-color: var(--acid-green-dark); text-shadow: var(--glow-acid); }
-
-.preview .panel-style--danger { border-left: var(--border-width-heavy) solid var(--biohazard-red); background-color: rgba(255, 48, 48, 0.05); }
-.preview .panel-style--danger > .panel-title { color: var(--biohazard-red); background: rgba(255, 48, 48, 0.1); border-bottom-color: var(--biohazard-red-dark); text-shadow: var(--glow-red); }
-
-/* info y muted adaptados */
-.preview .panel-style--info { border-left: var(--border-width-heavy) solid #507080; background-color: rgba(80, 112, 128, 0.05); }
-.preview .panel-style--info > .panel-title { color: #7090a0; background: rgba(80, 112, 128, 0.1); border-bottom-color: #507080; text-shadow: none; }
-
-.preview .panel-style--muted { border-left: var(--border-width-heavy) solid var(--lv426-text-secondary); background-color: rgba(112, 128, 112, 0.05); opacity: 0.8; }
-.preview .panel-style--muted > .panel-title { color: var(--lv426-text-secondary); background: rgba(112, 128, 112, 0.1); border-bottom-color: #506050; text-shadow: none; }
-
-
-/* Estilos Visuales/Estructurales Adaptados */
-.preview .panel-style--weyland-terminal {
-    border-color: var(--lv426-border);
-    background: var(--lv426-bg-alt) linear-gradient(rgba(255, 255, 255, 0.01), transparent);
-    box-shadow: var(--shadow-inset);
-    /* El título ya hereda color ámbar por defecto */
+    background: rgba(255, 175, 0, 0.1);
+    border-bottom-color: var(--amber-alert-dark);
+    text-shadow: var(--glow-amber);
 }
 
-.preview .panel-style--quarantine-zone {
-    border-color: var(--lv426-border);
-    box-shadow: inset 0 0 0 2px var(--biohazard-red), var(--shadow-inset);
-    background-color: rgba(42, 29, 28, 0.5);
+.preview-html .panel-style--success { /* Usar verde ácido para éxito en este tema */
+    border-left: var(--border-width-heavy) solid var(--acid-green-dark);
+    background-color: rgba(144, 255, 112, 0.05);
 }
-.preview .panel-style--quarantine-zone > .panel-title {
+.preview-html .panel-style--success > .panel-title {
+    color: var(--acid-green);
+    background: rgba(144, 255, 112, 0.1);
+    border-bottom-color: var(--acid-green-dark);
+    text-shadow: var(--glow-acid);
+}
+
+.preview-html .panel-style--danger {
+    border-left: var(--border-width-heavy) solid var(--biohazard-red-dark);
+    background-color: rgba(255, 48, 48, 0.05);
+    box-shadow: inset 3px 0 5px -2px rgba(255, 48, 48, 0.2), var(--shadow-inset);
+}
+.preview-html .panel-style--danger > .panel-title {
     color: var(--biohazard-red);
-    text-shadow: var(--glow-red);
     background: rgba(255, 48, 48, 0.1);
     border-bottom-color: var(--biohazard-red-dark);
-}
-/* Icono ::before no se aplica a h4, se podría añadir al span si se genera */
-
-.preview .panel-style--xenomorph-bio {
-    border: none;
-    background: radial-gradient(ellipse at center, var(--lv426-bg-alt) 0%, var(--lv426-bg) 80%);
-    box-shadow: inset 0 0 15px rgba(144, 255, 112, 0.15);
-    border-radius: var(--radius);
-}
-.preview .panel-style--xenomorph-bio > .panel-title {
-    color: var(--acid-green);
-    text-shadow: var(--glow-acid);
-    border-bottom-color: rgba(144, 255, 112, 0.2);
-    background: transparent; /* Sin fondo de cabecera */
+    text-shadow: var(--glow-red);
 }
 
-.preview .panel-style--medbay-screen {
-    border-color: var(--acid-green-dark);
+/* --- Estilos Específicos del Tema LV-426 --- */
+
+.preview-html .panel-style--data-log {
+    border: 1px dashed var(--lv426-border-fine);
+    background: linear-gradient(135deg, var(--lv426-bg-alt) 25%, transparent 25%) -10px 0,
+                linear-gradient(225deg, var(--lv426-bg-alt) 25%, transparent 25%) -10px 0,
+                linear-gradient(315deg, var(--lv426-bg-alt) 25%, transparent 25%),
+                linear-gradient(45deg, var(--lv426-bg-alt) 25%, transparent 25%);
+    background-size: 20px 20px;
     background-color: var(--lv426-bg);
-    background-image: linear-gradient(rgba(144, 255, 112, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(144, 255, 112, 0.05) 1px, transparent 1px);
-    background-size: 15px 15px;
-}
-.preview .panel-style--medbay-screen > .panel-title {
-    color: var(--lv426-text);
     font-family: var(--font-mono);
-    font-size: 1.1em;
-    background: rgba(144, 255, 112, 0.1);
-    border-bottom-color: var(--acid-green-dark);
-    text-shadow: none;
+    color: var(--lv426-text-secondary);
 }
-
-.preview .panel-style--distress-log {
-    border: 1px dotted var(--amber-alert);
-    background-color: var(--lv426-bg);
-    box-shadow: none;
-    color: var(--amber-alert); /* Color del texto del contenido */
-}
-.preview .panel-style--distress-log > .panel-title {
-    font-family: var(--font-mono);
-    color: var(--amber-alert);
+.preview-html .panel-style--data-log > .panel-title {
     background: transparent;
-    border-bottom-color: var(--amber-alert-dark);
+    border-bottom: 1px solid var(--lv426-border-fine);
+    color: var(--lv426-text-secondary);
+    font-size: 1.2em;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
 }
-/* Contenido interno ya usa fuente mono si es <pre> o <code> */
+.preview-html .panel-style--data-log code { color: var(--lv426-text-secondary); background: none; border: none; text-shadow: none; }
 
-.preview .panel-style--glass {
-    background-color: rgba(26, 32, 28, 0.75);
-    backdrop-filter: blur(4px) grayscale(0.2);
-    border: 1px solid rgba(200, 216, 192, 0.3);
-    box-shadow: 0 0 8px 1px rgba(200, 216, 192, 0.2);
+.preview-html .panel-style--med-bay {
+    border: 1px solid var(--lv426-border);
+    background-color: #1c2520; /* Verde muy oscuro */
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
 }
-.preview .panel-style--glass > .panel-title {
-    color: var(--lv426-text);
-    background: rgba(200, 216, 192, 0.05);
-    border-bottom-color: rgba(200, 216, 192, 0.3);
+.preview-html .panel-style--med-bay > .panel-title {
+    background: var(--lv426-border-dark);
+    color: #e0ffe0; /* Blanco verdoso claro */
+    border-bottom-color: var(--lv426-border);
+    text-shadow: 0 0 3px #e0ffe0;
+}
+
+.preview-html .panel-style--distress-beacon {
+    border: 2px solid var(--amber-alert);
+    box-shadow: 0 0 10px var(--amber-alert), inset 0 0 5px rgba(255, 175, 0, 0.2);
+    animation: lv426-pulse-amber 1.5s infinite ease-in-out;
+}
+.preview-html .panel-style--distress-beacon > .panel-title {
+    background: var(--amber-alert-dark);
+    color: #fff;
+    border-bottom-color: var(--amber-alert);
+    text-shadow: 0 0 5px #fff;
+}
+
+/* === 5. DECORACIONES (Scoped to .preview-html) === */
+/* Tipos de Esquina LV-426 */
+.preview-html .corner-type-1 { /* Remache desgastado */
+    width: 6px; height: 6px;
+    background-color: var(--lv426-border-dark);
+    border: 1px solid var(--lv426-border);
+    border-radius: 50%;
+    box-shadow: inset 0 0 1px rgba(0,0,0,0.7);
+}
+.preview-html .corner-type-2 { /* Luz Ámbar */
+     width: 15px; height: 5px;
+     background-color: var(--amber-alert);
+     border-radius: 1px;
+     box-shadow: var(--glow-amber);
+}
+.preview-html .corner-pos--top-left.corner-type-2,
+.preview-html .corner-pos--bottom-left.corner-type-2 { transform: rotate(90deg); transform-origin: top left; }
+.preview-html .corner-pos--top-right.corner-type-2,
+.preview-html .corner-pos--bottom-right.corner-type-2 { transform: rotate(-90deg); transform-origin: top right; }
+
+.preview-html .corner-type-3 { /* Luz Roja Peligro */
+      width: 15px; height: 5px;
+      background-color: var(--biohazard-red);
+      border-radius: 1px;
+      box-shadow: var(--glow-red);
+      animation: lv426-pulse-red 1s infinite ease-in-out;
+}
+.preview-html .corner-pos--top-left.corner-type-3,
+.preview-html .corner-pos--bottom-left.corner-type-3 { transform: rotate(90deg); transform-origin: top left; }
+.preview-html .corner-pos--top-right.corner-type-3,
+.preview-html .corner-pos--bottom-right.corner-type-3 { transform: rotate(-90deg); transform-origin: top right; }
+
+.preview-html .corner-type-4 { /* Esquina Metálica Cortada */
+    width: 12px; height: 12px;
+    background: none;
+    border-style: solid;
+    border-color: var(--lv426-border);
+    border-width: 0;
+}
+.preview-html .corner-pos--top-left.corner-type-4 { border-top-width: 2px; border-left-width: 2px; }
+.preview-html .corner-pos--top-right.corner-type-4 { border-top-width: 2px; border-right-width: 2px; }
+.preview-html .corner-pos--bottom-left.corner-type-4 { border-bottom-width: 2px; border-left-width: 2px; }
+.preview-html .corner-pos--bottom-right.corner-type-4 { border-bottom-width: 2px; border-right-width: 2px; }
+
+/* Tipos de Borde LV-426 */
+.preview-html .edge-type-1 { /* Barra Metálica Desgastada */
+    height: 2px;
+    background-color: var(--lv426-border-dark);
+    border-top: 1px solid var(--lv426-border);
+}
+.preview-html .edge-pos--left.edge-type-1,
+.preview-html .edge-pos--right.edge-type-1 {
+     width: 2px;
+     height: var(--edge-span-height, 60%);
+     background-color: var(--lv426-border-dark);
+     border-left: 1px solid var(--lv426-border);
+}
+
+.preview-html .edge-type-2 { /* Línea Alerta Ámbar */
+    height: 3px;
+    background-color: var(--amber-alert);
+    box-shadow: var(--glow-amber);
+}
+.preview-html .edge-pos--left.edge-type-2,
+.preview-html .edge-pos--right.edge-type-2 {
+     width: 3px;
+     height: var(--edge-span-height, 60%);
+     background-color: var(--amber-alert);
+     box-shadow: var(--glow-amber);
+}
+
+/* === 6. LAYOUTS (Scoped to .preview-html if needed) === */
+/* Usar estilos globales de floating-layout.css, ajustar si es necesario */
+/* .preview-html .layout--left { ... } */
+
+/* === 7. RESPONSIVE (Scoped to .preview-html) === */
+@media (max-width: 768px) {
+    .preview-html { --font-base-size: 15px; padding: calc(var(--spacing-unit) * 1.5); }
+    .preview-html .layout--left, .preview-html .layout--right, .preview-html .layout--center {
+        float: none; width: 100%; margin-left: 0; margin-right: 0;
+    }
+    .preview-html h1 { font-size: 1.8em; }
+    .preview-html h2 { font-size: 1.5em; }
+    .preview-html h3 { font-size: 1.3em; }
+}
+
+/* === 8. ANIMACIONES === */
+@keyframes lv426-pulse-amber {
+    0%, 100% { box-shadow: 0 0 5px var(--amber-alert), inset 0 0 3px rgba(255, 175, 0, 0.2); opacity: 1; }
+    50% { box-shadow: 0 0 12px var(--amber-alert), inset 0 0 5px rgba(255, 175, 0, 0.3); opacity: 0.7; }
+}
+@keyframes lv426-pulse-red {
+    0%, 100% { box-shadow: 0 0 8px var(--biohazard-red), inset 0 0 4px rgba(255, 48, 48, 0.3); opacity: 1; }
+    50% { box-shadow: 0 0 15px var(--biohazard-red), inset 0 0 6px rgba(255, 48, 48, 0.4); opacity: 0.6; }
+}
+
+/* Aplicar animaciones */
+/* .preview-html .panel.animation--pulse-amber { animation: lv426-pulse-amber ...; } */
+/* .preview-html .panel.animation--pulse-red { animation: lv426-pulse-red ...; } */
+
+/* --- 9. ESTILOS PARA ELEMENTOS ESPECÍFICOS (Ej. Botones, si son necesarios) --- */
+
+/* Aumentar especificidad y forzar estilos clave para botones dentro de paneles */
+.preview-html .panel .panel-button { /* Añadido .panel */
+    font-family: var(--font-mono);
+    background-color: var(--lv426-border-dark) !important; /* Forzar */
+    color: var(--lv426-text) !important; /* Forzar */
+    border: 1px solid var(--lv426-border) !important; /* Forzar */
+    padding: calc(var(--spacing-unit) * 0.8) calc(var(--spacing-unit) * 1.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-outset);
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; /* Asegurar transición */
+}
+
+.preview-html .panel .panel-button:hover {
+    background-color: var(--lv426-border) !important; /* Forzar */
+    color: #fff !important; /* Forzar */
+    border-color: var(--lv426-border) !important; /* Forzar */
+    box-shadow: var(--shadow-outset), 0 0 5px rgba(80, 112, 128, 0.5);
+}
+
+.preview-html .panel .panel-button.primary {
+    background-color: var(--acid-green-dark) !important; /* Forzar */
+    border-color: var(--acid-green) !important; /* Forzar */
+    color: var(--lv426-bg-alt) !important; /* Forzar */
     text-shadow: none;
 }
+.preview-html .panel .panel-button.primary:hover {
+    background-color: var(--acid-green) !important; /* Forzar */
+    border-color: var(--acid-green) !important; /* Forzar */
+    color: #000 !important; /* Forzar */
+    box-shadow: var(--shadow-outset), var(--glow-acid);
+}
 
-/* Estilos de Marquesina Adaptados */
-/* tech-corners ahora usa los ::before/::after definidos en el CSS original */
-.preview .panel-style--tech-corners {
+.preview-html .panel .panel-button.warning {
+    background-color: var(--amber-alert-dark) !important; /* Forzar */
+    border-color: var(--amber-alert) !important; /* Forzar */
+    color: #fff !important; /* Forzar */
+}
+.preview-html .panel .panel-button.warning:hover {
+    background-color: var(--amber-alert) !important; /* Forzar */
+    border-color: var(--amber-alert) !important; /* Forzar */
+    box-shadow: var(--shadow-outset), var(--glow-amber);
+}
+
+.preview-html .panel .panel-button.danger {
+    background-color: var(--biohazard-red-dark) !important; /* Forzar */
+    border-color: var(--biohazard-red) !important; /* Forzar */
+    color: #fff !important; /* Forzar */
+}
+.preview-html .panel .panel-button.danger:hover {
+    background-color: var(--biohazard-red) !important; /* Forzar */
+    border-color: var(--biohazard-red) !important; /* Forzar */
+    box-shadow: var(--shadow-outset), var(--glow-red);
+}
+
+/* Asegurarse de que otros botones (si existen fuera de .panel pero dentro de .preview-html) */
+/* también tengan estilos base o hereden correctamente */
+.preview-html button:not(.panel-button) {
+    /* Estilos mínimos para asegurar visibilidad si no son panel-button */
+    color: var(--lv426-text);
+    background-color: var(--lv426-border-dark);
     border: 1px solid var(--lv426-border);
-    padding: calc(var(--spacing-unit) * 2);
-    position: relative; /* Necesario para pseudo-elementos */
-}
-.preview .panel-style--tech-corners::before,
-.preview .panel-style--tech-corners::after {
-    content: ''; position: absolute; width: 18px; height: 18px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Cpolyline points='0,18 0,0 18,0' style='fill:none; stroke:%2390ff70; stroke-width:2.5' /%3E%3C/svg%3E"); /* Verde Ácido */
-    background-repeat: no-repeat; background-size: contain; filter: drop-shadow(0 0 3px var(--acid-green));
-}
-.preview .panel-style--tech-corners::before { top: 4px; left: 4px; }
-.preview .panel-style--tech-corners::after { bottom: 4px; right: 4px; transform: rotate(180deg); }
-
-.preview .panel-style--cut-corners {
-    --corner-cut-size: 12px;
-    clip-path: polygon( var(--corner-cut-size) 0%, calc(100% - var(--corner-cut-size)) 0%, 100% var(--corner-cut-size), 100% calc(100% - var(--corner-cut-size)), calc(100% - var(--corner-cut-size)) 100%, var(--corner-cut-size) 100%, 0% calc(100% - var(--corner-cut-size)), 0% var(--corner-cut-size) );
-    border: 1px solid var(--lv426-border-dark);
-    border-radius: 0; /* Quitar radius si se usa clip-path */
-}
-
-.preview .panel-style--corner-brackets {
-    position: relative;
-    border: 1px solid var(--lv426-border-dark);
-    padding: calc(var(--spacing-unit) * 2);
-}
-.preview .panel-style--corner-brackets::before,
-.preview .panel-style--corner-brackets::after {
-    content: ''; position: absolute; width: 15px; height: 15px; border-style: solid; border-color: var(--amber-alert); border-width: 0; box-shadow: 0 0 4px var(--amber-alert);
-}
-.preview .panel-style--corner-brackets::before { top: 5px; left: 5px; border-top-width: 2px; border-left-width: 2px; }
-.preview .panel-style--corner-brackets::after { bottom: 5px; right: 5px; border-bottom-width: 2px; border-right-width: 2px; }
-
-/* --- 5. DECORACIONES ::CORNER Y ::X-EDGE (Adaptados) --- */
-.preview .panel-corner, .preview .panel-edge {
-    position: absolute !important;
-    z-index: 10; /* Aumentado para asegurar visibilidad */
-    pointer-events: none;
-}
-
-/* Posicionamiento de Esquinas (Usa variables CSS) */
-.preview .corner-pos--top-left { top: calc(-2px - var(--corner-offset, 1px)); left: calc(-2px - var(--corner-offset, 1px)); }
-.preview .corner-pos--top-right { top: calc(-2px - var(--corner-offset, 1px)); right: calc(-2px - var(--corner-offset, 1px)); }
-.preview .corner-pos--bottom-left { bottom: calc(-2px - var(--corner-offset, 1px)); left: calc(-2px - var(--corner-offset, 1px)); }
-.preview .corner-pos--bottom-right { bottom: calc(-2px - var(--corner-offset, 1px)); right: calc(-2px - var(--corner-offset, 1px)); }
-
-/* Tipos de Esquina LV-426 */
-.preview .corner-type-1 { /* Escuadra Verde Ácido */
-    width: 15px; height: 15px;
-    border-style: solid;
-    border-color: var(--acid-green);
-    border-width: 0;
-    filter: drop-shadow(var(--glow-acid));
-}
-.preview .corner-pos--top-left.corner-type-1 { border-top-width: 2px; border-left-width: 2px; }
-.preview .corner-pos--top-right.corner-type-1 { border-top-width: 2px; border-right-width: 2px; }
-.preview .corner-pos--bottom-left.corner-type-1 { border-bottom-width: 2px; border-left-width: 2px; }
-.preview .corner-pos--bottom-right.corner-type-1 { border-bottom-width: 2px; border-right-width: 2px; }
-
-.preview .corner-type-2 { /* Bloque Ámbar */
-    width: 10px; height: 10px; background-color: var(--amber-alert); box-shadow: var(--glow-amber);
-}
-
-.preview .corner-type-3 { /* Bloque Rojo (Animado) */
-     width: 10px; height: 10px; background-color: var(--biohazard-red); box-shadow: var(--glow-red); animation: pulse-alert 1.5s infinite;
-}
-
-.preview .corner-type-4 { /* Forma SVG Biomecánica */
-    width: 20px; height: 20px;
-    background-color: var(--acid-green); /* Color base */
-    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C5,0 5,5 10,5 C10,10 5,10 0,10 C0,5 0,0 0,0 Z' fill='black'/%3E%3C/svg%3E");
-    mask-size: contain;
-    mask-repeat: no-repeat;
-     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C5,0 5,5 10,5 C10,10 5,10 0,10 C0,5 0,0 0,0 Z' fill='black'/%3E%3C/svg%3E");
-    -webkit-mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-}
-
-/* Flips (Se aplican bien a Type 4) */
-.preview .corner-shape-flipped-h { transform: scaleX(-1); }
-.preview .corner-shape-flipped-v { transform: scaleY(-1); }
-.preview .corner-shape-flipped-h.corner-shape-flipped-v { transform: scale(-1, -1); }
-
-
-/* Posicionamiento de Bordes (Usa variables CSS) */
-.preview .edge-pos--top { top: calc(-1 * var(--edge-offset, 1px)); left: 50%; transform: translateX(-50%); width: var(--edge-span-width, 50%); max-width: 100%; }
-.preview .edge-pos--bottom { bottom: calc(-1 * var(--edge-offset, 1px)); left: 50%; transform: translateX(-50%); width: var(--edge-span-width, 50%); max-width: 100%; }
-.preview .edge-pos--left { left: calc(-1 * var(--edge-offset, 1px)); top: 50%; transform: translateY(-50%); height: var(--edge-span-height, 50%); max-height: 100%; }
-.preview .edge-pos--right { right: calc(-1 * var(--edge-offset, 1px)); top: 50%; transform: translateY(-50%); height: var(--edge-span-height, 50%); max-height: 100%; }
-
-/* Tipos de Borde LV-426 */
-.preview .edge-type-1 { /* Línea discontinua Ámbar */
-    height: 1px; /* Altura base para T/B */
-    width: var(--edge-span-width, 50%); /* Span controla ancho */
-    background: repeating-linear-gradient(to right, var(--amber-alert) 0, var(--amber-alert) 3px, transparent 3px, transparent 6px);
-}
-.preview .edge-pos--left.edge-type-1, .preview .edge-pos--right.edge-type-1 { /* Adaptar para vertical */
-     width: 1px; /* Ancho base para L/R */
-     height: var(--edge-span-height, 50%); /* Span controla alto */
-     background: repeating-linear-gradient(to bottom, var(--amber-alert) 0, var(--amber-alert) 3px, transparent 3px, transparent 6px);
-}
-
-.preview .edge-type-2 { /* Barra Verde Ácido */
-    height: 4px; /* Altura base para T/B */
-    width: var(--edge-span-width, 50%); /* Span controla ancho */
-    background: linear-gradient(to right, transparent, var(--acid-green), transparent);
-    filter: drop-shadow(0 0 3px var(--acid-green));
-    border-radius: 1px;
-}
-.preview .edge-pos--left.edge-type-2, .preview .edge-pos--right.edge-type-2 { /* Adaptar para vertical */
-     width: 4px; /* Ancho base para L/R */
-     height: var(--edge-span-height, 50%); /* Span controla alto */
-     background: linear-gradient(to bottom, transparent, var(--acid-green), transparent);
-}
-
-
-/* --- 6. LAYOUTS (Adaptados) --- */
-.preview .layout--left { /* Reemplaza float-left */
-    float: left; width: 48%;
-    margin-right: 2%; margin-bottom: var(--spacing-unit); clear: left;
-}
-.preview .layout--right { /* Reemplaza float-right */
-    float: right; width: 48%;
-    margin-left: 2%; margin-bottom: var(--spacing-unit); clear: right;
-}
-.preview .layout--center {
-    display: block; width: 80%; /* O el ancho deseado */
-    margin-left: auto; margin-right: auto;
-    margin-bottom: var(--spacing-unit);
-    float: none; clear: both;
-}
-.preview .clearfix::after { content: ""; display: table; clear: both; }
-
-/* --- 7. RESPONSIVE DESIGN --- */
-@media (max-width: 768px) {
-    .preview .layout--left, .preview .layout--right, .preview .layout--center {
-        float: none;
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-    }
-    .preview { --font-base-size: 15px; }
-}
-
-/* --- 8. ANIMACIONES --- */
-@keyframes pulse-alert {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.1); }
-}
-.preview .animation--pulse { animation: pulse-alert 1.5s infinite ease-in-out; }
-
-/* --- NUEVOS ESTILOS LV-426 --- */
-
-.preview .panel-style--holographic {
-    border: 1px solid var(--acid-green-dark);
-    background: radial-gradient(ellipse at center, rgba(26, 32, 28, 0.7) 0%, rgba(16, 21, 18, 0.85) 100%);
-    box-shadow: inset 0 0 8px rgba(144, 255, 112, 0.2), 0 0 5px var(--acid-green);
-    backdrop-filter: blur(2px) brightness(0.9);
-    /* Añadir efecto scanlines sutil */
-    position: relative; /* Para el pseudo-elemento */
-    overflow: hidden;
-}
-.preview .panel-style--holographic::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(144, 255, 112, 0.05) 0%,
-        rgba(144, 255, 112, 0.05) 50%,
-        transparent 50%,
-        transparent 100%
-    );
-    background-size: 100% 4px; /* Altura de las scanlines */
-    opacity: 0.4;
-    pointer-events: none;
-    z-index: 1; /* Asegurar que esté sobre el fondo pero bajo el contenido */
-}
-.preview .panel-style--holographic > .panel-title {
-    color: var(--acid-green);
-    text-shadow: var(--glow-acid);
-    background: rgba(144, 255, 112, 0.1);
-    border-bottom-color: var(--acid-green-dark);
-    z-index: 2; /* Encima de las scanlines */
-    position: relative;
-}
-/* Contenido también necesita estar encima de las scanlines */
-.preview .panel-style--holographic > *:not(.panel-title) {
-    position: relative;
-    z-index: 2;
-}
-
-.preview .panel-style--cut-corner-lg {
-    --corner-cut-size-lg: 25px; /* Tamaño del corte más grande */
-    clip-path: polygon(
-        var(--corner-cut-size-lg) 0%, /* Corte arriba-izquierda */
-        100% 0%,
-        100% calc(100% - var(--corner-cut-size-lg)), /* Corte abajo-derecha */
-        calc(100% - var(--corner-cut-size-lg)) 100%,
-        0% 100%,
-        0% var(--corner-cut-size-lg) /* NO corte abajo-izquierda ni arriba-derecha */
-    );
-    border: 1px solid var(--lv426-border-dark);
-    border-radius: 0;
-    background-color: var(--lv426-bg-alt);
-}
-.preview .panel-style--cut-corner-lg > .panel-title {
-    /* Usar estilo de título por defecto o uno específico si se desea */
-    color: var(--amber-alert); /* Mantener título ámbar por defecto */
-    background: linear-gradient(to bottom, rgba(80, 112, 128, 0.2), rgba(80, 112, 128, 0.05));
-    border-bottom-color: var(--lv426-border-dark);
-}
-
-/* ------------------------------ */
-
-/* --- 5. DECORACIONES ::CORNER Y ::X-EDGE (Adaptados) --- */
-.preview .panel-corner, .preview .panel-edge {
-    position: absolute !important;
-    z-index: 10; /* Aumentado para asegurar visibilidad */
-    pointer-events: none;
-}
-
-/* Posicionamiento de Esquinas (Usa variables CSS) */
-.preview .corner-pos--top-left { top: calc(-1 * var(--corner-offset, 1px)); left: calc(-1 * var(--corner-offset, 1px)); }
-.preview .corner-pos--top-right { top: calc(-1 * var(--corner-offset, 1px)); right: calc(-1 * var(--corner-offset, 1px)); }
-.preview .corner-pos--bottom-left { bottom: calc(-1 * var(--corner-offset, 1px)); left: calc(-1 * var(--corner-offset, 1px)); }
-.preview .corner-pos--bottom-right { bottom: calc(-1 * var(--corner-offset, 1px)); right: calc(-1 * var(--corner-offset, 1px)); }
-
-/* Tipos de Esquina LV-426 */
-.preview .corner-type-1 { /* Escuadra Verde Ácido */
-    width: 15px; height: 15px;
-    border-style: solid;
-    border-color: var(--acid-green);
-    border-width: 0;
-    filter: drop-shadow(var(--glow-acid));
-}
-.preview .corner-pos--top-left.corner-type-1 { border-top-width: 2px; border-left-width: 2px; }
-.preview .corner-pos--top-right.corner-type-1 { border-top-width: 2px; border-right-width: 2px; }
-.preview .corner-pos--bottom-left.corner-type-1 { border-bottom-width: 2px; border-left-width: 2px; }
-.preview .corner-pos--bottom-right.corner-type-1 { border-bottom-width: 2px; border-right-width: 2px; }
-
-.preview .corner-type-2 { /* Bloque Ámbar */
-    width: 10px; height: 10px; background-color: var(--amber-alert); box-shadow: var(--glow-amber);
-}
-
-.preview .corner-type-3 { /* Bloque Rojo (Animado) */
-     width: 10px; height: 10px; background-color: var(--biohazard-red); box-shadow: var(--glow-red); animation: pulse-alert 1.5s infinite;
-}
-
-.preview .corner-type-4 { /* Forma SVG Biomecánica */
-    width: 20px; height: 20px;
-    background-color: var(--acid-green); /* Color base */
-    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C5,0 5,5 10,5 C10,10 5,10 0,10 C0,5 0,0 0,0 Z' fill='black'/%3E%3C/svg%3E");
-    mask-size: contain;
-    mask-repeat: no-repeat;
-     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C5,0 5,5 10,5 C10,10 5,10 0,10 C0,5 0,0 0,0 Z' fill='black'/%3E%3C/svg%3E");
-    -webkit-mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-}
-
-/* Flips (Se aplican bien a Type 4) */
-.preview .corner-shape-flipped-h { transform: scaleX(-1); }
-.preview .corner-shape-flipped-v { transform: scaleY(-1); }
-.preview .corner-shape-flipped-h.corner-shape-flipped-v { transform: scale(-1, -1); }
-
-
-/* Posicionamiento de Bordes (Usa variables CSS) */
-.preview .edge-pos--top { top: calc(-1 * var(--edge-offset, 1px)); left: 50%; transform: translateX(-50%); width: var(--edge-span-width, 50%); max-width: 100%; }
-.preview .edge-pos--bottom { bottom: calc(-1 * var(--edge-offset, 1px)); left: 50%; transform: translateX(-50%); width: var(--edge-span-width, 50%); max-width: 100%; }
-.preview .edge-pos--left { left: calc(-1 * var(--edge-offset, 1px)); top: 50%; transform: translateY(-50%); height: var(--edge-span-height, 50%); max-height: 100%; }
-.preview .edge-pos--right { right: calc(-1 * var(--edge-offset, 1px)); top: 50%; transform: translateY(-50%); height: var(--edge-span-height, 50%); max-height: 100%; }
-
-/* Tipos de Borde LV-426 */
-.preview .edge-type-1 { /* Línea discontinua Ámbar */
-    height: 1px; /* Altura base para T/B */
-    width: var(--edge-span-width, 50%); /* Span controla ancho */
-    background: repeating-linear-gradient(to right, var(--amber-alert) 0, var(--amber-alert) 3px, transparent 3px, transparent 6px);
-}
-.preview .edge-pos--left.edge-type-1, .preview .edge-pos--right.edge-type-1 { /* Adaptar para vertical */
-     width: 1px; /* Ancho base para L/R */
-     height: var(--edge-span-height, 50%); /* Span controla alto */
-     background: repeating-linear-gradient(to bottom, var(--amber-alert) 0, var(--amber-alert) 3px, transparent 3px, transparent 6px);
-}
-
-.preview .edge-type-2 { /* Barra Verde Ácido */
-    height: 4px; /* Altura base para T/B */
-    width: var(--edge-span-width, 50%); /* Span controla ancho */
-    background: linear-gradient(to right, transparent, var(--acid-green), transparent);
-    filter: drop-shadow(0 0 3px var(--acid-green));
-    border-radius: 1px;
-}
-.preview .edge-pos--left.edge-type-2, .preview .edge-pos--right.edge-type-2 { /* Adaptar para vertical */
-     width: 4px; /* Ancho base para L/R */
-     height: var(--edge-span-height, 50%); /* Span controla alto */
-     background: linear-gradient(to bottom, transparent, var(--acid-green), transparent);
-}
-
-
-/* --- 6. LAYOUTS (Adaptados) --- */
-.preview .layout--left { /* Reemplaza float-left */
-    float: left; width: 48%;
-    margin-right: 2%; margin-bottom: var(--spacing-unit); clear: left;
-}
-.preview .layout--right { /* Reemplaza float-right */
-    float: right; width: 48%;
-    margin-left: 2%; margin-bottom: var(--spacing-unit); clear: right;
-}
-.preview .layout--center {
-    display: block; width: 80%; /* O el ancho deseado */
-    margin-left: auto; margin-right: auto;
-    margin-bottom: var(--spacing-unit);
-    float: none; clear: both;
-}
-.preview .clearfix::after { content: ""; display: table; clear: both; }
-
-/* --- 7. RESPONSIVE DESIGN --- */
-@media (max-width: 768px) {
-    .preview .layout--left, .preview .layout--right, .preview .layout--center {
-        float: none;
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-    }
-    .preview { --font-base-size: 15px; }
-}
-
-/* --- 8. ANIMACIONES --- */
-@keyframes pulse-alert {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.1); }
-}
-.preview .animation--pulse { animation: pulse-alert 1.5s infinite ease-in-out; } 
+    padding: 4px 8px;
+    border-radius: var(--radius);
+} 

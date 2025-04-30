@@ -149,24 +149,4 @@
 /* Full Width Button */
 .panel-button.full-width {
   width: 100%;
-}
-
-/* Button Group */
-.panel-button-group {
-  display: inline-flex;
-  gap: var(--spacing-xs);
-}
-
-.panel-button-group .panel-button {
-  border-radius: 0;
-}
-
-.panel-button-group .panel-button:first-child {
-  border-top-left-radius: var(--radius-md);
-  border-bottom-left-radius: var(--radius-md);
-}
-
-.panel-button-group .panel-button:last-child {
-  border-top-right-radius: var(--radius-md);
-  border-bottom-right-radius: var(--radius-md);
 } 

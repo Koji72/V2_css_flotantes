@@ -718,4 +718,44 @@
 
 .h-full {
   height: 100%;
+}
+
+/* Mejorar visibilidad de los selectores en la toolbar */
+.toolbar select,
+select.dropdown,
+#theme-selector,
+#visual-style-selector {
+  color: #e0e0e0; /* Gris claro para modo oscuro */
+  background-color: var(--bg-secondary, #222);
+  border: 1px solid var(--border-color, #444);
+}
+
+[data-theme="dark"] .toolbar select,
+[data-theme="dark"] select.dropdown,
+[data-theme="dark"] #theme-selector,
+[data-theme="dark"] #visual-style-selector {
+  color: #fff;
+  background-color: #222;
+  border: 1px solid #444;
+}
+
+[data-theme="light"] .toolbar select,
+[data-theme="light"] select.dropdown,
+[data-theme="light"] #theme-selector,
+[data-theme="light"] #visual-style-selector {
+  color: #222;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+/* Opcional: mejorar el color de las opciones */
+.toolbar select option,
+select.dropdown option {
+  color: #222;
+  background: #fff;
+}
+[data-theme="dark"] .toolbar select option,
+[data-theme="dark"] select.dropdown option {
+  color: #fff;
+  background: #222;
 } 

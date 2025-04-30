@@ -1,0 +1,811 @@
+/* ================================================== */
+/*      THEME: Blade Runner Neon Interface           */
+/*      (Cyberpunk/Neon - Inspirado en Blade Runner) */
+/* ================================================== */
+/*
+ * Tema visual ultra-completo inspirado en Blade Runner.
+ * Paleta neón: cian, magenta, ámbar, verde, rojo, fondo oscuro.
+ * Efectos glow, glass, detalles tech y animaciones sutiles.
+ * Compatible 100% con la arquitectura SagaWeaver.
+ */
+
+/* -------------------------------------------------- */
+/*               0. IMPORTAR FUENTES                  */
+/* -------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Roboto+Condensed:wght@400;700&family=Teko:wght@400;500;600&display=swap');
+
+/* -------------------------------------------------- */
+/*           1. VARIABLES FUNDAMENTALES (:root)       */
+/* -------------------------------------------------- */
+:root {
+    --theme-bg-primary: #0a0c12;
+    --theme-bg-secondary: #181c24;
+    --theme-bg-tertiary: #232a33;
+    --theme-bg-glass: rgba(20, 30, 40, 0.85);
+    --theme-bg-overlay: rgba(10, 15, 20, 0.95);
+
+    --theme-text-primary: #e0f0ff;
+    --theme-text-secondary: #a0b0c0;
+    --theme-text-accent: #FF00FF;
+    --theme-text-inverted: #0a0c12;
+
+    --theme-border-primary: #304050;
+    --theme-border-secondary: #405060;
+    --theme-border-accent: #00FFFF;
+
+    --neon-magenta: #FF00FF;
+    --neon-cyan: #00FFFF;
+    --neon-amber: #FFA500;
+    --neon-red: #FF3030;
+    --neon-green: #30FF30;
+
+    --theme-color-note: var(--neon-cyan);
+    --theme-color-success: var(--neon-green);
+    --theme-color-warning: var(--neon-amber);
+    --theme-color-danger: var(--neon-red);
+    --theme-color-info: var(--neon-magenta);
+    --theme-color-muted: var(--theme-text-secondary);
+
+    --theme-font-body: 'Roboto Condensed', sans-serif;
+    --theme-font-heading: 'Teko', sans-serif;
+    --theme-font-mono: 'Share Tech Mono', monospace;
+    --theme-font-base-size: 16px;
+    --theme-body-line-height: 1.6;
+    --theme-heading-line-height: 1.2;
+    --theme-heading-weight: 500;
+    --theme-bold-weight: 700;
+
+    --theme-spacing-unit: 8px;
+    --theme-radius-sm: 2px;
+    --theme-radius-md: 4px;
+    --theme-radius-lg: 8px;
+    --theme-border-width-fine: 1px;
+    --theme-border-width-medium: 2px;
+    --theme-border-width-heavy: 3px;
+
+    --theme-shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --theme-shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+    --theme-shadow-lg: 0 10px 15px rgba(0,0,0,0.5);
+    --theme-shadow-inset: inset 0 1px 3px rgba(0,0,0,0.6);
+    --theme-glow-accent: 0 0 8px var(--neon-cyan);
+    --theme-glow-magenta: 0 0 8px var(--neon-magenta);
+    --theme-glow-cyan: 0 0 8px var(--neon-cyan);
+    --theme-glow-amber: 0 0 8px var(--neon-amber);
+    --theme-glow-red: 0 0 8px var(--neon-red);
+    --theme-glow-green: 0 0 8px var(--neon-green);
+}
+
+/* -------------------------------------------------- */
+/*      2. ESTILOS BASE DEL TEMA (.preview-html)      */
+/* -------------------------------------------------- */
+.preview-html {
+    background-color: var(--theme-bg-primary);
+    color: var(--theme-text-primary);
+    font-family: var(--theme-font-body);
+    font-size: var(--theme-font-base-size);
+    line-height: var(--theme-body-line-height);
+    margin: 0;
+    padding: calc(var(--theme-spacing-unit) * 2.5);
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.preview-html::before, .preview-html::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: -1;
+    opacity: 0.1;
+}
+
+/* -------------------------------------------------- */
+/*      3. ESTILOS DE PANELES Y CONTENEDORES         */
+/* -------------------------------------------------- */
+.preview-html .panel,
+.preview-html .mixed-panel {
+    position: relative;
+    background-color: var(--theme-bg-secondary);
+    border: var(--theme-border-width-fine) solid var(--theme-border-accent);
+    border-radius: var(--theme-radius-md);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    box-shadow: var(--theme-shadow-sm), var(--theme-shadow-inset);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(3px);
+    isolation: isolate;
+}
+
+.preview-html .panel-title,
+.preview-html .panel-header {
+    margin: calc(-1 * var(--theme-spacing-unit) * 1.5) calc(-1 * var(--theme-spacing-unit) * 1.5) var(--theme-spacing-unit) calc(-1 * var(--theme-spacing-unit) * 1.5);
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    background: linear-gradient(to right, var(--theme-bg-tertiary), rgba(32, 40, 48, 0.8));
+    border-bottom: var(--theme-border-width-fine) solid var(--theme-border-accent);
+    font-family: var(--theme-font-heading);
+    font-size: 1.4em;
+    font-weight: 500;
+    color: var(--neon-cyan);
+    text-shadow: var(--theme-glow-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.preview-html .panel-content-wrapper { padding: 0; }
+.preview-html .panel-content { padding: 0; }
+
+/* Paneles Semánticos */
+.preview-html .panel-style--note { border-left: var(--theme-border-width-heavy) solid var(--theme-color-note); background-color: rgba(0,255,255,0.05); }
+.preview-html .panel-style--note > .panel-title { color: var(--theme-color-note); background: rgba(0,255,255,0.1); border-bottom-color: var(--theme-color-note); text-shadow: var(--theme-glow-cyan); }
+
+.preview-html .panel-style--warning { border-left: var(--theme-border-width-heavy) solid var(--theme-color-warning); background-color: rgba(255,165,0,0.05); }
+.preview-html .panel-style--warning > .panel-title { color: var(--theme-color-warning); background: rgba(255,165,0,0.1); border-bottom-color: var(--theme-color-warning); text-shadow: var(--theme-glow-amber); }
+
+.preview-html .panel-style--danger { border-left: var(--theme-border-width-heavy) solid var(--theme-color-danger); background-color: rgba(255,48,48,0.05); }
+.preview-html .panel-style--danger > .panel-title { color: var(--theme-color-danger); background: rgba(255,48,48,0.1); border-bottom-color: var(--theme-color-danger); text-shadow: var(--theme-glow-red); }
+
+.preview-html .panel-style--success { border-left: var(--theme-border-width-heavy) solid var(--theme-color-success); background-color: rgba(48,255,48,0.05); }
+.preview-html .panel-style--success > .panel-title { color: var(--theme-color-success); background: rgba(48,255,48,0.1); border-bottom-color: var(--theme-color-success); text-shadow: var(--theme-glow-green); }
+
+.preview-html .panel-style--info { border-left: var(--theme-border-width-heavy) solid var(--theme-color-info); background-color: rgba(255,0,255,0.05); }
+.preview-html .panel-style--info > .panel-title { color: var(--theme-color-info); background: rgba(255,0,255,0.1); border-bottom-color: var(--theme-color-info); text-shadow: var(--theme-glow-magenta); }
+
+.preview-html .panel-style--muted { border-left: var(--theme-border-width-heavy) solid var(--theme-color-muted); background-color: rgba(160,160,160,0.05); opacity: 0.8; }
+.preview-html .panel-style--muted > .panel-title { color: var(--theme-color-muted); background: rgba(160,160,160,0.1); border-bottom-color: var(--theme-color-muted); text-shadow: none; }
+
+/* -------------------------------------------------- */
+/*      4. BARRAS DE ESTADO Y PROGRESO                */
+/* -------------------------------------------------- */
+.preview-html .dynamic-progress-bar {
+    background: var(--theme-bg-tertiary); border-radius: var(--theme-radius-md); overflow: hidden;
+    height: 1.2em; margin: var(--theme-spacing-unit) 0; box-shadow: 0 0 8px var(--theme-border-accent);
+    border: 1px solid var(--theme-border-accent); position: relative;
+}
+.preview-html .dynamic-progress-bar .bar-fill {
+    display: block; height: 100%; transition: width 0.3s cubic-bezier(.4,2,.6,1), background 0.2s;
+    background: var(--neon-cyan); position: relative;
+}
+.preview-html .dynamic-progress-bar .bar-fill.ok { background: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+.preview-html .dynamic-progress-bar .bar-fill.warn { background: var(--neon-amber); box-shadow: 0 0 5px var(--neon-amber); }
+.preview-html .dynamic-progress-bar .bar-fill.error { background: var(--neon-red); box-shadow: 0 0 8px var(--neon-red); }
+.preview-html .dynamic-progress-bar .bar-label {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    color: var(--theme-text-primary); font-family: var(--theme-font-mono); font-size: 0.95em;
+    text-shadow: 0 0 3px #000, 0 0 6px var(--theme-bg-primary); pointer-events: none; z-index: 1;
+}
+.preview-html .dynamic-progress-bar .bar-fill::after {
+    content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.4));
+    border-radius: 0 var(--theme-radius-md) var(--theme-radius-md) 0;
+}
+
+/* -------------------------------------------------- */
+/*      5. ELEMENTOS INTERACTIVOS AVANZADOS           */
+/* -------------------------------------------------- */
+.preview-html .panel .panel-button {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: calc(var(--theme-spacing-unit) * 0.8) calc(var(--theme-spacing-unit) * 1.5);
+    font-size: 0.95em; font-family: var(--theme-font-body); font-weight: 500;
+    line-height: 1.4; border-radius: var(--theme-radius-md);
+    border: 1px solid var(--theme-border-accent);
+    background-color: var(--theme-bg-tertiary);
+    color: var(--theme-text-primary);
+    cursor: pointer; user-select: none; text-decoration: none;
+    transition: all 0.2s cubic-bezier(.4,2,.6,1);
+    margin: calc(var(--theme-spacing-unit) * 0.5);
+    box-shadow: 0 0 8px var(--theme-border-accent);
+}
+
+/* ... (puedes añadir más secciones: tablas, blockquotes, animaciones, etc.) ... */
+
+/* -------------------------------------------------- */
+/*      6. TIPOGRAFÍA Y TEXTOS                        */
+/* -------------------------------------------------- */
+.preview-html h1, .preview-html h2, .preview-html h3,
+.preview-html h4, .preview-html h5, .preview-html h6 {
+    font-family: var(--theme-font-heading);
+    color: var(--neon-cyan);
+    text-shadow: var(--theme-glow-cyan);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    line-height: var(--theme-heading-line-height);
+    font-weight: var(--theme-heading-weight);
+    letter-spacing: 0.05em;
+}
+
+.preview-html h1 { font-size: 2.5em; border-bottom: 2px solid var(--neon-cyan); padding-bottom: 0.3em; }
+.preview-html h2 { font-size: 2em; border-bottom: 1px solid var(--neon-cyan); padding-bottom: 0.2em; }
+.preview-html h3 { font-size: 1.75em; }
+.preview-html h4 { font-size: 1.5em; }
+.preview-html h5 { font-size: 1.25em; }
+.preview-html h6 { font-size: 1.1em; }
+
+.preview-html p {
+    margin: calc(var(--theme-spacing-unit) * 1.5) 0;
+    text-shadow: 0 0 2px rgba(0,255,255,0.1);
+}
+
+.preview-html strong {
+    color: var(--neon-magenta);
+    text-shadow: var(--theme-glow-magenta);
+    font-weight: var(--theme-bold-weight);
+}
+
+.preview-html em {
+    color: var(--neon-amber);
+    text-shadow: var(--theme-glow-amber);
+    font-style: normal;
+    font-weight: 500;
+}
+
+.preview-html code {
+    font-family: var(--theme-font-mono);
+    background: var(--theme-bg-tertiary);
+    color: var(--neon-green);
+    padding: 0.2em 0.4em;
+    border-radius: var(--theme-radius-sm);
+    border: 1px solid var(--neon-green);
+    text-shadow: var(--theme-glow-green);
+}
+
+.preview-html pre {
+    background: var(--theme-bg-tertiary);
+    border: 1px solid var(--neon-cyan);
+    border-radius: var(--theme-radius-md);
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    overflow-x: auto;
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    box-shadow: var(--theme-shadow-md), var(--theme-shadow-inset);
+}
+
+.preview-html pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--neon-cyan);
+    text-shadow: var(--theme-glow-cyan);
+}
+
+/* -------------------------------------------------- */
+/*      7. LISTAS Y ELEMENTOS DE LISTA               */
+/* -------------------------------------------------- */
+.preview-html ul, .preview-html ol {
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding-left: calc(var(--theme-spacing-unit) * 3);
+}
+
+.preview-html li {
+    margin: calc(var(--theme-spacing-unit) * 0.8) 0;
+    position: relative;
+}
+
+.preview-html ul li::before {
+    content: '>';
+    color: var(--neon-magenta);
+    text-shadow: var(--theme-glow-magenta);
+    position: absolute;
+    left: -1.5em;
+    font-family: var(--theme-font-mono);
+}
+
+.preview-html ol {
+    counter-reset: item;
+}
+
+.preview-html ol li {
+    counter-increment: item;
+}
+
+.preview-html ol li::before {
+    content: counter(item) '.';
+    color: var(--neon-cyan);
+    text-shadow: var(--theme-glow-cyan);
+    position: absolute;
+    left: -2em;
+    font-family: var(--theme-font-mono);
+}
+
+/* -------------------------------------------------- */
+/*      8. TABLAS Y DATOS                            */
+/* -------------------------------------------------- */
+.preview-html table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    background: var(--theme-bg-tertiary);
+    border-radius: var(--theme-radius-md);
+    overflow: hidden;
+    box-shadow: var(--theme-shadow-md);
+}
+
+.preview-html th {
+    background: var(--theme-bg-secondary);
+    color: var(--neon-cyan);
+    text-shadow: var(--theme-glow-cyan);
+    font-family: var(--theme-font-heading);
+    font-weight: var(--theme-heading-weight);
+    text-transform: uppercase;
+    padding: calc(var(--theme-spacing-unit) * 1.2);
+    border-bottom: 2px solid var(--neon-cyan);
+    text-align: left;
+}
+
+.preview-html td {
+    padding: calc(var(--theme-spacing-unit) * 1.2);
+    border-bottom: 1px solid var(--theme-border-primary);
+    color: var(--theme-text-primary);
+}
+
+.preview-html tr:last-child td {
+    border-bottom: none;
+}
+
+.preview-html tr:hover td {
+    background: rgba(0,255,255,0.05);
+}
+
+/* -------------------------------------------------- */
+/*      9. BLOCKQUOTES Y CITAS                        */
+/* -------------------------------------------------- */
+.preview-html blockquote {
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 2);
+    border-left: 4px solid var(--neon-magenta);
+    background: var(--theme-bg-tertiary);
+    position: relative;
+    font-style: italic;
+    box-shadow: var(--theme-shadow-sm);
+}
+
+.preview-html blockquote::before {
+    content: '"';
+    position: absolute;
+    left: calc(var(--theme-spacing-unit) * 1.5);
+    top: calc(var(--theme-spacing-unit) * 1.5);
+    font-size: 3em;
+    color: var(--neon-magenta);
+    opacity: 0.2;
+    font-family: var(--theme-font-heading);
+}
+
+.preview-html blockquote p {
+    margin: 0;
+    color: var(--theme-text-primary);
+}
+
+.preview-html blockquote cite {
+    display: block;
+    margin-top: calc(var(--theme-spacing-unit) * 1.5);
+    color: var(--neon-cyan);
+    font-family: var(--theme-font-heading);
+    font-style: normal;
+    text-shadow: var(--theme-glow-cyan);
+}
+
+/* -------------------------------------------------- */
+/*      10. ELEMENTOS DE JUEGO RPG                    */
+/* -------------------------------------------------- */
+/* Stats y Atributos */
+.preview-html .rpg-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: calc(var(--theme-spacing-unit) * 1.5);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+}
+
+.preview-html .stat-block {
+    background: var(--theme-bg-tertiary);
+    border: 1px solid var(--neon-cyan);
+    border-radius: var(--theme-radius-md);
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.preview-html .stat-name {
+    color: var(--neon-magenta);
+    font-family: var(--theme-font-heading);
+    text-transform: uppercase;
+    font-size: 0.9em;
+    margin-bottom: calc(var(--theme-spacing-unit) * 0.5);
+    text-shadow: var(--theme-glow-magenta);
+}
+
+.preview-html .stat-value {
+    color: var(--neon-cyan);
+    font-family: var(--theme-font-mono);
+    font-size: 1.5em;
+    text-shadow: var(--theme-glow-cyan);
+}
+
+/* Inventario */
+.preview-html .inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: calc(var(--theme-spacing-unit) * 1.5);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+}
+
+.preview-html .inventory-item {
+    background: var(--theme-bg-tertiary);
+    border: 1px solid var(--neon-amber);
+    border-radius: var(--theme-radius-md);
+    padding: calc(var(--theme-spacing-unit) * 1.2);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.preview-html .inventory-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--theme-glow-amber);
+}
+
+.preview-html .item-name {
+    color: var(--neon-amber);
+    font-family: var(--theme-font-heading);
+    margin-bottom: calc(var(--theme-spacing-unit) * 0.5);
+    text-shadow: var(--theme-glow-amber);
+}
+
+.preview-html .item-description {
+    font-size: 0.9em;
+    color: var(--theme-text-secondary);
+}
+
+/* Diálogos y Conversaciones */
+.preview-html .dialogue {
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 2);
+    background: var(--theme-bg-tertiary);
+    border-radius: var(--theme-radius-md);
+    border-left: 4px solid var(--neon-green);
+}
+
+.preview-html .speaker {
+    color: var(--neon-green);
+    font-family: var(--theme-font-heading);
+    margin-bottom: calc(var(--theme-spacing-unit) * 0.5);
+    text-shadow: var(--theme-glow-green);
+}
+
+.preview-html .speech {
+    color: var(--theme-text-primary);
+    font-style: italic;
+}
+
+/* -------------------------------------------------- */
+/*      11. ANIMACIONES Y EFECTOS                     */
+/* -------------------------------------------------- */
+@keyframes neonPulse {
+    0% { text-shadow: var(--theme-glow-cyan); }
+    50% { text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan); }
+    100% { text-shadow: var(--theme-glow-cyan); }
+}
+
+@keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+.preview-html .neon-pulse {
+    animation: neonPulse 2s infinite;
+}
+
+.preview-html .scanline {
+    position: relative;
+    overflow: hidden;
+}
+
+.preview-html .scanline::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to bottom, 
+        transparent,
+        rgba(0,255,255,0.5),
+        transparent
+    );
+    animation: scanline 3s linear infinite;
+}
+
+/* -------------------------------------------------- */
+/*      12. ELEMENTOS DE NAVEGACIÓN                   */
+/* -------------------------------------------------- */
+.preview-html .nav-menu {
+    display: flex;
+    gap: calc(var(--theme-spacing-unit) * 1.5);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    background: var(--theme-bg-tertiary);
+    border-radius: var(--theme-radius-md);
+    border: 1px solid var(--theme-border-accent);
+}
+
+.preview-html .nav-item {
+    color: var(--theme-text-primary);
+    text-decoration: none;
+    padding: calc(var(--theme-spacing-unit) * 0.8) calc(var(--theme-spacing-unit) * 1.5);
+    border-radius: var(--theme-radius-sm);
+    transition: all 0.3s ease;
+}
+
+.preview-html .nav-item:hover {
+    background: var(--theme-bg-secondary);
+    color: var(--neon-cyan);
+    text-shadow: var(--theme-glow-cyan);
+}
+
+/* -------------------------------------------------- */
+/*      13. ELEMENTOS DE JUEGO INTERACTIVOS          */
+/* -------------------------------------------------- */
+.preview-html .game-choice {
+    display: block;
+    margin: calc(var(--theme-spacing-unit) * 1.5) 0;
+    padding: calc(var(--theme-spacing-unit) * 1.2);
+    background: var(--theme-bg-tertiary);
+    border: 1px solid var(--neon-magenta);
+    border-radius: var(--theme-radius-md);
+    color: var(--theme-text-primary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.preview-html .game-choice:hover {
+    background: var(--theme-bg-secondary);
+    border-color: var(--neon-cyan);
+    transform: translateX(5px);
+    box-shadow: var(--theme-glow-cyan);
+}
+
+.preview-html .game-status {
+    position: fixed;
+    bottom: calc(var(--theme-spacing-unit) * 2);
+    right: calc(var(--theme-spacing-unit) * 2);
+    background: var(--theme-bg-glass);
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    border-radius: var(--theme-radius-md);
+    border: 1px solid var(--neon-cyan);
+    box-shadow: var(--theme-shadow-lg);
+    backdrop-filter: blur(5px);
+}
+
+/* -------------------------------------------------- */
+/*      14. ELEMENTOS DE HISTORIA Y NARRATIVA         */
+/* -------------------------------------------------- */
+.preview-html .story-scene {
+    margin: calc(var(--theme-spacing-unit) * 3) 0;
+    padding: calc(var(--theme-spacing-unit) * 2);
+    background: var(--theme-bg-tertiary);
+    border-radius: var(--theme-radius-md);
+    border: 1px solid var(--neon-amber);
+    position: relative;
+}
+
+.preview-html .scene-title {
+    color: var(--neon-amber);
+    font-family: var(--theme-font-heading);
+    font-size: 1.5em;
+    margin-bottom: calc(var(--theme-spacing-unit) * 1.5);
+    text-shadow: var(--theme-glow-amber);
+}
+
+.preview-html .scene-description {
+    color: var(--theme-text-primary);
+    font-style: italic;
+    margin-bottom: calc(var(--theme-spacing-unit) * 1.5);
+}
+
+.preview-html .scene-actions {
+    display: flex;
+    gap: calc(var(--theme-spacing-unit) * 1.5);
+    margin-top: calc(var(--theme-spacing-unit) * 2);
+}
+
+/* -------------------------------------------------- */
+/*      15. ELEMENTOS DE INTERFAZ DE JUEGO           */
+/* -------------------------------------------------- */
+.preview-html .game-hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    background: var(--theme-bg-glass);
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid var(--neon-cyan);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.preview-html .hud-element {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--theme-spacing-unit) * 0.8);
+}
+
+.preview-html .hud-icon {
+    color: var(--neon-cyan);
+    text-shadow: var(--theme-glow-cyan);
+}
+
+.preview-html .hud-value {
+    font-family: var(--theme-font-mono);
+    color: var(--theme-text-primary);
+}
+
+/* -------------------------------------------------- */
+/*      16. ELEMENTOS DE SISTEMA                      */
+/* -------------------------------------------------- */
+.preview-html .system-message {
+    background: var(--theme-bg-tertiary);
+    border-left: 4px solid var(--neon-red);
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    font-family: var(--theme-font-mono);
+}
+
+.preview-html .system-message.error {
+    border-color: var(--neon-red);
+    color: var(--neon-red);
+    text-shadow: var(--theme-glow-red);
+}
+
+.preview-html .system-message.success {
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+    text-shadow: var(--theme-glow-green);
+}
+
+.preview-html .system-message.warning {
+    border-color: var(--neon-amber);
+    color: var(--neon-amber);
+    text-shadow: var(--theme-glow-amber);
+}
+
+/* -------------------------------------------------- */
+/*      17. ELEMENTOS DE MAPA Y NAVEGACIÓN           */
+/* -------------------------------------------------- */
+.preview-html .game-map {
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    background: var(--theme-bg-tertiary);
+    border-radius: var(--theme-radius-md);
+    border: 1px solid var(--neon-cyan);
+    position: relative;
+    overflow: hidden;
+}
+
+.preview-html .map-grid {
+    display: grid;
+    gap: 2px;
+    background: var(--theme-bg-primary);
+    padding: 2px;
+    border-radius: var(--theme-radius-sm);
+}
+
+.preview-html .map-cell {
+    aspect-ratio: 1;
+    background: var(--theme-bg-secondary);
+    border: 1px solid var(--theme-border-primary);
+    transition: all 0.3s ease;
+}
+
+.preview-html .map-cell.visited {
+    background: var(--theme-bg-tertiary);
+    border-color: var(--neon-cyan);
+}
+
+.preview-html .map-cell.current {
+    background: var(--neon-cyan);
+    box-shadow: var(--theme-glow-cyan);
+}
+
+/* -------------------------------------------------- */
+/*      18. ELEMENTOS DE COMBATE                      */
+/* -------------------------------------------------- */
+.preview-html .combat-log {
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    background: var(--theme-bg-tertiary);
+    border-radius: var(--theme-radius-md);
+    border: 1px solid var(--neon-red);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.preview-html .combat-entry {
+    margin: calc(var(--theme-spacing-unit) * 0.8) 0;
+    padding: calc(var(--theme-spacing-unit) * 0.8);
+    border-left: 2px solid var(--neon-red);
+    background: rgba(255,0,0,0.05);
+}
+
+.preview-html .combat-entry.attack {
+    border-color: var(--neon-amber);
+    background: rgba(255,165,0,0.05);
+}
+
+.preview-html .combat-entry.heal {
+    border-color: var(--neon-green);
+    background: rgba(0,255,0,0.05);
+}
+
+/* -------------------------------------------------- */
+/*      19. ELEMENTOS DE INVENTARIO AVANZADO         */
+/* -------------------------------------------------- */
+.preview-html .inventory-slot {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--theme-bg-secondary);
+    border: 1px solid var(--theme-border-primary);
+    border-radius: var(--theme-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.preview-html .inventory-slot:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: var(--theme-glow-cyan);
+}
+
+.preview-html .inventory-slot.empty::after {
+    content: '+';
+    color: var(--theme-text-secondary);
+    font-size: 1.5em;
+}
+
+.preview-html .inventory-slot .item-count {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: var(--theme-bg-primary);
+    color: var(--neon-cyan);
+    font-size: 0.8em;
+    padding: 2px 4px;
+    border-radius: var(--theme-radius-sm);
+}
+
+/* -------------------------------------------------- */
+/*      20. ELEMENTOS DE DIÁLOGO AVANZADO            */
+/* -------------------------------------------------- */
+.preview-html .dialogue-options {
+    display: grid;
+    gap: calc(var(--theme-spacing-unit) * 1.5);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+}
+
+.preview-html .dialogue-option {
+    background: var(--theme-bg-tertiary);
+    border: 1px solid var(--neon-magenta);
+    border-radius: var(--theme-radius-md);
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.preview-html .dialogue-option:hover {
+    background: var(--theme-bg-secondary);
+    border-color: var(--neon-cyan);
+    transform: translateX(5px);
+    box-shadow: var(--theme-glow-cyan);
+}
+
+.preview-html .dialogue-option .option-text {
+    color: var(--theme-text-primary);
+    margin-bottom: calc(var(--theme-spacing-unit) * 0.5);
+}
+
+.preview-html .dialogue-option .option-consequence {
+    font-size: 0.9em;
+    color: var(--theme-text-secondary);
+    font-style: italic;
+}
+
+/* --- FIN Blade Runner Neon Interface --- */ 

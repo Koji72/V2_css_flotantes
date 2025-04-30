@@ -1,0 +1,729 @@
+/* ================================================== */
+/*            THEME: Fantasía Épica                  */
+/* ================================================== */
+/*
+ * Tema visual inspirado en la fantasía épica clásica.
+ * Paleta: dorados, verdes, azules, tonos pergamino.
+ * Efectos mágicos, bordes ornamentados, glow sutil.
+ * Compatible 100% con la arquitectura SagaWeaver.
+ */
+
+/* -------------------------------------------------- */
+/*               0. IMPORTAR FUENTES                  */
+/* -------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=EB+Garamond:wght@400;700&family=Fira+Mono:wght@400;700&display=swap');
+
+/* -------------------------------------------------- */
+/*           1. VARIABLES FUNDAMENTALES (:root)       */
+/* -------------------------------------------------- */
+:root {
+    --theme-bg-primary: #f8f5e6;         /* Fondo pergamino */
+    --theme-bg-secondary: #ede6d6;       /* Fondo paneles */
+    --theme-bg-tertiary: #d6c7a1;        /* Fondo cabeceras panel */
+    --theme-bg-glass: rgba(237, 230, 214, 0.85);
+    --theme-bg-overlay: rgba(200, 180, 120, 0.95);
+
+    --theme-text-primary: #3b2e1a;       /* Marrón oscuro */
+    --theme-text-secondary: #6e5c3e;     /* Marrón claro */
+    --theme-text-accent: #1e5e2e;        /* Verde bosque */
+    --theme-text-inverted: #fffbe6;
+
+    --theme-border-primary: #bfa76a;     /* Oro viejo */
+    --theme-border-secondary: #8c7a4f;   /* Oro oscuro */
+    --theme-border-accent: #3a7bd5;      /* Azul real */
+
+    --theme-color-note: #3a7bd5;         /* Azul real */
+    --theme-color-success: #1e5e2e;      /* Verde bosque */
+    --theme-color-warning: #e6b800;      /* Amarillo dorado */
+    --theme-color-danger: #a83232;       /* Rojo rubí */
+    --theme-color-info: #3a7bd5;         /* Azul real */
+    --theme-color-muted: #bfa76a;        /* Oro viejo */
+
+    --theme-font-body: 'EB Garamond', serif;
+    --theme-font-heading: 'UnifrakturCook', cursive;
+    --theme-font-mono: 'Fira Mono', monospace;
+    --theme-font-base-size: 17px;
+    --theme-body-line-height: 1.7;
+    --theme-heading-line-height: 1.2;
+    --theme-heading-weight: 700;
+    --theme-bold-weight: 700;
+
+    --theme-spacing-unit: 8px;
+    --theme-radius-sm: 4px;
+    --theme-radius-md: 8px;
+    --theme-radius-lg: 16px;
+    --theme-border-width-fine: 2px;
+    --theme-border-width-medium: 3px;
+    --theme-border-width-heavy: 5px;
+
+    --theme-shadow-sm: 0 1px 2px rgba(120, 90, 30, 0.08);
+    --theme-shadow-md: 0 4px 8px rgba(120, 90, 30, 0.12);
+    --theme-shadow-lg: 0 10px 20px rgba(120, 90, 30, 0.18);
+    --theme-shadow-inset: inset 0 1px 3px rgba(120, 90, 30, 0.10);
+    --theme-glow-accent: 0 0 8px #e6b800;
+}
+
+/* El resto de la estructura y secciones se copia del template master, pero con detalles visuales de fantasía: bordes ornamentados, decoraciones mágicas, etc. */
+
+/* -------------------------------------------------- */
+/*      2. ESTILOS BASE DEL TEMA (.preview-html)      */
+/* -------------------------------------------------- */
+.preview-html {
+    background-color: #f8f5e6; /* Fondo pergamino claro, liso */
+    color: var(--theme-text-primary);
+    font-family: var(--theme-font-body);
+    font-size: var(--theme-font-base-size);
+    line-height: var(--theme-body-line-height);
+    margin: 0;
+    padding: calc(var(--theme-spacing-unit) * 2.5);
+    /* Fondo liso, sin texturas ni patrones */
+    background-image: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.preview-html::before, .preview-html::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* -------------------------------------------------- */
+/*      3. ESTILOS DE PANELES Y CONTENEDORES         */
+/* -------------------------------------------------- */
+.preview-html .panel,
+.preview-html .mixed-panel {
+    position: relative;
+    background-color: #f3e6c1; /* Más oscuro que el fondo base */
+    border: var(--theme-border-width-heavy) solid var(--theme-border-primary);
+    border-radius: var(--theme-radius-lg);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 2);
+    box-shadow: 0 4px 24px 0 rgba(186, 153, 63, 0.18), 0 0 0 6px #e6b80022, var(--theme-shadow-md), var(--theme-shadow-inset);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(1.5px);
+    isolation: isolate;
+    /* Marco ornamentado con imagen SVG (opcional) */
+    /* border-image: url('https://svgshare.com/i/14kA.svg') 30 repeat; */
+}
+
+.preview-html .panel-title,
+.preview-html .panel-header {
+    margin: calc(-1 * var(--theme-spacing-unit) * 2) calc(-1 * var(--theme-spacing-unit) * 2) var(--theme-spacing-unit) calc(-1 * var(--theme-spacing-unit) * 2);
+    padding: calc(var(--theme-spacing-unit) * 2);
+    background: linear-gradient(90deg, #e6b800 0%, #ede6d6 100%);
+    border-bottom: var(--theme-border-width-medium) solid var(--theme-border-accent);
+    font-family: var(--theme-font-heading);
+    font-size: 1.6em;
+    font-weight: 700;
+    color: #fffbe6;
+    text-shadow: 0 2px 8px #bfa76a, 0 0 2px #3a7bd5;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-top-left-radius: var(--theme-radius-lg);
+    border-top-right-radius: var(--theme-radius-lg);
+    box-shadow: 0 2px 12px #e6b80044;
+}
+
+.preview-html .panel-content-wrapper { padding: 0; }
+.preview-html .panel-content { padding: 0; }
+
+/* Paneles Semánticos */
+.preview-html .panel-style--note {
+    border-left: var(--theme-border-width-heavy) solid var(--theme-color-note);
+    background-color: #eaf2fb;
+    box-shadow: 0 0 12px #3a7bd544;
+}
+.preview-html .panel-style--note > .panel-title {
+    color: #fff;
+    background: linear-gradient(90deg, #3a7bd5 0%, #ede6d6 100%);
+    border-bottom-color: #3a7bd5;
+    text-shadow: 0 0 8px #3a7bd5;
+}
+
+.preview-html .panel-style--warning {
+    border-left: var(--theme-border-width-heavy) solid var(--theme-color-warning);
+    background-color: #fffbe6;
+    box-shadow: 0 0 12px #e6b80044;
+}
+.preview-html .panel-style--warning > .panel-title {
+    color: #a83232;
+    background: linear-gradient(90deg, #e6b800 0%, #ede6d6 100%);
+    border-bottom-color: #e6b800;
+    text-shadow: 0 0 8px #e6b800;
+}
+
+.preview-html .panel-style--danger {
+    border-left: var(--theme-border-width-heavy) solid var(--theme-color-danger);
+    background-color: #fbeaea;
+    box-shadow: 0 0 12px #a8323244;
+}
+.preview-html .panel-style--danger > .panel-title {
+    color: #fffbe6;
+    background: linear-gradient(90deg, #a83232 0%, #ede6d6 100%);
+    border-bottom-color: #a83232;
+    text-shadow: 0 0 8px #a83232;
+}
+
+.preview-html .panel-style--success {
+    border-left: var(--theme-border-width-heavy) solid var(--theme-color-success);
+    background-color: #eafbe9;
+    box-shadow: 0 0 12px #1e5e2e44;
+}
+.preview-html .panel-style--success > .panel-title {
+    color: #fffbe6;
+    background: linear-gradient(90deg, #1e5e2e 0%, #ede6d6 100%);
+    border-bottom-color: #1e5e2e;
+    text-shadow: 0 0 8px #1e5e2e;
+}
+
+.preview-html .panel-style--info {
+    border-left: var(--theme-border-width-heavy) solid var(--theme-color-info);
+    background-color: #eaf0fb;
+    box-shadow: 0 0 12px #3a7bd544;
+}
+.preview-html .panel-style--info > .panel-title {
+    color: #fffbe6;
+    background: linear-gradient(90deg, #3a7bd5 0%, #ede6d6 100%);
+    border-bottom-color: #3a7bd5;
+    text-shadow: 0 0 8px #3a7bd5;
+}
+
+.preview-html .panel-style--muted {
+    border-left: var(--theme-border-width-heavy) solid var(--theme-color-muted);
+    background-color: #f8f5e6;
+    opacity: 0.92;
+}
+.preview-html .panel-style--muted > .panel-title {
+    color: #bfa76a;
+    background: linear-gradient(90deg, #bfa76a 0%, #ede6d6 100%);
+    border-bottom-color: #bfa76a;
+    text-shadow: 0 0 8px #bfa76a;
+}
+
+/* El resto de las secciones (paneles, tablas, RPG, etc.) se copian del template master, pero con detalles visuales de fantasía: bordes ornamentados, decoraciones mágicas, efectos de glow dorado, etc. */
+
+/* ... (copiar aquí todas las secciones del template master y personalizar detalles visuales) ... */
+
+/* -------------------------------------------------- */
+/*      4. TABLAS Y DATOS                            */
+/* -------------------------------------------------- */
+.preview-html table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    background: #f6ecd2;
+    border-radius: var(--theme-radius-md);
+    overflow: hidden;
+    box-shadow: 0 2px 12px #bfa76a33, var(--theme-shadow-md);
+    border: 2px solid #bfa76a;
+}
+
+.preview-html th {
+    background: linear-gradient(90deg, #ede6d6 60%, #e6b800 100%);
+    color: #3b2e1a;
+    font-family: var(--theme-font-heading);
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: calc(var(--theme-spacing-unit) * 1.2);
+    border-bottom: 2px solid #bfa76a;
+    text-align: left;
+    letter-spacing: 0.05em;
+}
+
+.preview-html td {
+    padding: calc(var(--theme-spacing-unit) * 1.2);
+    border-bottom: 1px solid #e6b80044;
+    color: var(--theme-text-primary);
+    background: #f8f5e6;
+}
+
+.preview-html tr:last-child td {
+    border-bottom: none;
+}
+
+.preview-html tr:hover td {
+    background: #ede6d6;
+}
+
+/* -------------------------------------------------- */
+/*      5. LISTAS Y ELEMENTOS DE LISTA               */
+/* -------------------------------------------------- */
+.preview-html ul, .preview-html ol {
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding-left: calc(var(--theme-spacing-unit) * 3);
+}
+
+.preview-html li {
+    margin: calc(var(--theme-spacing-unit) * 0.8) 0;
+    position: relative;
+}
+
+.preview-html ul li::before {
+    content: '✦';
+    color: #e6b800;
+    text-shadow: 0 0 6px #e6b80099;
+    position: absolute;
+    left: -1.5em;
+    font-family: var(--theme-font-heading);
+}
+
+.preview-html ol {
+    counter-reset: item;
+}
+
+.preview-html ol li {
+    counter-increment: item;
+}
+
+.preview-html ol li::before {
+    content: counter(item) '.';
+    color: #3a7bd5;
+    text-shadow: 0 0 6px #3a7bd544;
+    position: absolute;
+    left: -2em;
+    font-family: var(--theme-font-heading);
+}
+
+/* -------------------------------------------------- */
+/*      6. BLOCKQUOTES Y CITAS                        */
+/* -------------------------------------------------- */
+.preview-html blockquote {
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 2);
+    border-left: 6px solid #bfa76a;
+    background: #f6ecd2;
+    position: relative;
+    font-style: italic;
+    box-shadow: 0 2px 12px #bfa76a33;
+    border-radius: var(--theme-radius-md);
+}
+
+.preview-html blockquote::before {
+    content: '“';
+    position: absolute;
+    left: calc(var(--theme-spacing-unit) * 1.5);
+    top: calc(var(--theme-spacing-unit) * 1.5);
+    font-size: 3em;
+    color: #e6b800;
+    opacity: 0.18;
+    font-family: var(--theme-font-heading);
+}
+
+.preview-html blockquote p {
+    margin: 0;
+    color: var(--theme-text-primary);
+}
+
+.preview-html blockquote cite {
+    display: block;
+    margin-top: calc(var(--theme-spacing-unit) * 1.5);
+    color: #3a7bd5;
+    font-family: var(--theme-font-heading);
+    font-style: normal;
+    text-shadow: 0 0 6px #3a7bd544;
+}
+
+/* -------------------------------------------------- */
+/*      7. RPG STATS, INVENTARIO Y DIÁLOGOS           */
+/* -------------------------------------------------- */
+.preview-html .rpg-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: calc(var(--theme-spacing-unit) * 1.5);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+}
+
+.preview-html .stat-block {
+    background: #ede6d6;
+    border: 2px solid #bfa76a;
+    border-radius: var(--theme-radius-md);
+    padding: calc(var(--theme-spacing-unit) * 1.2);
+    box-shadow: 0 0 8px #e6b80033;
+    position: relative;
+    overflow: hidden;
+}
+
+.preview-html .stat-name {
+    color: #3a7bd5;
+    font-family: var(--theme-font-heading);
+    text-transform: uppercase;
+    font-size: 0.95em;
+    margin-bottom: calc(var(--theme-spacing-unit) * 0.5);
+    text-shadow: 0 0 6px #3a7bd544;
+}
+
+.preview-html .stat-value {
+    color: #e6b800;
+    font-family: var(--theme-font-mono);
+    font-size: 1.5em;
+    text-shadow: 0 0 8px #e6b800;
+}
+
+/* Inventario */
+.preview-html .inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: calc(var(--theme-spacing-unit) * 1.5);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+}
+
+.preview-html .inventory-item {
+    background: #ede6d6;
+    border: 2px solid #bfa76a;
+    border-radius: var(--theme-radius-md);
+    padding: calc(var(--theme-spacing-unit) * 1.2);
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 8px #e6b80033;
+}
+
+.preview-html .inventory-item:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 0 16px #e6b80099;
+    border-color: #e6b800;
+}
+
+.preview-html .item-name {
+    color: #1e5e2e;
+    font-family: var(--theme-font-heading);
+    margin-bottom: calc(var(--theme-spacing-unit) * 0.5);
+    text-shadow: 0 0 6px #1e5e2e44;
+}
+
+.preview-html .item-description {
+    font-size: 0.92em;
+    color: var(--theme-text-secondary);
+}
+
+/* Diálogos */
+.preview-html .dialogue {
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 2);
+    background: #f6ecd2;
+    border-radius: var(--theme-radius-md);
+    border-left: 6px solid #1e5e2e;
+    box-shadow: 0 0 8px #1e5e2e33;
+}
+
+.preview-html .speaker {
+    color: #1e5e2e;
+    font-family: var(--theme-font-heading);
+    margin-bottom: calc(var(--theme-spacing-unit) * 0.5);
+    text-shadow: 0 0 6px #1e5e2e44;
+}
+
+.preview-html .speech {
+    color: var(--theme-text-primary);
+    font-style: italic;
+}
+
+/* Efectos mágicos sutiles */
+@keyframes magic-glow {
+    0% { box-shadow: 0 0 8px #e6b80044; }
+    50% { box-shadow: 0 0 24px #e6b800cc, 0 0 8px #3a7bd544; }
+    100% { box-shadow: 0 0 8px #e6b80044; }
+}
+
+.preview-html .magic-glow {
+    animation: magic-glow 2.5s infinite;
+}
+
+/* -------------------------------------------------- */
+/*      8. BOTONES Y ELEMENTOS INTERACTIVOS          */
+/* -------------------------------------------------- */
+.preview-html .panel .panel-button,
+.preview-html .game-choice,
+.preview-html .dialogue-option,
+.preview-html .panel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--theme-spacing-unit) * 0.9) calc(var(--theme-spacing-unit) * 2);
+    font-size: 1.05em;
+    font-family: var(--theme-font-heading);
+    font-weight: 700;
+    border-radius: var(--theme-radius-md);
+    border: 2px solid #bfa76a;
+    background: linear-gradient(90deg, #ede6d6 60%, #e6b800 100%);
+    color: #3b2e1a;
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+    margin: calc(var(--theme-spacing-unit) * 0.5);
+    box-shadow: 0 0 8px #e6b80044;
+    transition: all 0.2s cubic-bezier(.4,2,.6,1);
+    text-shadow: 0 0 4px #fffbe6;
+    position: relative;
+    overflow: hidden;
+}
+.preview-html .panel .panel-button:hover,
+.preview-html .game-choice:hover,
+.preview-html .dialogue-option:hover,
+.preview-html .panel-button:hover {
+    background: linear-gradient(90deg, #e6b800 0%, #ede6d6 100%);
+    color: #1e5e2e;
+    border-color: #e6b800;
+    box-shadow: 0 0 16px #e6b80099, 0 0 8px #bfa76a;
+    transform: scale(1.04);
+}
+.preview-html .panel .panel-button.primary,
+.preview-html .panel-button.primary {
+    background: linear-gradient(90deg, #1e5e2e 0%, #ede6d6 100%);
+    color: #fffbe6;
+    border-color: #1e5e2e;
+    text-shadow: 0 0 8px #1e5e2e;
+}
+.preview-html .panel .panel-button.danger,
+.preview-html .panel-button.danger {
+    background: linear-gradient(90deg, #a83232 0%, #ede6d6 100%);
+    color: #fffbe6;
+    border-color: #a83232;
+    text-shadow: 0 0 8px #a83232;
+}
+.preview-html .panel .panel-button.success,
+.preview-html .panel-button.success {
+    background: linear-gradient(90deg, #1e5e2e 0%, #ede6d6 100%);
+    color: #fffbe6;
+    border-color: #1e5e2e;
+    text-shadow: 0 0 8px #1e5e2e;
+}
+.preview-html .panel .panel-button.warning,
+.preview-html .panel-button.warning {
+    background: linear-gradient(90deg, #e6b800 0%, #ede6d6 100%);
+    color: #a83232;
+    border-color: #e6b800;
+    text-shadow: 0 0 8px #e6b800;
+}
+
+/* -------------------------------------------------- */
+/*      9. BARRAS DE PROGRESO Y ESTADO               */
+/* -------------------------------------------------- */
+.preview-html .dynamic-progress-bar {
+    background: #ede6d6;
+    border-radius: var(--theme-radius-md);
+    overflow: hidden;
+    height: 1.3em;
+    margin: var(--theme-spacing-unit) 0;
+    box-shadow: 0 0 8px #bfa76a44;
+    border: 2px solid #bfa76a;
+    position: relative;
+}
+.preview-html .dynamic-progress-bar .bar-fill {
+    display: block;
+    height: 100%;
+    transition: width 0.3s cubic-bezier(.4,2,.6,1), background 0.2s;
+    background: linear-gradient(90deg, #e6b800 0%, #3a7bd5 100%);
+    position: relative;
+    box-shadow: 0 0 12px #e6b80099;
+}
+.preview-html .dynamic-progress-bar .bar-label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #3b2e1a;
+    font-family: var(--theme-font-mono);
+    font-size: 1em;
+    text-shadow: 0 0 3px #fffbe6, 0 0 6px #e6b800;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* -------------------------------------------------- */
+/*      10. MAPAS Y CELDAS                            */
+/* -------------------------------------------------- */
+.preview-html .game-map {
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    background: #ede6d6;
+    border-radius: var(--theme-radius-md);
+    border: 2px solid #bfa76a;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 8px #bfa76a44;
+}
+.preview-html .map-grid {
+    display: grid;
+    gap: 2px;
+    background: #bfa76a22;
+    padding: 2px;
+    border-radius: var(--theme-radius-sm);
+}
+.preview-html .map-cell {
+    aspect-ratio: 1;
+    background: #f8f5e6;
+    border: 1.5px solid #bfa76a;
+    border-radius: var(--theme-radius-sm);
+    transition: all 0.3s ease;
+}
+.preview-html .map-cell.visited {
+    background: #ede6d6;
+    border-color: #3a7bd5;
+}
+.preview-html .map-cell.current {
+    background: #e6b800;
+    box-shadow: 0 0 12px #e6b800cc;
+    border-color: #e6b800;
+}
+
+/* -------------------------------------------------- */
+/*      11. COMBATE Y LOGS                            */
+/* -------------------------------------------------- */
+.preview-html .combat-log {
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    background: #fbeaea;
+    border-radius: var(--theme-radius-md);
+    border: 2px solid #a83232;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 0 8px #a8323244;
+}
+.preview-html .combat-entry {
+    margin: calc(var(--theme-spacing-unit) * 0.8) 0;
+    padding: calc(var(--theme-spacing-unit) * 0.8);
+    border-left: 3px solid #a83232;
+    background: #fffbe6;
+    border-radius: var(--theme-radius-sm);
+    box-shadow: 0 0 4px #a8323244;
+}
+.preview-html .combat-entry.attack {
+    border-color: #e6b800;
+    background: #fffbe6;
+}
+.preview-html .combat-entry.heal {
+    border-color: #1e5e2e;
+    background: #eafbe9;
+}
+
+/* -------------------------------------------------- */
+/*      12. INVENTARIO AVANZADO                       */
+/* -------------------------------------------------- */
+.preview-html .inventory-slot {
+    position: relative;
+    aspect-ratio: 1;
+    background: #ede6d6;
+    border: 2px solid #bfa76a;
+    border-radius: var(--theme-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 6px #e6b80044;
+}
+.preview-html .inventory-slot:hover {
+    border-color: #e6b800;
+    box-shadow: 0 0 16px #e6b80099;
+}
+.preview-html .inventory-slot.empty::after {
+    content: '+';
+    color: #bfa76a;
+    font-size: 1.5em;
+}
+.preview-html .inventory-slot .item-count {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #fffbe6;
+    color: #bfa76a;
+    font-size: 0.9em;
+    padding: 2px 4px;
+    border-radius: var(--theme-radius-sm);
+    border: 1px solid #bfa76a;
+}
+
+/* -------------------------------------------------- */
+/*      13. DIÁLOGOS AVANZADOS                        */
+/* -------------------------------------------------- */
+.preview-html .dialogue-options {
+    display: grid;
+    gap: calc(var(--theme-spacing-unit) * 1.5);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+}
+.preview-html .dialogue-option {
+    background: #ede6d6;
+    border: 2px solid #3a7bd5;
+    border-radius: var(--theme-radius-md);
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 8px #3a7bd544;
+}
+.preview-html .dialogue-option:hover {
+    background: #e6b80022;
+    border-color: #e6b800;
+    transform: translateX(5px) scale(1.03);
+    box-shadow: 0 0 16px #e6b80099;
+}
+.preview-html .dialogue-option .option-text {
+    color: #1e5e2e;
+    margin-bottom: calc(var(--theme-spacing-unit) * 0.5);
+    font-family: var(--theme-font-heading);
+}
+.preview-html .dialogue-option .option-consequence {
+    font-size: 0.95em;
+    color: #3a7bd5;
+    font-style: italic;
+}
+
+/* -------------------------------------------------- */
+/*      14. HUD Y ELEMENTOS DE SISTEMA                */
+/* -------------------------------------------------- */
+.preview-html .game-hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    background: #ede6d6cc;
+    backdrop-filter: blur(4px);
+    border-bottom: 2px solid #bfa76a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 12px #bfa76a33;
+}
+.preview-html .hud-element {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--theme-spacing-unit) * 0.8);
+}
+.preview-html .hud-icon {
+    color: #e6b800;
+    text-shadow: 0 0 8px #e6b800;
+}
+.preview-html .hud-value {
+    font-family: var(--theme-font-mono);
+    color: #3b2e1a;
+}
+
+/* -------------------------------------------------- */
+/*      15. SISTEMA Y MENSAJES                        */
+/* -------------------------------------------------- */
+.preview-html .system-message {
+    background: #fbeaea;
+    border-left: 6px solid #a83232;
+    padding: calc(var(--theme-spacing-unit) * 1.5);
+    margin: calc(var(--theme-spacing-unit) * 2) 0;
+    font-family: var(--theme-font-mono);
+    border-radius: var(--theme-radius-md);
+    box-shadow: 0 0 8px #a8323244;
+}
+.preview-html .system-message.error {
+    border-color: #a83232;
+    color: #a83232;
+    text-shadow: 0 0 8px #a83232;
+}
+.preview-html .system-message.success {
+    border-color: #1e5e2e;
+    color: #1e5e2e;
+    text-shadow: 0 0 8px #1e5e2e;
+}
+.preview-html .system-message.warning {
+    border-color: #e6b800;
+    color: #e6b800;
+    text-shadow: 0 0 8px #e6b800;
+} 

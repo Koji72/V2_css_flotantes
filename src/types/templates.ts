@@ -170,5 +170,19 @@ export const templates: Template[] = [
       accent: '#ff0000'
     },
     styles: ''
+  },
+  {
+    id: 'neon-rain-interface-full',
+    name: 'Neon Rain Interface - Full',
+    path: 'templates/neon-rain-interface-full.css',
+    description: 'Tema cyberpunk avanzado inspirado en Blade Runner',
+    category: 'cyberpunk',
+    tags: ['neon', 'futuristic', 'advanced', 'blade runner'],
+    colors: {
+      background: '#080a0f',
+      text: '#e0f0ff',
+      accent: '#00FFFF'
+    },
+    styles: ''
   }
 ]; 

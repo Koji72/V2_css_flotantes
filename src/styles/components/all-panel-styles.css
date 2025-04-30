@@ -164,7 +164,7 @@
     --alien-color2: #32cd32;
     background:
         radial-gradient(ellipse at top left, var(--alien-color1), transparent 70%),
-        radial-gradient(ellipse at bottom right, var(--alien-color2), transparent 70%),
+                radial-gradient(ellipse at bottom right, var(--alien-color2), transparent 70%),
         var(--panel-bg);
     color: var(--panel-text);
     border-radius: 15px 0px 15px 0px;
@@ -356,7 +356,7 @@
 .panel.panel-style--scanline-terminal *:not(.rig-bar):not(.rig-bar *):not(.markdown-alert):not(.markdown-alert *) {
   color: inherit;
   text-shadow: 0 0 3px rgba(192, 208, 128, 0.6);
-  background: transparent;
+    background: transparent;
   border-color: transparent;
 }
 
@@ -496,7 +496,7 @@
     border-radius: 1px; /* Menos radio interno */
     padding: var(--spacing-md);
     margin: var(--spacing-lg); /* Más margen interno */
-    position: relative;
+  position: relative;
     z-index: 2; /* Sobre fondo/scanline */
 }
 
@@ -562,8 +562,8 @@
 
 /* Animación de barrido para estado de carga */
 .panel.panel-style--nexus-gate.state--loading::after { 
-    content: ''; 
-    position: absolute; 
+    content: '';
+    position: absolute;
     inset: 0;
     background: linear-gradient(90deg, transparent, rgba(255, 175, 0, 0.4), transparent);
     background-size: 30% 100%;
@@ -726,8 +726,8 @@ div.preview div.panel.panel-style--alien-tech.state--warning .admonition * {
   border: 1px solid #4caf50;
   border-radius: 6px;
   margin: 0.5em 0 1em 0;
-  position: relative;
-  overflow: hidden;
+    position: relative;
+    overflow: hidden;
 }
 .rig-bar__fill {
   height: 100%;

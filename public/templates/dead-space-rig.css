@@ -1,0 +1,527 @@
+/* ================================================== */
+/*      THEME: Dead Space RIG                      */
+/*      Inspirado en la interfaz y ambiente de Dead Space */
+/* ================================================== */
+
+/* 0. IMPORTAR FUENTES (Ej: Orbitron, Teko, Share Tech Mono) */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Teko:wght@500;600&family=Share+Tech+Mono&display=swap');
+
+/* 1. VARIABLES FUNDAMENTALES */
+:root {
+    /* Paleta Principal - Oscura, Industrial, Metálica */
+    --ds-bg: #080C10; /* Azul muy oscuro, casi negro */
+    --ds-bg-alt: #121820; /* Azul grisáceo oscuro */
+    --ds-text-primary: #B0C4DE; /* Acero claro / Azul pálido */
+    --ds-text-secondary: #6B7A8F; /* Gris azulado medio */
+    --ds-metal-base: #333a45; /* Gris metálico oscuro */
+    --ds-metal-light: #525c6b;
+    --ds-border: #252c35; /* Borde oscuro */
+    --ds-border-light: #404a58; /* Borde más visible */
+
+    /* Acentos RIG */
+    --ds-rig-blue: #3AF0FF; /* Cian brillante */
+    --ds-rig-blue-dark: #00A8B8;
+    --ds-rig-amber: #FFB800; /* Ámbar/Naranja */
+    --ds-rig-amber-dark: #CC9400;
+    --ds-rig-red: #FF3030; /* Rojo peligro */
+    --ds-rig-red-dark: #B00000;
+    --ds-rig-health-fill: linear-gradient(90deg, var(--ds-rig-blue), #a1f7ff);
+    --ds-rig-stasis-fill: linear-gradient(90deg, var(--ds-rig-amber), #ffdf80);
+
+    /* Tipografía */
+    --font-heading: 'Orbitron', sans-serif; /* Futurista, bloques */
+    --font-body: 'Teko', sans-serif; /* Condensada, técnica */
+    --font-mono: 'Share Tech Mono', monospace; /* Clásica monoespacio */
+    --font-base-size: 17px; /* Ligeramente más grande para Teko */
+    --body-line-height: 1.6;
+    --heading-line-height: 1.3;
+
+    /* Métricas */
+    --spacing-unit: 10px; /* Un poco más de espacio */
+    --radius: 3px; /* Esquinas ligeramente redondeadas */
+    --radius-sharp: 0px; /* Para elementos más industriales */
+    --border-width-fine: 1px;
+    --border-width-medium: 2px;
+    --border-width-heavy: 4px;
+
+    /* Sombras y Brillos */
+    --shadow-inset: inset 0 1px 4px rgba(0, 0, 0, 0.7);
+    --shadow-outset: 0 2px 5px rgba(0, 0, 0, 0.5);
+    --glow-blue: 0 0 8px var(--ds-rig-blue);
+    --glow-amber: 0 0 8px var(--ds-rig-amber);
+    --glow-red: 0 0 10px var(--ds-rig-red);
+    --text-glow-blue: 0 0 5px rgba(58, 240, 255, 0.7);
+}
+
+/* 2. ESTILOS BASE (Aplicados a .preview-html) */
+.preview-html {
+    background-color: var(--ds-bg);
+    color: var(--ds-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--font-base-size);
+    line-height: var(--body-line-height);
+    padding: calc(var(--spacing-unit) * 2.5);
+    margin: 0;
+    background-image: linear-gradient(45deg, rgba(176, 196, 222, 0.02) 25%, transparent 25%),
+                      linear-gradient(-45deg, rgba(176, 196, 222, 0.02) 25%, transparent 25%),
+                      linear-gradient(45deg, transparent 75%, rgba(176, 196, 222, 0.02) 75%),
+                      linear-gradient(-45deg, transparent 75%, rgba(176, 196, 222, 0.02) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+/* Scrollbars dentro de .preview-html */
+.preview-html::-webkit-scrollbar { width: 10px; height: 10px; }
+.preview-html::-webkit-scrollbar-track { background: var(--ds-bg-alt); }
+.preview-html::-webkit-scrollbar-thumb { background: var(--ds-metal-base); border: 1px solid var(--ds-border); }
+.preview-html::-webkit-scrollbar-thumb:hover { background: var(--ds-metal-light); }
+
+/* 3. ELEMENTOS COMUNES (Dentro de .preview-html) */
+.preview-html h1, .preview-html h2, .preview-html h3,
+.preview-html h4:not(.panel-title), /* Excluir títulos de panel */
+.preview-html h5, .preview-html h6 {
+    font-family: var(--font-heading);
+    color: var(--ds-text-primary);
+    margin: calc(var(--spacing-unit) * 2) 0 var(--spacing-unit) 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--ds-border-light);
+    padding-bottom: calc(var(--spacing-unit) * 0.5);
+    line-height: var(--heading-line-height);
+    font-weight: 500;
+}
+.preview-html h1 { font-size: 2em; color: var(--ds-rig-blue); text-shadow: var(--text-glow-blue); border-color: var(--ds-rig-blue-dark); }
+.preview-html h2 { font-size: 1.6em; }
+.preview-html h3 { font-size: 1.3em; color: var(--ds-text-secondary); border-bottom-style: dashed; }
+.preview-html h4:not(.panel-title) { font-size: 1.1em; border-bottom: none; }
+.preview-html h5, .preview-html h6 { display: none; }
+
+.preview-html p { margin-bottom: calc(var(--spacing-unit) * 1.2); }
+.preview-html a { color: var(--ds-rig-blue); text-decoration: none; border-bottom: 1px dotted var(--ds-rig-blue-dark); transition: color 0.2s, border-color 0.2s; }
+.preview-html a:hover { color: #fff; border-bottom-color: #fff; text-shadow: var(--glow-blue); }
+.preview-html strong { font-weight: 700; color: #fff; }
+.preview-html em { font-style: normal; color: var(--ds-rig-amber); }
+
+/* Código y Pre dentro de .preview-html */
+.preview-html code {
+    font-family: var(--font-mono);
+    background-color: var(--ds-bg-alt);
+    color: var(--ds-rig-blue);
+    padding: 0.2em 0.4em;
+    border-radius: var(--radius);
+    border: 1px solid var(--ds-border);
+    font-size: 0.9em;
+}
+.preview-html pre code {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: 1em;
+}
+.preview-html pre {
+    background-color: var(--ds-bg-alt);
+    border: 1px solid var(--ds-border-light);
+    border-radius: var(--radius-sharp);
+    padding: var(--spacing-unit);
+    margin: var(--spacing-unit) 0;
+    overflow-x: auto;
+    box-shadow: var(--shadow-inset);
+    font-family: var(--font-mono);
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+.preview-html pre .comment { color: #6A9955; }
+.preview-html pre .string { color: #CE9178; }
+.preview-html pre .number { color: #B5CEA8; }
+.preview-html pre .keyword { color: #569CD6; }
+.preview-html pre .function { color: #DCDCAA; }
+.preview-html pre .parameter { color: #9CDCFE; }
+.preview-html pre .operator { color: #D4D4D4; }
+.preview-html pre .punctuation { color: #808080; }
+.preview-html pre .class-name { color: #4EC9B0; }
+
+/* Tablas dentro de .preview-html */
+.preview-html table { width: 100%; border-collapse: collapse; margin: calc(var(--spacing-unit) * 1.5) 0; background-color: transparent; border: 1px solid var(--ds-metal-base); }
+.preview-html th, .preview-html td { padding: var(--spacing-unit); text-align: left; border: 1px solid var(--ds-border-light); font-family: var(--font-body); }
+.preview-html th { background-color: var(--ds-metal-base); color: var(--ds-rig-blue); font-family: var(--font-heading); text-transform: uppercase; font-weight: 500; }
+.preview-html tbody tr:nth-child(even) { background-color: rgba(82, 92, 107, 0.1); }
+.preview-html tbody tr:hover { background-color: rgba(58, 240, 255, 0.08); }
+
+/* Citas dentro de .preview-html */
+.preview-html blockquote {
+    border-left: var(--border-width-heavy) solid var(--ds-rig-blue-dark);
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+    margin: var(--spacing-unit) 0;
+    background-color: rgba(58, 240, 255, 0.05);
+    color: var(--ds-text-secondary);
+    font-style: italic;
+}
+
+/* Admoniciones dentro de .preview-html */
+.preview-html .markdown-alert { border-left-width: var(--border-width-heavy); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: var(--radius); }
+.preview-html .markdown-alert-title { font-weight: 600; font-family: var(--font-heading); margin-bottom: 0.5rem; display: flex; align-items: center; text-transform: uppercase; }
+.preview-html .markdown-alert-title .icon { margin-right: 0.8rem; }
+.preview-html .markdown-alert-note { border-left-color: var(--ds-rig-blue); background-color: rgba(58, 240, 255, 0.08); color: var(--ds-text-primary); }
+.preview-html .markdown-alert-note .markdown-alert-title { color: var(--ds-rig-blue); }
+.preview-html .markdown-alert-tip { border-left-color: #3fb950; background-color: rgba(63, 185, 80, 0.08); }
+.preview-html .markdown-alert-tip .markdown-alert-title { color: #3fb950; }
+.preview-html .markdown-alert-important { border-left-color: #a371f7; background-color: rgba(163, 113, 247, 0.08); }
+.preview-html .markdown-alert-important .markdown-alert-title { color: #a371f7; }
+.preview-html .markdown-alert-warning { border-left-color: var(--ds-rig-amber); background-color: rgba(255, 184, 0, 0.08); }
+.preview-html .markdown-alert-warning .markdown-alert-title { color: var(--ds-rig-amber); }
+.preview-html .markdown-alert-caution { border-left-color: var(--ds-rig-red); background-color: rgba(255, 48, 48, 0.08); }
+.preview-html .markdown-alert-caution .markdown-alert-title { color: var(--ds-rig-red); }
+
+/* --- 4. PANELES :::PANEL (Dentro de .preview-html) --- */
+.preview-html .panel {
+    position: relative;
+    padding: calc(var(--spacing-unit) * 1.5);
+    margin: calc(var(--spacing-unit) * 1.5) 0;
+    border: 1px solid var(--ds-border-light);
+    border-radius: var(--radius);
+    background-color: var(--ds-bg-alt);
+    box-shadow: var(--shadow-inset);
+    overflow: hidden;
+}
+.preview-html .panel-title {
+    margin: calc(-1 * var(--spacing-unit) * 1.5);
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+    border-bottom: 1px solid var(--ds-border);
+    background: linear-gradient(to bottom, var(--ds-metal-base), rgba(51, 58, 69, 0.7));
+    font-family: var(--font-heading);
+    font-size: 1.2em;
+    font-weight: 500;
+    color: var(--ds-text-primary);
+    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+.preview-html .panel-title::before { display: none; }
+
+/* Estilos Semánticos (Adaptados a RIG) */
+.preview-html .panel-style--note { border-left-color: var(--ds-rig-blue-dark); background-color: rgba(58, 240, 255, 0.05); border-left-width: var(--border-width-heavy);}
+.preview-html .panel-style--note > .panel-title { color: var(--ds-rig-blue); background: rgba(58, 240, 255, 0.1); border-bottom-color: var(--ds-rig-blue-dark); text-shadow: var(--text-glow-blue); }
+
+.preview-html .panel-style--warning { border-left-color: var(--ds-rig-amber-dark); background-color: rgba(255, 184, 0, 0.05); border-left-width: var(--border-width-heavy);}
+.preview-html .panel-style--warning > .panel-title { color: var(--ds-rig-amber); background: rgba(255, 184, 0, 0.1); border-bottom-color: var(--ds-rig-amber-dark); text-shadow: var(--glow-amber); }
+
+.preview-html .panel-style--success { border-left: var(--border-width-heavy) solid #3fb950; background-color: rgba(63, 185, 80, 0.05); }
+.preview-html .panel-style--success > .panel-title { color: #50fa7b; background: rgba(63, 185, 80, 0.1); border-bottom-color: #3fb950; text-shadow: 0 0 5px #50fa7b; }
+
+.preview-html .panel-style--danger { border-left: var(--border-width-heavy) solid var(--ds-rig-red-dark); background-color: rgba(255, 48, 48, 0.05); }
+.preview-html .panel-style--danger > .panel-title { color: var(--ds-rig-red); background: rgba(255, 48, 48, 0.1); border-bottom-color: var(--ds-rig-red-dark); text-shadow: var(--glow-red); }
+
+/* Estilos Visuales/Estructurales Adaptados/Reutilizados */
+
+/* Scanline Terminal (Adaptado) */
+.preview-html .panel-style--scanline-terminal {
+    background: #0A0F08 linear-gradient(rgba(58, 255, 128, 0.1) 50%, transparent 50%);
+    background-size: 100% 4px;
+    border: 1px solid var(--ds-rig-blue-dark);
+    color: var(--ds-rig-blue);
+    font-family: var(--font-mono);
+    text-shadow: var(--glow-blue);
+    box-shadow: inset 0 0 15px rgba(58, 240, 255, 0.3), 0 0 5px rgba(58, 240, 255, 0.5);
+    padding: var(--spacing-unit);
+}
+.preview-html .panel-style--scanline-terminal > .panel-title {
+    background: rgba(58, 240, 255, 0.1);
+    border-bottom: 1px solid var(--ds-rig-blue-dark);
+    color: inherit;
+    text-shadow: inherit;
+    font-family: inherit;
+    margin: calc(-1 * var(--spacing-unit));
+    margin-bottom: var(--spacing-unit);
+    padding: calc(var(--spacing-unit) * 0.5) var(--spacing-unit);
+}
+.preview-html .panel-style--scanline-terminal code {
+     color: #f1fa8c;
+     background: rgba(255, 255, 255, 0.05);
+     border-color: rgba(58, 240, 255, 0.3);
+}
+.preview-html .panel-style--scanline-terminal pre {
+    background: transparent;
+    border-color: rgba(58, 240, 255, 0.3);
+    box-shadow: none;
+}
+.preview-html .panel-style--scanline-terminal .markdown-alert {
+    background: transparent !important;
+    border-left-color: currentColor !important;
+    color: inherit !important;
+}
+.preview-html .panel-style--scanline-terminal .markdown-alert-title {
+    color: inherit !important;
+    font-weight: bold;
+}
+
+/* Ishimura Engineering (Adaptado) */
+.preview-html .panel-style--ishimura-engineering-necromorph {
+    --panel-bg: #181c20;
+    --panel-border: #455060;
+    --panel-border-glow: rgba(70, 80, 95, 0.5);
+    --panel-text: #a0b0c8;
+    --panel-text-accent: var(--ds-rig-blue);
+    --panel-text-warn: var(--ds-rig-amber);
+    --panel-text-error: var(--ds-rig-red);
+
+    background-color: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.6), 0 0 3px var(--panel-border-glow);
+    color: var(--panel-text);
+    border-radius: var(--radius-sharp);
+}
+.preview-html .panel-style--ishimura-engineering-necromorph > .panel-title {
+    background: linear-gradient(to bottom, #2a3038, #1f252c);
+    border-bottom: 1px solid #0a0c10;
+    color: var(--panel-text-accent);
+    text-shadow: 0 0 4px var(--panel-text-accent);
+}
+.preview-html .panel-style--ishimura-engineering-necromorph .markdown-alert-warning {
+    border-left-color: var(--ds-rig-amber) !important;
+    background-color: rgba(255, 184, 0, 0.05) !important;
+}
+.preview-html .panel-style--ishimura-engineering-necromorph.state--warning .markdown-alert-warning .markdown-alert-title {
+     color: var(--ds-rig-amber) !important;
+}
+.preview-html .panel-style--ishimura-engineering-necromorph .markdown-alert-caution {
+    border-left-color: var(--ds-rig-red) !important;
+    background-color: rgba(255, 48, 48, 0.05) !important;
+}
+.preview-html .panel-style--ishimura-engineering-necromorph.state--error .markdown-alert-caution .markdown-alert-title {
+    color: var(--ds-rig-red) !important;
+}
+.preview-html .panel-style--ishimura-engineering-necromorph div.admonition,
+.preview-html .panel-style--ishimura-engineering-necromorph .admonition-title,
+.preview-html .panel-style--ishimura-engineering-necromorph .admonition * {
+  background: var(--panel-bg, #181c20) !important;
+  color: inherit !important;
+  border-left-color: var(--panel-border, #455060) !important;
+  box-shadow: none !important;
+}
+.preview-html .panel-style--ishimura-engineering-necromorph.state--warning div.admonition,
+.preview-html .panel-style--ishimura-engineering-necromorph.state--warning .admonition-title {
+  background: rgba(255, 184, 0, 0.05) !important;
+  color: var(--ds-rig-amber, #FFB800) !important;
+  border-left-color: var(--ds-rig-amber-dark, #CC9400) !important;
+}
+.preview-html .panel-style--ishimura-engineering-necromorph.state--error div.admonition,
+.preview-html .panel-style--ishimura-engineering-necromorph.state--error .admonition-title {
+  background: rgba(255, 48, 48, 0.05) !important;
+  color: var(--ds-rig-red, #FF3030) !important;
+  border-left-color: var(--ds-rig-red-dark, #B00000) !important;
+}
+
+/* HUD Frame (Adaptado) */
+.preview-html .panel-style--hud-frame {
+    border: none;
+    background: transparent;
+    padding: 0;
+    position: relative;
+    box-shadow: none;
+}
+.preview-html .panel-style--hud-frame > div {
+    border: 1px solid var(--ds-rig-blue-dark);
+    background: rgba(8, 12, 16, 0.85);
+    padding: var(--spacing-unit) * 1.5;
+    backdrop-filter: blur(3px);
+}
+.preview-html .panel-style--hud-frame::before,
+.preview-html .panel-style--hud-frame::after {
+    content: '';
+    position: absolute;
+    width: 25px; height: 25px;
+    border-style: solid;
+    border-color: var(--ds-rig-blue);
+    border-width: 0;
+    filter: drop-shadow(var(--glow-blue));
+}
+.preview-html .panel-style--hud-frame::before { top: -2px; left: -2px; border-top-width: 2px; border-left-width: 2px; }
+.preview-html .panel-style--hud-frame::after { bottom: -2px; right: -2px; border-bottom-width: 2px; border-right-width: 2px; }
+.preview-html .panel-style--hud-frame > div > .panel-title {
+    background: transparent;
+    border-bottom: 1px dashed var(--ds-rig-blue-dark);
+    color: var(--ds-rig-blue);
+    text-shadow: var(--glow-blue);
+    margin: 0;
+    margin-bottom: var(--spacing-unit);
+    padding: 0;
+    padding-bottom: calc(var(--spacing-unit) / 2);
+}
+
+/* Tech Corners (Adaptado) */
+.preview-html .panel-style--tech-corners {
+    border: 1px solid var(--ds-border);
+    padding: calc(var(--spacing-unit) * 2);
+    position: relative;
+}
+.preview-html .panel-style--tech-corners::before,
+.preview-html .panel-style--tech-corners::after {
+    content: ''; position: absolute; width: 20px; height: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpolyline points='0,20 0,0 20,0' style='fill:none; stroke:%233AF0FF; stroke-width:3' /%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-size: contain; filter: drop-shadow(var(--glow-blue));
+}
+.preview-html .panel-style--tech-corners::before { top: 5px; left: 5px; }
+.preview-html .panel-style--tech-corners::after { bottom: 5px; right: 5px; transform: rotate(180deg); }
+
+/* Cut Corners (Adaptado) */
+.preview-html .panel-style--cut-corners {
+    --corner-cut-size: 15px;
+    clip-path: polygon( var(--corner-cut-size) 0%, calc(100% - var(--corner-cut-size)) 0%, 100% var(--corner-cut-size), 100% calc(100% - var(--corner-cut-size)), calc(100% - var(--corner-cut-size)) 100%, var(--corner-cut-size) 100%, 0% calc(100% - var(--corner-cut-size)), 0% var(--corner-cut-size) );
+    border: 1px solid var(--ds-border);
+    border-radius: var(--radius-sharp);
+}
+
+/* Glass (Adaptado) */
+.preview-html .panel-style--glass {
+    background-color: rgba(18, 24, 32, 0.7);
+    backdrop-filter: blur(5px) grayscale(0.3);
+    border: 1px solid var(--ds-border-light);
+    box-shadow: 0 0 10px 2px rgba(82, 92, 107, 0.2);
+}
+.preview-html .panel-style--glass > .panel-title {
+    color: var(--ds-text-primary);
+    background: rgba(82, 92, 107, 0.1);
+    border-bottom-color: var(--ds-border-light);
+    text-shadow: none;
+}
+
+/* --- 5. DECORACIONES ::CORNER Y ::X-EDGE --- */
+/* Los estilos base globales ya definen position, z-index, pointer-events */
+/* Los temas definen la APARIENCIA */
+
+/* Tipos de Esquina Dead Space */
+.preview-html .corner-type-1 {
+    width: 8px; height: 8px;
+    background-color: var(--ds-metal-light);
+    border: 1px solid var(--ds-border);
+    border-radius: 50%;
+    box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+}
+
+.preview-html .corner-type-2 {
+    width: 18px; height: 6px;
+    background-color: var(--ds-rig-blue);
+    border-radius: 1px;
+    box-shadow: var(--glow-blue);
+}
+.preview-html .corner-pos--top-left.corner-type-2,
+.preview-html .corner-pos--bottom-left.corner-type-2 { transform: rotate(90deg); transform-origin: top left; }
+.preview-html .corner-pos--top-right.corner-type-2,
+.preview-html .corner-pos--bottom-right.corner-type-2 { transform: rotate(-90deg); transform-origin: top right; }
+
+.preview-html .corner-type-3 {
+     width: 18px; height: 6px;
+     background-color: var(--ds-rig-red);
+     border-radius: 1px;
+     box-shadow: var(--glow-red);
+     animation: pulse-alert 1.2s infinite ease-in-out;
+}
+.preview-html .corner-pos--top-left.corner-type-3,
+.preview-html .corner-pos--bottom-left.corner-type-3 { transform: rotate(90deg); transform-origin: top left; }
+.preview-html .corner-pos--top-right.corner-type-3,
+.preview-html .corner-pos--bottom-right.corner-type-3 { transform: rotate(-90deg); transform-origin: top right; }
+
+.preview-html .corner-type-4 {
+    width: 15px; height: 15px;
+    background: none;
+    border-style: solid;
+    border-color: var(--ds-border-light);
+    border-width: 0;
+}
+.preview-html .corner-pos--top-left.corner-type-4 { border-top-width: 2px; border-left-width: 2px; }
+.preview-html .corner-pos--top-right.corner-type-4 { border-top-width: 2px; border-right-width: 2px; }
+.preview-html .corner-pos--bottom-left.corner-type-4 { border-bottom-width: 2px; border-left-width: 2px; }
+.preview-html .corner-pos--bottom-right.corner-type-4 { border-bottom-width: 2px; border-right-width: 2px; }
+
+/* Tipos de Borde Dead Space */
+.preview-html .edge-type-1 {
+    height: 2px;
+    background-color: var(--ds-metal-base);
+    border-top: 1px solid var(--ds-metal-light);
+    border-bottom: 1px solid var(--ds-border);
+}
+.preview-html .edge-pos--left.edge-type-1,
+.preview-html .edge-pos--right.edge-type-1 {
+     width: 2px;
+     height: var(--edge-span-height, 50%);
+     background-color: var(--ds-metal-base);
+     border-left: 1px solid var(--ds-metal-light);
+     border-right: 1px solid var(--ds-border);
+     border-top: none; border-bottom: none;
+}
+
+.preview-html .edge-type-2 {
+    height: 3px;
+    background-color: var(--ds-rig-blue);
+    box-shadow: var(--glow-blue);
+    filter: brightness(1.2);
+}
+.preview-html .edge-pos--left.edge-type-2,
+.preview-html .edge-pos--right.edge-type-2 {
+     width: 3px;
+     height: var(--edge-span-height, 50%);
+     background-color: var(--ds-rig-blue);
+     box-shadow: var(--glow-blue);
+     filter: brightness(1.2);
+}
+
+/* --- 6. LAYOUTS --- */
+/* Usar los estilos base globales para .layout--* */
+
+/* --- 7. RESPONSIVE DESIGN --- */
+@media (max-width: 768px) {
+    .preview-html { --font-base-size: 16px; padding: var(--spacing-unit); }
+    .preview-html .layout--left, .preview-html .layout--right, .preview-html .layout--center {
+        float: none; width: 100%; margin-left: 0; margin-right: 0;
+    }
+}
+
+/* --- 8. ANIMACIONES --- */
+@keyframes pulse-alert {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: var(--glow-red); }
+    50% { opacity: 0.6; transform: scale(1.05); box-shadow: 0 0 15px var(--ds-rig-red); }
+}
+
+/* RIG Bar Styling */
+.preview-html .rig-bar {
+  width: 100%;
+  height: 18px;
+  background: #11151a;
+  border: 1px solid var(--ds-border-light);
+  border-radius: 2px;
+  margin: 0.5em 0 1em 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-inset);
+}
+.preview-html .rig-bar__fill {
+  height: 100%;
+  background: var(--ds-rig-health-fill);
+  width: 0%;
+  transition: width 0.4s ease-out;
+  box-shadow: inset 0 0 5px rgba(58, 240, 255, 0.5);
+}
+.preview-html .rig-bar.rig-bar--stasis .rig-bar__fill {
+  background: var(--ds-rig-stasis-fill);
+  box-shadow: inset 0 0 5px rgba(255, 184, 0, 0.5);
+}
+.preview-html .rig-bar.rig-bar--danger .rig-bar__fill {
+  background: linear-gradient(90deg, var(--ds-rig-red), #ff6b6b);
+  box-shadow: inset 0 0 5px rgba(255, 48, 48, 0.5);
+}
+.preview-html .rig-bar.rig-bar--critical .rig-bar__fill {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--ds-rig-red-dark),
+    var(--ds-rig-red-dark) 5px,
+    rgba(176, 0, 0, 0.7) 5px,
+    rgba(176, 0, 0, 0.7) 10px
+  );
+   box-shadow: inset 0 0 8px var(--ds-rig-red);
+   animation: pulse-alert 1s infinite;
+}
+
+/* ELIMINAR ESTA LÍNEA: </rewritten_file> */ 
